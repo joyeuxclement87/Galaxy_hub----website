@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Body font: Manrope via next/font/google ── */
+  --font-sans: var(--font-manrope), "Manrope", sans-serif;
+
+  /* ── Heading font: Cabinet Grotesk via Fontshare ── */
+  --font-cabinet: "Cabinet Grotesk", sans-serif;
+
+  /* ── Price / mono-style display ── */
+  --font-space: "Cabinet Grotesk", sans-serif;
+
+  /* ── Premium palette: Ivory & Ocean ── */
+  --color-ivory:       #faf9f6;
+  --color-ivory-dark:  #f0eee9;
+  --color-ocean:       #0b5497;
+  --color-ocean-dark:  #083e70;
+  --color-ocean-light: #e6f0fa;
+  --color-accent:      #0f70c9;
+
+  /* ── Soft Ocean shadow ── */
+  --shadow-premium: 0 20px 60px rgba(11, 84, 151, 0.08);
+}
+
+:root {
+  --background: #faf9f6;
+  --foreground: #0b5497;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* ── Typography utility classes ───────────────────────────────── */
+
+/* Headings: Cabinet Grotesk */
+.font-cabinet,
+.font-sora {                          /* keep .font-sora as alias so existing JSX works */
+  font-family: "Cabinet Grotesk", sans-serif;
+}
+
+/* Body: Manrope (default via --font-sans) */
+.font-manrope {
+  font-family: var(--font-sans);
+}
+
+/* Prices / labels */
+.font-space {
+  font-family: "Cabinet Grotesk", sans-serif;
+}
+
+/* ── Glass effect ─────────────────────────────────────────────── */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-panel-dark {
+  background: rgba(11, 84, 151, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(11, 84, 151, 0.08);
+}
+
+/* ── Floating animation ───────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px);  }
+  50%       { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* ── Border radius tokens ─────────────────────────────────────── */
+.rounded-card   { border-radius: 24px;   }
+.rounded-btn    { border-radius: 999px;  }
+.rounded-img    { border-radius: 28px;   }
+.rounded-input  { border-radius: 18px;   }
+.rounded-badge  { border-radius: 999px;  }
