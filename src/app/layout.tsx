@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Manrope, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope",
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  variable: "--font-ibm-plex",
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -22,16 +29,8 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} h-full antialiased`}
+      className={`${manrope.variable} ${ibmPlexSans.variable} h-full antialiased`}
     >
-      <head>
-        {/* Cabinet Grotesk — Fontshare (not available on Google Fonts) */}
-        <link rel="preconnect" href="https://api.fontshare.com" />
-        <link
-          rel="stylesheet"
-          href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,600,500&display=swap"
-        />
-      </head>
       <body className="min-h-full flex flex-col font-sans bg-ivory text-ocean select-none">
         {children}
       </body>

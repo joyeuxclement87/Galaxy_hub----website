@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, Menu, X, ArrowRight, ChevronDown,
@@ -12,7 +13,6 @@ import { PRODUCTS } from "@/data/mock-data";
 
 interface NavbarProps {
   onSearchFocus?: () => void;
-  onReserveClick?: () => void;
 }
 
 // ─── Mega Menu Categories ─────────────────────────────────────────────────────
@@ -112,29 +112,24 @@ const SOCIAL_LINKS = [
 // ─── Wordmark ─────────────────────────────────────────────────────────────────
 function Wordmark({ size = "lg" }: { size?: "sm" | "lg" }) {
   return (
-    <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-      <span
+    <Link href="/" className="group shrink-0">
+      <Image
+        src="/g-hub logo.png"
+        alt="Galaxy Hub logo"
+        width={220}
+        height={72}
+        priority
         className={cn(
-          "inline-flex items-center justify-center rounded-full bg-[#0B5497] text-[#FFFEF9] font-cabinet font-extrabold shadow-md group-hover:scale-110 transition-transform duration-300 select-none",
-          size === "sm" ? "w-7 h-7 text-sm" : "w-8 h-8 text-base"
+          "h-auto w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]",
+          size === "sm" ? "max-h-8 max-w-[120px]" : "max-h-10 max-w-[150px]"
         )}
-      >
-        G
-      </span>
-      <span
-        className={cn(
-          "font-cabinet font-extrabold tracking-tight text-[#0B5497]",
-          size === "sm" ? "text-base" : "text-lg"
-        )}
-      >
-        Galaxy<span className="text-[#0f70c9]">Hub</span>
-      </span>
+      />
     </Link>
   );
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────
-export function Navbar({ onSearchFocus, onReserveClick }: NavbarProps) {
+export function Navbar({ onSearchFocus }: NavbarProps) {
   const [scrolled,    setScrolled]   = useState(false);
   const [megaOpen,    setMegaOpen]   = useState(false);
   const [drawerOpen,  setDrawerOpen] = useState(false);
@@ -373,13 +368,13 @@ export function Navbar({ onSearchFocus, onReserveClick }: NavbarProps) {
             </div>
 
             {/* Order Now */}
-            <button
-              onClick={onReserveClick}
+            <Link
+              href="/order"
               className="inline-flex items-center gap-2 justify-center font-semibold text-sm text-[#FFFEF9] bg-[#0B5497] rounded-full px-6 py-2.5 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(11,84,151,0.28)] active:translate-y-0 active:shadow-none transition-all duration-300 cursor-pointer"
             >
               <ShoppingBag className="w-4 h-4" />
               Order Now
-            </button>
+            </Link>
           </div>
         </div>
       </header>
@@ -471,16 +466,14 @@ export function Navbar({ onSearchFocus, onReserveClick }: NavbarProps) {
                   <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#0B5497]/35 mb-4">
                     Ready to Order?
                   </p>
-                  <button
-                    onClick={() => {
-                      setDrawerOpen(false);
-                      if (onReserveClick) onReserveClick();
-                    }}
+                  <Link
+                    href="/order"
+                    onClick={() => setDrawerOpen(false)}
                     className="w-full inline-flex items-center justify-center gap-2.5 bg-[#0B5497] text-[#FFFEF9] font-semibold text-sm rounded-full py-4 hover:shadow-[0_10px_28px_rgba(11,84,151,0.30)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer"
                   >
                     <ShoppingBag className="w-4 h-4" />
                     Order Now
-                  </button>
+                  </Link>
                 </motion.div>
 
                 {/* ── Social Links ────────────────────────────────────────── */}

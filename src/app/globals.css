@@ -4,11 +4,11 @@
   /* ── Body font: Manrope via next/font/google ── */
   --font-sans: var(--font-manrope), "Manrope", sans-serif;
 
-  /* ── Heading font: Cabinet Grotesk via Fontshare ── */
-  --font-cabinet: "Cabinet Grotesk", sans-serif;
+  /* ── Display / heading font: IBM Plex Sans ── */
+  --font-clash: var(--font-ibm-plex), "IBM Plex Sans", sans-serif;
 
   /* ── Price / mono-style display ── */
-  --font-space: "Cabinet Grotesk", sans-serif;
+  --font-space: var(--font-ibm-plex), "IBM Plex Sans", sans-serif;
 
   /* ── Premium palette: Ivory & Ocean ── */
   --color-ivory:       #faf9f6;
@@ -35,10 +35,12 @@ body {
 
 /* ── Typography utility classes ───────────────────────────────── */
 
-/* Headings: Cabinet Grotesk */
+/* Headings: IBM Plex Sans */
+.font-clash,
 .font-cabinet,
-.font-sora {                          /* keep .font-sora as alias so existing JSX works */
-  font-family: "Cabinet Grotesk", sans-serif;
+.font-sora {                          /* keep existing aliases so current JSX keeps working */
+  font-family: var(--font-clash);
+  font-weight: 700;
 }
 
 /* Body: Manrope (default via --font-sans) */
@@ -68,12 +70,56 @@ body {
 
 /* ── Floating animation ───────────────────────────────────────── */
 @keyframes float {
-  0%, 100% { transform: translateY(0px);  }
-  50%       { transform: translateY(-8px); }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -8px, 0); }
+}
+
+@keyframes hero-drift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -6px, 0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; transform: scale(0.98); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes scroll-line {
+  0%, 100% { transform: translateY(0); opacity: 0.45; }
+  50% { transform: translateY(10px); opacity: 1; }
+}
+
+@keyframes fade-rise {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 .animate-float {
   animation: float 6s ease-in-out infinite;
+}
+
+.animate-hero-drift {
+  animation: hero-drift 6.5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 7s ease-in-out infinite;
+}
+
+.animate-scroll-line {
+  animation: scroll-line 2.2s ease-in-out infinite;
+}
+
+.animate-fade-rise {
+  animation: fade-rise 0.8s ease-out both;
+}
+
+/* ── Decorative surfaces ─────────────────────────────────────── */
+.hero-grid-texture {
+  background-image:
+    linear-gradient(rgba(11, 84, 151, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 84, 151, 0.045) 1px, transparent 1px);
+  background-size: 72px 72px;
 }
 
 /* ── Border radius tokens ─────────────────────────────────────── */
