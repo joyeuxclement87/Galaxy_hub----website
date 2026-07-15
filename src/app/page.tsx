@@ -1,20 +1,47 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import Fuse from "fuse.js";
 import {
   AlertCircle,
+  Aperture,
   ArrowRight,
   ArrowUpRight,
+  BatteryFull,
+  Bluetooth,
+  Camera,
+  ChevronLeft,
+  ChevronRight,
   Clock,
+  Cpu,
+  Droplet,
+  Feather,
+  Hand,
+  HardDrive,
+  Headphones as HeadphonesIcon,
+  Layers,
   MapPin,
+  Monitor,
+  Palette,
   Phone,
+  RotateCw,
   Search,
   Shield,
+  ShieldCheck,
   ShoppingBag,
+  Signal,
+  Smartphone,
+  SlidersHorizontal,
   Star,
   Store,
+  Sun,
+  Usb,
+  Volume2,
+  VolumeX,
+  Zap,
 } from "lucide-react";
 import { Navbar } from "@/components/ui/navbar";
 import { ProductCard } from "@/components/ui/product-card";
@@ -22,84 +49,201 @@ import { ReservationModal } from "@/components/ui/reservation-modal";
 import { PRODUCTS, REVIEWS, Product } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
 
-const TRUST_CHIPS = [
-  "✓ Genuine Products",
-  "✓ Warranty Available",
-  "✓ Kigali Delivery",
-  "✓ Flexible Pickup",
-];
-
-const HERO_SHOWCASE = [
+const SPOTLIGHT_SLIDES = [
   {
-    name: "iPhone 17 Pro",
-    type: "phone",
+    id: "smartphones",
+    category: "Smartphones",
     image:
       "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=900",
-    className:
-      "left-[4%] top-[14%] w-[34%] rotate-[-11deg] lg:left-[8%] lg:top-[17%] lg:w-[32%]",
-    animation: { y: [0, -6, 0], rotate: [-11, -9, -11] },
-    duration: 6.8,
+    features: [
+      { label: "5G Ready", icon: Signal },
+      { label: "48MP Camera", icon: Camera },
+      { label: "All-Day Battery", icon: BatteryFull },
+      { label: "Fast Charging", icon: Zap },
+    ],
   },
   {
-    name: "Samsung S26 Ultra",
-    type: "phone",
+    id: "phone-cases",
+    category: "Phone Cases",
     image:
-      "https://images.unsplash.com/photo-1708649290066-5f617003b930?auto=format&fit=crop&q=80&w=900",
-    className:
-      "right-[8%] top-[11%] w-[31%] rotate-[10deg] lg:right-[11%] lg:top-[14%] lg:w-[29%]",
-    animation: { y: [0, -5, 0], rotate: [10, 8, 10] },
-    duration: 7.2,
+      "https://images.unsplash.com/photo-1601593346740-925612772716?auto=format&fit=crop&q=80&w=900",
+    features: [
+      { label: "Shockproof", icon: ShieldCheck },
+      { label: "Slim Fit", icon: Layers },
+      { label: "Wireless Charging OK", icon: Zap },
+      { label: "Multiple Colors", icon: Palette },
+    ],
   },
   {
-    name: "MacBook Air",
-    type: "laptop",
+    id: "laptops",
+    category: "Laptops",
     image:
-      "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&q=80&w=1200",
-    className:
-      "left-1/2 top-[38%] w-[62%] -translate-x-1/2 rotate-[-3deg] lg:top-[40%] lg:w-[58%]",
-    animation: { y: [0, -4, 0], rotate: [-3, -1, -3] },
-    duration: 8,
+      "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&q=80&w=900",
+    features: [
+      { label: "16GB RAM", icon: Cpu },
+      { label: "512GB SSD", icon: HardDrive },
+      { label: "All-Day Battery", icon: BatteryFull },
+      { label: "Retina Display", icon: Monitor },
+    ],
   },
   {
-    name: "Smartwatch",
-    type: "watch",
+    id: "ring-lights",
+    category: "Ring Lights",
     image:
-      "https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&q=80&w=700",
-    className:
-      "left-[16%] bottom-[13%] w-[18%] rotate-[-8deg] lg:left-[18%] lg:bottom-[16%] lg:w-[17%]",
-    animation: { y: [0, -5, 0], rotate: [-8, -5, -8] },
-    duration: 6.4,
+      "https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&q=80&w=900",
+    features: [
+      { label: "3 Light Modes", icon: Sun },
+      { label: "Adjustable Stand", icon: SlidersHorizontal },
+      { label: "USB Powered", icon: Usb },
+      { label: "Phone Clip Included", icon: Smartphone },
+    ],
+  },
+  {
+    id: "camera-tripods",
+    category: "Camera Tripods",
+    image:
+      "https://images.unsplash.com/photo-1520170350707-b2da59970118?auto=format&fit=crop&q=80&w=900",
+    features: [
+      { label: "Extendable Legs", icon: SlidersHorizontal },
+      { label: "360° Rotation", icon: RotateCw },
+      { label: "Lightweight", icon: Feather },
+      { label: "Universal Mount", icon: Aperture },
+    ],
+  },
+  {
+    id: "bluetooth-speakers",
+    category: "Bluetooth Speakers",
+    image:
+      "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&q=80&w=900",
+    features: [
+      { label: "Deep Bass", icon: Volume2 },
+      { label: "12H Playtime", icon: Clock },
+      { label: "Water Resistant", icon: Droplet },
+      { label: "Bluetooth 5.3", icon: Bluetooth },
+    ],
+  },
+  {
+    id: "earbuds",
+    category: "Earbuds",
+    image:
+      "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=900",
+    features: [
+      { label: "Noise Cancelling", icon: VolumeX },
+      { label: "Touch Controls", icon: Hand },
+      { label: "30H Battery", icon: BatteryFull },
+      { label: "IPX5 Rated", icon: Droplet },
+    ],
+  },
+  {
+    id: "headphones",
+    category: "Headphones",
+    image:
+      "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=900",
+    features: [
+      { label: "Over-Ear Comfort", icon: HeadphonesIcon },
+      { label: "40H Battery", icon: BatteryFull },
+      { label: "Active ANC", icon: VolumeX },
+      { label: "Foldable Design", icon: Layers },
+    ],
+  },
+] as const;
+
+const BUBBLE_POSITIONS = [
+  "left-[2%] top-[10%] lg:left-[-4%] lg:top-[12%]",
+  "right-[2%] top-[10%] lg:right-[-4%] lg:top-[12%]",
+  "left-[2%] bottom-[10%] lg:left-[-4%] lg:bottom-[12%]",
+  "right-[2%] bottom-[10%] lg:right-[-4%] lg:bottom-[12%]",
+] as const;
+
+// NOTE: In production this data (image, description, product count, href) should be
+// fetched from Sanity CMS so counts and imagery stay in sync with the live catalog.
+const CATEGORIES = [
+  {
+    name: "Smartphones",
+    description: "Flagship phones from Apple, Samsung and Google.",
+    count: 24,
+    image:
+      "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=900",
+  },
+  {
+    name: "Phone Cases",
+    description: "Protection and style for every model.",
+    count: 38,
+    image:
+      "https://images.unsplash.com/photo-1601593346740-925612772716?auto=format&fit=crop&q=80&w=900",
+  },
+  {
+    name: "Laptops",
+    description: "Power and portability for work and play.",
+    count: 16,
+    image:
+      "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&q=80&w=900",
   },
   {
     name: "Earbuds",
-    type: "audio",
+    description: "True wireless sound, all-day comfort.",
+    count: 21,
     image:
-      "https://images.unsplash.com/photo-1606741965429-3f3e4a3d1f03?auto=format&fit=crop&q=80&w=700",
-    className:
-      "right-[15%] bottom-[12%] w-[19%] rotate-[8deg] lg:right-[16%] lg:bottom-[15%] lg:w-[17%]",
-    animation: { y: [0, -5, 0], rotate: [8, 5, 8] },
-    duration: 6.9,
+      "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=900",
   },
-];
+  {
+    name: "Headphones",
+    description: "Immersive audio for focus and travel.",
+    count: 14,
+    image:
+      "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=900",
+  },
+  {
+    name: "Bluetooth Speakers",
+    description: "Room-filling sound, anywhere you go.",
+    count: 12,
+    image:
+      "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&q=80&w=900",
+  },
+  {
+    name: "Ring Lights",
+    description: "Studio-quality lighting for content creators.",
+    count: 9,
+    image:
+      "https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&q=80&w=900",
+  },
+  {
+    name: "Camera Tripods",
+    description: "Stable, portable support for every shot.",
+    count: 11,
+    image:
+      "https://images.unsplash.com/photo-1520170350707-b2da59970118?auto=format&fit=crop&q=80&w=900",
+  },
+] as const;
 
-const FLOATING_CARDS = [
+const WHY_GALAXY_HUB = [
   {
-    title: "Available",
-    body: "iPhone 17 Pro",
-    meta: "256GB • In Stock",
-    className: "left-[2%] top-[6%] lg:left-[0%] lg:top-[10%]",
+    title: "Genuine Products",
+    description:
+      "Every device is sourced from authorized distributors and verified before it reaches our shelves.",
+    image:
+      "https://images.unsplash.com/photo-1586880244406-556ebe35f282?auto=format&fit=crop&q=80&w=1200",
   },
   {
-    title: "Reserve Today",
-    body: "Samsung S26 Ultra",
-    meta: "Titanium Black",
-    className: "right-[2%] top-[36%] lg:right-[0%] lg:top-[38%]",
+    title: "Delivery Across Rwanda",
+    description:
+      "From Kigali City to every province, your order is packed with care and delivered on time.",
+    image:
+      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1200",
   },
   {
-    title: "Studio Setup",
-    body: "MacBook Air",
-    meta: "M3 • Midnight",
-    className: "left-[8%] bottom-[0%] lg:left-[8%] lg:bottom-[3%]",
+    title: "Warranty & Support",
+    description:
+      "Standard manufacturer warranty and a concierge team ready to help long after you collect your device.",
+    image:
+      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&q=80&w=1200",
+  },
+  {
+    title: "Tech for Every Lifestyle",
+    description:
+      "Phones, laptops, wearables and accessories curated for how you actually live and work.",
+    image:
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&q=80&w=1200",
   },
 ] as const;
 
@@ -196,127 +340,270 @@ export default function ShowroomHome() {
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % SPOTLIGHT_SLIDES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const goToSlide = (index: number) => {
+    setActiveSlide(((index % SPOTLIGHT_SLIDES.length) + SPOTLIGHT_SLIDES.length) % SPOTLIGHT_SLIDES.length);
+  };
+
+  const activeSpotlight = SPOTLIGHT_SLIDES[activeSlide];
+
   return (
     <div className="flex-1 pt-20 lg:pt-28">
       <Navbar onSearchFocus={focusSearchInput} />
 
-      <section className="relative isolate overflow-hidden bg-[linear-gradient(180deg,#FFFEF9_0%,#F5F9FD_100%)] px-6 py-10 md:px-12 lg:min-h-[900px] lg:h-screen lg:py-0">
-        <div className="hero-grid-texture absolute inset-0 opacity-[0.22]" />
-        <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_74%_34%,rgba(11,84,151,0.16),transparent_30%),radial-gradient(circle_at_18%_18%,rgba(95,165,222,0.14),transparent_28%)]" />
-        <div className="absolute left-[8%] top-[18%] h-40 w-40 rounded-full bg-ocean/10 blur-3xl lg:h-64 lg:w-64" />
-        <div className="absolute right-[12%] top-[10%] h-36 w-36 rounded-full bg-sky-200/50 blur-3xl lg:h-56 lg:w-56" />
-        <div className="absolute bottom-[15%] right-[22%] h-28 w-28 rounded-full bg-ocean/8 blur-3xl lg:h-44 lg:w-44" />
+      <section className="relative isolate overflow-hidden bg-[linear-gradient(180deg,#FFFEF9_0%,#F5F9FD_100%)] px-6 py-14 md:px-12 lg:min-h-[820px] lg:py-0">
+        <div className="hero-grid-texture absolute inset-0 opacity-[0.16]" />
+        <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_74%_34%,rgba(11,84,151,0.12),transparent_30%),radial-gradient(circle_at_18%_18%,rgba(95,165,222,0.10),transparent_28%)]" />
 
-        <div className="relative z-10 mx-auto flex h-full max-w-[1320px] flex-col justify-center">
-          <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
-            <div className="lg:col-span-6 lg:pr-8">
-              <div className="max-w-[540px] space-y-7 pt-8 lg:pt-0">
-                <span className="inline-flex items-center rounded-badge border border-ocean/20 bg-[#FFFEF9]/88 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-ocean shadow-[0_12px_32px_rgba(11,84,151,0.08)] backdrop-blur-sm">
-                  NEW ARRIVALS • 2026 COLLECTION
-                </span>
+        <div className="relative z-10 mx-auto grid max-w-[1320px] items-center gap-14 lg:min-h-[820px] lg:grid-cols-12 lg:gap-10">
+          {/* Fixed marketing content — left side never changes between slides */}
+          <div className="lg:col-span-6 lg:pr-8">
+            <div className="max-w-[540px] space-y-7">
+              <span className="inline-flex items-center rounded-badge border border-ocean/20 bg-[#FFFEF9]/88 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-ocean shadow-[0_12px_32px_rgba(11,84,151,0.08)]">
+                Kigali • Rwanda
+              </span>
 
-                <div className="space-y-5">
-                  <h1 className="font-clash text-[52px] font-bold leading-[0.95] tracking-[-0.04em] text-[#10233D] sm:text-[64px] lg:text-[72px]">
-                    Your Next Device
-                    <br />
-                    Starts Here.
-                  </h1>
-                  <p className="max-w-[540px] text-base leading-8 text-[#10233D]/74 sm:text-lg">
-                    Genuine smartphones, accessories, laptops and smart devices from trusted brands.
-                    Reserve online in seconds and collect in-store or request delivery anywhere in Kigali.
-                  </p>
-                </div>
+              <div className="space-y-5">
+                <h1 className="font-clash text-[44px] font-bold leading-[0.98] tracking-[-0.03em] text-[#10233D] sm:text-[56px] lg:text-[64px]">
+                  Technology That Fits
+                  <br />
+                  Your Everyday Life.
+                </h1>
+                <p className="max-w-[500px] text-base leading-8 text-[#10233D]/74 sm:text-lg">
+                  Genuine smartphones, accessories, laptops and smart devices from trusted brands —
+                  ready to order and collect in-store or delivered anywhere in Kigali.
+                </p>
+              </div>
 
-                <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 sm:max-w-[460px]">
-                  <Button variant="primary" className="w-full gap-2" onClick={() => setSelectedProduct(featuredProduct)}>
-                    <ShoppingBag className="h-4 w-4" />
-                    Order Now
-                  </Button>
-                  <Button variant="secondary" className="w-full gap-2 bg-transparent" onClick={() => {
-                    const el = document.getElementById("showroom-details");
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
-                  }}>
-                    <Phone className="h-4 w-4" />
-                    Contact Us
-                  </Button>
-                </div>
+              <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 sm:max-w-[420px]">
+                <Button variant="primary" className="w-full gap-2" onClick={scrollToProducts}>
+                  Explore Products
+                </Button>
+                <Button variant="secondary" className="w-full gap-2 bg-transparent" onClick={() => setSelectedProduct(featuredProduct)}>
+                  <ShoppingBag className="h-4 w-4" />
+                  Order Now
+                </Button>
+              </div>
+            </div>
+          </div>
 
-                <div className="hidden flex-wrap gap-3 lg:flex">
-                  {TRUST_CHIPS.map((chip) => (
-                    <span
-                      key={chip}
-                      className="rounded-full border border-ocean/10 bg-white/60 px-4 py-2 text-sm font-medium text-[#10233D]/82 shadow-[0_10px_30px_rgba(11,84,151,0.06)] backdrop-blur-sm"
-                    >
-                      {chip}
-                    </span>
+          {/* Product Spotlight carousel — fixed frame, only inner content swaps */}
+          <div className="lg:col-span-6">
+            <div className="relative mx-auto w-full max-w-[600px]">
+              <span className="mb-5 block text-center text-[11px] font-semibold uppercase tracking-[0.28em] text-ocean/55">
+                Product Spotlight
+              </span>
+
+              <div className="relative mx-auto aspect-square w-full">
+                <div className="absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.95)_0%,rgba(203,227,248,0.65)_45%,transparent_100%)]" />
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeSpotlight.id}
+                    initial={{ opacity: 0, scale: 0.94 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.94 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    className="absolute inset-[4%]"
+                  >
+                    <Image
+                      src={activeSpotlight.image}
+                      alt={activeSpotlight.category}
+                      fill
+                      priority={activeSlide === 0}
+                      loading={activeSlide === 0 ? undefined : "lazy"}
+                      sizes="(min-width: 1024px) 560px, 85vw"
+                      className="rounded-[28px] object-cover drop-shadow-[0_20px_45px_rgba(16,35,61,0.18)]"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Feature bubbles — fixed anchor points, content swaps per slide */}
+                {BUBBLE_POSITIONS.map((position, idx) => (
+                  <div key={position} className={`absolute ${position} z-10`}>
+                    <AnimatePresence mode="wait">
+                      <motion.span
+                        key={`${activeSpotlight.id}-${idx}`}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.4, delay: 0.08 * idx }}
+                        className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-ocean/10 bg-white/90 px-3 py-1.5 text-[11px] font-medium text-[#10233D] shadow-[0_10px_24px_rgba(11,84,151,0.10)]"
+                      >
+                        {(() => {
+                          const FeatureIcon = activeSpotlight.features[idx].icon;
+                          return <FeatureIcon className="h-3.5 w-3.5 shrink-0 text-accent" />;
+                        })()}
+                        {activeSpotlight.features[idx].label}
+                      </motion.span>
+                    </AnimatePresence>
+                  </div>
+                ))}
+              </div>
+
+              {/* Category label */}
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={`label-${activeSpotlight.id}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.35 }}
+                  className="mt-6 text-center font-clash text-lg font-semibold text-[#10233D]"
+                >
+                  {activeSpotlight.category}
+                </motion.p>
+              </AnimatePresence>
+
+              {/* Arrows + pagination dots */}
+              <div className="mt-5 flex items-center justify-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => goToSlide(activeSlide - 1)}
+                  aria-label="Previous product"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-ocean/15 text-ocean/60 transition-colors duration-200 hover:border-ocean/40 hover:text-ocean"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+
+                <div className="flex items-center gap-2">
+                  {SPOTLIGHT_SLIDES.map((slide, idx) => (
+                    <button
+                      key={slide.id}
+                      type="button"
+                      onClick={() => goToSlide(idx)}
+                      aria-label={`Go to ${slide.category} slide`}
+                      className={idx === activeSlide ? "h-2 w-7 rounded-full bg-ocean transition-all duration-300" : "h-2 w-2 rounded-full bg-ocean/20 transition-all duration-300"}
+                    />
                   ))}
                 </div>
-              </div>
-            </div>
 
-            <div className="lg:col-span-6">
-              <div className="relative mx-auto aspect-[1.02/1] w-full max-w-[640px] animate-fade-rise">
-                <div className="animate-pulse-glow absolute left-1/2 top-1/2 h-[68%] w-[68%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.98)_0%,rgba(203,227,248,0.78)_34%,rgba(11,84,151,0.10)_68%,transparent_100%)] blur-2xl" />
-                <div className="absolute inset-[8%] rounded-[40px] border border-white/60 bg-white/18 shadow-[0_24px_80px_rgba(11,84,151,0.10)] backdrop-blur-[6px]" />
-
-                {HERO_SHOWCASE.map((device, index) => (
-                  <motion.div
-                    key={device.name}
-                    animate={device.animation}
-                    transition={{ duration: device.duration, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-                    className={`absolute ${device.className}`}
-                    style={{ zIndex: device.type === "laptop" ? 1 : 2 + index }}
-                  >
-                    <div className="overflow-hidden rounded-[26px] border border-white/60 bg-white/85 p-2 shadow-[0_24px_70px_rgba(16,35,61,0.18)] backdrop-blur-sm">
-                      <img
-                        src={device.image}
-                        alt={device.name}
-                        className={`h-full w-full object-cover ${device.type === "laptop" ? "aspect-[1.32/1]" : "aspect-[0.75/1]"}`}
-                      />
-                    </div>
-                  </motion.div>
-                ))}
-
-                {FLOATING_CARDS.map((card, index) => (
-                  <motion.div
-                    key={card.body}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.18 * index, duration: 0.65, ease: "easeOut" }}
-                    className={`absolute ${card.className} rounded-[22px] border border-white/60 bg-white/55 px-4 py-3 shadow-[0_18px_40px_rgba(16,35,61,0.12)] backdrop-blur-md`}
-                  >
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-ocean/72">
-                      {card.title}
-                    </p>
-                    <p className="mt-2 text-sm font-semibold text-[#10233D] sm:text-[15px]">{card.body}</p>
-                    <p className="mt-1 text-xs text-[#10233D]/62">{card.meta}</p>
-                  </motion.div>
-                ))}
+                <button
+                  type="button"
+                  onClick={() => goToSlide(activeSlide + 1)}
+                  aria-label="Next product"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-ocean/15 text-ocean/60 transition-colors duration-200 hover:border-ocean/40 hover:text-ocean"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="mt-8 flex flex-wrap gap-3 lg:hidden">
-            {TRUST_CHIPS.map((chip) => (
-              <span
-                key={chip}
-                className="rounded-full border border-ocean/10 bg-white/60 px-4 py-2 text-sm font-medium text-[#10233D]/82 shadow-[0_10px_30px_rgba(11,84,151,0.06)] backdrop-blur-sm"
+      <section id="why-galaxy-hub" className="bg-[#FFFEF9] px-6 py-24 md:px-12">
+        <div className="mx-auto max-w-[1320px]">
+          <div className="max-w-2xl space-y-4">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.24em] text-accent">
+              WHY GALAXY HUB
+            </span>
+            <h2 className="font-clash text-3xl font-bold leading-tight text-[#10233D] sm:text-4xl lg:text-[44px]">
+              A Showroom Built on Trust
+            </h2>
+            <p className="text-sm leading-relaxed text-ocean/70 sm:text-base">
+              From genuine hardware to nationwide delivery, every part of the Galaxy Hub experience is
+              designed around one thing: giving you total confidence in what you buy.
+            </p>
+          </div>
+
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {WHY_GALAXY_HUB.map((item) => (
+              <div
+                key={item.title}
+                className="group overflow-hidden rounded-[28px] border border-black/8 bg-white shadow-[0_12px_32px_rgba(16,35,61,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_rgba(16,35,61,0.12)]"
               >
-                {chip}
-              </span>
+                <div className="relative aspect-[4/3] w-full overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(min-width: 1024px) 620px, 90vw"
+                    loading="lazy"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="space-y-2 p-7">
+                  <h3 className="font-clash text-xl font-bold text-[#10233D]">{item.title}</h3>
+                  <p className="text-sm leading-6 text-ocean/70">{item.description}</p>
+                </div>
+              </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <button
-            type="button"
-            onClick={scrollToProducts}
-            className="mx-auto mt-12 hidden flex-col items-center gap-3 text-center text-[11px] font-semibold uppercase tracking-[0.28em] text-ocean/58 lg:flex"
-          >
-            <span>Scroll to Explore</span>
-            <span className="relative h-14 w-px overflow-hidden rounded-full bg-ocean/12">
-              <span className="animate-scroll-line absolute inset-x-0 top-0 h-5 rounded-full bg-ocean/55" />
-            </span>
-          </button>
+      <section id="categories" className="relative overflow-hidden bg-[#FFFEF9] px-6 py-24 md:px-12">
+        <div className="absolute -right-32 -top-32 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(11,84,151,0.10)_0%,transparent_70%)]" />
+
+        <div className="relative mx-auto max-w-[1320px]">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl space-y-4">
+              <span className="block text-[10px] font-bold uppercase tracking-[0.24em] text-accent">
+                SHOP BY CATEGORY
+              </span>
+              <h2 className="font-clash text-3xl font-bold leading-tight text-[#10233D] sm:text-4xl lg:text-[44px]">
+                Everything You Need, All in One Place
+              </h2>
+              <p className="text-sm leading-relaxed text-ocean/70 sm:text-base">
+                Browse Galaxy Hub&apos;s full range of genuine technology products, from everyday
+                essentials to premium devices, all available with delivery across Rwanda.
+              </p>
+            </div>
+
+            <Link
+              href="#products"
+              className="group inline-flex shrink-0 items-center gap-1.5 self-start text-sm font-semibold text-ocean transition-colors duration-200 hover:text-accent sm:self-auto"
+            >
+              View All Categories
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </div>
+
+          <div className="mt-12 grid grid-cols-2 gap-5 sm:gap-6 lg:grid-cols-4">
+            {CATEGORIES.map((category) => (
+              <Link
+                key={category.name}
+                href="#products"
+                className="group block overflow-hidden rounded-[24px] border border-black/8 bg-white shadow-[0_10px_28px_rgba(16,35,61,0.06)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_rgba(16,35,61,0.14)]"
+              >
+                <div className="relative aspect-[4/5] w-full overflow-hidden">
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    fill
+                    loading="lazy"
+                    sizes="(min-width: 1024px) 300px, 45vw"
+                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                  />
+                </div>
+
+                <div className="p-4 sm:p-5">
+                  <h3 className="font-clash text-base font-bold text-[#10233D] transition-colors duration-300 group-hover:text-ocean sm:text-lg">
+                    {category.name}
+                  </h3>
+                  <p className="mt-1 line-clamp-1 text-xs text-ocean/60 sm:text-sm">
+                    {category.description}
+                  </p>
+                  <div className="mt-3 flex items-center justify-between text-xs text-ocean/50">
+                    <span>{category.count} products</span>
+                    <span className="inline-flex items-center gap-1 font-semibold text-accent">
+                      Explore
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -387,13 +674,13 @@ export default function ShowroomHome() {
       <section id="products" className="mx-auto max-w-[1320px] space-y-12 px-6 py-24 md:px-12">
         <div className="max-w-2xl space-y-4">
           <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
-            THE SHOWROOM COLLECTION
+            FEATURED PRODUCTS
           </span>
-          <h2 className="font-sora text-3xl font-extrabold leading-tight text-ocean sm:text-4xl">
-            Featured Products
+          <h2 className="font-clash text-3xl font-bold leading-tight text-[#10233D] sm:text-4xl lg:text-[44px]">
+            Discover Our Latest Collection
           </h2>
           <p className="text-sm leading-relaxed text-ocean/70 sm:text-base">
-            Discover this week’s most popular smartphones and accessories, carefully selected for performance, reliability, and value.
+            Explore the newest smartphones, laptops, and smart accessories available in Rwanda — all genuine, all ready to order.
           </p>
         </div>
 
@@ -464,7 +751,7 @@ export default function ShowroomHome() {
         </div>
 
         {displayedProducts.length > 0 ? (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {displayedProducts.map((product) => (
               <ProductCard
                 key={product.id}

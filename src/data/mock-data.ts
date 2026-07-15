@@ -10,6 +10,8 @@ export interface Product {
   image: string;
   featured: boolean;
   specifications: Record<string, string>;
+  priceOnRequest?: boolean;
+  availability?: "In Stock" | "Limited Stock" | "Out of Stock";
 }
 
 export interface Review {
