@@ -62,13 +62,13 @@ export function Footer() {
           <div className="col-span-2 space-y-5 xl:col-span-1">
             <Link href="/" className="inline-flex items-center gap-3 text-white">
               <img
-                src="/g-hub%20logo.png"
+                src="/g-hub%20logo ii.png"
                 alt="Galaxy Hub"
                 width={40}
                 height={40}
                 className="h-10 w-auto object-contain"
               />
-              <span className="font-clash text-xl font-bold tracking-tight">Galaxy Hub</span>
+              
             </Link>
             <p className="text-sm leading-[1.8] text-white/65 font-manrope max-w-sm">
               Galaxy Hub is a trusted gadget store in Kigali, Rwanda, offering genuine smartphones, laptops, accessories, creator gear, and nationwide delivery.
