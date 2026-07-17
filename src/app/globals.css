@@ -1,15 +1,15 @@
-@import url("https://api.fontshare.com/v2/css?f[]=clash-display@700,600&display=swap");
+/* ── Import Manrope directly or via Next.js variable ───────────────────── */
 @import "tailwindcss";
 
 @theme {
   /* ── Body font: Manrope via next/font/google ── */
   --font-sans: var(--font-manrope), "Manrope", sans-serif;
 
-  /* ── Display / heading font: IBM Plex Sans ── */
-  --font-clash: var(--font-ibm-plex), "IBM Plex Sans", sans-serif;
+  /* ── Display / heading font: Manrope ── */
+  --font-clash: var(--font-manrope), "Manrope", sans-serif;
 
-  /* ── Price / mono-style display ── */
-  --font-space: var(--font-ibm-plex), "IBM Plex Sans", sans-serif;
+  /* ── Price / mono-style display: Manrope ── */
+  --font-space: var(--font-manrope), "Manrope", sans-serif;
 
   /* ── Premium palette: Ivory & Ocean ── */
   --color-ivory:       #faf9f6;
@@ -32,36 +32,68 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Typography utility classes ───────────────────────────────── */
+/* ── Typography utility classes ─────────────────────────────────────────── */
 
-/* Headings: IBM Plex Sans */
+/* Headings: Manrope (Bold/Extra Bold) */
 .font-clash,
+.font-clash-display,
 .font-cabinet,
-.font-sora {                          /* keep existing aliases so current JSX keeps working */
-  font-family: var(--font-clash);
-  font-weight: 700;
+.font-sora {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
-/* Body: Manrope (default via --font-sans) */
+/* Body: Manrope */
 .font-manrope {
   font-family: var(--font-sans);
 }
 
-/* Prices / labels */
+/* Prices / labels: Manrope */
 .font-space {
-  font-family: "Cabinet Grotesk", sans-serif;
+  font-family: var(--font-sans);
 }
 
-/* Scoped Clash Display — used only for the navbar wordmark, independent of the
-   site-wide heading font (.font-clash), which is intentionally IBM Plex Sans. */
-.font-clash-display {
-  font-family: "Clash Display", sans-serif;
-  font-weight: 700;
+/* ── Hide scrollbar utility ─────────────────────────────────────────────── */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-/* ── Glass effect ─────────────────────────────────────────────── */
+/* ── One-shot entrance animations (not infinite) ────────────────────────── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fade-rise {
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in  { animation: fade-in  0.5s ease-out both; }
+.animate-fade-rise { animation: fade-rise 0.7s ease-out both; }
+.animate-slide-up  { animation: slide-up  0.6s ease-out both; }
+.animate-scale-in  { animation: scale-in  0.4s ease-out both; }
+
+/* ── Glass effect (used sparingly) ─────────────────────────────────────── */
 .glass-panel {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(16px);
@@ -76,63 +108,48 @@ body {
   border: 1px solid rgba(11, 84, 151, 0.08);
 }
 
-/* ── Floating animation ───────────────────────────────────────── */
-@keyframes float {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50% { transform: translate3d(0, -8px, 0); }
-}
-
-@keyframes hero-drift {
-  0%, 100% { transform: translate3d(0, 0, 0); }
-  50% { transform: translate3d(0, -6px, 0); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.6; transform: scale(0.98); }
-  50% { opacity: 1; transform: scale(1.04); }
-}
-
-@keyframes scroll-line {
-  0%, 100% { transform: translateY(0); opacity: 0.45; }
-  50% { transform: translateY(10px); opacity: 1; }
-}
-
-@keyframes fade-rise {
-  from { opacity: 0; transform: translate3d(0, 12px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-hero-drift {
-  animation: hero-drift 6.5s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 7s ease-in-out infinite;
-}
-
-.animate-scroll-line {
-  animation: scroll-line 2.2s ease-in-out infinite;
-}
-
-.animate-fade-rise {
-  animation: fade-rise 0.8s ease-out both;
-}
-
-/* ── Decorative surfaces ─────────────────────────────────────── */
+/* ── Subtle grid texture for hero ──────────────────────────────────────── */
 .hero-grid-texture {
   background-image:
-    linear-gradient(rgba(11, 84, 151, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(11, 84, 151, 0.045) 1px, transparent 1px);
+    linear-gradient(rgba(11, 84, 151, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 84, 151, 0.04) 1px, transparent 1px);
   background-size: 72px 72px;
 }
 
-/* ── Border radius tokens ─────────────────────────────────────── */
-.rounded-card   { border-radius: 24px;   }
-.rounded-btn    { border-radius: 999px;  }
-.rounded-img    { border-radius: 28px;   }
-.rounded-input  { border-radius: 18px;   }
-.rounded-badge  { border-radius: 999px;  }
+/* ── Border radius tokens ───────────────────────────────────────────────── */
+.rounded-card   { border-radius: 24px;  }
+.rounded-btn    { border-radius: 999px; }
+.rounded-img    { border-radius: 28px;  }
+.rounded-input  { border-radius: 18px;  }
+.rounded-badge  { border-radius: 999px; }
+
+/* ── Safe-area utilities for mobile ────────────────────────────────────── */
+.safe-top    { padding-top:    env(safe-area-inset-top);    }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+/* ── Touch target enforcement ───────────────────────────────────────────── */
+.touch-target {
+  min-height: 44px;
+  min-width:  44px;
+}
+
+/* ── Product image mix-blend ────────────────────────────────────────────── */
+.product-img-blend {
+  mix-blend-mode: multiply;
+}
+
+/* ── Section label micro-style ──────────────────────────────────────────── */
+.section-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-family: var(--font-sans);
+}
+
+/* ── Smooth image reveal on load ────────────────────────────────────────── */
+img {
+  display: block;
+}
