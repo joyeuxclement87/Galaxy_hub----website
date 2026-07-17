@@ -1,508 +1,478 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Search, Menu, X, ArrowRight, ChevronDown,
-  Smartphone, Zap, Watch, Gamepad2, ShoppingBag,
-} from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
+import { Heart, Menu, Search, ShoppingBag, ShoppingCart, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PRODUCTS } from "@/data/mock-data";
+import { useApp } from "@/context/AppContext";
 
 interface NavbarProps {
   onSearchFocus?: () => void;
+  wishlistCount?: number;
+  cartCount?: number;
 }
 
-// ─── Mega Menu Categories ─────────────────────────────────────────────────────
-const MEGA_CATEGORIES = [
-  {
-    label: "Phones",
-    icon: Smartphone,
-    items: [
-      { name: "Apple",        sub: "iPhone 15 series & beyond.",    id: "iphone-15-pro" },
-      { name: "Samsung",      sub: "Galaxy flagship lineup.",        id: "s24-ultra"     },
-      { name: "Google Pixel", sub: "Pure Android, powerful AI.",     id: "pixel-8-pro"   },
-      { name: "Nothing",      sub: "Transparent design, clean OS.",  id: "nothing"       },
-      { name: "OnePlus",      sub: "Speed, never settle.",           id: "oneplus"       },
-    ],
-  },
-  {
-    label: "Accessories",
-    icon: Zap,
-    items: [
-      { name: "Chargers",          sub: "Fast & wireless charging.",  id: "chargers"          },
-      { name: "Cases",             sub: "Protection meets style.",    id: "cases"             },
-      { name: "Power Banks",       sub: "Always stay powered up.",    id: "power-banks"       },
-      { name: "Screen Protectors", sub: "Tempered glass & film.",     id: "screen-protectors" },
-    ],
-  },
-  {
-    label: "Wearables",
-    icon: Watch,
-    items: [
-      { name: "Smart Watches", sub: "Track health, stay connected.", id: "smart-watches" },
-      { name: "Earbuds",       sub: "True wireless, pro sound.",     id: "earbuds"       },
-      { name: "Speakers",      sub: "Room-filling portable audio.",  id: "speakers"      },
-    ],
-  },
-  {
-    label: "Gaming",
-    icon: Gamepad2,
-    items: [
-      { name: "Controllers",        sub: "Precision gaming controls.", id: "controllers"        },
-      { name: "Gaming Phones",      sub: "High-refresh, low latency.", id: "gaming-phones"      },
-      { name: "Gaming Accessories", sub: "Cooling, grips & more.",     id: "gaming-accessories" },
-    ],
-  },
-];
-
-const featuredProduct = PRODUCTS.find((p) => p.featured) || PRODUCTS[0];
-
 const NAV_LINKS = [
-  { label: "Brands",  href: "#brands"           },
-  { label: "Deals",   href: "#reviews"          },
-  { label: "About",   href: "#showroom-details" },
-  { label: "Contact", href: "#showroom-details" },
+  { label: "Products", id: "products" },
+  { label: "Brands", id: "brands" },
+  { label: "Deals", id: "deals" },
 ];
 
-// ─── Social link data with inline SVGs for WhatsApp & Telegram ───────────────
-const SOCIAL_LINKS = [
-  {
-    label: "Instagram",
-    href: "https://instagram.com",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-        <circle cx="12" cy="12" r="4" />
-        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
-      </svg>
-    ),
-  },
-  {
-    label: "Facebook",
-    href: "https://facebook.com",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-      </svg>
-    ),
-  },
-  {
-    label: "WhatsApp",
-    href: "https://wa.me/250788123456",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Telegram",
-    href: "https://t.me/galaxyhub",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
-      </svg>
-    ),
-  },
-];
-
-// ─── Wordmark ─────────────────────────────────────────────────────────────────
-function Wordmark({ size = "lg" }: { size?: "sm" | "lg" }) {
+// ─── Wordmark ───────────────────────────────────────────────────────────────
+function Wordmark({ compact = false }: { compact?: boolean }) {
   return (
-    <Link href="/" className="group shrink-0">
-      <Image
-        src="/g-hub logo.png"
-        alt="Galaxy Hub logo"
-        width={220}
-        height={72}
-        priority
+    <Link href="/" className="group flex shrink-0 flex-col items-start leading-none transition-all duration-300">
+      <span className="flex items-center gap-1.5 md:gap-2">
+        <span
+          className={cn(
+            "inline-flex items-center justify-center rounded-full bg-ocean text-ivory shadow-sm transition-all duration-300 group-hover:scale-105",
+            compact ? "h-7.5 w-7.5 text-xs" : "h-8.5 w-8.5 text-sm"
+          )}
+        >
+          <span className="font-clash-display">G</span>
+        </span>
+        <span
+          className={cn(
+            "font-clash-display tracking-tight text-ocean transition-all duration-300",
+            compact ? "text-base" : "text-[19px]"
+          )}
+        >
+          Galaxy<span className="text-accent">Hub</span>
+        </span>
+      </span>
+      <span
         className={cn(
-          "h-auto w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]",
-          size === "sm" ? "max-h-8 max-w-[120px]" : "max-h-10 max-w-[150px]"
+          "font-sans text-[8.5px] font-semibold uppercase tracking-[0.18em] text-ocean/45 transition-all duration-300",
+          compact ? "h-0 opacity-0 overflow-hidden" : "h-auto opacity-100 mt-1 ml-10"
         )}
-      />
+      >
+        Kigali • Rwanda
+      </span>
     </Link>
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
-export function Navbar({ onSearchFocus }: NavbarProps) {
-  const [scrolled,    setScrolled]   = useState(false);
-  const [megaOpen,    setMegaOpen]   = useState(false);
-  const [drawerOpen,  setDrawerOpen] = useState(false);
-  const megaTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+// ─── Icon button with animated counter badge ───────────────────────────────
+function IconLink({
+  label,
+  icon,
+  count,
+  onClick,
+  href,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  count?: number;
+  onClick?: (e: React.MouseEvent) => void;
+  href?: string;
+}) {
+  const content = (
+    <span className="relative inline-flex h-9.5 w-9.5 items-center justify-center rounded-full text-ocean transition-all duration-300 hover:bg-ocean/6 hover:scale-[1.04] active:scale-[0.96] cursor-pointer">
+      {icon}
+      <AnimatePresence mode="popLayout">
+        {!!count && count > 0 && (
+          <motion.span
+            key={count}
+            initial={{ scale: 0.4, opacity: 0, y: 3 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.4, opacity: 0, y: -3 }}
+            transition={{ type: "spring", stiffness: 600, damping: 14 }}
+            className="absolute -right-0.5 -top-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[9px] font-bold text-ivory shadow-[0_2px_6px_rgba(15,112,201,0.35)]"
+          >
+            {count}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </span>
+  );
 
+  if (href) {
+    return (
+      <Link href={href} onClick={onClick} aria-label={label} className="cursor-pointer">
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button type="button" onClick={onClick} aria-label={label} className="cursor-pointer">
+      {content}
+    </button>
+  );
+}
+
+// ─── Main Component ─────────────────────────────────────────────────────────
+export function Navbar({ onSearchFocus, wishlistCount: propWishlistCount, cartCount: propCartCount }: NavbarProps) {
+  const {
+    wishlist,
+    cart,
+    searchQuery,
+    setSearchQuery,
+    selectedCategory,
+    setSelectedCategory,
+    setSelectedBrand,
+    showDealsOnly,
+    setShowDealsOnly,
+  } = useApp();
+
+  const finalWishlistCount = propWishlistCount !== undefined ? propWishlistCount : wishlist.length;
+  const finalCartCount = propCartCount !== undefined ? propCartCount : cart.length;
+
+  const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  // Scroll detection
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 32);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Body overflow locking when menus open
   useEffect(() => {
-    document.body.style.overflow = drawerOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [drawerOpen]);
+    document.body.style.overflow = searchOpen || mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [searchOpen, mobileOpen]);
 
-  const openMega  = () => { if (megaTimer.current) clearTimeout(megaTimer.current); setMegaOpen(true); };
-  const closeMega = () => { megaTimer.current = setTimeout(() => setMegaOpen(false), 120); };
+  // Focus search input
+  useEffect(() => {
+    if (searchOpen) {
+      const t = setTimeout(() => searchInputRef.current?.focus(), 150);
+      return () => clearTimeout(t);
+    }
+  }, [searchOpen]);
+
+  // Keyboard listener for Escape key to close search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [searchOpen]);
+
+  // Scroll Spy Observer
+  useEffect(() => {
+    if (pathname !== "/") return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "-25% 0px -55% 0px",
+      threshold: 0.1,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, observerOptions);
+
+    const productsEl = document.getElementById("products");
+    const brandsEl = document.getElementById("brands");
+
+    if (productsEl) observer.observe(productsEl);
+    if (brandsEl) observer.observe(brandsEl);
+
+    return () => {
+      if (productsEl) observer.unobserve(productsEl);
+      if (brandsEl) observer.unobserve(brandsEl);
+    };
+  }, [pathname]);
+
+  const openSearch = () => {
+    setSearchOpen(true);
+    onSearchFocus?.();
+  };
+
+  const handleNavLinkClick = (e: React.MouseEvent, id: string) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      
+      if (id === "deals") {
+        setShowDealsOnly(true);
+        setSelectedCategory("All");
+        setSelectedBrand("All");
+      } else if (id === "products") {
+        setShowDealsOnly(false);
+      }
+
+      const targetEl = document.getElementById(id === "deals" ? "products" : id);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
+
+  const handleSuggestedSearch = (query: string) => {
+    setSearchQuery(query);
+    setSearchOpen(false);
+    
+    if (pathname === "/") {
+      const productsEl = document.getElementById("products");
+      if (productsEl) {
+        productsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    } else {
+      router.push("/#products");
+    }
+  };
+
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (pathname === "/") {
+      setSelectedCategory(selectedCategory === "Wishlist" ? "All" : "Wishlist");
+      setShowDealsOnly(false);
+      const el = document.getElementById("products");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      router.push("/#products");
+      // Once on landing page, a hash listener will handle toggling context state if required
+    }
+  };
 
   return (
     <>
-      {/* ══════════════════════════════════════════════════════════════════════
-          MOBILE FLOATING PILL  (visible < lg, hidden on lg+)
-      ══════════════════════════════════════════════════════════════════════ */}
-      <div
-        className={cn(
-          "fixed top-0 left-0 right-0 z-50 lg:hidden flex justify-center pointer-events-none transition-all duration-500",
-          scrolled ? "pt-3" : "pt-5"
-        )}
-      >
-        <div
+      {/* ── Floating pill navigation ────────────────────────────────────── */}
+      <div className="fixed inset-x-0 top-5 z-50 flex justify-center px-4 md:px-6">
+        <header
           className={cn(
-            "pointer-events-auto w-full mx-4 flex items-center justify-between px-5 transition-all duration-500 border border-white/40 rounded-[999px]",
-            scrolled
-              ? "h-[56px] bg-white/80 backdrop-blur-2xl shadow-[0_16px_48px_rgba(11,84,151,0.14)]"
-              : "h-[64px] bg-white/55 backdrop-blur-[16px] shadow-[0_20px_60px_rgba(11,84,151,0.07)]"
+            "pointer-events-auto flex w-full max-w-[1320px] items-center justify-between rounded-[999px] border border-ocean/10 bg-ivory/75 shadow-[0_12px_32px_rgba(11,84,151,0.06)] backdrop-blur-xl transition-all duration-300",
+            scrolled ? "h-[58px] px-5" : "h-[72px] px-6"
           )}
         >
-          {/* Logo */}
-          <Wordmark size="sm" />
+          {/* Left: wordmark */}
+          <Wordmark compact={scrolled} />
 
-          {/* Right actions */}
-          <div className="flex items-center gap-1">
-            <button
-              onClick={onSearchFocus}
-              aria-label="Search"
-              className="p-2.5 rounded-full text-[#0B5497] hover:bg-[#0B5497]/6 transition-all duration-200 cursor-pointer"
-            >
-              <Search className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setDrawerOpen(true)}
-              aria-label="Open menu"
-              className="p-2.5 rounded-full text-[#0B5497] hover:bg-[#0B5497]/6 transition-all duration-200 cursor-pointer"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-      </div>
+          {/* Center: nav links */}
+          <nav className="hidden items-center gap-8 lg:flex">
+            {NAV_LINKS.map((link) => {
+              const isActive =
+                link.id === "deals"
+                  ? showDealsOnly && pathname === "/"
+                  : link.id === "products"
+                  ? activeSection === "products" && !showDealsOnly && selectedCategory !== "Wishlist" && pathname === "/"
+                  : link.id === "brands"
+                  ? activeSection === "brands" && pathname === "/"
+                  : false;
 
-      {/* ══════════════════════════════════════════════════════════════════════
-          DESKTOP FLOATING PILL HEADER  (hidden < lg, visible on lg+)
-      ══════════════════════════════════════════════════════════════════════ */}
-      <header
-        className={cn(
-          "fixed top-0 left-0 right-0 z-50 hidden lg:flex justify-center pointer-events-none transition-all duration-500",
-          scrolled ? "pt-3" : "pt-6"
-        )}
-      >
-        <div
-          className={cn(
-            "pointer-events-auto w-full mx-8 max-w-[1320px] flex items-center justify-between px-8 transition-all duration-500 border border-white/40 rounded-[999px]",
-            scrolled
-              ? "h-[60px] bg-white/80 backdrop-blur-2xl shadow-[0_16px_48px_rgba(11,84,151,0.14)]"
-              : "h-[72px] bg-white/55 backdrop-blur-[16px] shadow-[0_20px_60px_rgba(11,84,151,0.07)]"
-          )}
-        >
-          {/* Wordmark */}
-          <Wordmark />
-
-          {/* Centered nav */}
-          <nav className="flex items-center gap-6 h-full absolute left-1/2 -translate-x-1/2">
-            {/* Products with mega menu */}
-            <div
-              className="relative h-full flex items-center"
-              onMouseEnter={openMega}
-              onMouseLeave={closeMega}
-            >
-              <button
-                className={cn(
-                  "flex items-center gap-1 text-sm font-semibold transition-colors duration-200 cursor-pointer",
-                  megaOpen ? "text-[#0f70c9]" : "text-[#0B5497] hover:text-[#0f70c9]"
-                )}
-                aria-haspopup="true"
-                aria-expanded={megaOpen}
-              >
-                Products
-                <ChevronDown className={cn("w-3.5 h-3.5 transition-transform duration-200", megaOpen && "rotate-180")} />
-              </button>
-
-              {/* ── Mega Menu ──────────────────────────────────────────────── */}
-              <AnimatePresence>
-                {megaOpen && (
-                  <motion.div
-                    onMouseEnter={openMega}
-                    onMouseLeave={closeMega}
-                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0,  scale: 1     }}
-                    exit={{   opacity: 0, y: 10, scale: 0.98   }}
-                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute top-full left-1/2 -translate-x-[38%] mt-4 w-[1040px] bg-white/96 backdrop-blur-2xl border border-black/6 rounded-[24px] shadow-[0_30px_80px_rgba(11,84,151,0.18)] overflow-hidden"
-                    style={{ transformOrigin: "top center" }}
-                  >
-                    <div className="grid grid-cols-12 gap-0">
-                      {/* Left: 4 category columns */}
-                      <div className="col-span-8 p-8 grid grid-cols-4 gap-6 border-r border-black/5">
-                        {MEGA_CATEGORIES.map((cat) => {
-                          const Icon = cat.icon;
-                          return (
-                            <div key={cat.label} className="space-y-5">
-                              <div className="flex items-center gap-2">
-                                <span className="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-[#e6f0fa] text-[#0B5497]">
-                                  <Icon className="w-3.5 h-3.5" />
-                                </span>
-                                <span className="font-cabinet text-[10px] font-bold uppercase tracking-[0.12em] text-[#0B5497]/50">
-                                  {cat.label}
-                                </span>
-                              </div>
-                              <ul className="space-y-4">
-                                {cat.items.map((item) => (
-                                  <li key={item.id}>
-                                    <Link
-                                      href="#products"
-                                      onClick={() => setMegaOpen(false)}
-                                      className="group/item block"
-                                    >
-                                      <p className="text-sm font-semibold text-[#0B5497] group-hover/item:text-[#0f70c9] transition-colors leading-none">
-                                        {item.name}
-                                      </p>
-                                      <p className="text-[11px] text-[#0B5497]/50 mt-1 group-hover/item:text-[#0f70c9]/60 transition-colors">
-                                        {item.sub}
-                                      </p>
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      {/* Right: Featured card */}
-                      <div className="col-span-4 p-6 bg-[#e6f0fa]/40 flex flex-col justify-between gap-6">
-                        <div className="space-y-3">
-                          <span className="inline-block bg-[#0B5497]/10 text-[#0B5497] text-[9px] font-bold tracking-[0.15em] uppercase rounded-full px-3 py-1">
-                            Featured This Week
-                          </span>
-                          <div className="w-full h-36 flex items-center justify-center">
-                            <img
-                              src={featuredProduct.image}
-                              alt={featuredProduct.title}
-                              className="h-32 object-contain drop-shadow-[0_12px_20px_rgba(0,0,0,0.14)]"
-                            />
-                          </div>
-                          <div>
-                            <h4 className="font-cabinet text-sm font-bold text-[#0B5497] leading-snug">
-                              {featuredProduct.title}
-                            </h4>
-                            <p className="text-[11px] text-[#0B5497]/60 mt-0.5 line-clamp-2">
-                              {featuredProduct.tagline}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="font-cabinet text-xs font-bold text-[#0f70c9]">
-                            {featuredProduct.currency}{" "}
-                            {new Intl.NumberFormat("en-US").format(featuredProduct.price)}
-                          </span>
-                          <Link
-                            href="#products"
-                            onClick={() => setMegaOpen(false)}
-                            className="inline-flex items-center gap-1 text-xs font-bold text-[#0B5497] hover:text-[#0f70c9] transition-colors group/cta"
-                          >
-                            Explore
-                            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/cta:translate-x-0.5" />
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Bottom strip */}
-                    <div className="border-t border-black/5 px-8 py-3 flex items-center justify-between bg-white/60">
-                      <span className="text-[11px] text-[#0B5497]/50">
-                        Authorized reseller · All stock verified & genuine
-                      </span>
-                      <Link
-                        href="#products"
-                        onClick={() => setMegaOpen(false)}
-                        className="text-[11px] font-bold text-[#0B5497] hover:text-[#0f70c9] transition-colors flex items-center gap-1"
-                      >
-                        View all products <ArrowRight className="w-3 h-3" />
-                      </Link>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Other nav links */}
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="text-sm font-semibold text-[#0B5497] hover:text-[#0f70c9] transition-colors duration-200"
-              >
-                {link.label}
-              </Link>
-            ))}
+              return (
+                <Link
+                  key={link.id}
+                  href={pathname === "/" ? `#${link.id === "deals" ? "products" : link.id}` : `/#${link.id === "deals" ? "products" : link.id}`}
+                  onClick={(e) => handleNavLinkClick(e, link.id)}
+                  className={cn(
+                    "relative py-1.5 font-sans text-sm font-medium tracking-wide transition-colors duration-300",
+                    isActive ? "text-ocean" : "text-ocean/60 hover:text-ocean"
+                  )}
+                >
+                  {link.label}
+                  {isActive && (
+                    <motion.span
+                      layoutId="activeUnderline"
+                      className="absolute inset-x-0 -bottom-1 h-[2px] rounded-full bg-ocean"
+                      transition={{ type: "spring", stiffness: 380, damping: 28 }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
-          {/* Right actions */}
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={onSearchFocus}
-              aria-label="Search"
-              className="p-2.5 rounded-full text-[#0B5497] hover:bg-[#0B5497]/6 transition-all duration-200 cursor-pointer"
-            >
-              <Search className="w-4.5 h-4.5" />
-            </button>
+          {/* Right: actions */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            <IconLink label="Search" icon={<Search className="h-[18px] w-[18px]" />} onClick={openSearch} />
+            <IconLink
+              label="Wishlist"
+              icon={<Heart className="h-[18px] w-[18px]" />}
+              count={finalWishlistCount}
+              onClick={handleWishlistClick}
+            />
+            <IconLink
+              href="/order"
+              label="Cart"
+              icon={<ShoppingCart className="h-[18px] w-[18px]" />}
+              count={finalCartCount}
+            />
 
-            {/* Boutique status */}
-            <div className="hidden xl:flex items-center gap-1.5 bg-emerald-50 border border-emerald-100 text-emerald-700 text-[11px] font-semibold rounded-full px-3 py-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Kigali · Open Now
-            </div>
-
-            {/* Order Now */}
             <Link
               href="/order"
-              className="inline-flex items-center gap-2 justify-center font-semibold text-sm text-[#FFFEF9] bg-[#0B5497] rounded-full px-6 py-2.5 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(11,84,151,0.28)] active:translate-y-0 active:shadow-none transition-all duration-300 cursor-pointer"
+              className="ml-1 hidden items-center gap-2 rounded-full bg-ocean px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-ivory transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(11,84,151,0.22)] active:translate-y-0 sm:inline-flex"
             >
-              <ShoppingBag className="w-4 h-4" />
+              <ShoppingBag className="h-3.5 w-3.5" />
               Order Now
             </Link>
-          </div>
-        </div>
-      </header>
 
-      {/* ══════════════════════════════════════════════════════════════════════
-          MOBILE DRAWER — full-screen panel, slides from right
-      ══════════════════════════════════════════════════════════════════════ */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open menu"
+              className="inline-flex h-9.5 w-9.5 items-center justify-center rounded-full text-ocean transition-colors duration-200 hover:bg-ocean/6 lg:hidden cursor-pointer"
+            >
+              <Menu className="h-[18px] w-[18px]" />
+            </button>
+          </div>
+        </header>
+      </div>
+
+      {/* ── Mobile menu ──────────────────────────────────────────────────── */}
       <AnimatePresence>
-        {drawerOpen && (
+        {mobileOpen && (
           <>
-            {/* Blurred overlay */}
             <motion.div
-              key="overlay"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              onClick={() => setDrawerOpen(false)}
-              className="fixed inset-0 z-[60] bg-[#0B5497]/20 backdrop-blur-[6px]"
+              onClick={() => setMobileOpen(false)}
+              className="fixed inset-0 z-[60] bg-[#0b1b2e]/45 backdrop-blur-sm lg:hidden"
             />
-
-            {/* Drawer panel */}
-            <motion.aside
-              key="drawer"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 260 }}
-              className="fixed top-0 right-0 bottom-0 z-[70] w-full max-w-[340px] bg-[#FFFEF9] flex flex-col shadow-[0_0_80px_rgba(11,84,151,0.22)]"
+            <motion.div
+              initial={{ opacity: 0, y: -12, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -12, scale: 0.98 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="fixed inset-x-4 top-24 z-[61] rounded-[28px] border border-ocean/10 bg-ivory/95 p-6 shadow-[0_24px_60px_rgba(11,84,151,0.18)] backdrop-blur-xl lg:hidden"
             >
-              {/* ── Header ─────────────────────────────────────────────────── */}
-              <div className="flex items-center justify-between px-7 pt-6 pb-5 border-b border-[#0B5497]/8">
-                <Wordmark size="sm" />
+              <div className="mb-5 flex items-center justify-between">
+                <Wordmark />
                 <button
-                  onClick={() => setDrawerOpen(false)}
-                  className="p-2 rounded-full hover:bg-[#0B5497]/6 text-[#0B5497] transition-all duration-200"
+                  type="button"
+                  onClick={() => setMobileOpen(false)}
                   aria-label="Close menu"
+                  className="inline-flex h-9.5 w-9.5 items-center justify-center rounded-full text-ocean/60 hover:bg-ocean/6 cursor-pointer"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="h-[18px] w-[18px]" />
                 </button>
               </div>
 
-              {/* ── Nav Links ──────────────────────────────────────────────── */}
-              <nav className="flex-1 px-7 pt-8 pb-6 flex flex-col overflow-y-auto">
-                {/* Separator label */}
-                <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#0B5497]/35 mb-6">
-                  Navigation
-                </p>
+              <nav className="flex flex-col gap-1">
+                {NAV_LINKS.map((link) => (
+                  <Link
+                    key={link.id}
+                    href={pathname === "/" ? `#${link.id === "deals" ? "products" : link.id}` : `/#${link.id === "deals" ? "products" : link.id}`}
+                    onClick={(e) => {
+                      setMobileOpen(false);
+                      handleNavLinkClick(e, link.id);
+                    }}
+                    className="rounded-2xl px-4 py-3 font-sans text-base font-semibold text-ocean/85 transition-colors duration-200 hover:bg-ocean/6"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
 
-                {/* Big staggered nav links */}
-                <div className="flex flex-col gap-1">
-                  {[
-                    { label: "Products", href: "#products" },
-                    { label: "Brands",   href: "#brands"           },
-                    { label: "Deals",    href: "#reviews"          },
-                    { label: "About",    href: "#showroom-details" },
-                    { label: "Contact",  href: "#showroom-details" },
-                  ].map(({ label, href }, i) => (
-                    <motion.div
-                      key={label}
-                      initial={{ opacity: 0, x: 24 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.04 * i + 0.05, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              <div className="mt-5 flex items-center gap-3 border-t border-ocean/8 pt-5">
+                <IconLink
+                  label="Wishlist"
+                  icon={<Heart className="h-[18px] w-[18px]" />}
+                  count={finalWishlistCount}
+                  onClick={(e) => {
+                    setMobileOpen(false);
+                    handleWishlistClick(e);
+                  }}
+                />
+                <IconLink
+                  href="/order"
+                  label="Cart"
+                  icon={<ShoppingCart className="h-[18px] w-[18px]" />}
+                  count={finalCartCount}
+                  onClick={() => setMobileOpen(false)}
+                />
+                <Link
+                  href="/order"
+                  onClick={() => setMobileOpen(false)}
+                  className="ml-auto inline-flex items-center gap-2 rounded-full bg-ocean px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-ivory"
+                >
+                  <ShoppingBag className="h-3.5 w-3.5" />
+                  Order Now
+                </Link>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ── Full-width search overlay ───────────────────────────────────── */}
+      <AnimatePresence>
+        {searchOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSearchOpen(false)}
+              className="fixed inset-0 z-[70] bg-[#0b1b2e]/45 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -36 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -36 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed inset-x-0 top-0 z-[71] border-b border-ocean/10 bg-ivory/90 px-6 py-10 shadow-[0_20px_50px_rgba(11,84,151,0.12)] backdrop-blur-2xl md:px-12"
+            >
+              <div className="mx-auto max-w-[1320px]">
+                <div className="flex items-center gap-4">
+                  <Search className="h-6 w-6 shrink-0 text-ocean/55" />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      if (pathname === "/") {
+                        const productsEl = document.getElementById("products");
+                        if (productsEl) {
+                          productsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }
+                      }
+                    }}
+                    placeholder="Search phones, laptops, accessories..."
+                    className="w-full border-none bg-transparent font-clash-display text-2xl font-semibold text-[#10233D] placeholder:text-ocean/30 focus:outline-none sm:text-3.5xl"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setSearchOpen(false)}
+                    aria-label="Close search"
+                    className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ocean/60 transition-colors duration-200 hover:bg-ocean/6 cursor-pointer"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+
+                {/* Popular searches suggestions */}
+                <div className="mt-8 flex flex-wrap items-center gap-2.5">
+                  <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ocean/45 mr-1.5 font-manrope">
+                    Popular searches:
+                  </span>
+                  {["iPhone 15", "Galaxy S24", "Sony XM5", "DJI Mini", "Laptops"].map((chip) => (
+                    <button
+                      key={chip}
+                      onClick={() => handleSuggestedSearch(chip)}
+                      className="rounded-full border border-ocean/8 bg-ocean-light/20 px-3.5 py-1.5 text-xs font-semibold text-ocean transition-all duration-300 hover:border-ocean/20 hover:bg-ocean-light/50 cursor-pointer font-manrope"
                     >
-                      <Link
-                        href={href}
-                        onClick={() => setDrawerOpen(false)}
-                        className="group flex items-center justify-between py-3.5 border-b border-[#0B5497]/6 last:border-0"
-                      >
-                        <span className="font-cabinet text-[26px] font-extrabold text-[#0B5497] group-hover:text-[#0f70c9] transition-colors duration-200 leading-none">
-                          {label}
-                        </span>
-                        <ArrowRight className="w-4 h-4 text-[#0B5497]/25 group-hover:text-[#0f70c9] group-hover:translate-x-1 transition-all duration-200" />
-                      </Link>
-                    </motion.div>
+                      {chip}
+                    </button>
                   ))}
                 </div>
 
-                {/* ── Spacer ─────────────────────────────────────────────── */}
-                <div className="flex-1" />
-
-                {/* ── Reserve CTA ────────────────────────────────────────── */}
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.32, duration: 0.3 }}
-                  className="mt-8 mb-6"
-                >
-                  <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#0B5497]/35 mb-4">
-                    Ready to Order?
-                  </p>
-                  <Link
-                    href="/order"
-                    onClick={() => setDrawerOpen(false)}
-                    className="w-full inline-flex items-center justify-center gap-2.5 bg-[#0B5497] text-[#FFFEF9] font-semibold text-sm rounded-full py-4 hover:shadow-[0_10px_28px_rgba(11,84,151,0.30)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer"
-                  >
-                    <ShoppingBag className="w-4 h-4" />
-                    Order Now
-                  </Link>
-                </motion.div>
-
-                {/* ── Social Links ────────────────────────────────────────── */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.42, duration: 0.3 }}
-                  className="border-t border-[#0B5497]/8 pt-6"
-                >
-                  <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-[#0B5497]/35 mb-4">
-                    Follow Us
-                  </p>
-                  <div className="flex items-center gap-3">
-                    {SOCIAL_LINKS.map(({ label, href, icon }) => (
-                      <a
-                        key={label}
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={label}
-                        className="flex items-center justify-center w-10 h-10 rounded-full border border-[#0B5497]/12 text-[#0B5497]/60 hover:bg-[#0B5497] hover:text-[#FFFEF9] hover:border-[#0B5497] transition-all duration-200"
-                      >
-                        {icon}
-                      </a>
-                    ))}
-                  </div>
-                </motion.div>
-              </nav>
-            </motion.aside>
+                <p className="mt-6 text-[10px] font-semibold uppercase tracking-[0.16em] text-ocean/40 font-manrope">
+                  Press ESC to close
+                </p>
+              </div>
+            </motion.div>
           </>
         )}
       </AnimatePresence>

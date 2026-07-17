@@ -27,6 +27,7 @@ import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PRODUCTS, Product } from "@/data/mock-data";
+import { useApp } from "@/context/AppContext";
 
 // ─── Delivery data ────────────────────────────────────────────────────────────
 type FulfillmentMethod = "pickup" | "delivery";
@@ -92,6 +93,7 @@ const FAQ_ITEMS = [
 ];
 
 export default function OrderNowPage() {
+  const { clearCart } = useApp();
   const featuredProduct = PRODUCTS.find((p) => p.featured) || PRODUCTS[0];
 
   const [selectedProductId, setSelectedProductId] = useState(featuredProduct.id);
@@ -141,6 +143,7 @@ export default function OrderNowPage() {
     if (!validate()) return;
     setOrderId(`GH-${Math.floor(100000 + Math.random() * 900000)}`);
     setSubmitted(true);
+    clearCart();
     confetti({
       particleCount: 90,
       spread: 65,

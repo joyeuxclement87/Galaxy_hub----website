@@ -1,3 +1,4 @@
+@import url("https://api.fontshare.com/v2/css?f[]=clash-display@700,600&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -51,6 +52,13 @@ body {
 /* Prices / labels */
 .font-space {
   font-family: "Cabinet Grotesk", sans-serif;
+}
+
+/* Scoped Clash Display — used only for the navbar wordmark, independent of the
+   site-wide heading font (.font-clash), which is intentionally IBM Plex Sans. */
+.font-clash-display {
+  font-family: "Clash Display", sans-serif;
+  font-weight: 700;
 }
 
 /* ── Glass effect ─────────────────────────────────────────────── */

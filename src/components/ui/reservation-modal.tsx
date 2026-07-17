@@ -10,9 +10,10 @@ import confetti from "canvas-confetti";
 interface ReservationModalProps {
   product: Product | null;
   onClose: () => void;
+  onSuccess?: (product: Product) => void;
 }
 
-export function ReservationModal({ product, onClose }: ReservationModalProps) {
+export function ReservationModal({ product, onClose, onSuccess }: ReservationModalProps) {
   const [step, setStep] = useState<"form" | "success">("form");
   const [formData, setFormData] = useState(() => ({
     name: "",
@@ -43,6 +44,7 @@ export function ReservationModal({ product, onClose }: ReservationModalProps) {
     if (validate()) {
       setStep("success");
       setReservationId(`GH-${Math.floor(100000 + Math.random() * 900000)}`);
+      onSuccess?.(product);
       confetti({
         particleCount: 80,
         spread: 60,
