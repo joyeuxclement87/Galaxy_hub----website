@@ -23,51 +23,24 @@ import {
 import { Navbar } from "@/components/ui/navbar";
 import { ProductCard } from "@/components/ui/product-card";
 import { ReservationModal } from "@/components/ui/reservation-modal";
-import { PRODUCTS, Product, HERO_CMS_CONTENT, HERO_SPOTLIGHT_SLIDES, TRENDING_KEYWORDS, QUICK_FILTERS, POPULAR_SEARCH_CARDS, DEALS_QUICK_FILTERS, DEAL_OFFERS, CATEGORIES, CREATOR_CATEGORIES, CREATOR_BUNDLE } from "@/data/mock-data";
+import { PRODUCTS, Product, HERO_CMS_CONTENT, HERO_SPOTLIGHT_SLIDES, TRENDING_KEYWORDS, QUICK_FILTERS, POPULAR_SEARCH_CARDS, DEALS_QUICK_FILTERS, DEAL_OFFERS, CATEGORIES } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/context/AppContext";
 import { Brands } from "@/app/(landing)/sections/Brands";
 import { Reviews } from "@/app/(landing)/sections/Reviews";
 import { FAQSupport } from "@/app/(landing)/sections/FAQSupport";
+import CTA from "@/app/(landing)/sections/CTA";
+import Footer from "@/components/ui/Footer";
 
 
 
 
-const WHY_GALAXY_HUB = [
-  {
-    title: "Genuine Products",
-    description:
-      "Every device is sourced from authorized distributors and verified before it reaches our shelves.",
-    image:
-      "https://images.unsplash.com/photo-1586880244406-556ebe35f282?auto=format&fit=crop&q=80&w=1200",
-  },
-  {
-    title: "Delivery Across Rwanda",
-    description:
-      "From Kigali City to every province, your order is packed with care and delivered on time.",
-    image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1200",
-  },
-  {
-    title: "Warranty & Support",
-    description:
-      "Standard manufacturer warranty and a concierge team ready to help long after you collect your device.",
-    image:
-      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&q=80&w=1200",
-  },
-  {
-    title: "Tech for Every Lifestyle",
-    description:
-      "Phones, laptops, wearables and accessories curated for how you actually live and work.",
-    image:
-      "https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&q=80&w=1200",
-  },
-] as const;
+// Removed: WHY_GALAXY_HUB editorial constant (moved to CMS)
 
 const FOOTER_COLUMNS = {
   products: ["Smartphones", "Accessories", "Laptops", "Smartwatches", "Audio"],
   support: ["Reservation Process", "Warranty", "Delivery", "FAQs", "Contact"],
-  visit: ["Kigali, Rwanda", "Mon - Sat • 9:00 - 20:00", "Google Maps", "WhatsApp", "Telegram"],
+  visit: ["TCB Floor: 1B, Door: 13B, Kigali, Rwanda", "Mon - Sat • 9:00 - 20:00", "Google Maps", "WhatsApp", "Telegram"],
 };
 
 function DealCountdown() {
@@ -636,51 +609,7 @@ export default function ShowroomHome() {
             </div>
           </div>
 
-          {/* 3. Smart Search CTA Banner */}
-          <div className="rounded-[24px] border border-ocean/8 bg-ivory p-6 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
-            <div className="max-w-2xl mx-auto text-center space-y-6">
-              <div className="space-y-2">
-                <h3 className="font-clash text-2xl font-bold text-[#10233D]">
-                  Looking for something specific?
-                </h3>
-                <p className="text-sm text-[#10233D]/60 font-manrope">
-                  Type any keyword to search across smartphones, accessories, creator setups, and laptops.
-                </p>
-              </div>
-
-              <form onSubmit={handleSmartSearch} className="flex flex-col sm:flex-row gap-2 max-w-xl mx-auto">
-                <input
-                  ref={smartSearchRef}
-                  type="text"
-                  placeholder="What are you looking for today?"
-                  className="flex-1 rounded-xl border border-ocean/15 bg-white px-4 py-3 text-sm text-[#10233D] placeholder:text-ocean/35 focus:border-accent focus:ring-1 focus:ring-accent focus:outline-none font-manrope shadow-sm"
-                />
-                <button
-                  type="submit"
-                  className="rounded-xl bg-ocean px-6 py-3 text-xs font-bold uppercase tracking-wider text-white transition-all duration-200 hover:bg-ocean-dark cursor-pointer font-manrope shadow-sm"
-                >
-                  Search Products
-                </button>
-              </form>
-
-              {/* Suggestion pills below */}
-              <div className="flex flex-wrap justify-center items-center gap-2 pt-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-ocean/45 font-manrope">Try:</span>
-                {["Tripod", "iPhone 15", "MagSafe", "AirPods", "Sony Headset"].map((term) => (
-                  <button
-                    key={term}
-                    onClick={() => {
-                      if (smartSearchRef.current) smartSearchRef.current.value = term;
-                      handlePillClick(term);
-                    }}
-                    className="rounded-full bg-white border border-ocean/8 px-3 py-1 text-xs font-medium text-ocean/70 transition-all duration-200 hover:border-ocean/20 hover:bg-ocean-light/10 cursor-pointer font-manrope"
-                  >
-                    {term}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+          {/* Smart Search CTA removed per request */}
         </div>
       </section>
 
@@ -907,46 +836,7 @@ export default function ShowroomHome() {
         </div>
       </section>
 
-      <section id="why-galaxy-hub" className="bg-[#FFFEF9] px-6 py-24 md:px-12">
-        <div className="mx-auto max-w-[1320px]">
-          <div className="max-w-2xl space-y-4">
-            <span className="block text-[10px] font-bold uppercase tracking-[0.24em] text-accent">
-              WHY GALAXY HUB
-            </span>
-            <h2 className="font-clash text-3xl font-bold leading-tight text-[#10233D] sm:text-4xl lg:text-[44px]">
-              A Showroom Built on Trust
-            </h2>
-            <p className="text-sm leading-relaxed text-ocean/70 sm:text-base">
-              From genuine hardware to nationwide delivery, every part of the Galaxy Hub experience is
-              designed around one thing: giving you total confidence in what you buy.
-            </p>
-          </div>
-
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {WHY_GALAXY_HUB.map((item) => (
-              <div
-                key={item.title}
-                className="group overflow-hidden rounded-[28px] border border-black/8 bg-white shadow-[0_12px_32px_rgba(16,35,61,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_rgba(16,35,61,0.12)]"
-              >
-                <div className="relative aspect-[4/3] w-full overflow-hidden">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="(min-width: 1024px) 620px, 90vw"
-                    loading="lazy"
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                  />
-                </div>
-                <div className="space-y-2 p-7">
-                  <h3 className="font-clash text-xl font-bold text-[#10233D]">{item.title}</h3>
-                  <p className="text-sm leading-6 text-ocean/70">{item.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* WHY_GALAXY_HUB section removed */}
 
             {/* ── Shop by Category ─────────────────────────────────────────── */}
       <section id="categories" className="bg-[#FFFEF9] px-6 py-24 md:px-12 border-t border-ocean/5 relative z-20">
@@ -1121,343 +1011,18 @@ export default function ShowroomHome() {
         )}
       </section>
 
-      {/* ── Creator Essentials ───────────────────────────────────────────── */}
-      <section id="creator-essentials" className="bg-[#F8F9FA] border-t border-ocean/5 px-6 py-24 md:px-12">
-        <div className="mx-auto max-w-[1320px] space-y-12">
-
-          {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <div className="space-y-4 max-w-2xl">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.24em] text-accent font-manrope">
-                CREATOR ESSENTIALS
-              </span>
-              <h2 className="font-clash text-3xl font-bold leading-tight text-[#10233D] sm:text-4xl lg:text-[44px]">
-                Create More.<br />Capture Better.
-              </h2>
-              <p className="text-sm leading-relaxed text-[#10233D]/65 font-manrope">
-                Everything you need to record, stream, photograph, and create content — available in Kigali and delivered across Rwanda.
-              </p>
-            </div>
-            <Link
-              href="/products/creator-gear"
-              className="inline-flex items-center gap-2 text-sm font-bold text-ocean transition-colors hover:text-ocean-dark group font-manrope shrink-0"
-            >
-              Explore Creator Gear
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-            </Link>
-          </div>
-
-          {/* Main Editorial Layout */}
-          <div className="grid gap-6 lg:grid-cols-12">
-
-            {/* Left: Large Featured Creator Card */}
-            <div className="lg:col-span-5">
-              <div className="group relative h-full min-h-[480px] overflow-hidden rounded-[32px] bg-[#10233D]">
-                <img
-                  src="https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&q=80&w=900"
-                  alt="Creator Setup at Galaxy Hub"
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover opacity-75 transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-
-                {/* Feature Chips */}
-                <div className="absolute top-8 left-8 flex flex-wrap gap-2 z-10">
-                  {["Ring Light", "Tripod", "Mic", "Earbuds"].map((item) => (
-                    <span key={item} className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur-md">
-                      {item}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Bottom Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 z-10">
-                  <div className="space-y-3">
-                    <h3 className="font-clash text-2xl font-bold text-white">Creator Kit</h3>
-                    <p className="text-sm text-white/75 font-manrope max-w-xs">
-                      Everything you need to start creating — right from Kigali.
-                    </p>
-                    <Link
-                      href="/products/creator-gear"
-                      className="inline-flex items-center gap-1.5 text-sm font-bold text-white/90 hover:text-white transition-colors group/link mt-2"
-                    >
-                      <span>Explore</span>
-                      <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover/link:translate-x-1" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Product Category Cards Grid */}
-            <div className="lg:col-span-7">
-              {/* Mobile: horizontal scroll / Desktop: grid */}
-              <div
-                className="flex gap-4 overflow-x-auto pb-4 flex-nowrap no-scrollbar md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:pb-0"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              >
-                {CREATOR_CATEGORIES.map((cat) => (
-                  <Link
-                    key={cat.id}
-                    href={`/products/${cat.slug}`}
-                    className="group relative flex shrink-0 w-[260px] md:w-auto flex-col justify-end overflow-hidden rounded-[28px] border border-ocean/8 bg-white h-[240px] shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-ocean/20"
-                  >
-                    {/* Background image */}
-                    <img
-                      src={cat.image}
-                      alt={cat.name}
-                      loading="lazy"
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
-                    {/* Content */}
-                    <div className="relative z-10 p-6 space-y-1">
-                      <h4 className="font-clash text-lg font-bold text-white">{cat.name}</h4>
-                      <p className="text-xs text-white/70 font-manrope line-clamp-1">{cat.description}</p>
-                      <div className="flex items-center justify-between pt-2">
-                        <span className="text-[10px] font-bold text-white/50 uppercase tracking-wider">{cat.count}+ Products</span>
-                        <ArrowRight className="h-4 w-4 text-white opacity-0 -translate-x-2 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0" />
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Bundle CTA */}
-          <div className="relative overflow-hidden rounded-[32px] bg-[#10233D] p-8 md:p-12">
-            <div className="absolute inset-0 z-0">
-              <img
-                src={CREATOR_BUNDLE.image}
-                alt="Creator Bundle"
-                loading="lazy"
-                className="w-full h-full object-cover opacity-20"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#10233D] via-[#10233D]/90 to-[#10233D]/60" />
-            </div>
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-              <div className="space-y-4 max-w-xl">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.24em] text-accent font-manrope">BUNDLE OFFER</span>
-                <h3 className="font-clash text-2xl md:text-3xl font-bold text-white">Build Your Creator Setup</h3>
-                <div className="flex flex-wrap items-center gap-3">
-                  {CREATOR_BUNDLE.items.map((item, idx) => (
-                    <React.Fragment key={item}>
-                      <span className="text-sm font-semibold text-white/90 font-manrope">{item}</span>
-                      {idx < CREATOR_BUNDLE.items.length - 1 && (
-                        <span className="text-white/30 text-lg font-light">+</span>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </div>
-                <p className="text-sm text-white/60 font-manrope">{CREATOR_BUNDLE.description}</p>
-                <p className="font-space text-xl font-bold text-white">
-                  Starting from {CREATOR_BUNDLE.currency} {new Intl.NumberFormat("en-US").format(CREATOR_BUNDLE.startingPrice)}
-                </p>
-              </div>
-              <Link
-                href="/products/creator-gear"
-                className="inline-flex shrink-0 items-center gap-2 rounded-[16px] bg-accent px-8 py-4 text-sm font-bold text-white transition-all duration-200 hover:bg-accent-dark shadow-lg shadow-accent/20 group"
-              >
-                Shop Bundle
-                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-              </Link>
-            </div>
-          </div>
-
-          {/* SEO Content Block */}
-          <div className="rounded-[24px] border border-ocean/5 bg-white px-8 py-6">
-            <h3 className="font-clash text-base font-bold text-[#10233D] mb-2">Creator Equipment in Rwanda</h3>
-            <p className="text-sm leading-relaxed text-ocean/60 font-manrope">
-              Galaxy Hub provides ring lights, tripods, phone accessories, microphones, and content creation tools for photographers, influencers, businesses, and students across Rwanda. All products are genuine, available in Kigali, and delivered nationwide.
-            </p>
-          </div>
-
-        </div>
-      </section>
+      {/* Creator Essentials removed */}
 
       <Reviews />
 
       <FAQSupport />
 
-      <section id="showroom-details" className="mx-auto max-w-[1320px] px-6 py-24 md:px-12">
-        <div className="glass-panel grid grid-cols-1 items-center gap-8 rounded-card p-8 shadow-premium md:p-12 lg:grid-cols-12">
-          <div className="space-y-6 lg:col-span-7">
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">
-              VISIT OUR KIGALI BOUTIQUE
-            </span>
-            <h2 className="font-sora text-3xl font-extrabold text-ocean">
-              Digital Showroom Meets Premium Retail
-            </h2>
-            <p className="text-sm leading-relaxed text-ocean/70">
-              Experience hands-on testing in a serene, distraction-free gallery. Located in the heart of Kigali City, our experts are here to walk you through device features.
-            </p>
+      {/* Showroom details removed */}
 
-            <div className="grid grid-cols-1 gap-6 pt-4 text-sm text-ocean/80 sm:grid-cols-2">
-              <div className="flex items-center gap-3">
-                <MapPin className="h-5 w-5 shrink-0 text-accent" />
-                <div>
-                  <p className="font-bold">Boutique Address</p>
-                  <p className="text-xs text-ocean/60">KN 2 Ave, Kigali City Centre</p>
-                </div>
-              </div>
+      {/* CTA: final conversion section before the footer */}
+      <CTA />
 
-              <div className="flex items-center gap-3">
-                <Clock className="h-5 w-5 shrink-0 text-accent" />
-                <div>
-                  <p className="font-bold">Showroom Hours</p>
-                  <p className="text-xs text-ocean/60">Mon - Sat: 9:00 AM - 8:00 PM</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Phone className="h-5 w-5 shrink-0 text-accent" />
-                <div>
-                  <p className="font-bold">Concierge Support</p>
-                  <p className="text-xs text-ocean/60">+250 788 123 456</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Store className="h-5 w-5 shrink-0 text-accent" />
-                <div>
-                  <p className="font-bold">Boutique pickup</p>
-                  <p className="text-xs text-ocean/60">Inspect device before payment</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative flex h-64 w-full items-center justify-center overflow-hidden rounded-img border border-black/5 bg-radial from-ocean/5 to-transparent sm:h-80 lg:col-span-5">
-            <div
-              className="absolute inset-0 bg-cover bg-center opacity-30 blur-[2px]"
-              style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=800')",
-              }}
-            />
-            <div className="relative mx-auto max-w-xs rounded-card border border-black/5 bg-white/80 p-6 text-center shadow-premium backdrop-blur-md">
-              <Store className="mx-auto mb-2 h-8 w-8 animate-bounce text-accent" />
-              <h4 className="font-sora text-sm font-bold text-ocean">Kigali Flagroom Store</h4>
-              <p className="mt-1 text-xs text-ocean/60">
-                Convenient parking, premium experience gallery
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="relative mt-8 bg-ocean px-6 pb-8 pt-0 text-[#FFFEF9] md:px-12">
-        <div className="mx-auto max-w-[1320px]">
-          <div className="relative -translate-y-8 overflow-hidden rounded-[32px] border border-[#7CB6E8]/30 bg-[linear-gradient(135deg,#0F6BC0_0%,#0B5497_48%,#083E70_100%)] p-8 shadow-[0_-18px_60px_rgba(5,23,43,0.28)] md:-translate-y-12 md:p-10 lg:flex lg:items-center lg:justify-between lg:gap-10 lg:p-12">
-            <div className="max-w-2xl space-y-4">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/70">
-                PREMIUM RESERVATION EXPERIENCE
-              </span>
-              <h2 className="font-clash text-3xl font-bold leading-[0.98] tracking-[-0.03em] text-white sm:text-4xl lg:text-[48px]">
-                Upgrade Your Tech Today.
-              </h2>
-              <p className="max-w-[640px] text-sm leading-7 text-white/78 sm:text-base">
-                Explore smartphones, accessories, and smart devices available in Kigali, Rwanda.
-              </p>
-            </div>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:mt-0 lg:min-w-[420px]">
-              <Button variant="primary" className="w-full gap-2 bg-[#FFFEF9] text-ocean hover:bg-white" onClick={() => setSelectedProduct(samsungProduct)}>
-                <ShoppingBag className="h-4 w-4" />
-                Order Now
-              </Button>
-              <Button variant="secondary" className="w-full gap-2 border-white/65 text-white hover:border-white hover:bg-white hover:text-ocean" onClick={() => {
-                const el = document.getElementById("showroom-details");
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-              }}>
-                <ArrowRight className="h-4 w-4" />
-                Contact Us
-              </Button>
-            </div>
-          </div>
-
-          <div className="grid gap-14 py-12 md:py-16 lg:grid-cols-4 lg:gap-10 lg:py-20">
-            <div className="space-y-5">
-              <div>
-                <h3 className="font-clash text-2xl font-semibold text-white">Galaxy Hub</h3>
-                <p className="mt-4 max-w-sm text-sm leading-7 text-white/72">
-                  Premium devices, trusted brands, and effortless reservations designed for Kigali’s modern tech shoppers.
-                </p>
-              </div>
-              <div className="space-y-2 text-sm text-white/72">
-                <a className="block transition-colors hover:text-white" href="https://instagram.com">
-                  Instagram
-                </a>
-                <a className="block transition-colors hover:text-white" href="https://facebook.com">
-                  Facebook
-                </a>
-                <a className="block transition-colors hover:text-white" href="tel:+250788123456">
-                  +250 788 123 456
-                </a>
-                <a className="block transition-colors hover:text-white" href="mailto:hello@galaxyhub.rw">
-                  hello@galaxyhub.rw
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-clash text-lg font-semibold text-white">Products</h4>
-              <ul className="mt-5 space-y-3 text-sm text-white/72">
-                {FOOTER_COLUMNS.products.map((item) => (
-                  <li key={item}>
-                    <a className="transition-colors hover:text-white" href="#products">
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-clash text-lg font-semibold text-white">Customer Support</h4>
-              <ul className="mt-5 space-y-3 text-sm text-white/72">
-                {FOOTER_COLUMNS.support.map((item) => (
-                  <li key={item}>
-                    <a className="transition-colors hover:text-white" href="#showroom-details">
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-clash text-lg font-semibold text-white">Visit Us</h4>
-              <ul className="mt-5 space-y-3 text-sm text-white/72">
-                {FOOTER_COLUMNS.visit.map((item) => (
-                  <li key={item}>
-                    <a className="inline-flex items-center gap-2 transition-colors hover:text-white" href="#showroom-details">
-                      <span>{item}</span>
-                      {item === "Google Maps" && <ArrowUpRight className="h-3.5 w-3.5" />}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4 border-t border-white/12 py-6 text-sm text-white/60 md:flex-row md:items-center md:justify-between">
-            <p>© 2026 Galaxy Hub. Designed with care in Kigali.</p>
-            <div className="flex flex-wrap gap-5">
-              <a href="#" className="transition-colors hover:text-white">
-                Privacy
-              </a>
-              <a href="#" className="transition-colors hover:text-white">
-                Terms
-              </a>
-              <a href="#" className="transition-colors hover:text-white">
-                Cookies
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       <ReservationModal
         key={selectedProduct?.id ?? "none"}

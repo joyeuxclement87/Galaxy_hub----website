@@ -92,21 +92,33 @@ export function ProductCard({ product, onReserve }: ProductCardProps) {
           />
         </button>
 
-        <Link href={`/product/${product.slug}`} className="absolute inset-0 z-0 flex items-center justify-center p-12">
-          <img
-            src={product.image}
-            alt={product.title}
-            loading="lazy"
-            className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105 mix-blend-multiply"
-          />
-        </Link>
+        {product.externalUrl ? (
+          <a href={product.externalUrl} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-0 flex items-center justify-center p-12">
+            <img
+              src={product.image}
+              alt={product.title}
+              loading="lazy"
+              className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105 mix-blend-multiply"
+            />
+          </a>
+        ) : (
+          <Link href={`/product/${product.slug}`} className="absolute inset-0 z-0 flex items-center justify-center p-12">
+            <img
+              src={product.image}
+              alt={product.title}
+              loading="lazy"
+              className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105 mix-blend-multiply"
+            />
+          </Link>
+        )}
       </div>
 
       {/* Product Content Area */}
       <div className="flex flex-1 flex-col p-5 md:p-6 bg-white relative z-10">
-        <Link href={`/product/${product.slug}`} className="group-hover:opacity-0 transition-opacity duration-300 md:group-hover:invisible">
-          {/* Rating */}
-          <div className="flex items-center gap-1.5 mb-2.5">
+        {/* Rating / Title / Summary block - wrapped by external link or internal Link */}
+        {product.externalUrl ? (
+          <a href={product.externalUrl} target="_blank" rel="noopener noreferrer" className="group-hover:opacity-0 transition-opacity duration-300 md:group-hover:invisible">
+            <div className="flex items-center gap-1.5 mb-2.5">
             <div className="flex items-center text-amber-400">
               <Star className="h-3.5 w-3.5 fill-current" />
               <Star className="h-3.5 w-3.5 fill-current" />
@@ -117,39 +129,85 @@ export function ProductCard({ product, onReserve }: ProductCardProps) {
             <span className="text-[11px] font-semibold text-[#10233D]">{product.rating || "4.8"}</span>
             <span className="text-[11px] text-ocean/40 font-manrope">({product.reviewCount || 32} reviews)</span>
           </div>
+            <h3 className="font-clash text-lg font-bold leading-snug text-[#10233D] line-clamp-1">
+              {product.title}
+            </h3>
 
-          <h3 className="font-clash text-lg font-bold leading-snug text-[#10233D] line-clamp-1">
-            {product.title}
-          </h3>
-          
-          <p className="mt-1 text-xs text-ocean/50 font-manrope line-clamp-1">
-            {product.specsSummary || product.tagline}
-          </p>
+            <p className="mt-1 text-xs text-ocean/50 font-manrope line-clamp-1">
+              {product.specsSummary || product.tagline}
+            </p>
 
-          <div className="mt-4 pt-4 border-t border-black/5">
-            {product.priceOnRequest ? (
-              <span className="font-space text-lg font-bold text-ocean">Contact for Price</span>
-            ) : (
-              <div className="flex flex-col">
-                <div className="flex items-end gap-2 mb-0.5">
-                  <span className="font-space text-xl font-bold text-[#10233D]">
-                    {product.currency} {formattedPrice}
-                  </span>
-                  {product.originalPrice && (
-                    <span className="font-space text-xs text-ocean/40 line-through mb-1">
-                      {new Intl.NumberFormat("en-US").format(product.originalPrice)}
+            <div className="mt-4 pt-4 border-t border-black/5">
+              {product.priceOnRequest ? (
+                <span className="font-space text-lg font-bold text-ocean">Contact for Price</span>
+              ) : (
+                <div className="flex flex-col">
+                  <div className="flex items-end gap-2 mb-0.5">
+                    <span className="font-space text-xl font-bold text-[#10233D]">
+                      {product.currency} {formattedPrice}
+                    </span>
+                    {product.originalPrice && (
+                      <span className="font-space text-xs text-ocean/40 line-through mb-1">
+                        {new Intl.NumberFormat("en-US").format(product.originalPrice)}
+                      </span>
+                    )}
+                  </div>
+                  {formattedMonthly && (
+                    <span className="text-[10px] font-bold text-ocean/50 uppercase tracking-wide">
+                      From RWF {formattedMonthly}/month
                     </span>
                   )}
                 </div>
-                {formattedMonthly && (
-                  <span className="text-[10px] font-bold text-ocean/50 uppercase tracking-wide">
-                    From RWF {formattedMonthly}/month
-                  </span>
-                )}
+              )}
+            </div>
+          </a>
+        ) : (
+          <Link href={`/product/${product.slug}`} className="group-hover:opacity-0 transition-opacity duration-300 md:group-hover:invisible">
+            <div className="flex items-center gap-1.5 mb-2.5">
+              <div className="flex items-center text-amber-400">
+                <Star className="h-3.5 w-3.5 fill-current" />
+                <Star className="h-3.5 w-3.5 fill-current" />
+                <Star className="h-3.5 w-3.5 fill-current" />
+                <Star className="h-3.5 w-3.5 fill-current" />
+                <Star className="h-3.5 w-3.5 fill-current opacity-50" />
               </div>
-            )}
-          </div>
-        </Link>
+              <span className="text-[11px] font-semibold text-[#10233D]">{product.rating || "4.8"}</span>
+              <span className="text-[11px] text-ocean/40 font-manrope">({product.reviewCount || 32} reviews)</span>
+            </div>
+
+            <h3 className="font-clash text-lg font-bold leading-snug text-[#10233D] line-clamp-1">
+              {product.title}
+            </h3>
+
+            <p className="mt-1 text-xs text-ocean/50 font-manrope line-clamp-1">
+              {product.specsSummary || product.tagline}
+            </p>
+
+            <div className="mt-4 pt-4 border-t border-black/5">
+              {product.priceOnRequest ? (
+                <span className="font-space text-lg font-bold text-ocean">Contact for Price</span>
+              ) : (
+                <div className="flex flex-col">
+                  <div className="flex items-end gap-2 mb-0.5">
+                    <span className="font-space text-xl font-bold text-[#10233D]">
+                      {product.currency} {formattedPrice}
+                    </span>
+                    {product.originalPrice && (
+                      <span className="font-space text-xs text-ocean/40 line-through mb-1">
+                        {new Intl.NumberFormat("en-US").format(product.originalPrice)}
+                      </span>
+                    )}
+                  </div>
+                  {formattedMonthly && (
+                    <span className="text-[10px] font-bold text-ocean/50 uppercase tracking-wide">
+                      From RWF {formattedMonthly}/month
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </Link>
+        )}
 
         {/* Action Buttons */}
         <div className="mt-5 grid grid-cols-2 gap-2 opacity-100 md:opacity-0 md:absolute md:bottom-6 md:left-6 md:right-6 md:translate-y-4 md:transition-all md:duration-300 md:group-hover:opacity-100 md:group-hover:translate-y-0 z-30">

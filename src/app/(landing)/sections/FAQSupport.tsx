@@ -87,10 +87,10 @@ export function FAQSupport() {
         </div>
 
         <div className="mt-10 flex flex-col items-center gap-3 rounded-[24px] border border-[#0b5497]/10 bg-[#f8fbff] p-6 text-center sm:flex-row sm:justify-between sm:text-left">
-          <div className="flex items-center gap-3">
-            <Sparkles className="h-5 w-5 shrink-0 text-[#0b5497]" />
-            <p className="text-sm text-[#10233D]/75">Still have questions? Our concierge team is ready to help.</p>
-          </div>
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-[#0b5497]" />
+                <span>+250 785 288 910</span>
+              </div>
           <div className="flex flex-wrap gap-3">
             <Link
               href="/order"
@@ -99,11 +99,11 @@ export function FAQSupport() {
               Order Now
             </Link>
             <a
-              href="tel:+250788123456"
+              href="tel:+250785288910"
               className="inline-flex items-center justify-center gap-2 rounded-full border border-[#0b5497]/10 bg-white px-4 py-3 text-sm font-semibold text-[#10233D]"
             >
               <Phone className="h-4 w-4" />
-              +250 788 123 456
+              +250 785 288 910
             </a>
           </div>
         </div>

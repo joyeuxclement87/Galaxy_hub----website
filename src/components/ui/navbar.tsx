@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Heart, Menu, Search, ShoppingBag, ShoppingCart, X } from "lucide-react";
+import { Heart, Menu, Search, ShoppingBag, ShoppingCart, X, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/context/AppContext";
 
@@ -23,33 +23,12 @@ const NAV_LINKS = [
 // ─── Wordmark ───────────────────────────────────────────────────────────────
 function Wordmark({ compact = false }: { compact?: boolean }) {
   return (
-    <Link href="/" className="group flex shrink-0 flex-col items-start leading-none transition-all duration-300">
-      <span className="flex items-center gap-1.5 md:gap-2">
-        <span
-          className={cn(
-            "inline-flex items-center justify-center rounded-full bg-ocean text-ivory shadow-sm transition-all duration-300 group-hover:scale-105",
-            compact ? "h-7.5 w-7.5 text-xs" : "h-8.5 w-8.5 text-sm"
-          )}
-        >
-          <span className="font-clash-display">G</span>
-        </span>
-        <span
-          className={cn(
-            "font-clash-display tracking-tight text-ocean transition-all duration-300",
-            compact ? "text-base" : "text-[19px]"
-          )}
-        >
-          Galaxy<span className="text-accent">Hub</span>
-        </span>
-      </span>
-      <span
-        className={cn(
-          "font-sans text-[8.5px] font-semibold uppercase tracking-[0.18em] text-ocean/45 transition-all duration-300",
-          compact ? "h-0 opacity-0 overflow-hidden" : "h-auto opacity-100 mt-1 ml-10"
-        )}
-      >
-        Kigali • Rwanda
-      </span>
+    <Link href="/" className="group flex shrink-0 items-center gap-3 leading-none transition-all duration-300">
+      <img
+        src="/g-hub%20logo.png"
+        alt="Galaxy Hub"
+        className={cn(compact ? "h-7.5 w-auto" : "h-9 w-auto", "block select-none")}
+      />
     </Link>
   );
 }
@@ -115,6 +94,7 @@ export function Navbar({ onSearchFocus, wishlistCount: propWishlistCount, cartCo
     setSelectedBrand,
     showDealsOnly,
     setShowDealsOnly,
+    clearCart,
   } = useApp();
 
   const finalWishlistCount = propWishlistCount !== undefined ? propWishlistCount : wishlist.length;
@@ -261,18 +241,25 @@ export function Navbar({ onSearchFocus, wishlistCount: propWishlistCount, cartCo
           <nav className="hidden items-center gap-8 lg:flex">
             {NAV_LINKS.map((link) => {
               const isActive =
-                link.id === "deals"
-                  ? showDealsOnly && pathname === "/"
-                  : link.id === "products"
-                  ? activeSection === "products" && !showDealsOnly && selectedCategory !== "Wishlist" && pathname === "/"
+                link.id === "products"
+                  ? pathname?.startsWith("/products") || (activeSection === "products" && !showDealsOnly && selectedCategory !== "Wishlist" && pathname === "/")
                   : link.id === "brands"
-                  ? activeSection === "brands" && pathname === "/"
+                  ? pathname?.startsWith("/brands") || (activeSection === "brands" && pathname === "/")
+                  : link.id === "deals"
+                  ? pathname === "/deals" || (activeSection === "deals" && pathname === "/")
                   : false;
+
+              const href = (() => {
+                if (link.id === "products") return pathname === "/" ? `#products` : "/products";
+                if (link.id === "brands") return pathname === "/" ? `#brands` : "/brands";
+                if (link.id === "deals") return pathname === "/" ? `#deals` : "/deals";
+                return pathname === "/" ? `#${link.id}` : `/#${link.id}`;
+              })();
 
               return (
                 <Link
                   key={link.id}
-                  href={pathname === "/" ? `#${link.id === "deals" ? "products" : link.id}` : `/#${link.id === "deals" ? "products" : link.id}`}
+                  href={href}
                   onClick={(e) => handleNavLinkClick(e, link.id)}
                   className={cn(
                     "relative py-1.5 font-sans text-sm font-medium tracking-wide transition-colors duration-300",
@@ -315,6 +302,20 @@ export function Navbar({ onSearchFocus, wishlistCount: propWishlistCount, cartCo
               <ShoppingBag className="h-3.5 w-3.5" />
               Order Now
             </Link>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (cart.length === 0) return;
+                if (confirm("Clear all items from your cart? This cannot be undone.")) {
+                  clearCart();
+                }
+              }}
+              title="Clear cart"
+              className="ml-2 hidden h-9.5 w-9.5 items-center justify-center rounded-full border border-black/6 text-ocean/70 transition-colors duration-200 hover:bg-rose-50 hover:text-rose-600 sm:inline-flex"
+            >
+              <Trash2 className="h-[18px] w-[18px]" />
+            </button>
 
             <button
               type="button"
@@ -362,7 +363,12 @@ export function Navbar({ onSearchFocus, wishlistCount: propWishlistCount, cartCo
                 {NAV_LINKS.map((link) => (
                   <Link
                     key={link.id}
-                    href={pathname === "/" ? `#${link.id === "deals" ? "products" : link.id}` : `/#${link.id === "deals" ? "products" : link.id}`}
+                    href={(() => {
+                      if (link.id === "products") return pathname === "/" ? `#products` : "/products";
+                      if (link.id === "brands") return pathname === "/" ? `#brands` : "/brands";
+                      if (link.id === "deals") return pathname === "/" ? `#deals` : "/deals";
+                      return pathname === "/" ? `#${link.id}` : `/#${link.id}`;
+                    })()}
                     onClick={(e) => {
                       setMobileOpen(false);
                       handleNavLinkClick(e, link.id);
@@ -391,6 +397,20 @@ export function Navbar({ onSearchFocus, wishlistCount: propWishlistCount, cartCo
                   count={finalCartCount}
                   onClick={() => setMobileOpen(false)}
                 />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (cart.length === 0) return;
+                    if (confirm("Clear all items from your cart? This cannot be undone.")) {
+                      clearCart();
+                      setMobileOpen(false);
+                    }
+                  }}
+                  className="ml-2 inline-flex items-center gap-2 rounded-full border border-black/8 px-3 py-2 text-sm text-rose-600 bg-rose-50"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Clear cart
+                </button>
                 <Link
                   href="/order"
                   onClick={() => setMobileOpen(false)}

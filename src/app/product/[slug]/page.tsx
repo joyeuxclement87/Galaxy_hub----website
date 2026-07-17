@@ -6,6 +6,7 @@ import { Navbar } from "@/components/ui/navbar";
 import { PRODUCTS } from "@/data/mock-data";
 import { ProductCard } from "@/components/ui/product-card";
 import { Button } from "@/components/ui/button";
+import ProductDetails from "@/components/ui/product-details";
 import { Metadata } from "next";
 
 // Define generateStaticParams
@@ -40,11 +41,30 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   // Use the same image for gallery mockup
   const gallery = [product.image, product.image, product.image];
 
+  // JSON-LD structured data
+  const productSchema = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    name: product.title,
+    image: gallery,
+    description: product.description,
+    brand: { "@type": "Brand", name: product.brand },
+    sku: product.id,
+    offers: {
+      "@type": "Offer",
+      url: `https://example.com/product/${product.slug}`,
+      priceCurrency: product.currency || "RWF",
+      price: product.price || 0,
+      availability: product.availability === "In Stock" ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[#F8F9FA] selection:bg-ocean/20 selection:text-ocean pb-24">
       <Navbar />
       
       <main className="pt-24 md:pt-32">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
         {/* Breadcrumb */}
         <div className="mx-auto max-w-[1320px] px-6 md:px-12 mb-8">
           <div className="flex items-center gap-2 text-xs font-medium text-ocean/50 font-manrope">
@@ -60,101 +80,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
         {/* Product Details Section */}
         <div className="mx-auto max-w-[1320px] px-6 md:px-12 mb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-            
-            {/* Left: Gallery */}
-            <div className="space-y-6">
-              <div className="aspect-[4/5] rounded-[32px] bg-white border border-black/5 flex items-center justify-center p-12 overflow-hidden relative">
-                {product.badge && (
-                  <span className="absolute left-6 top-6 z-10 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest shadow-sm bg-ocean text-white">
-                    {product.badge}
-                  </span>
-                )}
-                <img src={gallery[0]} alt={product.title} className="w-full h-full object-contain mix-blend-multiply" />
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                {gallery.map((img, idx) => (
-                  <div key={idx} className="aspect-square rounded-[20px] bg-white border border-black/5 flex items-center justify-center p-4 cursor-pointer hover:border-ocean/20 transition-colors">
-                    <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-contain mix-blend-multiply" />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: Info */}
-            <div className="flex flex-col">
-              <div className="mb-4 flex items-center gap-2">
-                <div className="flex items-center text-amber-400">
-                  <Star className="h-4 w-4 fill-current" />
-                  <Star className="h-4 w-4 fill-current" />
-                  <Star className="h-4 w-4 fill-current" />
-                  <Star className="h-4 w-4 fill-current" />
-                  <Star className="h-4 w-4 fill-current" />
-                </div>
-                <span className="text-sm font-bold text-[#10233D]">{product.rating || "4.9"}</span>
-                <span className="text-sm text-ocean/50 font-manrope">({product.reviewCount || 42} reviews)</span>
-              </div>
-              
-              <h1 className="font-clash text-3xl sm:text-4xl lg:text-5xl font-bold text-[#10233D] tracking-tight mb-2">
-                {product.title}
-              </h1>
-              <p className="text-sm sm:text-base text-ocean/60 font-manrope mb-8">
-                {product.tagline}
-              </p>
-
-              <div className="pb-8 border-b border-black/5 mb-8">
-                {product.priceOnRequest ? (
-                  <span className="font-space text-2xl font-bold text-ocean">Contact for Price</span>
-                ) : (
-                  <div className="flex flex-col">
-                    <div className="flex items-end gap-3 mb-1">
-                      <span className="font-space text-3xl sm:text-4xl font-bold text-[#10233D]">
-                        {product.currency} {new Intl.NumberFormat("en-US").format(product.price)}
-                      </span>
-                      {product.originalPrice && (
-                        <span className="font-space text-lg text-ocean/40 line-through mb-1.5">
-                          {new Intl.NumberFormat("en-US").format(product.originalPrice)}
-                        </span>
-                      )}
-                    </div>
-                    {product.monthlyInstallment && (
-                      <span className="text-xs font-bold text-ocean/50 uppercase tracking-widest font-manrope">
-                        Or from RWF {new Intl.NumberFormat("en-US").format(product.monthlyInstallment)} / month
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-4 mb-10">
-                <div className="flex items-center gap-3 text-sm font-manrope text-ocean/80">
-                  <CheckCircle className="h-5 w-5 text-emerald-500" /> 
-                  <span className="font-medium text-[#10233D]">{product.availability || "In Stock in Kigali"}</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm font-manrope text-ocean/80">
-                  <Shield className="h-5 w-5 text-accent" /> 
-                  <span>1 Year Genuine Warranty</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm font-manrope text-ocean/80">
-                  <Truck className="h-5 w-5 text-accent" /> 
-                  <span>Free delivery across Rwanda</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm font-manrope text-ocean/80">
-                  <RefreshCw className="h-5 w-5 text-accent" /> 
-                  <span>14-Day Returns</span>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-                <Button className="flex-1 py-4 text-sm font-bold bg-ocean hover:bg-ocean-dark rounded-[16px] shadow-sm">
-                  Order Now
-                </Button>
-                <Button variant="secondary" className="flex-1 py-4 text-sm font-bold rounded-[16px] border-ocean/10 hover:bg-ocean/5 text-[#10233D]">
-                  Add to Cart
-                </Button>
-              </div>
-            </div>
-          </div>
+          <ProductDetails product={product} />
         </div>
 
         {/* Specifications & Description */}
@@ -183,7 +109,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                 <p className="text-sm text-white/70 font-manrope mb-6">
                   Our tech specialists are available to answer any questions about this product.
                 </p>
-                <a href="tel:+250788123456" className="flex items-center justify-center gap-2 bg-white text-ocean py-3 rounded-xl text-sm font-bold hover:bg-ivory transition-colors">
+                <a href="tel:+250785288910" className="flex items-center justify-center gap-2 bg-white text-ocean py-3 rounded-xl text-sm font-bold hover:bg-ivory transition-colors">
                   Contact Support
                 </a>
               </div>

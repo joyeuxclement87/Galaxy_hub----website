@@ -99,7 +99,7 @@ export default function OrderNowPage() {
   const [selectedProductId, setSelectedProductId] = useState(featuredProduct.id);
   const [fulfillment, setFulfillment] = useState<FulfillmentMethod>("pickup");
   const [province, setProvince] = useState(PROVINCES[0].name);
-  const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
     name: "",
     phone: "",
     email: "",
@@ -250,10 +250,10 @@ export default function OrderNowPage() {
                   Place Another Order
                 </Button>
                 <a
-                  href="https://wa.me/250788123456"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                              href="https://wa.me/250785288910"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                   <Button variant="primary" className="w-full gap-2">
                     <MessageCircle className="h-4 w-4" />
                     Message Us on WhatsApp
@@ -368,7 +368,7 @@ export default function OrderNowPage() {
                           type="tel"
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="e.g. +250 788 000 000"
+                          placeholder="e.g. +250 785 288 910"
                           className="w-full rounded-input border border-ocean/10 bg-ocean-light/30 px-4 py-2.5 text-sm text-ocean transition-all duration-200 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                         />
                         {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
@@ -657,7 +657,7 @@ export default function OrderNowPage() {
 
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
       <section className="px-6 py-20 md:px-12">
-        <div className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-3xl">
           <div className="mb-10 space-y-4 text-center">
             <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
               GOOD TO KNOW
@@ -713,10 +713,10 @@ export default function OrderNowPage() {
                 Still have questions? Our concierge team is ready to help.
               </p>
             </div>
-            <a href="tel:+250788123456">
+            <a href="tel:+250785288910">
               <Button variant="secondary" className="gap-2 whitespace-nowrap">
                 <Phone className="h-4 w-4" />
-                +250 788 123 456
+                +250 785 288 910
               </Button>
             </a>
           </div>

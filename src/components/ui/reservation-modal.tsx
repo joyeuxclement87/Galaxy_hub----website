@@ -145,7 +145,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full rounded-input border border-ocean/10 bg-ocean-light/30 px-4 py-2.5 text-sm text-ocean transition-all duration-200 focus:border-accent focus:ring-1 focus:ring-accent focus:outline-none"
-                      placeholder="e.g. +250 788 000 000"
+                      placeholder="e.g. +250 785 288 910"
                     />
                     {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
                   </div>
@@ -216,7 +216,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
               <div className="space-y-2 rounded-[20px] border border-ocean/10 bg-white/60 p-4 text-left text-xs text-ocean/70 shadow-[0_10px_30px_rgba(11,84,151,0.06)] backdrop-blur-sm">
                 <p><strong>Order ID:</strong> {reservationId}</p>
                 <p><strong>Showroom Visit:</strong> {formData.date}</p>
-                <p><strong>Support Phone:</strong> +250 788 123 456</p>
+                <p><strong>Support Phone:</strong> +250 785 288 910</p>
               </div>
 
               <p className="text-xs text-ocean/50">

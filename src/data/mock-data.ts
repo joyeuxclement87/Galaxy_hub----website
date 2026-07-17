@@ -5,11 +5,15 @@ export interface Product {
   tagline: string;
   description: string;
   price: number;
+  externalUrl?: string;
   originalPrice?: number;
   currency: string;
   category: string;
   brand: string;
   image: string;
+  gallery?: string[];
+  colors?: string[];
+  storages?: string[];
   featured: boolean;
   specifications: Record<string, string>;
   priceOnRequest?: boolean;
@@ -83,6 +87,38 @@ export const PRODUCTS: Product[] = [
       Camera: "48MP Main | Ultra Wide | Telephoto",
       Material: "Aerospace-grade titanium design",
       Battery: "Up to 29 hours video playback",
+    },
+  },
+  {
+    id: "iphone-16-pro",
+    slug: "iphone-16-pro",
+    badge: "NEW",
+    rating: 4.9,
+    reviewCount: 124,
+    monthlyInstallment: 65000,
+    specsSummary: "Next-gen Tech",
+    title: "iPhone 16 Pro",
+    tagline: "Titanium reimagined",
+    description: "The iPhone 16 Pro features the A18 Pro chip, enhanced camera system, and refined titanium design with longer battery life.",
+    price: 1650000,
+    originalPrice: 1800000,
+    currency: "RWF",
+    category: "Smartphones",
+    brand: "Apple",
+    image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=600",
+    gallery: [
+      "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1708649290066-5f617003b930?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&q=80&w=1200"
+    ],
+    colors: ["Titanium Black", "White", "Natural", "Blue"],
+    storages: ["128GB", "256GB", "512GB", "1TB"],
+    featured: true,
+    specifications: {
+      Processor: "A18 Pro chip",
+      Camera: "48MP Main | Ultra Wide | Telephoto",
+      Display: "Super Retina XDR",
+      Battery: "Up to 36 hours video playback",
     },
   },
   {

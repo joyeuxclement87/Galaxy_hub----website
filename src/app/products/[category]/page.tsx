@@ -117,9 +117,9 @@ export default function CategoryPage({ params }: { params: { category: string } 
                   <div className="space-y-2">
                     <h4 className="text-sm font-bold text-[#10233D]">Need Help Choosing?</h4>
                     <p className="text-xs text-ocean/70 font-manrope">Call our tech experts in Kigali for personalized recommendations.</p>
-                    <a href="tel:+250788123456" className="inline-flex items-center gap-1.5 text-xs font-bold text-ocean hover:text-ocean-dark transition-colors mt-2">
+                    <a href="tel:+250785288910" className="inline-flex items-center gap-1.5 text-xs font-bold text-ocean hover:text-ocean-dark transition-colors mt-2">
                       <Phone className="h-3 w-3" />
-                      +250 788 123 456
+                      +250 785 288 910
                     </a>
                   </div>
                 </div>
