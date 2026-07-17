@@ -15,7 +15,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onReserve }: ProductCardProps) {
-  const { wishlist, toggleWishlist, cart, addToCart } = useApp();
+  const { wishlist, toggleWishlist, cart, addToCart, removeFromCart } = useApp();
   const isWishlisted = wishlist.includes(product.id);
   const isInCart     = cart.includes(product.id);
 
@@ -164,35 +164,27 @@ export function ProductCard({ product, onReserve }: ProductCardProps) {
           )}
         </div>
 
-        {/* ── Action buttons — always visible on mobile, overlay on desktop ── */}
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          <Button
-            variant="secondary"
-            onClick={(e) => {
-              e.preventDefault();
-              if (!isInCart) addToCart(product.id);
-            }}
-            className={cn(
-              "gap-1.5 rounded-xl text-[11px] font-bold w-full",
-              isInCart
-                ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                : "border-black/8 text-[#10233D] hover:bg-black/4"
-            )}
-          >
-            <ShoppingCart className="h-3.5 w-3.5 shrink-0" />
-            {isInCart ? "Added" : "Add to Cart"}
-          </Button>
-
+        {/* ── Compact action button ── */}
+        <div className="mt-4">
           <Button
             variant="primary"
             onClick={(e) => {
               e.preventDefault();
-              onReserve(product);
+              if (isInCart) {
+                removeFromCart(product.id);
+              } else {
+                addToCart(product.id);
+              }
             }}
-            className="gap-1.5 rounded-xl text-[11px] font-bold bg-ocean hover:bg-ocean-dark w-full shadow-sm"
+            className={cn(
+              "w-full justify-center gap-1.5 rounded-xl px-3 py-2.5 text-[11px] font-semibold shadow-sm sm:px-4",
+              isInCart
+                ? "bg-emerald-600 hover:bg-emerald-700"
+                : "bg-ocean hover:bg-ocean-dark"
+            )}
           >
-            <ShoppingBag className="h-3.5 w-3.5 shrink-0" />
-            Order Now
+            <ShoppingCart className="h-3.5 w-3.5 shrink-0" />
+            {isInCart ? "Added" : "Add to Cart"}
           </Button>
         </div>
 

@@ -164,32 +164,76 @@ export default function OrderNowPage() {
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-[linear-gradient(180deg,#FFFEF9_0%,#F5F9FD_100%)] px-6 py-16 md:px-12">
-        <div className="hero-grid-texture absolute inset-0 opacity-[0.18]" />
+        <div className="hero-grid-texture absolute inset-0 opacity-[0.16]" />
         <div className="absolute -left-16 top-6 h-56 w-56 rounded-full bg-ocean/8 blur-3xl" />
         <div className="absolute right-0 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full bg-sky-200/40 blur-3xl" />
 
-        <div className="relative mx-auto max-w-[1320px]">
-          <Link
-            href="/"
-            className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-ocean/60 transition-colors hover:text-ocean"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Showroom
-          </Link>
+        <div className="relative mx-auto grid max-w-[1320px] gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+          <div>
+            <Link
+              href="/"
+              className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-ocean/60 transition-colors hover:text-ocean"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Showroom
+            </Link>
 
-          <span className="inline-flex items-center rounded-badge border border-ocean/20 bg-[#FFFEF9]/88 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-ocean shadow-sm">
-            ORDER REQUEST • NO ONLINE PAYMENT
-          </span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-ocean/20 bg-[#FFFEF9]/88 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-ocean shadow-sm">
+              <Sparkles className="h-3.5 w-3.5" />
+              Order request • no online payment
+            </div>
 
-          <h1 className="mt-5 max-w-2xl font-clash text-4xl font-bold leading-[1.05] tracking-[-0.02em] text-[#10233D] sm:text-5xl lg:text-[56px]">
-            Order Your Next Device.
-            <br />
-            Pay When You Collect.
-          </h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-[#10233D]/72 sm:text-lg">
-            Select a device, share your details, and choose store pickup in Kigali or delivery
-            anywhere in Rwanda. Our team confirms everything by phone before any payment is made.
-          </p>
+            <h1 className="mt-5 max-w-2xl font-clash text-4xl font-bold leading-[1.02] tracking-[-0.02em] text-[#10233D] sm:text-5xl lg:text-[56px]">
+              Order with clarity.
+              <br />
+              <span className="text-ocean">Pay when you collect.</span>
+            </h1>
+            <p className="mt-4 max-w-xl text-base leading-7 text-[#10233D]/72 sm:text-lg">
+              Choose a device, share a few details, and pick pickup or delivery. We confirm everything by phone before any payment is made.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="#order-form"
+                className="inline-flex items-center justify-center gap-2 rounded-btn bg-ocean px-6 py-3 text-sm font-semibold text-ivory shadow-sm transition-all duration-300 hover:bg-ocean-dark"
+              >
+                <ShoppingBag className="h-4 w-4" />
+                Start Your Order
+              </Link>
+              <a
+                href="https://wa.me/250785288910"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/80 px-6 py-3 text-sm font-semibold text-ocean transition-all duration-300 hover:bg-ocean/5"
+              >
+                <MessageCircle className="h-4 w-4" />
+                Message Us
+              </a>
+            </div>
+          </div>
+
+          <div className="rounded-[28px] border border-white/70 bg-white/80 p-6 shadow-[0_20px_60px_rgba(11,84,151,0.10)] backdrop-blur">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-ocean/60">
+              Simple process
+            </p>
+            <div className="mt-4 space-y-3">
+              {[
+                { title: "Pick your device", body: "Browse from our curated collection of phones, laptops and accessories." },
+                { title: "Share your details", body: "Tell us who you are and where you want the order delivered or collected." },
+                { title: "We confirm by phone", body: "Our team calls to verify stock, pricing and your preferred pickup time." },
+              ].map((step, index) => (
+                <div key={step.title} className="flex gap-3 rounded-2xl border border-ocean/10 bg-ocean-light/20 p-3">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ocean text-[11px] font-bold text-ivory">
+                    {index + 1}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-[#10233D]">{step.title}</p>
+                    <p className="mt-0.5 text-sm leading-6 text-ocean/65">{step.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -277,20 +321,19 @@ export default function OrderNowPage() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               onSubmit={handleSubmit}
-              className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-10"
+              id="order-form"
+              className="grid grid-cols-1 gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8"
             >
-              {/* ── Left column: selector + form ─────────────────────────── */}
-              <div className="space-y-10 lg:col-span-8">
-                {/* Product selector */}
-                <div>
-                  <div className="mb-5 flex items-center gap-2">
+              <div className="space-y-6">
+                <div className="rounded-[24px] border border-ocean/10 bg-white/80 p-6 shadow-[0_12px_36px_rgba(11,84,151,0.06)]">
+                  <div className="mb-4 flex items-center gap-2">
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-ocean text-xs font-bold text-ivory">
                       1
                     </span>
                     <h2 className="font-clash text-xl font-bold text-[#10233D]">Select Your Device</h2>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {PRODUCTS.map((product) => {
                       const isActive = product.id === selectedProductId;
                       return (
@@ -299,18 +342,14 @@ export default function OrderNowPage() {
                           type="button"
                           onClick={() => setSelectedProductId(product.id)}
                           className={cn(
-                            "group relative flex items-center gap-4 rounded-[22px] border p-4 text-left transition-all duration-300",
+                            "flex items-center gap-3 rounded-[18px] border p-3 text-left transition-all duration-300",
                             isActive
-                              ? "border-ocean bg-white shadow-[0_16px_40px_rgba(11,84,151,0.14)]"
-                              : "border-ocean/10 bg-white/50 hover:border-ocean/30 hover:bg-white/80"
+                              ? "border-ocean bg-ocean-light/35 shadow-[0_10px_24px_rgba(11,84,151,0.10)]"
+                              : "border-ocean/10 bg-white/70 hover:border-ocean/30"
                           )}
                         >
-                          <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-ocean-light/40">
-                            <img
-                              src={product.image}
-                              alt={product.title}
-                              className="h-full w-full object-contain p-1.5"
-                            />
+                          <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-ocean-light/40">
+                            <img src={product.image} alt={product.title} className="h-full w-full object-contain p-1.5" />
                           </div>
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm font-semibold text-[#10233D]">{product.title}</p>
@@ -319,32 +358,21 @@ export default function OrderNowPage() {
                               {product.currency} {formatPrice(product.price)}
                             </p>
                           </div>
-                          <div
-                            className={cn(
-                              "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all duration-300",
-                              isActive
-                                ? "border-ocean bg-ocean text-ivory"
-                                : "border-ocean/20 text-transparent"
-                            )}
-                          >
-                            <Check className="h-3.5 w-3.5" />
-                          </div>
                         </button>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* Customer info */}
-                <div>
-                  <div className="mb-5 flex items-center gap-2">
+                <div className="rounded-[24px] border border-ocean/10 bg-white/80 p-6 shadow-[0_12px_36px_rgba(11,84,151,0.06)]">
+                  <div className="mb-4 flex items-center gap-2">
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-ocean text-xs font-bold text-ivory">
                       2
                     </span>
                     <h2 className="font-clash text-xl font-bold text-[#10233D]">Your Information</h2>
                   </div>
 
-                  <div className="space-y-4 rounded-[24px] border border-ocean/10 bg-white/60 p-6 shadow-[0_10px_30px_rgba(11,84,151,0.06)] backdrop-blur-sm">
+                  <div className="space-y-4">
                     <div>
                       <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/70">
                         <User className="h-3.5 w-3.5" /> Full Name
@@ -403,24 +431,23 @@ export default function OrderNowPage() {
                   </div>
                 </div>
 
-                {/* Delivery options */}
-                <div>
-                  <div className="mb-5 flex items-center gap-2">
+                <div className="rounded-[24px] border border-ocean/10 bg-white/80 p-6 shadow-[0_12px_36px_rgba(11,84,151,0.06)]">
+                  <div className="mb-4 flex items-center gap-2">
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-ocean text-xs font-bold text-ivory">
                       3
                     </span>
                     <h2 className="font-clash text-xl font-bold text-[#10233D]">Pickup or Delivery</h2>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <button
                       type="button"
                       onClick={() => setFulfillment("pickup")}
                       className={cn(
-                        "rounded-[22px] border p-5 text-left transition-all duration-300",
+                        "rounded-[18px] border p-4 text-left transition-all duration-300",
                         fulfillment === "pickup"
-                          ? "border-ocean bg-white shadow-[0_16px_40px_rgba(11,84,151,0.14)]"
-                          : "border-ocean/10 bg-white/50 hover:border-ocean/30"
+                          ? "border-ocean bg-ocean-light/35 shadow-[0_10px_24px_rgba(11,84,151,0.10)]"
+                          : "border-ocean/10 bg-white/70 hover:border-ocean/30"
                       )}
                     >
                       <div className="flex items-center justify-between">
@@ -432,19 +459,17 @@ export default function OrderNowPage() {
                         </span>
                       </div>
                       <p className="mt-3 text-sm font-semibold text-[#10233D]">Kigali Store Pickup</p>
-                      <p className="mt-1 text-xs text-ocean/60">
-                        Collect and inspect your device at our KN 2 Ave showroom.
-                      </p>
+                      <p className="mt-1 text-xs text-ocean/60">Collect and inspect your device at our KN 2 Ave showroom.</p>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setFulfillment("delivery")}
                       className={cn(
-                        "rounded-[22px] border p-5 text-left transition-all duration-300",
+                        "rounded-[18px] border p-4 text-left transition-all duration-300",
                         fulfillment === "delivery"
-                          ? "border-ocean bg-white shadow-[0_16px_40px_rgba(11,84,151,0.14)]"
-                          : "border-ocean/10 bg-white/50 hover:border-ocean/30"
+                          ? "border-ocean bg-ocean-light/35 shadow-[0_10px_24px_rgba(11,84,151,0.10)]"
+                          : "border-ocean/10 bg-white/70 hover:border-ocean/30"
                       )}
                     >
                       <div className="flex items-center justify-between">
@@ -456,9 +481,7 @@ export default function OrderNowPage() {
                         </span>
                       </div>
                       <p className="mt-3 text-sm font-semibold text-[#10233D]">Nationwide Delivery</p>
-                      <p className="mt-1 text-xs text-ocean/60">
-                        Delivered anywhere in Rwanda, from Kigali to every province.
-                      </p>
+                      <p className="mt-1 text-xs text-ocean/60">Delivered anywhere in Rwanda, from Kigali to every province.</p>
                     </button>
                   </div>
 
@@ -471,7 +494,7 @@ export default function OrderNowPage() {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="mt-4 space-y-4 rounded-[22px] border border-ocean/10 bg-white/60 p-6 shadow-[0_10px_30px_rgba(11,84,151,0.06)] backdrop-blur-sm">
+                        <div className="mt-4 space-y-4 rounded-[18px] border border-ocean/10 bg-ocean-light/20 p-4">
                           <div>
                             <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/70">
                               <MapPin className="h-3.5 w-3.5" /> Province
@@ -479,7 +502,7 @@ export default function OrderNowPage() {
                             <select
                               value={province}
                               onChange={(e) => setProvince(e.target.value)}
-                              className="w-full cursor-pointer rounded-input border border-ocean/10 bg-ocean-light/30 px-4 py-2.5 text-sm text-ocean transition-all duration-200 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                              className="w-full cursor-pointer rounded-input border border-ocean/10 bg-white px-4 py-2.5 text-sm text-ocean transition-all duration-200 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                             >
                               {PROVINCES.map((p) => (
                                 <option key={p.name} value={p.name}>
@@ -499,7 +522,7 @@ export default function OrderNowPage() {
                                 value={formData.district}
                                 onChange={(e) => setFormData({ ...formData, district: e.target.value })}
                                 placeholder="e.g. Gasabo, Nyarugenge..."
-                                className="w-full rounded-input border border-ocean/10 bg-ocean-light/30 px-4 py-2.5 text-sm text-ocean transition-all duration-200 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                                className="w-full rounded-input border border-ocean/10 bg-white px-4 py-2.5 text-sm text-ocean transition-all duration-200 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                               />
                               {errors.district && <p className="mt-1 text-xs text-red-500">{errors.district}</p>}
                             </div>
@@ -512,7 +535,7 @@ export default function OrderNowPage() {
                                 value={formData.address}
                                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                                 placeholder="Street, landmark, house number..."
-                                className="w-full rounded-input border border-ocean/10 bg-ocean-light/30 px-4 py-2.5 text-sm text-ocean transition-all duration-200 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+                                className="w-full rounded-input border border-ocean/10 bg-white px-4 py-2.5 text-sm text-ocean transition-all duration-200 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                               />
                               {errors.address && <p className="mt-1 text-xs text-red-500">{errors.address}</p>}
                             </div>
@@ -524,63 +547,56 @@ export default function OrderNowPage() {
                 </div>
               </div>
 
-              {/* ── Right column: sticky order summary ───────────────────── */}
-              <div className="lg:col-span-4">
-                <div className="lg:sticky lg:top-28">
-                  <div className="overflow-hidden rounded-[28px] border border-white/60 bg-white/80 shadow-[0_24px_70px_rgba(11,84,151,0.12)] backdrop-blur-xl">
-                    <div className="border-b border-ocean/10 bg-ocean-light/30 px-6 py-4">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-ocean/60">
-                        Order Summary
-                      </p>
+              <div className="lg:sticky lg:top-24">
+                <div className="overflow-hidden rounded-[28px] border border-white/70 bg-white/80 shadow-[0_20px_60px_rgba(11,84,151,0.10)] backdrop-blur">
+                  <div className="border-b border-ocean/10 bg-ocean-light/30 px-6 py-4">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-ocean/60">
+                      Order Summary
+                    </p>
+                  </div>
+
+                  <div className="space-y-4 p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-ocean-light/40">
+                        <img src={selectedProduct.image} alt={selectedProduct.title} className="h-full w-full object-contain p-1" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-[#10233D]">{selectedProduct.title}</p>
+                        <p className="text-xs text-ocean/55">{selectedProduct.category}</p>
+                      </div>
                     </div>
 
-                    <div className="space-y-4 p-6">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-ocean-light/40">
-                          <img
-                            src={selectedProduct.image}
-                            alt={selectedProduct.title}
-                            className="h-full w-full object-contain p-1"
-                          />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-[#10233D]">{selectedProduct.title}</p>
-                          <p className="text-xs text-ocean/55">{selectedProduct.category}</p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2 border-t border-ocean/10 pt-4 text-sm">
-                        <div className="flex items-center justify-between text-ocean/70">
-                          <span>Device Price</span>
-                          <span className="font-medium text-ocean">
-                            {selectedProduct.currency} {formatPrice(selectedProduct.price)}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between text-ocean/70">
-                          <span>{fulfillment === "pickup" ? "Store Pickup" : `Delivery • ${province}`}</span>
-                          <span className="font-medium text-ocean">
-                            {deliveryFee === 0 ? "Free" : `RWF ${formatPrice(deliveryFee)}`}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between border-t border-ocean/10 pt-4">
-                        <span className="text-sm font-semibold text-[#10233D]">Estimated Total</span>
-                        <span className="font-space text-lg font-bold text-ocean">
-                          {selectedProduct.currency} {formatPrice(total)}
+                    <div className="space-y-2 border-t border-ocean/10 pt-4 text-sm">
+                      <div className="flex items-center justify-between text-ocean/70">
+                        <span>Device Price</span>
+                        <span className="font-medium text-ocean">
+                          {selectedProduct.currency} {formatPrice(selectedProduct.price)}
                         </span>
                       </div>
-
-                      <div className="flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2.5 text-xs text-ocean/70">
-                        <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" />
-                        <span>No payment now. Pay on pickup or delivery.</span>
+                      <div className="flex items-center justify-between text-ocean/70">
+                        <span>{fulfillment === "pickup" ? "Store Pickup" : `Delivery • ${province}`}</span>
+                        <span className="font-medium text-ocean">
+                          {deliveryFee === 0 ? "Free" : `RWF ${formatPrice(deliveryFee)}`}
+                        </span>
                       </div>
-
-                      <Button variant="primary" type="submit" className="w-full gap-2">
-                        <ShoppingBag className="h-4 w-4" />
-                        Submit Order Request
-                      </Button>
                     </div>
+
+                    <div className="flex items-center justify-between border-t border-ocean/10 pt-4">
+                      <span className="text-sm font-semibold text-[#10233D]">Estimated Total</span>
+                      <span className="font-space text-lg font-bold text-ocean">
+                        {selectedProduct.currency} {formatPrice(total)}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2.5 text-xs text-ocean/70">
+                      <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" />
+                      <span>No payment now. Pay on pickup or delivery.</span>
+                    </div>
+
+                    <Button variant="primary" type="submit" className="w-full gap-2">
+                      <ShoppingBag className="h-4 w-4" />
+                      Submit Order Request
+                    </Button>
                   </div>
                 </div>
               </div>
