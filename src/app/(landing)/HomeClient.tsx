@@ -19,7 +19,7 @@ import { Brands }             from "@/app/(landing)/sections/Brands";
 import { Reviews }            from "@/app/(landing)/sections/Reviews";
 import { FAQSupport }         from "@/app/(landing)/sections/FAQSupport";
 import CTA                    from "@/app/(landing)/sections/CTA";
-import { EverydayTech }       from "@/app/(landing)/sections/EverydayTech";
+
 import Footer                 from "@/components/ui/Footer";
 import type { HomepageData }  from "@/data/homepage";
 
@@ -363,7 +363,6 @@ export default function HomeClient({ data }: HomeClientProps) {
         </div>
       </section>
 
-      <EverydayTech />
       <Reviews />
       <FAQSupport />
       <CTA />
