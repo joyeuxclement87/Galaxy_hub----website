@@ -9,8 +9,7 @@ import { ProductCard }        from "@/components/products/ProductCard";
 import { ReservationModal }   from "@/components/ui/reservation-modal";
 import {
   Product,
-  TRENDING_KEYWORDS, QUICK_FILTERS,
-  POPULAR_SEARCH_CARDS, DEALS_QUICK_FILTERS,
+  DEALS_QUICK_FILTERS,
   CATEGORIES as FALLBACK_CATEGORIES,
 } from "@/data/mock-data";
 import { useApp }             from "@/context/AppContext";
@@ -83,7 +82,6 @@ interface HomeClientProps {
 
 export default function HomeClient({ data }: HomeClientProps) {
   const [selectedProduct,       setSelectedProduct]       = useState<Product | null>(null);
-  const [popularSearchFilter,   setPopularSearchFilter]   = useState("All");
   const [selectedDealsFilter,   setSelectedDealsFilter]   = useState("All Deals");
 
   const {
@@ -158,108 +156,6 @@ export default function HomeClient({ data }: HomeClientProps) {
       <HeroSection slides={heroSlides} onAddToCart={addToCart} />
 
       <FeaturedCategories categories={data.categories} />
-
-      {/* ── POPULAR SEARCHES — editorial layout ── */}
-      <section className="bg-[radial-gradient(ellipse_at_top,rgba(11,84,151,0.02)_0%,transparent_70%)] px-4 py-20 sm:px-6 md:px-12 md:py-28">
-        <div className="mx-auto max-w-[1320px]">
-          <div className="md:flex md:gap-16">
-            <div className="md:w-[380px] shrink-0 mb-8 md:mb-0">
-              <span className="section-label">POPULAR SEARCHES</span>
-              <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper mt-4">
-                Quickly Find Your Next Device.
-              </h2>
-              <p className="text-sm leading-[1.8] text-ocean/50 font-manrope mt-4">
-                Explore the gadgets, smartphones, accessories, and creator gear our community is looking for right now.
-              </p>
-              <div className="flex flex-wrap gap-2 mt-8">
-                {TRENDING_KEYWORDS.slice(0, 4).map((keyword) => (
-                  <Link
-                    key={keyword}
-                    href={`/search?q=${encodeURIComponent(keyword)}`}
-                    onClick={(e) => { e.preventDefault(); setSearchQuery(keyword); setShowDealsOnly(false); setSelectedCategory("All"); setSelectedBrand("All"); scrollToProducts(); }}
-                    className="rounded-full border border-ocean/8 bg-white px-3.5 py-1.5 text-xs font-semibold text-ocean transition-all duration-200 hover:border-ocean/20 hover:bg-ocean-light/40 font-manrope"
-                  >
-                    {keyword}
-                  </Link>
-                ))}
-                <button
-                  onClick={scrollToProducts}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-ocean/60 hover:text-ocean transition-colors px-2 font-manrope"
-                >
-                  Browse All <ArrowRight className="h-3 w-3" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-3 flex-nowrap no-scrollbar">
-                {QUICK_FILTERS.map((filter) => (
-                  <button
-                    key={filter}
-                    onClick={() => setPopularSearchFilter(filter)}
-                    className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer font-manrope ${
-                      popularSearchFilter === filter
-                        ? "bg-ocean text-white shadow-sm"
-                        : "bg-white border border-ocean/8 text-ocean/55 hover:border-ocean/20 hover:text-ocean"
-                    }`}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                {(() => {
-                  const filtered = POPULAR_SEARCH_CARDS.filter(
-                    (card) => popularSearchFilter === "All" || card.category === popularSearchFilter
-                  );
-                  if (filtered.length === 0) {
-                    return (
-                      <div className="col-span-full py-16 text-center text-sm text-ocean/40">
-                        No matches found in this category.
-                      </div>
-                    );
-                  }
-                  const first = filtered[0];
-                  const rest = filtered.slice(1, 5);
-                  return (
-                    <>
-                      <Link
-                        href={`/search?q=${encodeURIComponent(first.keyword)}`}
-                        onClick={(e) => { e.preventDefault(); setSearchQuery(first.keyword); setShowDealsOnly(false); setSelectedCategory("All"); setSelectedBrand("All"); scrollToProducts(); }}
-                        className="group relative overflow-hidden rounded-2xl bg-ocean-deeper shadow-sm transition-all duration-300 hover:-translate-y-[3px] hover:shadow-lg row-span-2 aspect-[3/4] sm:aspect-[4/5]"
-                      >
-                        <img src={first.image} alt={first.keyword} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
-                        <div className="absolute bottom-0 left-0 p-5 z-10">
-                          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 font-manrope">{first.category}</span>
-                          <h4 className="font-clash text-xl font-bold text-white mt-1">{first.keyword}</h4>
-                          <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold text-white/80 font-manrope opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-                            <span>Explore</span> <ArrowRight className="h-3.5 w-3.5" />
-                          </div>
-                        </div>
-                      </Link>
-                      {rest.map((card, i) => (
-                        <Link
-                          key={card.keyword}
-                          href={`/search?q=${encodeURIComponent(card.keyword)}`}
-                          onClick={(e) => { e.preventDefault(); setSearchQuery(card.keyword); setShowDealsOnly(false); setSelectedCategory("All"); setSelectedBrand("All"); scrollToProducts(); }}
-                          className={`group relative overflow-hidden rounded-2xl bg-ocean-deeper shadow-sm transition-all duration-300 hover:-translate-y-[3px] hover:shadow-lg aspect-square ${i === 1 ? "hidden sm:block" : ""}`}
-                        >
-                          <img src={card.image} alt={card.keyword} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
-                          <div className="absolute bottom-0 left-0 p-4 z-10">
-                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/45 font-manrope">{card.category}</span>
-                            <h4 className="font-clash text-sm font-bold text-white mt-0.5">{card.keyword}</h4>
-                          </div>
-                        </Link>
-                      ))}
-                    </>
-                  );
-                })()}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ── FEATURED DEALS — full-width banner rhythm ── */}
       <section id="deals" className="bg-white px-4 py-20 sm:px-6 md:px-12 md:py-28">
