@@ -24,47 +24,39 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
     : FALLBACK_CATEGORIES;
 
   return (
-    <section id="categories" className="bg-[#FFFEF9] px-6 py-24 md:px-12 lg:py-32">
+    <section className="bg-white px-6 py-24 md:px-12 lg:py-32">
       <div className="mx-auto max-w-[1320px]">
-        <div className="max-w-2xl">
-          <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ocean-deeper">
-            Explore Our Categories
+        <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-accent">CATEGORIES</p>
+        <div className="mt-4 md:flex md:items-end md:justify-between">
+          <h2 className="font-display text-[clamp(1.5rem,4vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ocean-deeper max-w-xl">
+            Explore Our Collections
           </h2>
-          <p className="mt-4 max-w-lg text-sm leading-relaxed text-ocean/55">
-            Discover smartphones, laptops, accessories, and smart devices built for your lifestyle.
-          </p>
+          <Link href="/products" className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-ocean hover:text-accent transition-colors mt-2 md:mt-0">
+            All Categories <ArrowUpRight className="h-4 w-4" />
+          </Link>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-6">
           {display.map((cat) => (
             <Link
               key={cat.name}
               href={cat.href}
               className="group relative block overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-[2px] hover:shadow-md"
             >
-              <div className="absolute right-0 top-0 h-[70%] w-[80%] bg-[radial-gradient(ellipse_at_top_right,rgba(11,84,151,0.06)_0%,transparent_70%)]" />
-              <div className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-[5/4]">
+              <div className="relative aspect-square w-full overflow-hidden bg-ivory-dark/30">
                 <Image
                   src={cat.image}
-                  alt={`${cat.name} category`}
+                  alt={cat.name}
                   fill
                   loading="lazy"
-                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className="object-cover transition-all duration-500 ease-out group-hover:scale-[1.03]"
+                  sizes="(min-width: 1024px) 16vw, (min-width: 768px) 33vw, 50vw"
+                  className="object-cover transition-all duration-500 ease-out group-hover:scale-[1.04]"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
-              <div className="flex items-center justify-between px-6 py-5 sm:px-7 sm:py-6">
-                <div>
-                  <h3 className="font-display text-lg font-bold text-ocean-deeper sm:text-xl">
-                    {cat.name}
-                  </h3>
-                  <p className="mt-0.5 text-sm leading-snug text-ocean/50">
-                    {cat.description}
-                  </p>
-                </div>
-                <span className="ml-4 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-ocean/10 text-ocean/40 transition-all duration-300 group-hover:border-ocean/20 group-hover:bg-ocean group-hover:text-white">
-                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </span>
+              <div className="p-4">
+                <h3 className="font-clash text-sm font-bold text-ocean-deeper sm:text-base">{cat.name}</h3>
+                <p className="mt-0.5 text-[11px] text-ocean/45 leading-snug line-clamp-1">{cat.description}</p>
               </div>
             </Link>
           ))}

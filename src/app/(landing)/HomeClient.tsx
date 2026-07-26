@@ -160,167 +160,116 @@ export default function HomeClient({ data }: HomeClientProps) {
 
       <FeaturedCategories categories={data.categories} />
 
-      <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12">
-        <hr className="divider-subtle" />
-      </div>
-
-      {/* ── POPULAR SEARCHES ── */}
-      <section className="bg-white px-4 py-20 sm:px-6 md:px-12 md:py-28">
-        <div className="mx-auto max-w-[1320px] space-y-10">
-          <div className="flex flex-col gap-3 pb-6 sm:flex-row sm:items-center">
-            <span className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold uppercase tracking-[0.16em] text-ocean/40 font-manrope whitespace-nowrap">
-              Trending
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {TRENDING_KEYWORDS.map((keyword) => (
-                <Link
-                  key={keyword}
-                  href={`/search?q=${encodeURIComponent(keyword)}`}
-                  onClick={(e) => { e.preventDefault(); setSearchQuery(keyword); setShowDealsOnly(false); setSelectedCategory("All"); setSelectedBrand("All"); scrollToProducts(); }}
-                  className="rounded-full border border-ocean/8 bg-ocean/[0.03] px-3 py-1 text-xs font-semibold text-ocean transition-all duration-200 hover:border-ocean/20 hover:bg-ocean-light/40 font-manrope"
-                >
-                  {keyword}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-6 pb-8 md:flex-row md:items-end md:justify-between">
-            <div className="space-y-3 max-w-2xl">
+      {/* ── POPULAR SEARCHES — editorial layout ── */}
+      <section className="bg-[radial-gradient(ellipse_at_top,rgba(11,84,151,0.02)_0%,transparent_70%)] px-4 py-20 sm:px-6 md:px-12 md:py-28">
+        <div className="mx-auto max-w-[1320px]">
+          <div className="md:flex md:gap-16">
+            <div className="md:w-[380px] shrink-0 mb-8 md:mb-0">
               <span className="section-label">POPULAR SEARCHES</span>
-              <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
+              <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper mt-4">
                 Quickly Find Your Next Device.
               </h2>
-              <p className="text-sm leading-[1.8] text-ocean/50 font-manrope">
+              <p className="text-sm leading-[1.8] text-ocean/50 font-manrope mt-4">
                 Explore the gadgets, smartphones, accessories, and creator gear our community is looking for right now.
               </p>
-            </div>
-            <button
-              onClick={scrollToProducts}
-              className="inline-flex items-center gap-2 text-sm font-bold text-ocean transition-all duration-200 hover:gap-3 group cursor-pointer font-manrope"
-            >
-              Browse All Products
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-            </button>
-          </div>
-
-          <div className="space-y-6">
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-2 flex-nowrap no-scrollbar">
-              {QUICK_FILTERS.map((filter) => (
+              <div className="flex flex-wrap gap-2 mt-8">
+                {TRENDING_KEYWORDS.slice(0, 4).map((keyword) => (
+                  <Link
+                    key={keyword}
+                    href={`/search?q=${encodeURIComponent(keyword)}`}
+                    onClick={(e) => { e.preventDefault(); setSearchQuery(keyword); setShowDealsOnly(false); setSelectedCategory("All"); setSelectedBrand("All"); scrollToProducts(); }}
+                    className="rounded-full border border-ocean/8 bg-white px-3.5 py-1.5 text-xs font-semibold text-ocean transition-all duration-200 hover:border-ocean/20 hover:bg-ocean-light/40 font-manrope"
+                  >
+                    {keyword}
+                  </Link>
+                ))}
                 <button
-                  key={filter}
-                  onClick={() => setPopularSearchFilter(filter)}
-                  className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer font-manrope ${
-                    popularSearchFilter === filter
-                      ? "bg-ocean text-white shadow-sm"
-                      : "bg-ocean/[0.04] text-ocean/55 hover:bg-ocean/10 hover:text-ocean"
-                  }`}
+                  onClick={scrollToProducts}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-ocean/60 hover:text-ocean transition-colors px-2 font-manrope"
                 >
-                  {filter}
+                  Browse All <ArrowRight className="h-3 w-3" />
                 </button>
-              ))}
+              </div>
             </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-              {(() => {
-                const filtered = POPULAR_SEARCH_CARDS.filter(
-                  (card) => popularSearchFilter === "All" || card.category === popularSearchFilter
-                );
-                if (filtered.length === 0) {
-                  return (
-                    <div className="col-span-full py-16 text-center text-sm text-ocean/40">
-                      No matches found in this category.
-                    </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-3 flex-nowrap no-scrollbar">
+                {QUICK_FILTERS.map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => setPopularSearchFilter(filter)}
+                    className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer font-manrope ${
+                      popularSearchFilter === filter
+                        ? "bg-ocean text-white shadow-sm"
+                        : "bg-white border border-ocean/8 text-ocean/55 hover:border-ocean/20 hover:text-ocean"
+                    }`}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                {(() => {
+                  const filtered = POPULAR_SEARCH_CARDS.filter(
+                    (card) => popularSearchFilter === "All" || card.category === popularSearchFilter
                   );
-                }
-                return filtered.map((card, index) => {
-                  const isFeatured = index === 0;
-                  return (
-                    <Link
-                      key={card.keyword}
-                      href={`/search?q=${encodeURIComponent(card.keyword)}`}
-                      onClick={(e) => { e.preventDefault(); setSearchQuery(card.keyword); setShowDealsOnly(false); setSelectedCategory("All"); setSelectedBrand("All"); scrollToProducts(); }}
-                      className={`group relative overflow-hidden rounded-2xl bg-ocean-deeper shadow-sm transition-all duration-300 hover:-translate-y-[3px] hover:shadow-lg ${
-                        isFeatured
-                          ? "col-span-1 sm:col-span-2 aspect-[16/10] sm:aspect-[2/1]"
-                          : "col-span-1 aspect-[4/3] sm:aspect-square"
-                      }`}
-                    >
-                      <div className="absolute inset-0 z-0">
-                        <img
-                          src={card.image}
-                          alt={card.keyword}
-                          loading="lazy"
-                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03] select-none"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10 transition-opacity duration-300 group-hover:from-black/95" />
+                  if (filtered.length === 0) {
+                    return (
+                      <div className="col-span-full py-16 text-center text-sm text-ocean/40">
+                        No matches found in this category.
                       </div>
-                      <div className="absolute inset-0 z-10 flex flex-col justify-end p-5 md:p-6">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 font-manrope mb-1">
-                          {card.category}
-                        </span>
-                        <h4 className={`font-clash text-white tracking-tight leading-tight ${
-                          isFeatured ? "text-xl sm:text-2xl" : "text-base sm:text-lg"
-                        }`}>
-                          {card.keyword}
-                        </h4>
-                        <p className="text-xs text-white/60 font-manrope mt-1">
-                          {card.count} items configured
-                        </p>
-                        <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold text-white/90 uppercase tracking-wider font-manrope opacity-0 -translate-x-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
-                          <span>Explore Category</span>
-                          <ArrowRight className="h-3.5 w-3.5" />
+                    );
+                  }
+                  const first = filtered[0];
+                  const rest = filtered.slice(1, 5);
+                  return (
+                    <>
+                      <Link
+                        href={`/search?q=${encodeURIComponent(first.keyword)}`}
+                        onClick={(e) => { e.preventDefault(); setSearchQuery(first.keyword); setShowDealsOnly(false); setSelectedCategory("All"); setSelectedBrand("All"); scrollToProducts(); }}
+                        className="group relative overflow-hidden rounded-2xl bg-ocean-deeper shadow-sm transition-all duration-300 hover:-translate-y-[3px] hover:shadow-lg row-span-2 aspect-[3/4] sm:aspect-[4/5]"
+                      >
+                        <img src={first.image} alt={first.keyword} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+                        <div className="absolute bottom-0 left-0 p-5 z-10">
+                          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 font-manrope">{first.category}</span>
+                          <h4 className="font-clash text-xl font-bold text-white mt-1">{first.keyword}</h4>
+                          <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold text-white/80 font-manrope opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                            <span>Explore</span> <ArrowRight className="h-3.5 w-3.5" />
+                          </div>
                         </div>
-                      </div>
-                    </Link>
+                      </Link>
+                      {rest.map((card, i) => (
+                        <Link
+                          key={card.keyword}
+                          href={`/search?q=${encodeURIComponent(card.keyword)}`}
+                          onClick={(e) => { e.preventDefault(); setSearchQuery(card.keyword); setShowDealsOnly(false); setSelectedCategory("All"); setSelectedBrand("All"); scrollToProducts(); }}
+                          className={`group relative overflow-hidden rounded-2xl bg-ocean-deeper shadow-sm transition-all duration-300 hover:-translate-y-[3px] hover:shadow-lg aspect-square ${i === 1 ? "hidden sm:block" : ""}`}
+                        >
+                          <img src={card.image} alt={card.keyword} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+                          <div className="absolute bottom-0 left-0 p-4 z-10">
+                            <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/45 font-manrope">{card.category}</span>
+                            <h4 className="font-clash text-sm font-bold text-white mt-0.5">{card.keyword}</h4>
+                          </div>
+                        </Link>
+                      ))}
+                    </>
                   );
-                });
-              })()}
+                })()}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12">
-        <hr className="divider-subtle" />
-      </div>
-
-      {/* ── FEATURED DEALS ── */}
-      <section id="deals" className="bg-ivory px-4 py-20 sm:px-6 md:px-12 md:py-28">
-        <div className="mx-auto max-w-[1320px] space-y-12">
-          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-            <div className="space-y-3 max-w-2xl">
-              <span className="section-label">FEATURED DEALS</span>
-              <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
-                Today&apos;s Best Tech Deals
-              </h2>
-              <p className="text-sm leading-[1.8] text-ocean/50 font-manrope">
-                Exclusive offers on genuine gadgets, accessories, and creator gear available across Rwanda.
-              </p>
-            </div>
-            <Link
-              href="/deals"
-              className="inline-flex shrink-0 items-center gap-2 text-sm font-bold text-ocean hover:text-ocean-dark transition-all duration-200 hover:gap-3 group font-manrope"
-            >
-              View All Deals
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-2 flex-nowrap no-scrollbar">
-            {DEALS_QUICK_FILTERS.map((filter) => (
-              <button
-                key={filter}
-                onClick={() => setSelectedDealsFilter(filter)}
-                className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer font-manrope ${
-                  selectedDealsFilter === filter
-                    ? "bg-ocean text-white shadow-sm"
-                    : "bg-white border border-ocean/8 text-ocean/55 hover:bg-ocean/4"
-                }`}
-              >
-                {filter}
-              </button>
-            ))}
+      {/* ── FEATURED DEALS — full-width banner rhythm ── */}
+      <section id="deals" className="bg-white px-4 py-20 sm:px-6 md:px-12 md:py-28">
+        <div className="mx-auto max-w-[1320px]">
+          <div className="max-w-2xl mb-12">
+            <span className="section-label">FEATURED DEALS</span>
+            <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper mt-3">
+              Today&apos;s Best Tech Deals
+            </h2>
           </div>
 
           {displayDeals.length > 0 && selectedDealsFilter === "All Deals" ? (
@@ -346,87 +295,46 @@ export default function HomeClient({ data }: HomeClientProps) {
                       <DealCountdown />
                     </div>
                     <div className="relative aspect-square w-full rounded-xl bg-ivory-dark/40 overflow-hidden flex items-center justify-center p-4">
-                      <img
-                        src={displayDeals[0].image}
-                        alt={displayDeals[0].title}
-                        loading="lazy"
-                        className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105 select-none"
-                      />
+                      <img src={displayDeals[0].image} alt={displayDeals[0].title} loading="lazy" className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105 select-none" />
                     </div>
                   </div>
-                  <div className="mt-6 flex items-center gap-1.5 text-xs font-bold text-ocean font-manrope">
+                  <div className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-ocean font-manrope">
                     <span>{displayDeals[0].ctaText}</span>
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                   </div>
                 </Link>
-
                 <div className="flex flex-col gap-6">
                   {displayDeals.slice(1, 3).map((deal) => (
-                    <Link
-                      key={deal.slug}
-                      href={`/deals/${deal.slug}`}
+                    <Link key={deal.slug} href={`/deals/${deal.slug}`}
                       className="group relative flex flex-row items-center justify-between rounded-2xl border border-ocean/8 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-[2px] hover:border-ocean/15 hover:shadow-md flex-1"
                     >
                       <div className="flex-1 space-y-3 pr-3">
-                        <span className="inline-block rounded-full bg-ocean/5 border border-ocean/10 px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider text-ocean">
-                          {deal.badge}
-                        </span>
-                        <div className="space-y-1">
-                          <h4 className="font-clash text-base font-bold text-ocean-deeper tracking-tight">
-                            {deal.title}
-                          </h4>
-                          <p className="text-xs leading-[1.7] text-ocean/45 font-manrope line-clamp-2">
-                            {deal.description}
-                          </p>
-                        </div>
+                        <span className="inline-block rounded-full bg-ocean/5 border border-ocean/10 px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider text-ocean">{deal.badge}</span>
+                        <h4 className="font-clash text-base font-bold text-ocean-deeper tracking-tight">{deal.title}</h4>
                         <div className="flex items-center gap-1 text-[11px] font-bold text-ocean font-manrope">
                           <span>{deal.ctaText}</span>
                           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
                         </div>
                       </div>
                       <div className="relative aspect-square w-20 rounded-xl bg-ivory-dark/40 overflow-hidden shrink-0 flex items-center justify-center p-2">
-                        <img
-                          src={deal.image}
-                          alt={deal.title}
-                          loading="lazy"
-                          className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105 select-none"
-                        />
+                        <img src={deal.image} alt={deal.title} loading="lazy" className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105 select-none" />
                       </div>
                     </Link>
                   ))}
                 </div>
               </div>
-
               {displayDeals.length > 3 && (
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {displayDeals.slice(3, 6).map((deal) => (
-                    <Link
-                      key={deal.slug}
-                      href={`/deals/${deal.slug}`}
+                    <Link key={deal.slug} href={`/deals/${deal.slug}`}
                       className="group relative flex flex-col justify-between rounded-2xl border border-ocean/8 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-[2px] hover:border-ocean/15 hover:shadow-md"
                     >
-                      <div className="space-y-4">
-                        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-ivory-dark/30 flex items-center justify-center p-3">
-                          <img
-                            src={deal.image}
-                            alt={deal.title}
-                            loading="lazy"
-                            className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105 select-none"
-                          />
-                          <span className="absolute left-3 top-3 rounded-full px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider shadow-sm bg-ocean text-white">
-                            {deal.badge}
-                          </span>
-                        </div>
-                        <div className="space-y-1">
-                          <h4 className="font-clash text-base font-bold text-ocean-deeper tracking-tight">
-                            {deal.title}
-                          </h4>
-                          <p className="text-xs leading-[1.7] text-ocean/45 font-manrope">
-                            {deal.description}
-                          </p>
-                        </div>
+                      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-ivory-dark/30 flex items-center justify-center p-3">
+                        <img src={deal.image} alt={deal.title} loading="lazy" className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105 select-none" />
+                        <span className="absolute left-3 top-3 rounded-full px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider shadow-sm bg-ocean text-white">{deal.badge}</span>
                       </div>
-                      <div className="mt-4 flex items-center gap-1.5 text-xs font-bold text-ocean font-manrope">
+                      <h4 className="font-clash text-base font-bold text-ocean-deeper tracking-tight mt-4">{deal.title}</h4>
+                      <div className="mt-2 flex items-center gap-1.5 text-xs font-bold text-ocean font-manrope">
                         <span>{deal.ctaText}</span>
                         <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
                       </div>
@@ -443,29 +351,18 @@ export default function HomeClient({ data }: HomeClientProps) {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12">
-        <hr className="divider-subtle" />
-      </div>
-
       {/* ── SHOP BY CATEGORY ── */}
-      <section id="categories" className="bg-white px-4 py-20 sm:px-6 md:px-12 md:py-28">
-        <div className="mx-auto max-w-[1320px] space-y-10">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div className="space-y-3 max-w-2xl">
-              <span className="section-label">SHOP BY CATEGORY</span>
-              <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
-                Everything Tech.<br />One Place.
+      <section id="categories" className="bg-ivory px-4 py-20 sm:px-6 md:px-12 md:py-28">
+        <div className="mx-auto max-w-[1320px]">
+          <div className="flex items-end justify-between mb-12">
+            <div className="max-w-2xl">
+              <span className="section-label">CATEGORIES</span>
+              <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper mt-3">
+                Everything Tech. One Place.
               </h2>
-              <p className="text-sm leading-[1.8] text-ocean/50 font-manrope">
-                Explore smartphones, accessories, creator equipment, and smart devices available in Kigali and delivered across Rwanda.
-              </p>
             </div>
-            <Link
-              href="/products"
-              className="inline-flex shrink-0 items-center gap-2 text-sm font-bold text-ocean hover:text-ocean-dark transition-colors group font-manrope"
-            >
-              View All Products
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+            <Link href="/products" className="hidden sm:inline-flex shrink-0 items-center gap-2 text-sm font-bold text-ocean hover:text-ocean-dark transition-colors group font-manrope">
+              View All <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
             </Link>
           </div>
 
@@ -475,25 +372,19 @@ export default function HomeClient({ data }: HomeClientProps) {
                 <Link
                   key={category.id}
                   href={`/products/${category.slug}`}
-                  className={`group relative overflow-hidden rounded-2xl bg-ocean-deeper h-[220px] sm:h-[280px] md:h-[340px] col-span-1`}
+                  className="group relative overflow-hidden rounded-2xl bg-ocean-deeper h-[220px] sm:h-[280px] md:h-[340px]"
                 >
                   <div className="absolute inset-0">
-                    <img
-                      src={category.image}
-                      alt={category.name}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent transition-colors duration-300 group-hover:from-black/65" />
+                    <img src={category.image} alt={category.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
                   </div>
                   <div className="absolute bottom-0 left-0 w-full p-5 sm:p-6 z-10">
                     <h3 className="font-clash text-lg font-bold text-white sm:text-xl">{category.name}</h3>
                     {category.productCount > 0 && (
                       <p className="text-xs text-white/60 font-manrope mt-0.5">{category.productCount}+ Products</p>
                     )}
-                    <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold text-white/80 uppercase tracking-wider font-manrope opacity-0 translate-y-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-                      <span>Explore</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
+                    <div className="mt-3 flex items-center gap-1.5 text-[11px] font-bold text-white/80 font-manrope opacity-0 translate-y-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                      <span>Explore</span> <ArrowRight className="h-3.5 w-3.5" />
                     </div>
                   </div>
                 </Link>
@@ -509,88 +400,72 @@ export default function HomeClient({ data }: HomeClientProps) {
 
       <Brands brands={data.brands} filters={data.brandFilters} />
 
-      <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12">
-        <hr className="divider-subtle" />
-      </div>
-
       {/* ── TRENDING PRODUCTS ── */}
-      <section id="products" className="mx-auto max-w-[1320px] space-y-8 px-4 py-20 sm:px-6 md:px-12 md:py-28">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div className="space-y-3 max-w-2xl">
-            <span className="section-label">TRENDING NOW</span>
-            <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
-              Popular Tech Picks
-            </h2>
-            <p className="text-sm leading-[1.8] text-ocean/50 font-manrope">
-              Discover the devices and accessories customers are choosing most from Galaxy Hub.
-            </p>
+      <section id="products" className="bg-white px-4 py-20 sm:px-6 md:px-12 md:py-28">
+        <div className="mx-auto max-w-[1320px] space-y-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-2xl">
+              <span className="section-label">TRENDING NOW</span>
+              <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper mt-3">
+                Popular Tech Picks
+              </h2>
+            </div>
+            <Link href="/products" className="inline-flex shrink-0 items-center gap-2 text-sm font-bold text-ocean hover:text-ocean-dark transition-colors group font-manrope">
+              View All Products <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+            </Link>
           </div>
-          <Link
-            href="/products"
-            className="inline-flex shrink-0 items-center gap-2 text-sm font-bold text-ocean hover:text-ocean-dark transition-colors group font-manrope"
-          >
-            View All Products
-            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-          </Link>
-        </div>
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-ocean/5 pb-4">
-          <div className="flex items-center gap-1.5 overflow-x-auto flex-nowrap no-scrollbar">
-            {["All", "Smartphones", "Laptops", "Audio", "Accessories", "Creator Gear", "Deals"].map((tab) => {
-              const isActive =
-                tab === "All"   ? selectedCategory === "All" && !showDealsOnly :
-                tab === "Deals" ? showDealsOnly :
-                                  selectedCategory === tab && !showDealsOnly;
-              return (
-                <button
-                  key={tab}
-                  onClick={() => {
-                    if (tab === "All")   { setSelectedCategory("All"); setShowDealsOnly(false); }
-                    else if (tab === "Deals") { setShowDealsOnly(true); }
-                    else                 { setSelectedCategory(tab);  setShowDealsOnly(false); }
-                  }}
-                  className={`whitespace-nowrap rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer font-manrope ${
-                    isActive
-                      ? "bg-ocean text-white shadow-sm"
-                      : "text-ocean/40 hover:text-ocean hover:bg-ocean/4"
-                  }`}
-                >
-                  {tab}
-                </button>
-              );
-            })}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-ocean/5 pb-4">
+            <div className="flex items-center gap-1.5 overflow-x-auto flex-nowrap no-scrollbar">
+              {["All", "Smartphones", "Laptops", "Audio", "Accessories", "Creator Gear", "Deals"].map((tab) => {
+                const isActive =
+                  tab === "All"   ? selectedCategory === "All" && !showDealsOnly :
+                  tab === "Deals" ? showDealsOnly :
+                                    selectedCategory === tab && !showDealsOnly;
+                return (
+                  <button key={tab}
+                    onClick={() => {
+                      if (tab === "All")   { setSelectedCategory("All"); setShowDealsOnly(false); }
+                      else if (tab === "Deals") { setShowDealsOnly(true); }
+                      else                 { setSelectedCategory(tab);  setShowDealsOnly(false); }
+                    }}
+                    className={`whitespace-nowrap rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer font-manrope ${
+                      isActive ? "bg-ocean text-white shadow-sm" : "text-ocean/40 hover:text-ocean hover:bg-ocean/4"
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-xs text-ocean/40 font-manrope">Sort by:</span>
+              <select className="bg-transparent border-none text-xs font-bold text-ocean-deeper focus:ring-0 outline-none cursor-pointer font-manrope">
+                <option>Popular</option>
+                <option>Newest</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+                <option>Rating</option>
+              </select>
+            </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="text-xs text-ocean/40 font-manrope">Sort by:</span>
-            <select className="bg-transparent border-none text-xs font-bold text-ocean-deeper focus:ring-0 outline-none cursor-pointer font-manrope">
-              <option>Popular</option>
-              <option>Newest</option>
-              <option>Price: Low to High</option>
-              <option>Price: High to Low</option>
-              <option>Rating</option>
-            </select>
-          </div>
-        </div>
 
-        {displayedProducts.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
-            {displayedProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onReserve={setSelectedProduct}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-4 rounded-2xl border border-dashed border-black/6 bg-white/40 py-24 text-center">
-            <AlertCircle className="mx-auto h-10 w-10 text-ocean/15" />
-            <h3 className="font-clash text-lg font-bold text-ocean-deeper">No products found</h3>
-            <p className="mx-auto max-w-sm text-sm text-ocean/45 font-manrope">
-              We couldn&apos;t find matches for your current filters. Try selecting a different category.
-            </p>
-          </div>
-        )}
+          {displayedProducts.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
+              {displayedProducts.map((product) => (
+                <ProductCard key={product.id} product={product} onReserve={setSelectedProduct} />
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-4 rounded-2xl border border-dashed border-black/6 bg-white/40 py-24 text-center">
+              <AlertCircle className="mx-auto h-10 w-10 text-ocean/15" />
+              <h3 className="font-clash text-lg font-bold text-ocean-deeper">No products found</h3>
+              <p className="mx-auto max-w-sm text-sm text-ocean/45 font-manrope">
+                We couldn&apos;t find matches for your current filters.
+              </p>
+            </div>
+          )}
+        </div>
       </section>
 
       <CreatorEssentials />
