@@ -23,7 +23,7 @@ import {
   Truck,
   User,
 } from "lucide-react";
-import { Navbar } from "@/components/ui/navbar";
+import { Navbar } from "@/components/navbar/Navbar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PRODUCTS, Product } from "@/data/mock-data";

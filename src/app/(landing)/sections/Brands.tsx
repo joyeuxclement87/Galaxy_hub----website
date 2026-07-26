@@ -4,15 +4,25 @@ import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { BRAND_CATALOG, BRAND_FILTERS, type BrandFilter } from "@/data/brands";
+import { BRAND_CATALOG, type BrandFilter } from "@/data/brands";
+import type { BrandCatalogItem } from "@/data/brands";
 
-export function Brands() {
+interface BrandsProps {
+  brands?: BrandCatalogItem[];
+  filters?: BrandFilter[];
+}
+
+const DEFAULT_FILTERS: BrandFilter[] = ["All", "Phones", "Laptops", "Audio", "Accessories"];
+
+export function Brands({ brands, filters = DEFAULT_FILTERS }: BrandsProps) {
   const [activeFilter, setActiveFilter] = useState<BrandFilter>("All");
 
+  const catalog = brands ?? BRAND_CATALOG;
+
   const filteredBrands = useMemo(() => {
-    if (activeFilter === "All") return BRAND_CATALOG;
-    return BRAND_CATALOG.filter((brand) => brand.filter === activeFilter);
-  }, [activeFilter]);
+    if (activeFilter === "All") return catalog;
+    return catalog.filter((brand) => brand.filter === activeFilter);
+  }, [activeFilter, catalog]);
 
   const featuredBrand    = filteredBrands.find((b) => b.featured) ?? filteredBrands[0];
   const secondaryBrands  = filteredBrands.filter((b) => b.slug !== featuredBrand?.slug);
@@ -35,7 +45,7 @@ export function Brands() {
 
           {/* Segmented Filter Control */}
           <div className="flex flex-wrap items-center gap-1.5">
-            {BRAND_FILTERS.map((filter) => (
+            {filters.map((filter) => (
               <button
                 key={filter}
                 type="button"

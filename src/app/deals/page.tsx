@@ -3,13 +3,13 @@
 import Link from "next/link";
 import React from "react";
 import { ArrowRight, ChevronLeft } from "lucide-react";
-import { Navbar } from "@/components/ui/navbar";
+import { Navbar } from "@/components/navbar/Navbar";
 import { DEAL_OFFERS } from "@/data/mock-data";
 
 export default function DealsPage() {
   return (
     <div className="min-h-screen bg-ivory flex flex-col">
-      <Navbar onSearchFocus={() => {}} />
+      <Navbar />
 
       <main className="flex-1 pt-32 px-6 md:px-12 pb-24 max-w-[1320px] mx-auto w-full space-y-12">
         {/* Back Link */}

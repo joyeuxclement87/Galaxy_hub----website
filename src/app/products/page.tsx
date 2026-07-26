@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Navbar } from "@/components/ui/navbar";
+import { Navbar } from "@/components/navbar/Navbar";
 import ProductsGrid from "@/components/ui/products-grid";
 import { PRODUCTS, CATEGORIES, Product } from "@/data/mock-data";
 import SortSelect from "@/components/ui/sort-select";

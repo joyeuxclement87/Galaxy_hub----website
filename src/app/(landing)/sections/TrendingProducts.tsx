@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import Fuse from "fuse.js";
 import { AlertCircle, Search } from "lucide-react";
-import { ProductCard } from "@/components/ui/product-card";
+import { ProductCard } from "@/components/products/ProductCard";
 import { PRODUCTS, Product } from "@/data/mock-data";
 
 interface TrendingProductsProps {

@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Product } from "@/data/mock-data";
-import { Button } from "./button";
+import { Button } from "@/components/ui/button";
 import { ShoppingBag, Heart, Star, ShoppingCart, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/context/AppContext";

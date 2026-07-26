@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Product } from "@/data/mock-data";
-import { ProductCard } from "./product-card";
+import { ProductCard } from "@/components/products/ProductCard";
 
 interface ProductsGridProps {
   products: Product[];

@@ -1,12 +1,11 @@
-/* ── Import Manrope directly or via Next.js variable ───────────────────── */
 @import "tailwindcss";
 
 @theme {
-  /* ── Body font: Manrope via next/font/google ── */
+  /* ── Body: Manrope (loaded via next/font/google) ── */
   --font-sans: var(--font-manrope), "Manrope", sans-serif;
 
-  /* ── Display / heading font: Manrope ── */
-  --font-clash: var(--font-manrope), "Manrope", sans-serif;
+  /* ── Display / headings: Oakes Grotesk (self-hosted) ── */
+  --font-display: "Oakes Grotesk", sans-serif;
 
   /* ── Price / mono-style display: Manrope ── */
   --font-space: var(--font-manrope), "Manrope", sans-serif;
@@ -21,6 +20,39 @@
 
   /* ── Soft Ocean shadow ── */
   --shadow-premium: 0 20px 60px rgba(11, 84, 151, 0.08);
+}
+
+/* ── Self-hosted: Oakes Grotesk ─────────────────────────────────────────── */
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("/fonts/oakes-grotesk-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("/fonts/oakes-grotesk-semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("/fonts/oakes-grotesk-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Oakes Grotesk";
+  src: url("/fonts/oakes-grotesk-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 :root {

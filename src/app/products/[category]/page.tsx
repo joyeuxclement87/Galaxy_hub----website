@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, Filter, Star, Info, Phone, ArrowRight } from "lucide-react";
-import { Navbar } from "@/components/ui/navbar";
+import { Navbar } from "@/components/navbar/Navbar";
 import { CATEGORIES, PRODUCTS } from "@/data/mock-data";
 import { CategoryProductGrid } from "@/components/ui/category-product-grid";
 

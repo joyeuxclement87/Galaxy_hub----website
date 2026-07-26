@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ProductCard } from "./product-card";
+import { ProductCard } from "@/components/products/ProductCard";
 import { ReservationModal } from "./reservation-modal";
 import { Product } from "@/data/mock-data";
 
