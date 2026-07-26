@@ -14,31 +14,15 @@ const localBusinessSchema = {
     "addressCountry": "RW",
   },
   "openingHoursSpecification": [
-    {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-      "opens": "09:00",
-      "closes": "20:00",
-    },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "09:00", "closes": "20:00" },
   ],
   "sameAs": [
-    "https://instagram.com/galaxyhub",
-    "https://facebook.com/galaxyhub",
-    "https://tiktok.com/@galaxyhub",
-    "https://wa.me/250785288910",
-    "https://t.me/galaxyhub",
+    "https://instagram.com/galaxyhub", "https://facebook.com/galaxyhub",
+    "https://tiktok.com/@galaxyhub", "https://wa.me/250785288910", "https://t.me/galaxyhub",
   ],
 };
 
-function SocialIcon({
-  href,
-  label,
-  children,
-}: {
-  href: string;
-  label: string;
-  children: React.ReactNode;
-}) {
+function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
     <Link
       href={href}
@@ -52,13 +36,9 @@ function SocialIcon({
 
 export function Footer() {
   return (
-    <footer className="bg-[#061F3A] text-[#FFFEF9]">
+    <footer className="bg-[#061F3A]">
       <div className="mx-auto max-w-[1320px] px-4 pt-14 pb-8 sm:px-6 md:px-12">
-
-        {/* Main grid — 1 col on mobile, 2 cols on sm, 4 cols on xl */}
         <div className="grid grid-cols-2 gap-8 sm:gap-10 xl:grid-cols-[1.6fr_1fr_1fr_1.1fr]">
-
-          {/* Brand column — full width on mobile */}
           <div className="col-span-2 space-y-5 xl:col-span-1">
             <Link href="/" className="inline-flex items-center gap-3 text-white">
               <img
@@ -68,23 +48,21 @@ export function Footer() {
                 height={40}
                 className="h-10 w-auto object-contain"
               />
-              
             </Link>
-            <p className="text-sm leading-[1.8] text-white/65 font-manrope max-w-sm">
+            <p className="text-sm leading-[1.8] text-white/55 font-manrope max-w-sm">
               Galaxy Hub is a trusted gadget store in Kigali, Rwanda, offering genuine smartphones, laptops, accessories, creator gear, and nationwide delivery.
             </p>
             <Link
               href="/order"
-              className="inline-flex items-center gap-2 rounded-full bg-ocean px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-ocean-dark"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-ocean to-ocean-dark px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_20px_rgba(11,84,151,0.25)]"
             >
               Order Now →
             </Link>
           </div>
 
-          {/* Shop */}
           <nav aria-label="Shop links" className="space-y-4">
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/50 font-manrope">Shop</h2>
-            <ul className="space-y-2.5 text-sm text-white/70 font-manrope">
+            <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/45 font-manrope">Shop</h2>
+            <ul className="space-y-2.5 text-sm text-white/60 font-manrope">
               {[
                 { label: "All Products",       href: "/products"            },
                 { label: "Smartphones",        href: "/products/smartphones"},
@@ -94,7 +72,7 @@ export function Footer() {
                 { label: "Creator Essentials", href: "/products/creator-gear"},
               ].map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="transition-colors hover:text-white hover:underline underline-offset-4">
+                  <Link href={link.href} className="transition-colors hover:text-white/85">
                     {link.label}
                   </Link>
                 </li>
@@ -102,10 +80,9 @@ export function Footer() {
             </ul>
           </nav>
 
-          {/* Support */}
           <nav aria-label="Support links" className="space-y-4">
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/50 font-manrope">Support</h2>
-            <ul className="space-y-2.5 text-sm text-white/70 font-manrope">
+            <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/45 font-manrope">Support</h2>
+            <ul className="space-y-2.5 text-sm text-white/60 font-manrope">
               {[
                 { label: "How to Order",   href: "/order"   },
                 { label: "Delivery Info",  href: "/order"   },
@@ -114,7 +91,7 @@ export function Footer() {
                 { label: "Contact Us",     href: "/contact" },
               ].map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="transition-colors hover:text-white hover:underline underline-offset-4">
+                  <Link href={link.href} className="transition-colors hover:text-white/85">
                     {link.label}
                   </Link>
                 </li>
@@ -122,28 +99,23 @@ export function Footer() {
             </ul>
           </nav>
 
-          {/* Contact */}
           <address className="not-italic col-span-2 space-y-4 sm:col-span-1 xl:col-span-1">
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/50 font-manrope">Contact</h2>
-            <div className="space-y-2 text-sm text-white/70 font-manrope">
+            <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/45 font-manrope">Contact</h2>
+            <div className="space-y-2 text-sm text-white/60 font-manrope">
               <p>TCB Floor 1B, Door 13B</p>
               <p>Kigali, Rwanda</p>
-              <a href="tel:+250785288910" className="block text-white/85 hover:text-white hover:underline underline-offset-4 transition-colors">
+              <a href="tel:+250785288910" className="block text-white/80 hover:text-white transition-colors">
                 +250 785 288 910
               </a>
-              <a href="mailto:hello@galaxyhub.rw" className="block text-white/85 hover:text-white hover:underline underline-offset-4 transition-colors">
+              <a href="mailto:hello@galaxyhub.rw" className="block text-white/80 hover:text-white transition-colors">
                 hello@galaxyhub.rw
               </a>
               <p>Mon – Sat · 9 AM – 8 PM</p>
             </div>
-
-            {/* Social links */}
             <div className="flex flex-wrap gap-2 pt-1">
               <SocialIcon href="https://instagram.com/galaxyhub" label="Instagram">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                  <rect x="2.5" y="2.5" width="19" height="19" rx="5" />
-                  <path d="M16.5 7.5h.01" />
-                  <circle cx="12" cy="12" r="4.5" />
+                  <rect x="2.5" y="2.5" width="19" height="19" rx="5" /><path d="M16.5 7.5h.01" /><circle cx="12" cy="12" r="4.5" />
                 </svg>
               </SocialIcon>
               <SocialIcon href="https://facebook.com/galaxyhub" label="Facebook">
@@ -153,8 +125,7 @@ export function Footer() {
               </SocialIcon>
               <SocialIcon href="https://tiktok.com/@galaxyhub" label="TikTok">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                  <path d="M14 2v10a4 4 0 1 1-4-4" />
-                  <path d="M18 8.5a4.8 4.8 0 0 1-3.5-1.5" />
+                  <path d="M14 2v10a4 4 0 1 1-4-4" /><path d="M18 8.5a4.8 4.8 0 0 1-3.5-1.5" />
                 </svg>
               </SocialIcon>
               <SocialIcon href="https://wa.me/250785288910" label="WhatsApp">
@@ -164,37 +135,30 @@ export function Footer() {
               </SocialIcon>
               <SocialIcon href="https://t.me/galaxyhub" label="Telegram">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                  <path d="M22 2 2 11.5 7.5 14l2.6 8L11 14l11-12Z" />
-                  <path d="M7.5 14 18.4 6.8" />
+                  <path d="M22 2 2 11.5 7.5 14l2.6 8L11 14l11-12Z" /><path d="M7.5 14 18.4 6.8" />
                 </svg>
               </SocialIcon>
             </div>
           </address>
         </div>
 
-        {/* SEO text */}
-        <p className="mt-10 text-xs leading-[1.8] text-white/40 font-manrope max-w-2xl">
+        <p className="mt-10 text-xs leading-[1.8] text-white/35 font-manrope max-w-2xl">
           Galaxy Hub supplies genuine smartphones, laptops, audio devices, creator accessories, and smart technology with delivery across Rwanda — including Kigali, Musanze, Rubavu, Huye, Muhanga, and all other provinces.
         </p>
       </div>
 
-      {/* Bottom bar */}
       <div className="border-t border-white/8 bg-[#04131F]">
-        <div className="mx-auto flex max-w-[1320px] flex-col gap-2 px-4 py-5 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between md:px-12">
+        <div className="mx-auto flex max-w-[1320px] flex-col gap-2 px-4 py-5 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between md:px-12">
           <span className="font-manrope">© 2026 Galaxy Hub · Kigali, Rwanda</span>
-          <span className="font-manrope">Made with care in Rwanda 🇷🇼</span>
+          <span className="font-manrope">Made with care in Rwanda</span>
           <div className="flex flex-wrap items-center gap-4 font-manrope">
-            <Link href="/privacy" className="hover:text-white/70 hover:underline underline-offset-4 transition-colors">Privacy</Link>
-            <Link href="/terms"   className="hover:text-white/70 hover:underline underline-offset-4 transition-colors">Terms</Link>
+            <Link href="/privacy" className="hover:text-white/70 transition-colors">Privacy</Link>
+            <Link href="/terms"   className="hover:text-white/70 transition-colors">Terms</Link>
           </div>
         </div>
       </div>
 
-      {/* Structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
     </footer>
   );
 }

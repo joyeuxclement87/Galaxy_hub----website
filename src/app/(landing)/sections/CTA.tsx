@@ -22,69 +22,63 @@ export function CTA() {
   return (
     <section aria-labelledby="cta-heading" className="px-4 py-10 sm:px-6 md:px-12 md:py-16">
       <div className="mx-auto max-w-[1280px]">
-        <div className="relative overflow-hidden rounded-[32px] bg-ocean px-8 py-12 md:px-16 md:py-20">
-
-          {/* Subtle dot grid overlay */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-ocean via-ocean-dark to-[#062d54] px-8 py-12 md:px-16 md:py-20">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 opacity-[0.04]"
+            className="pointer-events-none absolute inset-0 opacity-[0.03]"
             style={{
               backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
               backgroundSize: "28px 28px",
             }}
           />
+          <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-[radial-gradient(ellipse,rgba(255,255,255,0.06)_0%,transparent_70%)]" />
 
           <div className="relative z-10 grid gap-10 lg:grid-cols-[1fr_0.45fr] lg:items-center">
-
-            {/* Left: content */}
             <div className="text-white">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.28em] text-white/60 font-manrope">
+              <span className="block text-[10px] font-bold uppercase tracking-[0.28em] text-white/50 font-manrope">
                 READY TO UPGRADE?
               </span>
               <h2
                 id="cta-heading"
-                className="mt-4 font-clash text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl"
+                className="mt-4 font-clash text-[clamp(1.75rem,4vw,3rem)] font-bold leading-tight text-white"
               >
                 Your Next Device<br />Starts Here.
               </h2>
-              <p className="mt-4 max-w-lg text-sm leading-[1.8] text-white/75 font-manrope">
+              <p className="mt-4 max-w-lg text-sm leading-[1.8] text-white/65 font-manrope">
                 Browse genuine smartphones, laptops, accessories, creator gear, and everyday technology with delivery available across Rwanda.
               </p>
 
-              {/* Primary CTAs */}
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/order"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-ocean shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-ocean shadow-sm transition-all duration-200 hover:-translate-y-[1px] hover:shadow-md active:translate-y-0"
                 >
                   Order Now
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/products"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 hover:border-white/30"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 hover:border-white/25"
                 >
                   Browse Products
                 </Link>
               </div>
 
-              {/* Trust row */}
               <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2">
                 {TRUST_ITEMS.map((item) => (
-                  <li key={item} className="inline-flex items-center gap-1.5 text-sm font-medium text-white/85">
+                  <li key={item} className="inline-flex items-center gap-1.5 text-sm font-medium text-white/80">
                     <span className="text-emerald-300 text-base leading-none">✓</span>
                     {item}
                   </li>
                 ))}
               </ul>
 
-              {/* Contact shortcuts */}
               <div className="mt-6 flex flex-wrap gap-2">
                 {CONTACT_LINKS.map((link) => (
                   <a
                     key={link.label}
                     href={link.href}
-                    className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-white/20 border border-white/10"
+                    className="inline-flex items-center gap-2 rounded-full bg-white/8 px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-white/15 border border-white/10"
                   >
                     {link.icon}
                     {link.label}
@@ -93,18 +87,16 @@ export function CTA() {
               </div>
             </div>
 
-            {/* Right: product composition image */}
             <div className="flex items-center justify-center">
               <div className="relative h-[220px] w-full max-w-[360px] md:h-[280px]">
                 <Image
                   src="/cta-composition.svg"
-                  alt="Galaxy Hub tech devices — smartphones, earbuds, and accessories available in Rwanda"
+                  alt="Galaxy Hub tech devices"
                   fill
                   sizes="(min-width: 1024px) 360px, 90vw"
                   className="object-contain"
                   priority={false}
                 />
-                {/* Floating trust pills */}
                 <div className="absolute left-2 top-4 rounded-full bg-white/90 px-3 py-1.5 text-[11px] font-semibold text-ocean shadow-sm">
                   ✓ Genuine Products
                 </div>
@@ -113,7 +105,6 @@ export function CTA() {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

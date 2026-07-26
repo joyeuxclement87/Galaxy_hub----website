@@ -1,28 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── Body: Manrope (loaded via next/font/google) ── */
   --font-sans: var(--font-manrope), "Manrope", sans-serif;
-
-  /* ── Display / headings: Oakes Grotesk (self-hosted) ── */
   --font-display: "Oakes Grotesk", sans-serif;
-
-  /* ── Price / mono-style display: Manrope ── */
   --font-space: var(--font-manrope), "Manrope", sans-serif;
 
-  /* ── Premium palette: Ivory & Ocean ── */
-  --color-ivory:       #faf9f6;
-  --color-ivory-dark:  #f0eee9;
-  --color-ocean:       #0b5497;
-  --color-ocean-dark:  #083e70;
+  --color-ivory: #faf9f6;
+  --color-ivory-dark: #f0eee9;
+  --color-ocean: #0b5497;
+  --color-ocean-dark: #083e70;
+  --color-ocean-deeper: #0a1f3a;
   --color-ocean-light: #e6f0fa;
-  --color-accent:      #0f70c9;
+  --color-ocean-subtle: rgba(11, 84, 151, 0.04);
+  --color-accent: #0f70c9;
+  --color-surface: #f7f7f5;
+  --color-charcoal: #1a1a2e;
 
-  /* ── Soft Ocean shadow ── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.1);
   --shadow-premium: 0 20px 60px rgba(11, 84, 151, 0.08);
+  --shadow-premium-lg: 0 32px 80px rgba(11, 84, 151, 0.12);
 }
 
-/* ── Self-hosted: Oakes Grotesk ─────────────────────────────────────────── */
 @font-face {
   font-family: "Oakes Grotesk";
   src: url("/fonts/oakes-grotesk-bold.woff2") format("woff2");
@@ -30,7 +31,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "Oakes Grotesk";
   src: url("/fonts/oakes-grotesk-semibold.woff2") format("woff2");
@@ -38,7 +38,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "Oakes Grotesk";
   src: url("/fonts/oakes-grotesk-medium.woff2") format("woff2");
@@ -46,7 +45,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "Oakes Grotesk";
   src: url("/fonts/oakes-grotesk-regular.woff2") format("woff2");
@@ -62,126 +60,53 @@
 
 body {
   background-color: var(--background);
-  color: var(--foreground);
+  color: #0a1f3a;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Typography utility classes ─────────────────────────────────────────── */
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
 
-/* Headings: Manrope (Bold/Extra Bold) */
-.font-clash,
-.font-clash-display,
-.font-cabinet,
-.font-sora {
-  font-family: var(--font-sans);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-/* Body: Manrope */
-.font-manrope {
-  font-family: var(--font-sans);
-}
-
-/* Prices / labels: Manrope */
-.font-space {
-  font-family: var(--font-sans);
-}
-
-/* ── Hide scrollbar utility ─────────────────────────────────────────────── */
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* ── One-shot entrance animations (not infinite) ────────────────────────── */
-@keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes fade-rise {
-  from { opacity: 0; transform: translate3d(0, 16px, 0); }
-  to   { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-
-@keyframes slide-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes scale-in {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fade-rise { from { opacity: 0; transform: translate3d(0, 16px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
+@keyframes slide-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scale-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
 .animate-fade-in  { animation: fade-in  0.5s ease-out both; }
 .animate-fade-rise { animation: fade-rise 0.7s ease-out both; }
 .animate-slide-up  { animation: slide-up  0.6s ease-out both; }
 .animate-scale-in  { animation: scale-in  0.4s ease-out both; }
 
-/* ── Glass effect (used sparingly) ─────────────────────────────────────── */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
+.glass-panel { background: rgba(255,255,255,0.55); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.4); }
+.glass-panel-dark { background: rgba(11,84,151,0.05); backdrop-filter: blur(16px); border: 1px solid rgba(11,84,151,0.08); }
 
-.glass-panel-dark {
-  background: rgba(11, 84, 151, 0.05);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(11, 84, 151, 0.08);
-}
+.hero-grid-texture { background-image: linear-gradient(rgba(11,84,151,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(11,84,151,0.04) 1px, transparent 1px); background-size: 72px 72px; }
 
-/* ── Subtle grid texture for hero ──────────────────────────────────────── */
-.hero-grid-texture {
-  background-image:
-    linear-gradient(rgba(11, 84, 151, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(11, 84, 151, 0.04) 1px, transparent 1px);
-  background-size: 72px 72px;
-}
-
-/* ── Border radius tokens ───────────────────────────────────────────────── */
 .rounded-card   { border-radius: 24px;  }
 .rounded-btn    { border-radius: 999px; }
 .rounded-img    { border-radius: 28px;  }
 .rounded-input  { border-radius: 18px;  }
 .rounded-badge  { border-radius: 999px; }
 
-/* ── Safe-area utilities for mobile ────────────────────────────────────── */
 .safe-top    { padding-top:    env(safe-area-inset-top);    }
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+.touch-target { min-height: 44px; min-width: 44px; }
+.product-img-blend { mix-blend-mode: multiply; }
 
-/* ── Touch target enforcement ───────────────────────────────────────────── */
-.touch-target {
-  min-height: 44px;
-  min-width:  44px;
-}
-
-/* ── Product image mix-blend ────────────────────────────────────────────── */
-.product-img-blend {
-  mix-blend-mode: multiply;
-}
-
-/* ── Section label micro-style ──────────────────────────────────────────── */
 .section-label {
-  display: block;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  font-family: var(--font-sans);
+  display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--color-accent); font-family: var(--font-sans);
 }
 
-/* ── Smooth image reveal on load ────────────────────────────────────────── */
-img {
-  display: block;
+img { display: block; }
+
+.soft-radial-glow {
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(11,84,151,0.06) 0%, transparent 70%);
+}
+
+.divider-subtle {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(11,84,151,0.08), transparent);
 }

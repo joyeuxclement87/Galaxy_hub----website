@@ -24,12 +24,8 @@ interface CartItem {
   id: string;
   quantity: number;
   product: {
-    id: string;
-    name: string;
-    slug: string;
-    price: number;
-    old_price: number | null;
-    main_image_url: string | null;
+    id: string; name: string; slug: string; price: number;
+    old_price: number | null; main_image_url: string | null;
   } | null;
 }
 
@@ -71,18 +67,10 @@ export default function CheckoutPage() {
     setSubmitting(true);
     setError("");
 
-    const result = await submitOrder({
-      ...form,
-      session_id: getSessionId(),
-    });
-
+    const result = await submitOrder({ ...form, session_id: getSessionId() });
     setSubmitting(false);
 
-    if (result.error) {
-      setError(result.error);
-      return;
-    }
-
+    if (result.error) { setError(result.error); return; }
     if (result.order) {
       localStorage.removeItem("gh-session");
       router.push(`/order/success?id=${result.order.id}&order_number=${result.order.order_number}&total=${result.order.total_amount}`);
@@ -91,7 +79,7 @@ export default function CheckoutPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-[#F8F9FA]">
+      <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-ivory">
         <Navbar />
         <main className="mx-auto max-w-[1320px] px-6 py-12 md:px-12">
           <div className="flex items-center justify-center py-24">
@@ -104,16 +92,14 @@ export default function CheckoutPage() {
 
   if (validItems.length === 0 && !loading) {
     return (
-      <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-[#F8F9FA]">
+      <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-ivory">
         <Navbar />
         <main className="mx-auto max-w-[1320px] px-6 py-12 md:px-12">
           <EmptyState
             title="Your cart is empty"
             description="Add some products before checking out."
             action={
-              <Link href="/products">
-                <Button variant="primary" className="gap-2"><ShoppingBag className="h-4 w-4" /> Browse Products</Button>
-              </Link>
+              <Link href="/products"><Button variant="primary" className="gap-2"><ShoppingBag className="h-4 w-4" /> Browse Products</Button></Link>
             }
           />
         </main>
@@ -122,111 +108,111 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-[#F8F9FA]">
+    <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-ivory">
       <Navbar />
       <main className="mx-auto max-w-[1320px] px-6 py-12 md:px-12">
-        <Link href="/cart" className="mb-6 inline-flex items-center gap-2 text-sm text-ocean/60 hover:text-ocean transition-colors">
+        <Link href="/cart" className="mb-6 inline-flex items-center gap-2 text-sm text-ocean/50 hover:text-ocean transition-colors">
           <ArrowLeft className="h-4 w-4" /> Back to Cart
         </Link>
 
-        <h1 className="font-clash text-3xl font-bold text-[#10233D] mb-8">Checkout</h1>
+        <h1 className="font-clash text-3xl font-bold text-ocean-deeper mb-8">Checkout</h1>
 
         {error && (
-          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
+          <div className="mb-6 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
         )}
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_400px]">
             <div className="space-y-6">
-              <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
-                <h2 className="font-clash text-lg font-bold text-[#10233D] mb-6">Contact Information</h2>
+              <div className="rounded-2xl border border-ocean/8 bg-white p-6 shadow-sm">
+                <h2 className="font-clash text-lg font-bold text-ocean-deeper mb-6">Contact Information</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/70">
+                    <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/60">
                       <User className="h-3.5 w-3.5" /> Full Name *
                     </label>
                     <input type="text" value={form.customer_name} onChange={(e) => setForm({ ...form, customer_name: e.target.value })}
                       placeholder="Enter your full name"
-                      className="w-full rounded-xl border border-black/8 bg-white px-4 py-2.5 text-sm text-[#10233D] placeholder:text-ocean/30 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/10" />
+                      className="w-full rounded-xl border border-ocean/8 bg-white px-4 py-2.5 text-sm text-ocean-deeper placeholder:text-ocean/25 focus:border-ocean/30 focus:outline-none focus:ring-2 focus:ring-ocean/8" />
                     {fieldErrors.customer_name && <p className="mt-1 text-xs text-red-500">{fieldErrors.customer_name}</p>}
                   </div>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/70">
+                      <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/60">
                         <Phone className="h-3.5 w-3.5" /> Phone *
                       </label>
                       <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}
                         placeholder="+250 7XX XXX XXX"
-                        className="w-full rounded-xl border border-black/8 bg-white px-4 py-2.5 text-sm text-[#10233D] placeholder:text-ocean/30 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/10" />
+                        className="w-full rounded-xl border border-ocean/8 bg-white px-4 py-2.5 text-sm text-ocean-deeper placeholder:text-ocean/25 focus:border-ocean/30 focus:outline-none focus:ring-2 focus:ring-ocean/8" />
                       {fieldErrors.phone && <p className="mt-1 text-xs text-red-500">{fieldErrors.phone}</p>}
                     </div>
                     <div>
-                      <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/70">
+                      <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/60">
                         <Mail className="h-3.5 w-3.5" /> Email (optional)
                       </label>
                       <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
                         placeholder="name@domain.com"
-                        className="w-full rounded-xl border border-black/8 bg-white px-4 py-2.5 text-sm text-[#10233D] placeholder:text-ocean/30 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/10" />
+                        className="w-full rounded-xl border border-ocean/8 bg-white px-4 py-2.5 text-sm text-ocean-deeper placeholder:text-ocean/25 focus:border-ocean/30 focus:outline-none focus:ring-2 focus:ring-ocean/8" />
                       {fieldErrors.email && <p className="mt-1 text-xs text-red-500">{fieldErrors.email}</p>}
                     </div>
                   </div>
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/70">
+                    <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/60">
                       <MapPin className="h-3.5 w-3.5" /> Delivery Address (optional)
                     </label>
                     <input type="text" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })}
                       placeholder="Street, district, landmark..."
-                      className="w-full rounded-xl border border-black/8 bg-white px-4 py-2.5 text-sm text-[#10233D] placeholder:text-ocean/30 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/10" />
+                      className="w-full rounded-xl border border-ocean/8 bg-white px-4 py-2.5 text-sm text-ocean-deeper placeholder:text-ocean/25 focus:border-ocean/30 focus:outline-none focus:ring-2 focus:ring-ocean/8" />
                   </div>
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/70">
+                    <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-ocean/60">
                       <MessageSquare className="h-3.5 w-3.5" /> Notes (optional)
                     </label>
                     <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })}
                       rows={3} placeholder="Color preference, storage size, or any special requests..."
-                      className="w-full resize-none rounded-xl border border-black/8 bg-white px-4 py-2.5 text-sm text-[#10233D] placeholder:text-ocean/30 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/10" />
+                      className="w-full resize-none rounded-xl border border-ocean/8 bg-white px-4 py-2.5 text-sm text-ocean-deeper placeholder:text-ocean/25 focus:border-ocean/30 focus:outline-none focus:ring-2 focus:ring-ocean/8" />
                   </div>
                 </div>
               </div>
             </div>
 
             <div>
-              <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm lg:sticky lg:top-24">
-                <h3 className="font-clash text-lg font-bold text-[#10233D] mb-4">Order Summary</h3>
+              <div className="rounded-2xl border border-ocean/8 bg-white p-6 shadow-sm lg:sticky lg:top-24">
+                <h3 className="font-clash text-lg font-bold text-ocean-deeper mb-4">Order Summary</h3>
                 <div className="space-y-3">
                   {validItems.map((item) => {
                     const p = item.product!;
                     return (
                       <div key={item.id} className="flex items-center gap-3">
-                        <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-[#F7F8FA]">
-                          {p.main_image_url ? <img src={p.main_image_url} alt={p.name} className="h-full w-full object-contain p-1" /> : <div className="flex h-full items-center justify-center text-ocean/20"><ShoppingBag className="h-5 w-5" /></div>}
+                        <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-ivory-dark/30">
+                          {p.main_image_url ? <img src={p.main_image_url} alt={p.name} className="h-full w-full object-contain p-1" /> : <div className="flex h-full items-center justify-center text-ocean/15"><ShoppingBag className="h-5 w-5" /></div>}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="truncate text-sm font-medium text-[#10233D]">{p.name}</p>
-                          <p className="text-xs text-ocean/50">Qty: {item.quantity}</p>
+                          <p className="truncate text-sm font-medium text-ocean-deeper">{p.name}</p>
+                          <p className="text-xs text-ocean/45">Qty: {item.quantity}</p>
                         </div>
-                        <span className="text-sm font-semibold text-[#10233D]">RWF {formatPrice(Number(p.price) * item.quantity)}</span>
+                        <span className="text-sm font-semibold text-ocean-deeper">RWF {formatPrice(Number(p.price) * item.quantity)}</span>
                       </div>
                     );
                   })}
                 </div>
-                <div className="mt-4 space-y-2 border-t border-black/5 pt-4 text-sm">
-                  <div className="flex items-center justify-between text-ocean/70">
+                <div className="mt-4 space-y-2 border-t border-ocean/5 pt-4 text-sm">
+                  <div className="flex items-center justify-between text-ocean/60">
                     <span>Subtotal</span>
-                    <span className="font-semibold text-[#10233D]">RWF {formatPrice(subtotal)}</span>
+                    <span className="font-semibold text-ocean-deeper">RWF {formatPrice(subtotal)}</span>
                   </div>
-                  <div className="flex items-center justify-between text-ocean/70">
+                  <div className="flex items-center justify-between text-ocean/60">
                     <span>Delivery</span>
-                    <span className="text-ocean/50">To be confirmed</span>
+                    <span className="text-ocean/40">To be confirmed</span>
                   </div>
-                  <div className="border-t border-black/5 pt-2">
+                  <div className="border-t border-ocean/5 pt-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-[#10233D]">Estimated Total</span>
+                      <span className="font-semibold text-ocean-deeper">Estimated Total</span>
                       <span className="font-clash text-xl font-bold text-ocean">RWF {formatPrice(subtotal)}</span>
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-2.5 text-xs text-ocean/70">
+                <div className="mt-4 flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-2.5 text-xs text-ocean/60">
                   <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" />
                   <span>No payment now. Pay on pickup or delivery.</span>
                 </div>

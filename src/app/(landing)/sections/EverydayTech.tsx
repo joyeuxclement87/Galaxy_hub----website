@@ -51,8 +51,6 @@ export function EverydayTech() {
       className="bg-ivory px-4 py-20 sm:px-6 md:px-12 md:py-28"
     >
       <div className="mx-auto max-w-[1320px]">
-
-        {/* Section header */}
         <div className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div className="max-w-xl space-y-3">
             <span className="block text-[10px] font-bold uppercase tracking-[0.28em] text-accent font-manrope">
@@ -60,11 +58,11 @@ export function EverydayTech() {
             </span>
             <h2
               id="everyday-heading"
-              className="font-clash text-3xl font-bold leading-tight text-[#10233D] sm:text-4xl lg:text-[44px] lg:leading-[1.06]"
+              className="font-clash text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-ocean-deeper"
             >
               Tech That Fits Your Life.
             </h2>
-            <p className="text-sm leading-[1.8] text-[#10233D]/60 font-manrope">
+            <p className="text-sm leading-[1.8] text-ocean/50 font-manrope">
               Curated bundles for students, professionals, travellers, and remote workers — all available in Kigali with delivery across Rwanda.
             </p>
           </div>
@@ -77,36 +75,31 @@ export function EverydayTech() {
           </Link>
         </div>
 
-        {/* Collections grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-5">
           {EVERYDAY_COLLECTIONS.map((col) => (
             <Link
               key={col.id}
               href={col.href}
-              className="group relative flex flex-col overflow-hidden rounded-[28px] border border-ocean/8 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-ocean/20 hover:shadow-md"
+              className="group relative flex flex-col overflow-hidden rounded-2xl border border-ocean/8 bg-white shadow-sm transition-all duration-300 hover:-translate-y-[2px] hover:border-ocean/15 hover:shadow-md"
             >
-              {/* Image */}
               <div className="relative aspect-[16/9] w-full overflow-hidden">
                 <img
                   src={col.image}
                   alt={col.title}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
-                {/* Subtle color tint overlay */}
                 <div
                   className="absolute inset-0 mix-blend-multiply opacity-20 transition-opacity duration-300 group-hover:opacity-10"
                   style={{ background: col.accent }}
                 />
               </div>
-
-              {/* Content */}
               <div className="flex flex-1 flex-col p-6">
-                <span className="mb-2 inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-ocean/50 font-manrope">
+                <span className="mb-2 inline-block text-[10px] font-bold uppercase tracking-[0.22em] text-ocean/45 font-manrope">
                   {col.subtitle}
                 </span>
-                <h3 className="font-clash text-xl font-bold text-[#10233D] sm:text-2xl">{col.title}</h3>
-                <p className="mt-2 flex-1 text-sm leading-[1.75] text-[#10233D]/60 font-manrope">
+                <h3 className="font-clash text-xl font-bold text-ocean-deeper sm:text-2xl">{col.title}</h3>
+                <p className="mt-2 flex-1 text-sm leading-[1.75] text-ocean/55 font-manrope">
                   {col.description}
                 </p>
                 <div className="mt-5 flex items-center gap-1.5 text-sm font-bold text-ocean transition-colors duration-200 group-hover:text-ocean-dark">
@@ -117,7 +110,6 @@ export function EverydayTech() {
             </Link>
           ))}
         </div>
-
       </div>
     </section>
   );

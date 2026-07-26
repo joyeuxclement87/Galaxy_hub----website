@@ -22,53 +22,47 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
         href: `/products/${c.slug}`,
       }))
     : FALLBACK_CATEGORIES;
+
   return (
     <section id="categories" className="bg-[#FFFEF9] px-6 py-24 md:px-12 lg:py-32">
       <div className="mx-auto max-w-[1320px]">
-        {/* ── Heading ──────────────────────────────────────────────── */}
         <div className="max-w-2xl">
-          <h2 className="font-display text-[32px] font-bold leading-[1.1] tracking-[-0.02em] text-[#111827] sm:text-[40px] lg:text-[48px]">
+          <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ocean-deeper">
             Explore Our Categories
           </h2>
-          <p className="mt-4 max-w-lg text-base leading-relaxed text-[#6B7280] sm:text-lg">
+          <p className="mt-4 max-w-lg text-sm leading-relaxed text-ocean/55">
             Discover smartphones, laptops, accessories, and smart devices built for your lifestyle.
           </p>
         </div>
 
-        {/* ── Grid ─────────────────────────────────────────────────── */}
         <div className="mt-12 grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
           {display.map((cat) => (
             <Link
               key={cat.name}
               href={cat.href}
-              className="group relative block overflow-hidden rounded-[24px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.04)] transition-all duration-400 ease-out hover:-translate-y-1 hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.10)]"
+              className="group relative block overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-[2px] hover:shadow-md"
             >
-              {/* Gradient glow behind image */}
-              <div className="absolute right-0 top-0 h-[70%] w-[80%] bg-[radial-gradient(ellipse_at_top_right,rgba(11,84,151,0.08)_0%,transparent_70%)]" />
-
-              {/* Image */}
+              <div className="absolute right-0 top-0 h-[70%] w-[80%] bg-[radial-gradient(ellipse_at_top_right,rgba(11,84,151,0.06)_0%,transparent_70%)]" />
               <div className="relative aspect-[4/3] w-full overflow-hidden sm:aspect-[5/4]">
                 <Image
                   src={cat.image}
-                  alt={`${cat.name} category — ${cat.description}`}
+                  alt={`${cat.name} category`}
                   fill
                   loading="lazy"
                   sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className="object-cover transition-all duration-500 ease-out group-hover:scale-[1.04]"
+                  className="object-cover transition-all duration-500 ease-out group-hover:scale-[1.03]"
                 />
               </div>
-
-              {/* Text area */}
               <div className="flex items-center justify-between px-6 py-5 sm:px-7 sm:py-6">
                 <div>
-                  <h3 className="font-display text-lg font-bold text-[#111827] sm:text-xl">
+                  <h3 className="font-display text-lg font-bold text-ocean-deeper sm:text-xl">
                     {cat.name}
                   </h3>
-                  <p className="mt-0.5 text-sm leading-snug text-[#6B7280] sm:text-base">
+                  <p className="mt-0.5 text-sm leading-snug text-ocean/50">
                     {cat.description}
                   </p>
                 </div>
-                <span className="ml-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#111827]/8 text-[#6B7280] transition-all duration-300 group-hover:border-[#0B5497]/20 group-hover:bg-[#0B5497] group-hover:text-white">
+                <span className="ml-4 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-ocean/10 text-ocean/40 transition-all duration-300 group-hover:border-ocean/20 group-hover:bg-ocean group-hover:text-white">
                   <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
               </div>

@@ -50,23 +50,20 @@ export function FAQSupport() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="bg-ivory px-4 py-20 sm:px-6 md:px-12 md:py-28 text-[#10233D]">
+    <section id="faq" className="bg-ivory px-4 py-20 sm:px-6 md:px-12 md:py-28">
       <div className="mx-auto max-w-3xl">
-
-        {/* Section header */}
         <div className="mb-10 space-y-3 text-center">
           <span className="block text-[10px] font-bold uppercase tracking-[0.28em] text-accent font-manrope">
             GOOD TO KNOW
           </span>
-          <h2 className="font-clash text-3xl font-bold leading-tight sm:text-4xl">
+          <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
             Frequently Asked Questions
           </h2>
-          <p className="text-sm leading-[1.8] text-[#10233D]/60 font-manrope">
+          <p className="text-sm leading-[1.8] text-ocean/50 font-manrope">
             Clear answers about ordering, delivery, payments, and support before you place your next request.
           </p>
         </div>
 
-        {/* FAQ accordion */}
         <div className="space-y-3">
           {FAQ_ITEMS.map((item, index) => {
             const isOpen = openFaq === index;
@@ -74,8 +71,8 @@ export function FAQSupport() {
               <div
                 key={item.q}
                 className={cn(
-                  "overflow-hidden rounded-[20px] border bg-white shadow-sm transition-colors duration-200",
-                  isOpen ? "border-ocean/20" : "border-ocean/8"
+                  "overflow-hidden rounded-2xl border bg-white shadow-sm transition-colors duration-200",
+                  isOpen ? "border-ocean/15" : "border-ocean/8"
                 )}
               >
                 <button
@@ -86,10 +83,10 @@ export function FAQSupport() {
                   onClick={() => setOpenFaq(isOpen ? null : index)}
                   className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left min-h-[56px] sm:px-6"
                 >
-                  <span className="text-sm font-semibold text-[#10233D] sm:text-base">{item.q}</span>
+                  <span className="text-sm font-semibold text-ocean-deeper sm:text-base">{item.q}</span>
                   <ChevronDown
                     className={cn(
-                      "h-4 w-4 shrink-0 text-ocean/50 transition-transform duration-300",
+                      "h-4 w-4 shrink-0 text-ocean/40 transition-transform duration-300",
                       isOpen && "rotate-180 text-ocean"
                     )}
                   />
@@ -106,7 +103,7 @@ export function FAQSupport() {
                       transition={{ duration: 0.22 }}
                       className="overflow-hidden"
                     >
-                      <p className="border-t border-ocean/6 px-5 pb-5 pt-4 text-sm leading-[1.8] text-[#10233D]/65 font-manrope sm:px-6">
+                      <p className="border-t border-ocean/6 px-5 pb-5 pt-4 text-sm leading-[1.8] text-ocean/55 font-manrope sm:px-6">
                         {item.a}
                       </p>
                     </motion.div>
@@ -117,9 +114,8 @@ export function FAQSupport() {
           })}
         </div>
 
-        {/* Contact strip */}
-        <div className="mt-8 flex flex-col gap-4 rounded-[20px] border border-ocean/10 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-sm text-[#10233D]/75 font-manrope">
+        <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-ocean/8 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 text-sm text-ocean/65 font-manrope">
             <Phone className="h-4 w-4 text-ocean shrink-0" />
             <span>Still have questions?</span>
             <a href="tel:+250785288910" className="font-semibold text-ocean hover:underline">
@@ -129,23 +125,21 @@ export function FAQSupport() {
           <div className="flex flex-wrap gap-2">
             <Link
               href="/order"
-              className="inline-flex items-center justify-center rounded-full bg-ocean px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-ocean-dark"
+              className="inline-flex items-center justify-center rounded-full bg-gradient-to-b from-ocean to-ocean-dark px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_20px_rgba(11,84,151,0.25)]"
             >
               Order Now
             </Link>
             <a
               href="tel:+250785288910"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-ocean/12 bg-white px-5 py-2.5 text-sm font-semibold text-[#10233D] transition-colors hover:bg-ocean/5"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-ocean/12 bg-white px-5 py-2.5 text-sm font-semibold text-ocean-deeper transition-colors hover:bg-ocean/4"
             >
               <Phone className="h-4 w-4" />
               Call Us
             </a>
           </div>
         </div>
-
       </div>
 
-      {/* FAQ structured data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

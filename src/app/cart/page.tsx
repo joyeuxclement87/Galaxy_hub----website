@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ShoppingBag, Trash2, Minus, Plus, ArrowLeft, PackageOpen } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
 import { Button } from "@/components/ui/button";
@@ -24,19 +23,13 @@ interface CartItem {
   id: string;
   quantity: number;
   product: {
-    id: string;
-    name: string;
-    slug: string;
-    price: number;
-    old_price: number | null;
-    main_image_url: string | null;
-    stock_status: string;
-    discount_percentage: number | null;
+    id: string; name: string; slug: string; price: number;
+    old_price: number | null; main_image_url: string | null;
+    stock_status: string; discount_percentage: number | null;
   } | null;
 }
 
 export default function CartPage() {
-  const router = useRouter();
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [sessionId, setSessionId] = useState("");
@@ -45,15 +38,14 @@ export default function CartPage() {
     const sid = getSessionId();
     setSessionId(sid);
     const result = await getOrCreateCart(sid);
-    if (result) {
-      setItems(result.items as CartItem[]);
-    }
+    if (result) setItems(result.items as CartItem[]);
     setLoading(false);
   }, []);
 
   useEffect(() => { loadCart(); }, [loadCart]);
 
   const handleQuantity = async (itemId: string, qty: number) => {
+    if (qty < 1) return;
     await updateCartItemQuantity(itemId, qty);
     await loadCart();
   };
@@ -84,19 +76,19 @@ export default function CartPage() {
   }
 
   return (
-    <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-[#F8F9FA]">
+    <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-ivory">
       <Navbar />
       <main className="mx-auto max-w-[1320px] px-6 py-12 md:px-12">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <Link href="/" className="mb-4 inline-flex items-center gap-2 text-sm text-ocean/60 hover:text-ocean transition-colors">
+            <Link href="/" className="mb-4 inline-flex items-center gap-2 text-sm text-ocean/50 hover:text-ocean transition-colors">
               <ArrowLeft className="h-4 w-4" /> Continue Shopping
             </Link>
-            <h1 className="font-clash text-3xl font-bold text-[#10233D] mt-2">Shopping Cart</h1>
-            <p className="text-sm text-ocean/60 mt-1">{validItems.length} {validItems.length === 1 ? "item" : "items"}</p>
+            <h1 className="font-clash text-3xl font-bold text-ocean-deeper mt-2">Shopping Cart</h1>
+            <p className="text-sm text-ocean/50 mt-1">{validItems.length} {validItems.length === 1 ? "item" : "items"}</p>
           </div>
           {validItems.length > 0 && (
-            <button onClick={handleClear} className="text-sm text-red-500 hover:text-red-600 transition-colors cursor-pointer">
+            <button onClick={handleClear} className="text-sm text-red-400 hover:text-red-500 transition-colors cursor-pointer">
               Clear Cart
             </button>
           )}
@@ -122,37 +114,37 @@ export default function CartPage() {
                 const p = item.product!;
                 const discount = p.old_price ? Math.round((1 - Number(p.price) / Number(p.old_price)) * 100) : 0;
                 return (
-                  <div key={item.id} className="flex gap-4 rounded-2xl border border-black/5 bg-white p-4 shadow-sm transition-all hover:shadow-md">
-                    <Link href={`/product/${p.slug}`} className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[#F7F8FA]">
+                  <div key={item.id} className="flex gap-4 rounded-2xl border border-ocean/8 bg-white p-4 shadow-sm transition-all hover:shadow-md">
+                    <Link href={`/product/${p.slug}`} className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-ivory-dark/40">
                       {p.main_image_url ? (
                         <img src={p.main_image_url} alt={p.name} className="h-full w-full object-contain p-2" />
                       ) : (
-                        <div className="flex h-full items-center justify-center text-ocean/20"><ShoppingBag className="h-8 w-8" /></div>
+                        <div className="flex h-full items-center justify-center text-ocean/15"><ShoppingBag className="h-8 w-8" /></div>
                       )}
                     </Link>
                     <div className="flex flex-1 flex-col justify-between">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <Link href={`/product/${p.slug}`} className="font-clash text-base font-bold text-[#10233D] hover:text-ocean transition-colors">{p.name}</Link>
-                          <p className="mt-0.5 text-xs text-ocean/50 capitalize">{p.stock_status.replace("_", " ")}</p>
+                          <Link href={`/product/${p.slug}`} className="font-clash text-base font-bold text-ocean-deeper hover:text-ocean transition-colors">{p.name}</Link>
+                          <p className="mt-0.5 text-xs text-ocean/45 capitalize">{p.stock_status.replace("_", " ")}</p>
                         </div>
-                        <button onClick={() => handleRemove(item.id)} className="shrink-0 p-1 text-ocean/30 hover:text-red-500 transition-colors cursor-pointer" aria-label="Remove item">
+                        <button onClick={() => handleRemove(item.id)} className="shrink-0 p-1 text-ocean/25 hover:text-red-500 transition-colors cursor-pointer" aria-label="Remove item">
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center gap-2">
-                          <button onClick={() => handleQuantity(item.id, item.quantity - 1)} className="flex h-8 w-8 items-center justify-center rounded-lg border border-black/8 bg-white text-ocean/60 hover:bg-gray-50 transition-colors cursor-pointer" aria-label="Decrease quantity">
+                          <button onClick={() => handleQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1} className="flex h-8 w-8 items-center justify-center rounded-xl border border-ocean/8 bg-white text-ocean/50 hover:bg-ivory-dark/30 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed" aria-label="Decrease quantity">
                             <Minus className="h-3.5 w-3.5" />
                           </button>
-                          <span className="w-8 text-center text-sm font-semibold text-[#10233D]">{item.quantity}</span>
-                          <button onClick={() => handleQuantity(item.id, item.quantity + 1)} className="flex h-8 w-8 items-center justify-center rounded-lg border border-black/8 bg-white text-ocean/60 hover:bg-gray-50 transition-colors cursor-pointer" aria-label="Increase quantity">
+                          <span className="w-8 text-center text-sm font-semibold text-ocean-deeper">{item.quantity}</span>
+                          <button onClick={() => handleQuantity(item.id, item.quantity + 1)} className="flex h-8 w-8 items-center justify-center rounded-xl border border-ocean/8 bg-white text-ocean/50 hover:bg-ivory-dark/30 transition-colors cursor-pointer" aria-label="Increase quantity">
                             <Plus className="h-3.5 w-3.5" />
                           </button>
                         </div>
                         <div className="text-right">
-                          <span className="font-clash text-lg font-bold text-[#10233D]">RWF {formatPrice(Number(p.price) * item.quantity)}</span>
-                          {discount > 0 && <p className="text-[10px] text-ocean/40">RWF {formatPrice(Number(p.price))} each</p>}
+                          <span className="font-clash text-lg font-bold text-ocean-deeper">RWF {formatPrice(Number(p.price) * item.quantity)}</span>
+                          {discount > 0 && <p className="text-[10px] text-ocean/35">RWF {formatPrice(Number(p.price))} each</p>}
                         </div>
                       </div>
                     </div>
@@ -162,20 +154,20 @@ export default function CartPage() {
             </div>
 
             <div className="lg:sticky lg:top-24">
-              <div className="rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
-                <h3 className="font-clash text-lg font-bold text-[#10233D] mb-4">Order Summary</h3>
+              <div className="rounded-2xl border border-ocean/8 bg-white p-6 shadow-sm">
+                <h3 className="font-clash text-lg font-bold text-ocean-deeper mb-4">Order Summary</h3>
                 <div className="space-y-3 text-sm">
-                  <div className="flex items-center justify-between text-ocean/70">
+                  <div className="flex items-center justify-between text-ocean/60">
                     <span>Subtotal ({validItems.length} {validItems.length === 1 ? "item" : "items"})</span>
-                    <span className="font-semibold text-[#10233D]">RWF {formatPrice(subtotal)}</span>
+                    <span className="font-semibold text-ocean-deeper">RWF {formatPrice(subtotal)}</span>
                   </div>
-                  <div className="flex items-center justify-between text-ocean/70">
+                  <div className="flex items-center justify-between text-ocean/60">
                     <span>Delivery</span>
-                    <span className="text-ocean/50">Calculated at checkout</span>
+                    <span className="text-ocean/40">Calculated at checkout</span>
                   </div>
-                  <div className="border-t border-black/5 pt-3">
+                  <div className="border-t border-ocean/5 pt-3">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-[#10233D]">Estimated Total</span>
+                      <span className="font-semibold text-ocean-deeper">Estimated Total</span>
                       <span className="font-clash text-xl font-bold text-ocean">RWF {formatPrice(subtotal)}</span>
                     </div>
                   </div>
@@ -185,7 +177,7 @@ export default function CartPage() {
                     <ShoppingBag className="h-4 w-4" /> Proceed to Checkout
                   </Button>
                 </Link>
-                <p className="mt-3 text-center text-[10px] text-ocean/40">No payment required now. Pay on pickup or delivery.</p>
+                <p className="mt-3 text-center text-[10px] text-ocean/35">No payment required now. Pay on pickup or delivery.</p>
               </div>
             </div>
           </div>
