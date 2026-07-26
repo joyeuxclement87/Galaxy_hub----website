@@ -1,39 +1,94 @@
-"use client";
+import Link from "next/link";
+import { Search as SearchIcon, PackageOpen } from "lucide-react";
+import { Navbar } from "@/components/navbar/Navbar";
+import { ProductCard } from "@/components/products/ProductCard";
+import { searchProducts } from "@/data/public-products";
 
-import { useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useApp } from "@/context/AppContext";
+export const dynamic = "force-dynamic";
 
-function SearchRedirectContent() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const { setSearchQuery, setShowDealsOnly, setSelectedCategory, setSelectedBrand } = useApp();
-
-  useEffect(() => {
-    const query = searchParams.get("q");
-    if (query !== null) {
-      setSearchQuery(query.trim());
-      setShowDealsOnly(false);
-      setSelectedCategory("All");
-      setSelectedBrand("All");
-    }
-    router.replace("/#products");
-  }, [router, searchParams, setSearchQuery, setShowDealsOnly, setSelectedCategory, setSelectedBrand]);
-
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-ivory">
-      <div className="text-center space-y-4">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-ocean border-t-transparent mx-auto" />
-        <p className="text-sm font-medium text-ocean/60 font-manrope">Searching Galaxy Hub...</p>
-      </div>
-    </div>
-  );
+export async function generateMetadata({ searchParams }: { searchParams?: { [key: string]: string } }) {
+  const q = searchParams?.q || "";
+  return {
+    title: q ? `Search "${q}" — Galaxy Hub Rwanda` : "Search — Galaxy Hub Rwanda",
+    description: `Search results for "${q}" — Find smartphones, laptops, accessories, and more.`,
+  };
 }
 
-export default function SearchRedirectPage() {
+export default async function SearchPage({ searchParams }: { searchParams?: { [key: string]: string } }) {
+  const q = searchParams?.q || "";
+  const results = q ? await searchProducts(q) : [];
+
   return (
-    <Suspense fallback={null}>
-      <SearchRedirectContent />
-    </Suspense>
+    <div className="min-h-screen bg-[#F8F9FA]">
+      <Navbar />
+      <main className="pt-24 md:pt-32 pb-24">
+        <div className="mx-auto max-w-[1320px] px-6 md:px-12">
+          <div className="mb-8">
+            <h1 className="font-clash text-3xl font-bold text-[#10233D]">Search</h1>
+            <p className="mt-2 text-sm text-ocean/60">Find products across our catalog.</p>
+          </div>
+
+          <form method="get" action="/search" className="mb-10">
+            <div className="relative max-w-xl">
+              <SearchIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-ocean/30" />
+              <input
+                name="q"
+                defaultValue={q}
+                placeholder="Search products, brands, categories..."
+                className="w-full rounded-2xl border border-black/8 bg-white py-4 pl-12 pr-4 text-sm text-[#10233D] placeholder:text-ocean/30 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/10"
+              />
+            </div>
+          </form>
+
+          {q && (
+            <p className="mb-6 text-sm text-ocean/60">
+              {results.length} result{results.length !== 1 ? "s" : ""} for &ldquo;{q}&rdquo;
+            </p>
+          )}
+
+          {!q ? (
+            <div className="flex flex-col items-center justify-center py-24 text-center">
+              <SearchIcon className="mb-4 h-16 w-16 text-ocean/10" />
+              <h2 className="font-clash text-xl font-bold text-[#10233D]">Search our catalog</h2>
+              <p className="mt-2 text-sm text-ocean/60">Enter a product name, brand, or category above.</p>
+            </div>
+          ) : results.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-24 text-center">
+              <PackageOpen className="mb-4 h-16 w-16 text-ocean/10" />
+              <h2 className="font-clash text-xl font-bold text-[#10233D]">No results found</h2>
+              <p className="mt-2 text-sm text-ocean/60">Try a different search term or browse our categories.</p>
+              <div className="mt-6 flex gap-3">
+                <Link href="/products" className="text-sm font-semibold text-ocean hover:text-ocean-dark transition-colors">Browse Products</Link>
+                <Link href="/brands" className="text-sm font-semibold text-ocean hover:text-ocean-dark transition-colors">Shop by Brand</Link>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {results.map((p) => (
+                <ProductCard key={p.id} product={{
+                  id: p.id,
+                  slug: p.slug,
+                  title: p.name,
+                  tagline: p.short_description || "",
+                  description: "",
+                  price: p.price,
+                  originalPrice: p.old_price || undefined,
+                  currency: "RWF",
+                  category: p.category_name || "",
+                  brand: p.brand_name || "",
+                  image: p.main_image_url || "",
+                  featured: false,
+                  specifications: {},
+                  availability: p.stock_status === "available" ? "In Stock" : "Out of Stock",
+                  badge: undefined,
+                  rating: 4.8,
+                  reviewCount: 32,
+                }} onReserve={() => {}} />
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
   );
 }
