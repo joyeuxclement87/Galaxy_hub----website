@@ -1,4 +1,8 @@
+"use client";
+
+import React from "react";
 import Link from "next/link";
+import { ArrowRight, Phone, Mail, MapPin } from "lucide-react";
 
 const localBusinessSchema = {
   "@context": "https://schema.org",
@@ -24,74 +28,62 @@ const localBusinessSchema = {
 
 function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
-    <Link
+    <a
       href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       aria-label={label}
-      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/6 text-white transition-all duration-200 hover:bg-white/14 hover:scale-105"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-btn border border-white/10 bg-white/5 text-white/70 transition-all duration-300 hover:bg-white/15 hover:text-white hover:border-white/20 hover:-translate-y-0.5"
     >
       {children}
-    </Link>
+    </a>
   );
 }
 
 export function Footer() {
   return (
-    <footer className="bg-[#061F3A]">
-      <div className="mx-auto max-w-[1320px] px-4 pt-14 pb-8 sm:px-6 md:px-12">
-        <div className="grid grid-cols-2 gap-8 sm:gap-10 xl:grid-cols-[1.6fr_1fr_1fr_1.1fr]">
-          <div className="col-span-2 space-y-5 xl:col-span-1">
-            <Link href="/" className="inline-flex items-center gap-3 text-white">
+    <footer className="bg-ocean-deeper text-white overflow-hidden border-t border-ocean/10">
+      <div className="mx-auto max-w-[1440px] px-6 pt-16 pb-10 sm:px-10 lg:px-16">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-12">
+          {/* Brand Col */}
+          <div className="lg:col-span-4 space-y-5">
+            <Link href="/" className="inline-flex items-center gap-3 transition-opacity duration-200 hover:opacity-80">
               <img
                 src="/g-hub%20logo ii.png"
                 alt="Galaxy Hub"
-                width={40}
-                height={40}
-                className="h-10 w-auto object-contain"
+                className="h-10 w-auto object-contain select-none"
               />
             </Link>
-            <p className="text-sm leading-[1.8] text-white/55 font-manrope max-w-sm">
-              Galaxy Hub is a trusted gadget store in Kigali, Rwanda, offering genuine smartphones, laptops, accessories, creator gear, and nationwide delivery.
+            <p className="text-sm leading-relaxed text-white/60 font-sans max-w-sm">
+              Galaxy Hub is Rwanda&apos;s premier tech retailer, supplying genuine smartphones, laptops, audio gear, creator accessories, and nationwide express delivery.
             </p>
-            <Link
-              href="/order"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-ocean to-ocean-dark px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_20px_rgba(11,84,151,0.25)]"
-            >
-              Order Now →
-            </Link>
+
+            <div className="pt-1">
+              <Link
+                href="/order"
+                className="inline-flex items-center gap-2 rounded-btn bg-white text-ocean-deeper px-6 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] shadow-btn transition-all duration-300 hover:bg-white/90 hover:shadow-btn-hover hover:-translate-y-0.5"
+              >
+                Order Now
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
 
-          <nav aria-label="Shop links" className="space-y-4">
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/45 font-manrope">Shop</h2>
-            <ul className="space-y-2.5 text-sm text-white/60 font-manrope">
+          {/* Quick Links */}
+          <nav aria-label="Shop links" className="lg:col-span-2 space-y-4">
+            <span className="inline-flex items-center rounded-btn bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-ocean-light/70">
+              Shop
+            </span>
+            <ul className="space-y-2.5 text-sm text-white/60 font-sans">
               {[
-                { label: "All Products",       href: "/products"            },
-                { label: "Smartphones",        href: "/products/smartphones"},
-                { label: "Laptops",            href: "/products/laptops"    },
-                { label: "Brands",             href: "/brands"              },
-                { label: "Deals",              href: "/deals"               },
-                { label: "Creator Essentials", href: "/products/creator-gear"},
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="transition-colors hover:text-white/85">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <nav aria-label="Support links" className="space-y-4">
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/45 font-manrope">Support</h2>
-            <ul className="space-y-2.5 text-sm text-white/60 font-manrope">
-              {[
-                { label: "How to Order",   href: "/order"   },
-                { label: "Delivery Info",  href: "/order"   },
-                { label: "FAQs",           href: "/#faq"    },
-                { label: "Warranty",       href: "/warranty"},
-                { label: "Contact Us",     href: "/contact" },
+                { label: "All Products",       href: "/#products"            },
+                { label: "Smartphones",        href: "/#products"            },
+                { label: "Laptops",            href: "/#products"            },
+                { label: "Promotions",         href: "/#deals"               },
+                { label: "Brands",             href: "/#brands"              },
               ].map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="transition-colors hover:text-white/85">
+                  <Link href={link.href} className="transition-colors duration-200 hover:text-white">
                     {link.label}
                   </Link>
                 </li>
@@ -99,20 +91,54 @@ export function Footer() {
             </ul>
           </nav>
 
-          <address className="not-italic col-span-2 space-y-4 sm:col-span-1 xl:col-span-1">
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/45 font-manrope">Contact</h2>
-            <div className="space-y-2 text-sm text-white/60 font-manrope">
-              <p>TCB Floor 1B, Door 13B</p>
-              <p>Kigali, Rwanda</p>
-              <a href="tel:+250785288910" className="block text-white/80 hover:text-white transition-colors">
-                +250 785 288 910
-              </a>
-              <a href="mailto:hello@galaxyhub.rw" className="block text-white/80 hover:text-white transition-colors">
-                hello@galaxyhub.rw
-              </a>
-              <p>Mon – Sat · 9 AM – 8 PM</p>
+          {/* Support Links */}
+          <nav aria-label="Support links" className="lg:col-span-2 space-y-4">
+            <span className="inline-flex items-center rounded-btn bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-ocean-light/70">
+              Support
+            </span>
+            <ul className="space-y-2.5 text-sm text-white/60 font-sans">
+              {[
+                { label: "How to Order",   href: "/order"   },
+                { label: "Kigali Pickup",  href: "/order"   },
+                { label: "Delivery Info",  href: "/order"   },
+                { label: "Warranty",       href: "/#faq"    },
+                { label: "Contact Us",     href: "/order"   },
+              ].map((link) => (
+                <li key={link.label}>
+                  <Link href={link.href} className="transition-colors duration-200 hover:text-white">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Contact Details */}
+          <address className="not-italic lg:col-span-4 space-y-4">
+            <span className="inline-flex items-center rounded-btn bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-ocean-light/70">
+              Contact & Visit
+            </span>
+            <div className="space-y-3 text-sm text-white/60 font-sans">
+              <div className="flex items-start gap-2.5">
+                <MapPin className="h-4 w-4 shrink-0 text-accent mt-0.5" />
+                <span>TCB Floor 1B, Door 13B · KN 2 Ave, Kigali, Rwanda</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Phone className="h-4 w-4 shrink-0 text-accent" />
+                <a href="tel:+250785288910" className="hover:text-white transition-colors">
+                  +250 785 288 910
+                </a>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Mail className="h-4 w-4 shrink-0 text-accent" />
+                <a href="mailto:hello@galaxyhub.rw" className="hover:text-white transition-colors">
+                  hello@galaxyhub.rw
+                </a>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2 pt-1">
+
+            {/* Social icons */}
+            <div className="flex flex-wrap gap-2 pt-2">
               <SocialIcon href="https://instagram.com/galaxyhub" label="Instagram">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                   <rect x="2.5" y="2.5" width="19" height="19" rx="5" /><path d="M16.5 7.5h.01" /><circle cx="12" cy="12" r="4.5" />
@@ -142,18 +168,12 @@ export function Footer() {
           </address>
         </div>
 
-        <p className="mt-10 text-xs leading-[1.8] text-white/35 font-manrope max-w-2xl">
-          Galaxy Hub supplies genuine smartphones, laptops, audio devices, creator accessories, and smart technology with delivery across Rwanda — including Kigali, Musanze, Rubavu, Huye, Muhanga, and all other provinces.
-        </p>
-      </div>
-
-      <div className="border-t border-white/8 bg-[#04131F]">
-        <div className="mx-auto flex max-w-[1320px] flex-col gap-2 px-4 py-5 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between md:px-12">
-          <span className="font-manrope">© 2026 Galaxy Hub · Kigali, Rwanda</span>
-          <span className="font-manrope">Made with care in Rwanda</span>
-          <div className="flex flex-wrap items-center gap-4 font-manrope">
-            <Link href="/privacy" className="hover:text-white/70 transition-colors">Privacy</Link>
-            <Link href="/terms"   className="hover:text-white/70 transition-colors">Terms</Link>
+        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col gap-3 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
+          <span>© 2026 Galaxy Hub · Kigali, Rwanda</span>
+          <div className="flex items-center gap-4">
+            <span>Genuine Tech Guaranteed</span>
+            <span>·</span>
+            <span>Pay on Collection</span>
           </div>
         </div>
       </div>

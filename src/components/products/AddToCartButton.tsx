@@ -28,8 +28,8 @@ export function AddToCartButton({ productId }: { productId: string }) {
   };
 
   return (
-    <Button variant="primary" onClick={handleClick} disabled={pending} className="w-full justify-center gap-2 rounded-xl py-3 text-base">
-      {pending ? <Loader2 className="h-5 w-5 animate-spin" /> : <ShoppingCart className="h-5 w-5" />}
+    <Button variant="primary" onClick={handleClick} disabled={pending} className="w-full justify-center gap-2">
+      {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-4 w-4" />}
       {pending ? "Adding..." : "Add to Cart"}
     </Button>
   );

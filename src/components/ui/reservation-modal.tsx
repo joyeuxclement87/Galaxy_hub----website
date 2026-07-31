@@ -189,7 +189,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
                 <Button variant="ghost" type="button" onClick={onClose}>
                   Cancel
                 </Button>
-                <Button variant="primary" type="submit" className="gap-2 px-8">
+                <Button variant="primary" type="submit" className="gap-2">
                   <ShoppingBag className="h-4 w-4" />
                   Order Now
                 </Button>
@@ -228,9 +228,9 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
                   Continue browsing while your device is prepared in-store.
                 </p>
                 <Button
-                  variant="primary"
+                  variant="secondary"
                   onClick={onClose}
-                  className="w-full gap-2 bg-[#FFFEF9] text-ocean hover:bg-white"
+                  className="w-full gap-2 !border-white/20 !text-ocean hover:!bg-white/10"
                 >
                   Return to Showroom
                   <ArrowRight className="h-4 w-4" />

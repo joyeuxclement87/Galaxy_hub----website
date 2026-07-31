@@ -88,9 +88,9 @@ export default function CartPage() {
             <p className="text-sm text-ocean/50 mt-1">{validItems.length} {validItems.length === 1 ? "item" : "items"}</p>
           </div>
           {validItems.length > 0 && (
-            <button onClick={handleClear} className="text-sm text-red-400 hover:text-red-500 transition-colors cursor-pointer">
+            <Button variant="ghost" onClick={handleClear} className="text-xs text-red-400 hover:text-red-500 hover:!bg-transparent">
               Clear Cart
-            </button>
+            </Button>
           )}
         </div>
 
@@ -128,17 +128,17 @@ export default function CartPage() {
                           <Link href={`/product/${p.slug}`} className="font-clash text-base font-bold text-ocean-deeper hover:text-ocean transition-colors">{p.name}</Link>
                           <p className="mt-0.5 text-xs text-ocean/45 capitalize">{p.stock_status.replace("_", " ")}</p>
                         </div>
-                        <button onClick={() => handleRemove(item.id)} className="shrink-0 p-1 text-ocean/25 hover:text-red-500 transition-colors cursor-pointer" aria-label="Remove item">
+                        <Button variant="icon" onClick={() => handleRemove(item.id)} className="h-8 w-8 text-ocean/25 hover:text-red-500" aria-label="Remove item">
                           <Trash2 className="h-4 w-4" />
-                        </button>
+                        </Button>
                       </div>
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center gap-2">
-                          <button onClick={() => handleQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1} className="flex h-8 w-8 items-center justify-center rounded-xl border border-ocean/8 bg-white text-ocean/50 hover:bg-ivory-dark/30 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed" aria-label="Decrease quantity">
+                          <button onClick={() => handleQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1} className="flex h-8 w-8 items-center justify-center rounded-btn border border-black/8 bg-white text-ocean/50 hover:bg-ocean/4 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed" aria-label="Decrease quantity">
                             <Minus className="h-3.5 w-3.5" />
                           </button>
                           <span className="w-8 text-center text-sm font-semibold text-ocean-deeper">{item.quantity}</span>
-                          <button onClick={() => handleQuantity(item.id, item.quantity + 1)} className="flex h-8 w-8 items-center justify-center rounded-xl border border-ocean/8 bg-white text-ocean/50 hover:bg-ivory-dark/30 transition-colors cursor-pointer" aria-label="Increase quantity">
+                          <button onClick={() => handleQuantity(item.id, item.quantity + 1)} className="flex h-8 w-8 items-center justify-center rounded-btn border border-black/8 bg-white text-ocean/50 hover:bg-ocean/4 transition-colors cursor-pointer" aria-label="Increase quantity">
                             <Plus className="h-3.5 w-3.5" />
                           </button>
                         </div>
@@ -173,9 +173,9 @@ export default function CartPage() {
                   </div>
                 </div>
                 <Link href="/checkout">
-                  <Button variant="primary" className="mt-6 w-full gap-2">
-                    <ShoppingBag className="h-4 w-4" /> Proceed to Checkout
-                  </Button>
+                <Button variant="primary" className="mt-6 w-full gap-2 justify-center">
+                  <ShoppingBag className="h-4 w-4" /> Proceed to Checkout
+                </Button>
                 </Link>
                 <p className="mt-3 text-center text-[10px] text-ocean/35">No payment required now. Pay on pickup or delivery.</p>
               </div>

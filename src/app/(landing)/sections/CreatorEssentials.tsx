@@ -24,16 +24,16 @@ export function CreatorEssentials() {
             >
               For Creators Who Refuse to Compromise.
             </h2>
-            <p className="text-sm leading-[1.8] text-white/55 font-manrope">
+            <p className="text-sm leading-[1.8] text-white/70 font-manrope">
               Ring lights, tripods, microphones, phone holders, and power banks — everything you need to create beautiful content, available in Kigali.
             </p>
           </div>
           <Link
             href="/products/creator-gear"
-            className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-semibold text-white/85 transition-all duration-200 hover:bg-white/10 hover:border-white/25"
+            className="group inline-flex shrink-0 items-center gap-2 rounded-btn border border-white/15 px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white/10 hover:-translate-y-0.5"
           >
             Shop All Creator Gear
-            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
           </Link>
         </div>
 
@@ -57,25 +57,25 @@ export function CreatorEssentials() {
               </div>
               <div className="p-4">
                 <h3 className="font-clash text-sm font-bold text-white sm:text-base">{cat.name}</h3>
-                <p className="mt-0.5 text-[11px] text-white/45 font-manrope">{cat.count} items</p>
+                <p className="mt-0.5 text-[11px] text-white/60 font-manrope">{cat.count} items</p>
               </div>
             </Link>
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col items-start gap-5 rounded-2xl border border-white/10 bg-white/5 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col items-start gap-5 rounded-card border border-white/10 bg-white/5 p-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ocean/30 text-ocean-light">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-btn bg-ocean/30 text-ocean-light">
               <Camera className="h-6 w-6" />
             </div>
             <div>
               <p className="font-clash text-base font-bold text-white">{CREATOR_BUNDLE.name}</p>
-              <p className="text-sm text-white/55 font-manrope">{CREATOR_BUNDLE.description}</p>
+              <p className="text-sm text-white/70 font-manrope">{CREATOR_BUNDLE.description}</p>
             </div>
           </div>
           <Link
             href="/products/creator-gear"
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-gradient-to-b from-ocean to-ocean-dark px-5 py-2.5 text-sm font-bold text-white shadow-[0_8px_24px_rgba(11,84,151,0.35)] transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_12px_28px_rgba(11,84,151,0.45)]"
+            className="inline-flex shrink-0 items-center gap-2 rounded-btn bg-white px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean-deeper shadow-btn transition-all duration-300 hover:bg-white/90 hover:shadow-btn-hover hover:-translate-y-0.5"
           >
             <ShoppingBagIcon />
             From RWF {new Intl.NumberFormat("en-US").format(CREATOR_BUNDLE.startingPrice)}

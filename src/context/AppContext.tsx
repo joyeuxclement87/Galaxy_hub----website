@@ -1,6 +1,16 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { PRODUCTS, Product } from "@/data/mock-data";
+
+export interface CartProductMeta {
+  id: string;
+  title: string;
+  price: number;
+  currency: string;
+  image: string;
+  slug?: string;
+}
 
 interface AppContextType {
   cart: string[];
@@ -9,17 +19,45 @@ interface AppContextType {
   selectedCategory: string;
   selectedBrand: string;
   showDealsOnly: boolean;
-  addToCart: (id: string) => void;
+  productsMap: Record<string, CartProductMeta>;
+  addToCart: (id: string, productData?: CartProductMeta) => void;
   removeFromCart: (id: string) => void;
   toggleWishlist: (id: string) => void;
   setSearchQuery: (query: string) => void;
   setSelectedCategory: (category: string) => void;
   setSelectedBrand: (brand: string) => void;
   setShowDealsOnly: (show: boolean) => void;
+  registerProducts: (products: CartProductMeta[]) => void;
   clearCart: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
+
+function getInitialProductsMap(): Record<string, CartProductMeta> {
+  const map: Record<string, CartProductMeta> = {};
+  for (const p of PRODUCTS) {
+    map[p.id] = {
+      id: p.id,
+      title: p.title,
+      price: p.price,
+      currency: p.currency || "RWF",
+      image: p.image,
+      slug: p.slug,
+    };
+  }
+  if (typeof window !== "undefined") {
+    try {
+      const savedMeta = localStorage.getItem("gh-cart-meta");
+      if (savedMeta) {
+        const parsed = JSON.parse(savedMeta) as Record<string, CartProductMeta>;
+        Object.assign(map, parsed);
+      }
+    } catch (e) {
+      console.error("Failed to load cart meta from localStorage:", e);
+    }
+  }
+  return map;
+}
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<string[]>([]);
@@ -28,8 +66,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedBrand, setSelectedBrand] = useState("All");
   const [showDealsOnly, setShowDealsOnly] = useState(false);
+  const [productsMap, setProductsMap] = useState<Record<string, CartProductMeta>>(() => getInitialProductsMap());
 
-  // Load from localStorage on mount (client-side only)
+  // Load cart and wishlist from localStorage on mount
   useEffect(() => {
     const timer = setTimeout(() => {
       try {
@@ -44,8 +83,44 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return () => clearTimeout(timer);
   }, []);
 
-  const addToCart = (id: string) => {
+  const registerProducts = useCallback((productsList: CartProductMeta[]) => {
+    setProductsMap((prev) => {
+      const next = { ...prev };
+      let changed = false;
+      for (const p of productsList) {
+        if (!p || !p.id) continue;
+        if (!next[p.id] || next[p.id].title !== p.title || next[p.id].price !== p.price) {
+          next[p.id] = p;
+          changed = true;
+        }
+      }
+      if (changed) {
+        try {
+          localStorage.setItem("gh-cart-meta", JSON.stringify(next));
+        } catch (e) {
+          console.error("Failed to save cart meta:", e);
+        }
+        return next;
+      }
+      return prev;
+    });
+  }, []);
+
+  const addToCart = (id: string, productData?: CartProductMeta) => {
+    if (productData) {
+      setProductsMap((prev) => {
+        const updated = { ...prev, [id]: productData };
+        try {
+          localStorage.setItem("gh-cart-meta", JSON.stringify(updated));
+        } catch (e) {
+          console.error("Failed to save cart meta:", e);
+        }
+        return updated;
+      });
+    }
+
     setCart((prev) => {
+      if (prev.includes(id)) return prev; // Deduplicate: do not add duplicate IDs
       const updated = [...prev, id];
       localStorage.setItem("gh-cart", JSON.stringify(updated));
       return updated;
@@ -54,14 +129,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const removeFromCart = (id: string) => {
     setCart((prev) => {
-      const index = prev.indexOf(id);
-      if (index > -1) {
-        const updated = [...prev];
-        updated.splice(index, 1);
-        localStorage.setItem("gh-cart", JSON.stringify(updated));
-        return updated;
-      }
-      return prev;
+      const updated = prev.filter((itemId) => itemId !== id);
+      localStorage.setItem("gh-cart", JSON.stringify(updated));
+      return updated;
     });
   };
 
@@ -92,6 +162,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         selectedCategory,
         selectedBrand,
         showDealsOnly,
+        productsMap,
         addToCart,
         removeFromCart,
         toggleWishlist,
@@ -99,6 +170,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setSelectedCategory,
         setSelectedBrand,
         setShowDealsOnly,
+        registerProducts,
         clearCart,
       }}
     >

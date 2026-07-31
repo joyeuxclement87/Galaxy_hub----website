@@ -4,9 +4,10 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Search, ShoppingCart, X } from "lucide-react";
+import { Menu, Search, ShoppingCart, X, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/context/AppContext";
+import { Button } from "@/components/ui/button";
 import { PRODUCTS } from "@/data/mock-data";
 
 interface NavbarProps {
@@ -41,7 +42,7 @@ function CartDropdown({
   open: boolean;
   onClose: () => void;
 }) {
-  const { cart, clearCart } = useApp();
+  const { cart, removeFromCart, clearCart, productsMap } = useApp();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,77 +56,130 @@ function CartDropdown({
     return () => document.removeEventListener("mousedown", handleClick, true);
   }, [open, onClose]);
 
-  const cartItems = PRODUCTS.filter((p) => cart.includes(p.id));
+  const cartItems = cart.map((id) => {
+    const meta = productsMap[id];
+    if (meta) return meta;
+    const mock = PRODUCTS.find((p) => p.id === id);
+    if (mock) {
+      return {
+        id: mock.id,
+        title: mock.title,
+        price: mock.price,
+        currency: mock.currency || "RWF",
+        image: mock.image,
+        slug: mock.slug,
+      };
+    }
+    return {
+      id,
+      title: "Genuine Tech Item",
+      price: 0,
+      currency: "RWF",
+      image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=600",
+    };
+  });
+  const total = cartItems.reduce((sum, item) => sum + item.price, 0);
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div
           ref={dropdownRef}
-          initial={{ opacity: 0, y: -6, scale: 0.96 }}
+          initial={{ opacity: 0, y: -8, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -6, scale: 0.96 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
-          className="absolute right-0 top-full z-50 mt-2 w-[320px] overflow-hidden rounded-2xl border border-black/[0.06] bg-[#FFFEF9] shadow-[0_12px_40px_-8px_rgba(0,0,0,0.12)]"
+          exit={{ opacity: 0, y: -8, scale: 0.96 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="absolute right-0 top-full z-50 mt-3 w-[360px] overflow-hidden rounded-card border border-ocean/[0.06] bg-ivory/95 backdrop-blur-xl shadow-premium-lg"
         >
           {cartItems.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 px-6 py-10 text-center">
-              <ShoppingCart className="h-10 w-10 text-ocean/15" />
+            <div className="flex flex-col items-center gap-4 px-6 py-12 text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-card bg-ocean/[0.04]">
+                <ShoppingCart className="h-7 w-7 text-ocean/20" />
+              </div>
               <div>
-                <p className="text-sm font-semibold text-ocean-deeper">Your cart is empty</p>
-                <p className="mt-1 text-xs text-ocean/50">Browse our products and add items you love.</p>
+                <p className="font-display text-sm font-bold text-ocean-deeper">Your cart is empty</p>
+                <p className="mt-1.5 text-xs text-ocean/45 leading-relaxed">Browse our products and add items you love.</p>
               </div>
               <Link
                 href="/"
                 onClick={onClose}
-                className="mt-1 rounded-full bg-ocean px-5 py-2 text-xs font-semibold text-white transition-all duration-200 hover:bg-ocean-dark hover:-translate-y-[1px]"
+                className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-10 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
               >
                 Browse Products
               </Link>
             </div>
           ) : (
             <div>
-              <div className="flex items-center justify-between border-b border-black/[0.06] px-5 py-3">
-                <span className="text-xs font-semibold text-ocean/60">
-                  {cartItems.length} item{cartItems.length !== 1 ? "s" : ""}
-                </span>
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-ocean/[0.06] px-5 py-3.5">
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-sm font-bold text-ocean-deeper">Cart</span>
+                  <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-btn bg-ocean/[0.08] px-1.5 text-[10px] font-bold text-ocean">
+                    {cartItems.length}
+                  </span>
+                </div>
                 <button
                   type="button"
                   onClick={() => { clearCart(); onClose(); }}
-                  className="text-[10px] font-semibold text-red-400 transition-colors hover:text-red-500 cursor-pointer"
+                  className="rounded-btn px-2.5 py-1 text-[10px] font-semibold text-red-400 transition-all duration-200 hover:text-red-500 hover:bg-red-50 cursor-pointer"
                 >
-                  Clear cart
+                  Clear all
                 </button>
               </div>
-              <div className="max-h-[280px] space-y-1 overflow-y-auto px-3 py-3">
-                {cartItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-ocean/4"
-                  >
-                    <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-ivory-dark">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold text-ocean-deeper">
-                        {item.title}
-                      </p>
-                      <p className="text-xs font-medium text-ocean/50">
-                        FRw {item.price.toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+
+              {/* Items */}
+              <div className="max-h-[300px] space-y-1 overflow-y-auto px-3 py-3 no-scrollbar">
+                <AnimatePresence mode="popLayout">
+                  {cartItems.map((item) => (
+                    <motion.div
+                      key={item.id}
+                      layout
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 12, scale: 0.9 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="group/item flex items-center gap-3 rounded-btn px-2.5 py-2.5 transition-colors duration-200 hover:bg-ocean/[0.03]"
+                    >
+                      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 border border-ocean/[0.04] flex items-center justify-center p-1">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="h-full w-full object-contain mix-blend-multiply"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[13px] font-semibold text-ocean-deeper">
+                          {item.title}
+                        </p>
+                        <p className="text-xs font-medium text-ocean/45">
+                          {item.currency} {item.price.toLocaleString()}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeFromCart(item.id)}
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-btn text-ocean/25 opacity-0 transition-all duration-200 hover:bg-red-50 hover:text-red-400 group-hover/item:opacity-100 cursor-pointer"
+                        aria-label={`Remove ${item.title} from cart`}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
-              <div className="border-t border-black/[0.06] px-5 py-3">
+
+              {/* Footer with total + CTA */}
+              <div className="border-t border-ocean/[0.06] px-5 py-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-ocean/50">Subtotal</span>
+                  <span className="font-display text-base font-bold text-ocean-deeper">
+                    RWF {total.toLocaleString()}
+                  </span>
+                </div>
                 <Link
                   href="/order"
                   onClick={onClose}
-                  className="flex items-center justify-center gap-2 rounded-full bg-ocean px-5 py-2.5 text-xs font-semibold text-white transition-all duration-200 hover:bg-ocean-dark hover:-translate-y-[1px]"
+                  className="flex items-center justify-center gap-2 rounded-btn bg-ocean-deeper w-full h-11 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
                 >
                   <ShoppingCart className="h-3.5 w-3.5" />
                   Order Now
@@ -140,7 +194,7 @@ function CartDropdown({
 }
 
 export function Navbar({ onSearchFocus }: NavbarProps) {
-  const { cart, searchQuery, setSearchQuery, setSelectedCategory, setSelectedBrand, setShowDealsOnly } = useApp();
+  const { cart, searchQuery, setSearchQuery, setSelectedCategory, setSelectedBrand, setShowDealsOnly, productsMap } = useApp();
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -237,22 +291,22 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-all duration-300",
           scrolled
-            ? "bg-[#FFFEF9]/90 backdrop-blur-lg border-b border-black/[0.06] shadow-[0_1px_0_rgba(0,0,0,0.02)]"
+            ? "bg-ivory/90 backdrop-blur-xl border-b border-ocean/[0.06] shadow-sm"
             : "bg-transparent border-b border-transparent"
         )}
       >
         <div
           className={cn(
-            "mx-auto flex items-center justify-between gap-6 px-6 sm:px-10 transition-all duration-300",
-            scrolled ? "h-14" : "h-24"
+            "mx-auto flex items-center justify-between gap-6 px-6 sm:px-10 lg:px-16 transition-all duration-300",
+            scrolled ? "h-16" : "h-20"
           )}
           style={{ maxWidth: "1440px" }}
         >
           <Wordmark large={!scrolled} />
 
           {searchOpen ? (
-            <div className="flex flex-1 items-center gap-2 px-2">
-              <Search className="h-4 w-4 shrink-0 text-ocean/40" />
+            <div className="flex flex-1 items-center gap-3 rounded-btn border border-ocean/[0.08] bg-white/70 backdrop-blur-sm px-4 py-2 mx-2">
+              <Search className="h-4 w-4 shrink-0 text-ocean/35" />
               <form onSubmit={handleSearchSubmit} className="flex-1">
                 <input
                   ref={searchInputRef}
@@ -262,38 +316,38 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                   className="w-full border-none bg-transparent text-sm font-medium text-ocean-deeper placeholder:text-ocean/25 focus:outline-none"
                 />
               </form>
-              <div className="hidden items-center gap-1 sm:flex">
+              <div className="hidden items-center gap-1.5 sm:flex">
                 {suggestedSearches.slice(0, 3).map((chip) => (
                   <button
                     key={chip}
                     onClick={() => handleSuggestedSearch(chip)}
-                    className="rounded-full border border-black/[0.06] px-2.5 py-1 text-[10px] font-semibold text-ocean/50 transition-colors hover:border-ocean/20 hover:text-ocean cursor-pointer"
+                    className="rounded-btn border border-ocean/[0.08] bg-ivory/60 px-2.5 py-1 text-[10px] font-semibold text-ocean/45 transition-all duration-200 hover:border-ocean/15 hover:text-ocean hover:bg-white cursor-pointer"
                   >
                     {chip}
                   </button>
                 ))}
               </div>
-              <button
-                type="button"
+              <Button
+                variant="icon"
                 onClick={() => setSearchOpen(false)}
                 aria-label="Close search"
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-ocean/50 transition-colors hover:bg-ocean/8 cursor-pointer"
+                className="h-8 w-8 rounded-btn"
               >
                 <X className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
           ) : (
-            <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+            <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main navigation">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.id}
                   href={getHref(link.id)}
                   onClick={(e) => handleNavClick(e, link.id)}
                   className={cn(
-                    "relative px-4 py-2 text-sm font-medium tracking-tight transition-colors duration-200 rounded-full",
+                    "relative px-4 py-2 text-sm font-medium tracking-tight transition-all duration-200 rounded-btn",
                     isActive(link.id)
-                      ? "text-ocean bg-ocean/6"
-                      : "text-ocean/55 hover:text-ocean hover:bg-ocean/4"
+                      ? "text-ocean bg-ocean/[0.06] font-semibold"
+                      : "text-ocean/50 hover:text-ocean hover:bg-ocean/[0.04]"
                   )}
                 >
                   {link.label}
@@ -302,23 +356,23 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
             </nav>
           )}
 
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
+          <div className="flex items-center gap-2">
+            <Button
+              variant="icon"
               onClick={() => { setSearchOpen(v => !v); onSearchFocus?.(); setCartOpen(false); }}
               aria-label="Search"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-ocean/50 transition-colors duration-200 hover:bg-ocean/6 cursor-pointer"
+              className="h-10 w-10 rounded-btn border border-transparent hover:border-ocean/[0.08] hover:bg-white/60"
             >
               <Search className="h-[18px] w-[18px]" />
-            </button>
+            </Button>
 
             <div className="relative">
-              <button
-                type="button"
+              <Button
+                variant="icon"
                 onClick={() => { setCartOpen(v => !v); setSearchOpen(false); }}
                 aria-label={cart.length > 0 ? `Cart (${cart.length} items)` : "Cart is empty"}
                 title={cart.length > 0 ? `${cart.length} item${cart.length !== 1 ? "s" : ""} in cart` : "Cart is empty"}
-                className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-ocean/50 transition-colors duration-200 hover:bg-ocean/6 cursor-pointer"
+                className="relative h-10 w-10 rounded-btn border border-transparent hover:border-ocean/[0.08] hover:bg-white/60"
               >
                 <ShoppingCart className="h-[18px] w-[18px]" />
                 <AnimatePresence mode="popLayout">
@@ -329,36 +383,37 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0.4, opacity: 0 }}
                       transition={{ type: "spring", stiffness: 600, damping: 14 }}
-                      className="absolute -right-0.5 -top-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-ocean px-1 text-[9px] font-bold text-white"
+                      className="absolute -right-0.5 -top-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-btn bg-ocean px-1 text-[9px] font-bold text-white shadow-sm"
                     >
                       {cart.length}
                     </motion.span>
                   )}
                 </AnimatePresence>
-              </button>
+              </Button>
               <CartDropdown open={cartOpen} onClose={() => setCartOpen(false)} />
             </div>
 
             <Link
               href="/order"
-              className="ml-1 hidden items-center gap-1.5 rounded-full bg-gradient-to-b from-ocean to-ocean-dark px-5 py-2 text-[13px] font-bold text-white transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_20px_rgba(11,84,151,0.25)] active:translate-y-0 sm:inline-flex"
+              className="ml-1.5 hidden items-center gap-2 rounded-btn bg-ocean-deeper px-7 h-10 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5 active:translate-y-0 sm:inline-flex"
             >
               <ShoppingCart className="h-3.5 w-3.5" />
               Order Now
             </Link>
 
-            <button
-              type="button"
+            <Button
+              variant="icon"
               onClick={() => { setMobileOpen(true); setCartOpen(false); }}
               aria-label="Open menu"
-              className="ml-0.5 inline-flex h-9 w-9 items-center justify-center rounded-full text-ocean/50 transition-colors duration-200 hover:bg-ocean/6 lg:hidden cursor-pointer"
+              className="lg:hidden h-10 w-10 rounded-btn"
             >
               <Menu className="h-[19px] w-[19px]" />
-            </button>
+            </Button>
           </div>
         </div>
       </header>
 
+      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -368,25 +423,25 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 z-[60] bg-black/20 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-[60] bg-ocean-deeper/15 backdrop-blur-sm lg:hidden"
             />
             <motion.div
               initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="fixed inset-x-3 top-3 z-[61] overflow-hidden rounded-2xl border border-black/[0.06] bg-[#FFFEF9] shadow-xl lg:hidden"
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="fixed inset-x-3 top-3 z-[61] overflow-hidden rounded-card border border-ocean/[0.06] bg-ivory/95 backdrop-blur-xl shadow-premium-lg lg:hidden"
             >
-              <div className="flex items-center justify-between border-b border-black/[0.06] px-5 py-4">
+              <div className="flex items-center justify-between border-b border-ocean/[0.06] px-5 py-4">
                 <Wordmark />
-                <button
-                  type="button"
+                <Button
+                  variant="icon"
                   onClick={() => setMobileOpen(false)}
                   aria-label="Close menu"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full text-ocean/50 hover:bg-ocean/6 transition-colors cursor-pointer"
+                  className="h-10 w-10 rounded-btn"
                 >
                   <X className="h-5 w-5" />
-                </button>
+                </Button>
               </div>
               <nav className="flex flex-col gap-0.5 px-3 py-3" aria-label="Mobile navigation">
                 {NAV_LINKS.map((link) => (
@@ -395,22 +450,53 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                     href={getHref(link.id)}
                     onClick={(e) => handleNavClick(e, link.id)}
                     className={cn(
-                      "flex items-center gap-2 rounded-xl px-4 py-3.5 text-base font-medium text-ocean/55 transition-colors duration-150 hover:bg-ocean/5 hover:text-ocean",
-                      isActive(link.id) && "text-ocean"
+                      "flex items-center gap-2 rounded-btn px-4 py-3.5 text-base font-medium text-ocean/50 transition-all duration-200 hover:bg-ocean/[0.04] hover:text-ocean",
+                      isActive(link.id) && "text-ocean bg-ocean/[0.05] font-semibold"
                     )}
                   >
                     {link.label}
                   </Link>
                 ))}
               </nav>
-              <div className="flex items-center gap-3 border-t border-black/[0.06] px-5 py-4">
+
+              {/* Mobile cart preview */}
+              {cart.length > 0 && (
+                <div className="border-t border-ocean/[0.06] px-5 py-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <ShoppingCart className="h-3.5 w-3.5 text-ocean/40" />
+                    <span className="text-xs font-semibold text-ocean/50">{cart.length} item{cart.length !== 1 ? "s" : ""} in cart</span>
+                  </div>
+                  <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                    {cart.slice(0, 4).map((id) => {
+                      const item = productsMap[id] || PRODUCTS.find((p) => p.id === id) || { id, title: "Item", image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=600" };
+                      return (
+                        <div key={id} className="h-10 w-10 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 border border-ocean/[0.04] flex items-center justify-center p-1">
+                          <img src={item.image} alt={item.title} className="h-full w-full object-contain mix-blend-multiply" />
+                        </div>
+                      );
+                    })}
+                    {cart.length > 4 && (
+                      <div className="h-10 w-10 shrink-0 flex items-center justify-center rounded-btn bg-ocean/[0.04] text-[10px] font-bold text-ocean/40">
+                        +{cart.length - 4}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center gap-3 border-t border-ocean/[0.06] px-5 py-4">
                 <Link
                   href="/order"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 flex-1 rounded-full bg-gradient-to-b from-ocean to-ocean-dark px-5 py-3 text-center text-base font-bold text-white transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_20px_rgba(11,84,151,0.25)]"
+                  className="flex items-center justify-center gap-2 flex-1 rounded-btn bg-ocean-deeper h-11 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
                 >
-                  <ShoppingCart className="h-4 w-4" />
+                  <ShoppingCart className="h-3.5 w-3.5" />
                   Order Now
+                  {cart.length > 0 && (
+                    <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-btn bg-white/20 px-1 text-[9px] font-bold">
+                      {cart.length}
+                    </span>
+                  )}
                 </Link>
               </div>
             </motion.div>

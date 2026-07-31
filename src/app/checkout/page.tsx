@@ -216,7 +216,7 @@ export default function CheckoutPage() {
                   <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600" />
                   <span>No payment now. Pay on pickup or delivery.</span>
                 </div>
-                <Button variant="primary" type="submit" disabled={submitting} className="mt-4 w-full gap-2">
+                <Button variant="primary" type="submit" disabled={submitting} className="mt-4 w-full gap-2 justify-center">
                   {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingBag className="h-4 w-4" />}
                   {submitting ? "Submitting..." : "Submit Order Request"}
                 </Button>

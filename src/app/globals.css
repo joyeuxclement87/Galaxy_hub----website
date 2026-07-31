@@ -22,6 +22,8 @@
   --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.1);
   --shadow-premium: 0 20px 60px rgba(11, 84, 151, 0.08);
   --shadow-premium-lg: 0 32px 80px rgba(11, 84, 151, 0.12);
+  --shadow-btn: 0 2px 8px rgba(11, 84, 151, 0.12);
+  --shadow-btn-hover: 0 6px 20px rgba(11, 84, 151, 0.16);
 }
 
 @font-face {
@@ -78,16 +80,25 @@ body {
 .animate-slide-up  { animation: slide-up  0.6s ease-out both; }
 .animate-scale-in  { animation: scale-in  0.4s ease-out both; }
 
+@keyframes marquee-left  { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+@keyframes marquee-right { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
+.animate-marquee-left  { animation: marquee-left  38s linear infinite; }
+.animate-marquee-right { animation: marquee-right 38s linear infinite; }
+.marquee-paused { animation-play-state: paused; }
+
 .glass-panel { background: rgba(255,255,255,0.55); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.4); }
 .glass-panel-dark { background: rgba(11,84,151,0.05); backdrop-filter: blur(16px); border: 1px solid rgba(11,84,151,0.08); }
 
 .hero-grid-texture { background-image: linear-gradient(rgba(11,84,151,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(11,84,151,0.04) 1px, transparent 1px); background-size: 72px 72px; }
 
 .rounded-card   { border-radius: 24px;  }
-.rounded-btn    { border-radius: 999px; }
+.rounded-btn    { border-radius: 14px; }
 .rounded-img    { border-radius: 28px;  }
 .rounded-input  { border-radius: 18px;  }
 .rounded-badge  { border-radius: 999px; }
+
+.shadow-btn      { box-shadow: 0 2px 8px rgba(11, 84, 151, 0.12); }
+.shadow-btn-hover { box-shadow: 0 6px 20px rgba(11, 84, 151, 0.16); }
 
 .safe-top    { padding-top:    env(safe-area-inset-top);    }
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }

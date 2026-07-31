@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Product } from "@/data/mock-data";
-import { Heart, Share2, ZoomIn } from "lucide-react";
+import { Heart, Share2, ZoomIn, X } from "lucide-react";
 import { Button } from "./button";
 import { useApp } from "@/context/AppContext";
 import { cn } from "@/lib/utils";
@@ -11,8 +11,9 @@ import { useRouter } from "next/navigation";
 
 export default function ProductDetails({ product, relatedProducts }: { product: Product; relatedProducts?: Product[] }) {
   const router = useRouter();
-  const { wishlist, toggleWishlist, addToCart, removeFromCart } = useApp();
+  const { cart, wishlist, toggleWishlist, addToCart, removeFromCart } = useApp();
   const isWishlisted = wishlist.includes(product.id);
+  const isInCart = cart.includes(product.id);
 
   const gallery: string[] = (product as any).gallery && (product as any).gallery.length ? (product as any).gallery : [product.image];
   const colors: string[] = (product as any).colors || ["Default"];
@@ -83,7 +84,7 @@ export default function ProductDetails({ product, relatedProducts }: { product: 
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button className="bg-ocean text-ivory" onClick={() => { addToCart(product.id); router.push('/order'); }}>Order Now</Button>
+            <Button variant="primary" onClick={() => { addToCart(product.id); router.push('/order'); }}>Order Now</Button>
             <Button variant="secondary" onClick={() => addToCart(product.id)}>Add to Cart</Button>
           </div>
         </div>
@@ -93,12 +94,13 @@ export default function ProductDetails({ product, relatedProducts }: { product: 
         <div className="lg:col-span-7">
           <div className="rounded-[28px] bg-white border border-black/5 overflow-hidden">
             <div className="relative bg-[#F8F9FA]">
-              <button
+              <Button
+                variant="secondary"
                 onClick={() => setOpenLightbox(true)}
-                className="absolute right-3 top-3 z-20 inline-flex items-center gap-2 rounded-md bg-ivory/90 px-3 py-2 text-xs font-semibold text-ocean shadow-sm"
+                className="absolute right-3 top-3 z-20 px-3 py-1.5 text-xs shadow-sm"
               >
-                <ZoomIn className="h-4 w-4" /> View
-              </button>
+                <ZoomIn className="h-3.5 w-3.5" /> View
+              </Button>
               <div className="aspect-[4/5] flex items-center justify-center p-8">
                 <img src={gallery[selectedImage]} alt={product.title} className="max-h-[600px] w-full object-contain transition-transform duration-300 hover:scale-105" />
               </div>
@@ -120,9 +122,11 @@ export default function ProductDetails({ product, relatedProducts }: { product: 
           </div>
 
           {/* Lightbox */}
-          {openLightbox && (
+            {openLightbox && (
             <div className="fixed inset-0 z-[200] bg-black/80 flex items-center justify-center p-6">
-              <button onClick={() => setOpenLightbox(false)} className="absolute right-6 top-6 text-white">Close</button>
+              <Button variant="icon" onClick={() => setOpenLightbox(false)} className="absolute right-6 top-6 h-10 w-10 text-white hover:bg-white/10">
+                <X className="h-5 w-5" />
+              </Button>
               <div className="max-w-[1100px] w-full">
                 <img src={gallery[selectedImage]} alt={product.title} className="w-full h-auto object-contain" />
               </div>
@@ -181,24 +185,30 @@ export default function ProductDetails({ product, relatedProducts }: { product: 
                 </div>
 
                 <div className="mt-4 flex items-center gap-3">
-                  <div className="flex items-center gap-2 border rounded-lg px-3 py-1">
-                    <button onClick={decQty} className="text-xl leading-none">−</button>
-                    <div className="w-8 text-center font-semibold">{quantity}</div>
-                    <button onClick={incQty} className="text-xl leading-none">+</button>
+                  <div className="flex items-center gap-2 border border-black/10 rounded-btn px-3 py-1">
+                    <button onClick={decQty} className="text-lg leading-none text-ocean/60 hover:text-ocean transition-colors">−</button>
+                    <div className="w-8 text-center text-sm font-semibold">{quantity}</div>
+                    <button onClick={incQty} className="text-lg leading-none text-ocean/60 hover:text-ocean transition-colors">+</button>
                   </div>
 
-                  <button onClick={() => toggleWishlist(product.id)} className={cn("inline-flex items-center gap-2 rounded-lg px-3 py-2 border", isWishlisted ? "bg-rose-50 text-rose-600 border-rose-100" : "bg-white border-black/6 text-ocean") }>
-                    <Heart className="h-4 w-4" /> Wishlist
-                  </button>
+                  <Button variant="secondary" onClick={() => toggleWishlist(product.id)} className={cn("gap-1.5", isWishlisted && "!border-rose-100 !bg-rose-50 !text-rose-600")}>
+                    <Heart className={cn("h-4 w-4", isWishlisted && "fill-rose-600")} /> Wishlist
+                  </Button>
 
-                  <button onClick={() => navigator.share ? navigator.share({ title: product.title, text: product.tagline, url: window.location.href }) : alert('Share this product URL') } className="inline-flex items-center gap-2 rounded-lg px-3 py-2 border border-black/6">
+                  <Button variant="secondary" onClick={() => navigator.share ? navigator.share({ title: product.title, text: product.tagline, url: window.location.href }) : alert('Share this product URL') } className="gap-1.5">
                     <Share2 className="h-4 w-4" /> Share
-                  </button>
+                  </Button>
                 </div>
 
                 <div className="mt-6 flex items-center gap-3">
-                  <Button className="flex-1 py-4 bg-ocean text-ivory" onClick={() => { addToCart(product.id); router.push('/order'); }}>Order Now</Button>
-                  <Button variant="secondary" className="py-4" onClick={() => addToCart(product.id)}>Add to Cart</Button>
+                  <Button variant="primary" className="flex-1" onClick={() => { if (!isInCart) addToCart(product.id); router.push('/order'); }}>Order Now</Button>
+                  <Button
+                    variant="secondary"
+                    className={cn("flex-1", isInCart && "!border-emerald-600 !bg-emerald-600 !text-white")}
+                    onClick={() => { if (isInCart) { removeFromCart(product.id); } else { addToCart(product.id); } }}
+                  >
+                    {isInCart ? "Added" : "Add to Cart"}
+                  </Button>
                 </div>
 
                 <div className="mt-4 text-sm text-ocean/70">
@@ -224,14 +234,26 @@ export default function ProductDetails({ product, relatedProducts }: { product: 
 
       {/* Tabs: Description, What's included, Specs */}
       <div className="mt-10">
-        <div className="border-b border-black/6">
-          <nav className="flex gap-6" role="tablist" aria-label="Product sections">
-            <button aria-selected={tab === 'overview'} role="tab" onClick={() => selectTab('overview')} className={cn('py-3 font-semibold', tab === 'overview' ? 'text-[#10233D]' : 'text-ocean/70')}>Overview</button>
-            <button aria-selected={tab === 'features'} role="tab" onClick={() => selectTab('features')} className={cn('py-3', tab === 'features' ? 'text-[#10233D]' : 'text-ocean/70')}>Features</button>
-            <button aria-selected={tab === 'specs'} role="tab" onClick={() => selectTab('specs')} className={cn('py-3', tab === 'specs' ? 'text-[#10233D]' : 'text-ocean/70')}>Specifications</button>
-            <button aria-selected={tab === 'included'} role="tab" onClick={() => selectTab('included')} className={cn('py-3', tab === 'included' ? 'text-[#10233D]' : 'text-ocean/70')}>What's Included</button>
-          </nav>
-        </div>
+          <div className="border-b border-black/6">
+            <nav className="flex gap-1" role="tablist" aria-label="Product sections">
+              {['overview', 'features', 'specs', 'included'].map((t) => (
+                <button
+                  key={t}
+                  aria-selected={tab === t}
+                  role="tab"
+                  onClick={() => selectTab(t)}
+                  className={cn(
+                    "px-4 py-2.5 text-xs font-semibold rounded-btn transition-all duration-200",
+                    tab === t
+                      ? "bg-ocean/8 text-ocean"
+                      : "text-ocean/50 hover:text-ocean hover:bg-ocean/4"
+                  )}
+                >
+                  {t === 'overview' ? 'Overview' : t === 'features' ? 'Features' : t === 'specs' ? 'Specifications' : "What's Included"}
+                </button>
+              ))}
+            </nav>
+          </div>
 
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8" role="tabpanel">
@@ -258,7 +280,7 @@ export default function ProductDetails({ product, relatedProducts }: { product: 
 
             {tab === 'included' && (
               <>
-                <h3 className="font-clash text-2xl font-bold text-[#10233D] mb-4">What's Included</h3>
+                <h3 className="font-clash text-2xl font-bold text-[#10233D] mb-4">What&apos;s Included</h3>
                 <ul className="list-disc list-inside text-sm text-ocean/70">
                   <li>Handset</li>
                   <li>USB-C Cable</li>
@@ -308,7 +330,7 @@ export default function ProductDetails({ product, relatedProducts }: { product: 
           </div>
 
           <div className="mt-4 flex items-center gap-3">
-            <Button className="bg-ocean text-ivory" onClick={addBundle}>Add Bundle</Button>
+            <Button variant="primary" onClick={addBundle}>Add Bundle</Button>
             {undoVisible && (
               <div className="ml-3 inline-flex items-center gap-3 bg-black/5 rounded-full px-3 py-2">
                 <div className="text-sm">Bundle added</div>

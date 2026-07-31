@@ -83,10 +83,10 @@ export function Categories() {
           </div>
           <Link
             href="/products"
-            className="group inline-flex shrink-0 items-center gap-1.5 self-start text-sm font-semibold text-ocean transition-colors duration-200 hover:text-accent sm:self-auto"
+            className="group inline-flex shrink-0 items-center gap-1.5 self-start text-sm font-semibold text-ocean hover:text-accent transition-colors sm:self-auto"
           >
             View All Categories
-            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
         </div>
 

@@ -24,24 +24,24 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
     : FALLBACK_CATEGORIES;
 
   return (
-    <section className="bg-white px-6 py-24 md:px-12 lg:py-32">
+    <section className="bg-ivory px-6 py-20 md:px-12 md:py-28">
       <div className="mx-auto max-w-[1320px]">
-        <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-accent">CATEGORIES</p>
+        <span className="section-label">CATEGORIES</span>
         <div className="mt-4 md:flex md:items-end md:justify-between">
           <h2 className="font-display text-[clamp(1.5rem,4vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ocean-deeper max-w-xl">
             Explore Our Collections
           </h2>
-          <Link href="/products" className="hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-ocean hover:text-accent transition-colors mt-2 md:mt-0">
-            All Categories <ArrowUpRight className="h-4 w-4" />
+          <Link href="/products" className="group hidden md:inline-flex items-center gap-1.5 text-sm font-semibold text-ocean hover:text-accent transition-colors mt-2 md:mt-0">
+            All Categories <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </div>
 
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-6">
+        <div className="mt-10 grid grid-cols-2 gap-5 sm:gap-6 md:grid-cols-3 lg:grid-cols-6">
           {display.map((cat) => (
             <Link
               key={cat.name}
               href={cat.href}
-              className="group relative block overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-[2px] hover:shadow-md"
+              className="group relative block overflow-hidden rounded-card bg-white shadow-sm transition-all duration-300 hover:-translate-y-[2px] hover:shadow-md"
             >
               <div className="relative aspect-square w-full overflow-hidden bg-ivory-dark/30">
                 <Image
@@ -56,7 +56,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
               </div>
               <div className="p-4">
                 <h3 className="font-clash text-sm font-bold text-ocean-deeper sm:text-base">{cat.name}</h3>
-                <p className="mt-0.5 text-[11px] text-ocean/45 leading-snug line-clamp-1">{cat.description}</p>
+                <p className="mt-0.5 text-[11px] text-ocean-deeper/55 leading-snug line-clamp-1">{cat.description}</p>
               </div>
             </Link>
           ))}

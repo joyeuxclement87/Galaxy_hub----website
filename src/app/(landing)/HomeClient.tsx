@@ -89,10 +89,23 @@ export default function HomeClient({ data }: HomeClientProps) {
     selectedCategory, setSelectedCategory,
     selectedBrand, setSelectedBrand,
     showDealsOnly, setShowDealsOnly,
-    addToCart, wishlist,
+    addToCart, wishlist, registerProducts,
   } = useApp();
 
   const products = data.allProducts;
+
+  useEffect(() => {
+    if (products && products.length > 0) {
+      registerProducts(products.map((p) => ({
+        id: p.id,
+        title: p.title,
+        price: p.price,
+        currency: p.currency || "RWF",
+        image: p.image,
+        slug: p.slug,
+      })));
+    }
+  }, [products, registerProducts]);
 
   useEffect(() => {
     const handleHash = () => {
@@ -293,7 +306,7 @@ export default function HomeClient({ data }: HomeClientProps) {
         </div>
       </section>
 
-      <Brands brands={data.brands} filters={data.brandFilters} />
+      <Brands brands={data.brands} />
 
       {/* ── TRENDING PRODUCTS ── */}
       <section id="products" className="bg-white px-4 py-20 sm:px-6 md:px-12 md:py-28">

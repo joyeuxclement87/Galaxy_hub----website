@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Phone, MessageCircle, Mail, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const TRUST_ITEMS = [
   "Genuine Products",
@@ -12,30 +12,14 @@ const TRUST_ITEMS = [
   "Friendly Customer Service",
 ];
 
-const CONTACT_LINKS = [
-  { label: "Call Us",   href: "tel:+250785288910",             icon: <Phone className="h-4 w-4" /> },
-  { label: "WhatsApp",  href: "https://wa.me/250785288910",    icon: <MessageCircle className="h-4 w-4" /> },
-  { label: "Email",     href: "mailto:hello@galaxyhub.rw",     icon: <Mail className="h-4 w-4" /> },
-];
-
 export function CTA() {
   return (
     <section aria-labelledby="cta-heading" className="px-4 py-10 sm:px-6 md:px-12 md:py-16">
       <div className="mx-auto max-w-[1280px]">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-ocean via-ocean-dark to-[#062d54] px-8 py-12 md:px-16 md:py-20">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
-              backgroundSize: "28px 28px",
-            }}
-          />
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-[radial-gradient(ellipse,rgba(255,255,255,0.06)_0%,transparent_70%)]" />
-
+        <div className="relative overflow-hidden rounded-card bg-gradient-to-br from-ocean via-ocean-dark to-[#062d54] px-8 py-12 md:px-16 md:py-20">
           <div className="relative z-10 grid gap-10 lg:grid-cols-[1fr_0.45fr] lg:items-center">
             <div className="text-white">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.28em] text-white/50 font-manrope">
+              <span className="block text-[10px] font-bold uppercase tracking-[0.28em] text-white/60 font-manrope">
                 READY TO UPGRADE?
               </span>
               <h2
@@ -44,47 +28,34 @@ export function CTA() {
               >
                 Your Next Device<br />Starts Here.
               </h2>
-              <p className="mt-4 max-w-lg text-sm leading-[1.8] text-white/65 font-manrope">
+              <p className="mt-4 max-w-lg text-sm leading-[1.8] text-white/75 font-manrope">
                 Browse genuine smartphones, laptops, accessories, creator gear, and everyday technology with delivery available across Rwanda.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/order"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-ocean shadow-sm transition-all duration-200 hover:-translate-y-[1px] hover:shadow-md active:translate-y-0"
+                  className="group inline-flex items-center gap-2 rounded-btn bg-white px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean shadow-btn transition-all duration-300 hover:bg-white/90 hover:shadow-btn-hover hover:-translate-y-0.5"
                 >
                   Order Now
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   href="/products"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 hover:border-white/25"
+                  className="group inline-flex items-center gap-2 rounded-btn border border-white/15 px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white/10 hover:-translate-y-0.5"
                 >
                   Browse Products
                 </Link>
               </div>
 
-              <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2">
-                {TRUST_ITEMS.map((item) => (
-                  <li key={item} className="inline-flex items-center gap-1.5 text-sm font-medium text-white/80">
-                    <span className="text-emerald-300 text-base leading-none">✓</span>
-                    {item}
+              <ul className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2">
+                {TRUST_ITEMS.map((item, index) => (
+                  <li key={item} className="flex items-center gap-x-5">
+                    {index > 0 && <span className="text-white/30">—</span>}
+                    <span className="text-sm font-medium text-white/85">{item}</span>
                   </li>
                 ))}
               </ul>
-
-              <div className="mt-6 flex flex-wrap gap-2">
-                {CONTACT_LINKS.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    className="inline-flex items-center gap-2 rounded-full bg-white/8 px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-white/15 border border-white/10"
-                  >
-                    {link.icon}
-                    {link.label}
-                  </a>
-                ))}
-              </div>
             </div>
 
             <div className="flex items-center justify-center">
@@ -97,12 +68,6 @@ export function CTA() {
                   className="object-contain"
                   priority={false}
                 />
-                <div className="absolute left-2 top-4 rounded-full bg-white/90 px-3 py-1.5 text-[11px] font-semibold text-ocean shadow-sm">
-                  ✓ Genuine Products
-                </div>
-                <div className="absolute right-2 bottom-8 rounded-full bg-white/90 px-3 py-1.5 text-[11px] font-semibold text-ocean shadow-sm">
-                  🚚 Nationwide Delivery
-                </div>
               </div>
             </div>
           </div>

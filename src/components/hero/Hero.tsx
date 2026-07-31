@@ -4,8 +4,10 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, ShoppingCart, ShieldCheck, Truck, ArrowUpRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingCart, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useApp } from "@/context/AppContext";
 
 export interface HeroSlideData {
   id: string;
@@ -36,7 +38,9 @@ export function HeroSection({ slides, onAddToCart }: HeroSectionProps) {
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const { cart, addToCart, removeFromCart } = useApp();
   const slide = slides[current] || slides[0];
+  const isInCart = slide ? cart.includes(slide.id) : false;
 
   const startTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -83,11 +87,14 @@ export function HeroSection({ slides, onAddToCart }: HeroSectionProps) {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="relative mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-12 py-8 lg:py-16">
-        <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-8 min-h-[420px] lg:min-h-[560px]">
+      {/* Grid texture — very subtle */}
+      <div className="absolute inset-0 hero-grid-texture opacity-40 pointer-events-none" />
 
-          {/* Left: Content */}
-          <div className="lg:col-span-6 flex flex-col justify-center space-y-5 z-10">
+      <div className="relative mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16 pt-16 pb-12 lg:pt-24 lg:pb-16">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-16 min-h-[500px] lg:min-h-[600px]">
+
+          {/* ── Left: Content ── */}
+          <div className="lg:col-span-5 flex flex-col justify-center z-10">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={slide.id}
@@ -96,86 +103,111 @@ export function HeroSection({ slides, onAddToCart }: HeroSectionProps) {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="space-y-5"
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="space-y-7"
               >
+                {/* Category / type label — no pill, just text */}
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
-                    {slide.badge || "FEATURED TECH"}
-                  </span>
+                  <span className="section-label">{slide.badge || "FEATURED TECH"}</span>
                   {discount > 0 && (
-                    <span className="rounded-full bg-red-50 text-red-600 border border-red-100 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider">
-                      Save {discount}%
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-red-500">
+                      — Save {discount}%
                     </span>
                   )}
                 </div>
 
-                <h1 className="font-clash text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.08] tracking-tight text-ocean-deeper">
+                {/* Title — large and confident */}
+                <h1 className="font-display text-[clamp(2.25rem,5.5vw,3.75rem)] font-bold leading-[1.05] tracking-tight text-ocean-deeper">
                   {slide.title}
                 </h1>
 
-                <p className="max-w-md text-sm leading-relaxed text-ocean/65">
+                {/* Description — stronger contrast */}
+                <p className="max-w-[480px] text-base leading-relaxed text-ocean-deeper/65">
                   {slide.description}
                 </p>
 
-                <div className="flex items-baseline gap-3 pt-1">
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-ocean/45">
-                      {slide.currency}
+                {/* Price block */}
+                <div className="space-y-1 pt-1">
+                  <span className="block text-[11px] font-bold uppercase tracking-[0.18em] text-ocean/45">
+                    Starting from
+                  </span>
+                  <div className="flex items-baseline gap-4">
+                    <span className="font-display text-[clamp(2rem,4.5vw,3rem)] font-bold leading-none text-ocean-deeper">
+                      {slide.currency} {slide.price.toLocaleString()}
                     </span>
-                    <span className="font-clash text-[clamp(1.75rem,4vw,2.75rem)] font-bold text-ocean-deeper">
-                      {slide.price.toLocaleString()}
-                    </span>
+                    {slide.originalPrice && slide.originalPrice > slide.price && (
+                      <span className="text-base text-ocean-deeper/30 line-through font-medium">
+                        {slide.currency} {slide.originalPrice.toLocaleString()}
+                      </span>
+                    )}
                   </div>
-                  {slide.originalPrice && slide.originalPrice > slide.price && (
-                    <span className="text-sm text-ocean/35 line-through font-medium">
-                      {slide.currency} {slide.originalPrice.toLocaleString()}
-                    </span>
-                  )}
                 </div>
 
+                {/* Action buttons */}
                 <div className="flex flex-wrap items-center gap-3 pt-1">
-                  <button
-                    onClick={() => onAddToCart(slide.id)}
-                    className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-ocean to-ocean-dark px-7 py-3.5 text-sm font-semibold text-white shadow-premium transition-all duration-200 hover:-translate-y-[2px] hover:shadow-premium-lg active:translate-y-0 cursor-pointer"
+                  <Button
+                    variant="primary"
+                    onClick={() => {
+                      if (isInCart) {
+                        removeFromCart(slide.id);
+                      } else {
+                        addToCart(slide.id, {
+                          id: slide.id,
+                          title: slide.title,
+                          price: slide.price,
+                          currency: slide.currency,
+                          image: slide.image,
+                          slug: slide.slug,
+                        });
+                      }
+                    }}
+                    className={cn(
+                      "rounded-btn h-12 px-8 text-[11px] font-bold uppercase tracking-[0.14em] transition-all duration-300 shadow-btn hover:shadow-btn-hover hover:-translate-y-0.5 active:translate-y-0",
+                      isInCart
+                        ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                        : "bg-ocean-deeper text-white hover:bg-ocean-dark"
+                    )}
                   >
-                    <ShoppingCart className="h-4 w-4" />
-                    Add to Cart
-                  </button>
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    {isInCart ? "Added to Cart" : "Add to Cart"}
+                  </Button>
+
                   <Link
                     href={`/product/${slide.slug}`}
-                    className="inline-flex items-center gap-2 rounded-full border border-ocean/15 bg-white px-7 py-3.5 text-sm font-semibold text-ocean transition-all duration-200 hover:border-ocean/30 hover:bg-ocean/4"
+                    className="group inline-flex items-center gap-2 rounded-btn h-12 px-8 border border-ocean/20 bg-white/70 text-ocean-deeper text-[11px] font-bold uppercase tracking-[0.14em] transition-all duration-300 hover:border-ocean/35 hover:bg-white hover:shadow-sm hover:-translate-y-0.5"
                   >
-                    Explore Product
-                    <ArrowUpRight className="h-4 w-4 text-accent" />
+                    View Details
+                    <ArrowUpRight className="h-4 w-4 opacity-50 group-hover:opacity-100 transition-opacity" />
                   </Link>
                 </div>
               </motion.div>
             </AnimatePresence>
           </div>
 
-          {/* Right: Product Image with depth */}
-          <div className="lg:col-span-6 relative flex items-center justify-center">
+          {/* ── Right: Product Image ── */}
+          <div className="lg:col-span-7 relative flex items-center justify-center">
+            {/* Radial glow behind the image */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-[480px] h-[480px] rounded-full bg-[radial-gradient(ellipse, rgba(11,84,151,0.07)_0%, transparent_70%)] lg:w-[600px] lg:h-[600px]" />
+              <div className="w-[520px] h-[380px] rounded-[100px] bg-[radial-gradient(ellipse,_rgba(11,84,151,0.08)_0%,_transparent_68%)] lg:w-[680px] lg:h-[480px]" />
             </div>
-            <div className="relative z-10 w-full max-w-[520px] lg:-mr-8 aspect-square flex items-center justify-center">
+
+            <div className="relative z-10 w-full max-w-[640px] aspect-[16/11] overflow-hidden rounded-card bg-gradient-to-br from-white to-ivory-dark/40">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={slide.id + "-img"}
-                  initial={{ scale: 0.92, opacity: 0 }}
+                  initial={{ scale: 1.04, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.96, opacity: 0 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="relative w-full h-full flex items-center justify-center"
+                  exit={{ scale: 0.98, opacity: 0 }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute inset-0"
                 >
                   <Image
                     src={slide.image}
                     alt={slide.title}
-                    width={520}
-                    height={520}
+                    fill
                     priority
-                    className="object-contain w-full h-full drop-shadow-[0_20px_40px_rgba(0,0,0,0.06)]"
+                    sizes="(min-width: 1024px) 640px, 90vw"
+                    className="object-cover drop-shadow-[0_28px_56px_rgba(0,0,0,0.09)]"
                   />
                 </motion.div>
               </AnimatePresence>
@@ -183,55 +215,43 @@ export function HeroSection({ slides, onAddToCart }: HeroSectionProps) {
           </div>
         </div>
 
-        {/* Bottom: Controls + Trust */}
-        <div className="relative mt-8 pt-6 border-t border-ocean/[0.06] flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5">
+        {/* ── Bottom bar: nav controls only ── */}
+        <div className="relative mt-12 pt-6 border-t border-ocean/[0.06] flex items-center justify-between">
+          {/* Dot indicators */}
+          <div className="flex items-center gap-2">
+            {slides.map((s, index) => (
               <button
-                onClick={goPrev}
-                aria-label="Previous slide"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-ocean/10 bg-white text-ocean/50 transition-all duration-200 hover:border-ocean/20 hover:text-ocean hover:bg-ocean/4 cursor-pointer"
-              >
-                <ChevronLeft className="h-3.5 w-3.5" />
-              </button>
-              <button
-                onClick={goNext}
-                aria-label="Next slide"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-ocean/10 bg-white text-ocean/50 transition-all duration-200 hover:border-ocean/20 hover:text-ocean hover:bg-ocean/4 cursor-pointer"
-              >
-                <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <div className="flex items-center gap-1.5">
-              {slides.map((s, index) => (
-                <button
-                  key={s.id}
-                  onClick={() => goTo(index)}
-                  className={cn(
-                    "rounded-full transition-all duration-200 cursor-pointer",
-                    index === current
-                      ? "w-5 h-2 bg-ocean"
-                      : "w-2 h-2 bg-ocean/15 hover:bg-ocean/30"
-                  )}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
+                key={s.id}
+                onClick={() => goTo(index)}
+                className={cn(
+                  "rounded-full transition-all duration-300 cursor-pointer",
+                  index === current
+                    ? "w-7 h-2 bg-ocean-deeper"
+                    : "w-2 h-2 bg-ocean-deeper/15 hover:bg-ocean-deeper/30"
+                )}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
           </div>
 
-          <div className="flex flex-wrap items-center gap-5 text-xs font-medium text-ocean/65">
-            <span className="inline-flex items-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5 text-ocean" />
-              100% Authentic
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Truck className="h-3.5 w-3.5 text-ocean" />
-              Kigali Express
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <ArrowUpRight className="h-3.5 w-3.5 text-ocean" />
-              Warranty Included
-            </span>
+          {/* Prev / Next arrows */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="icon"
+              onClick={goPrev}
+              aria-label="Previous slide"
+              className="h-10 w-10 rounded-btn border border-ocean/10 bg-white/60 text-ocean/50 hover:bg-white hover:text-ocean hover:border-ocean/20 transition-all duration-200"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="icon"
+              onClick={goNext}
+              aria-label="Next slide"
+              className="h-10 w-10 rounded-btn border border-ocean/10 bg-white/60 text-ocean/50 hover:bg-white hover:text-ocean hover:border-ocean/20 transition-all duration-200"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </div>

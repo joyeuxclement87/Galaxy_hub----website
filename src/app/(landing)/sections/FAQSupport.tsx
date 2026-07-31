@@ -71,7 +71,7 @@ export function FAQSupport() {
               <div
                 key={item.q}
                 className={cn(
-                  "overflow-hidden rounded-2xl border bg-white shadow-sm transition-colors duration-200",
+                  "overflow-hidden rounded-card border bg-white shadow-sm transition-colors duration-200",
                   isOpen ? "border-ocean/15" : "border-ocean/8"
                 )}
               >
@@ -103,7 +103,7 @@ export function FAQSupport() {
                       transition={{ duration: 0.22 }}
                       className="overflow-hidden"
                     >
-                      <p className="border-t border-ocean/6 px-5 pb-5 pt-4 text-sm leading-[1.8] text-ocean/55 font-manrope sm:px-6">
+                      <p className="border-t border-ocean/6 px-5 pb-5 pt-4 text-sm leading-[1.8] text-ocean-deeper/60 font-manrope sm:px-6">
                         {item.a}
                       </p>
                     </motion.div>
@@ -114,7 +114,7 @@ export function FAQSupport() {
           })}
         </div>
 
-        <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-ocean/8 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-4 rounded-card border border-ocean/8 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 text-sm text-ocean/65 font-manrope">
             <Phone className="h-4 w-4 text-ocean shrink-0" />
             <span>Still have questions?</span>
@@ -125,13 +125,13 @@ export function FAQSupport() {
           <div className="flex flex-wrap gap-2">
             <Link
               href="/order"
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-b from-ocean to-ocean-dark px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-[1px] hover:shadow-[0_8px_20px_rgba(11,84,151,0.25)]"
+              className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
             >
               Order Now
             </Link>
             <a
               href="tel:+250785288910"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-ocean/12 bg-white px-5 py-2.5 text-sm font-semibold text-ocean-deeper transition-colors hover:bg-ocean/4"
+              className="inline-flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 backdrop-blur-sm px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-white hover:shadow-sm hover:-translate-y-0.5"
             >
               <Phone className="h-4 w-4" />
               Call Us
