@@ -143,7 +143,7 @@ export default function HomeClient({ data }: HomeClientProps) {
 
   const heroSlidesRaw: HeroSlideData[] = data.heroSlides.length > 0
     ? data.heroSlides
-    : products.slice(0, 1).map((p) => ({
+    : products.slice(0, 5).map((p) => ({
         id: p.id, badge: p.badge || "NEW ARRIVAL", title: p.title,
         description: p.description, price: p.price, originalPrice: p.originalPrice,
         currency: p.currency, image: p.image, slug: p.slug,

@@ -42,7 +42,7 @@ function BrandLogoCard({ brand, index }: { brand: BrandCatalogItem; index: numbe
 }
 
 export function Brands({ brands }: BrandsProps) {
-  const catalog = brands ?? BRAND_CATALOG;
+  const catalog = brands && brands.length > 0 ? brands : BRAND_CATALOG;
 
   // Repeat the catalog enough times so the strip always overflows the
   // viewport and the loop reads as continuous, no matter how many brands
@@ -66,10 +66,10 @@ export function Brands({ brands }: BrandsProps) {
           </p>
         </div>
 
-        <div className="group relative mt-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+        <div className="relative mt-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
           <div
-            className="flex w-max animate-marquee-left gap-4 group-hover:marquee-paused"
-            style={{ animationDuration: `${repeats * 6}s` }}
+            className="flex w-max animate-marquee-left gap-4 hover:[animation-play-state:paused]"
+            style={{ animationDuration: `${track.length * 2.5}s` }}
           >
             {track.map((brand, index) => (
               <BrandLogoCard key={`${brand.slug}-${index}`} brand={brand} index={index} />

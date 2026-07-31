@@ -48,7 +48,7 @@ export function HeroSection({ slides, onAddToCart }: HeroSectionProps) {
     timerRef.current = setInterval(() => {
       setDirection(1);
       setCurrent((prev) => (prev + 1) % slides.length);
-    }, 6000);
+    }, 5000);
   }, [slides.length, isPaused]);
 
   const stopTimer = useCallback(() => {
@@ -82,11 +82,7 @@ export function HeroSection({ slides, onAddToCart }: HeroSectionProps) {
     ? Math.round((1 - slide.price / slide.originalPrice) * 100) : 0;
 
   return (
-    <section
-      className="relative bg-ivory overflow-hidden"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-    >
+    <section className="relative bg-ivory overflow-hidden">
       {/* Grid texture — very subtle */}
       <div className="absolute inset-0 hero-grid-texture opacity-40 pointer-events-none" />
 
@@ -224,13 +220,23 @@ export function HeroSection({ slides, onAddToCart }: HeroSectionProps) {
                 key={s.id}
                 onClick={() => goTo(index)}
                 className={cn(
-                  "rounded-full transition-all duration-300 cursor-pointer",
+                  "relative overflow-hidden rounded-full transition-all duration-300 cursor-pointer h-2",
                   index === current
-                    ? "w-7 h-2 bg-ocean-deeper"
-                    : "w-2 h-2 bg-ocean-deeper/15 hover:bg-ocean-deeper/30"
+                    ? "w-8 bg-ocean-deeper/20"
+                    : "w-2 bg-ocean-deeper/15 hover:bg-ocean-deeper/30"
                 )}
                 aria-label={`Go to slide ${index + 1}`}
-              />
+              >
+                {index === current && (
+                  <motion.div
+                    key={`progress-${current}`}
+                    initial={{ width: "0%" }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 5, ease: "linear" }}
+                    className="h-full bg-ocean-deeper rounded-full"
+                  />
+                )}
+              </button>
             ))}
           </div>
 

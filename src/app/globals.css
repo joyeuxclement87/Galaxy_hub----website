@@ -82,8 +82,12 @@ body {
 
 @keyframes marquee-left  { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
 @keyframes marquee-right { from { transform: translate3d(-50%, 0, 0); } to { transform: translate3d(0, 0, 0); } }
-.animate-marquee-left  { animation: marquee-left  38s linear infinite; }
-.animate-marquee-right { animation: marquee-right 38s linear infinite; }
+.animate-marquee-left  { animation: marquee-left  60s linear infinite; }
+.animate-marquee-right { animation: marquee-right 60s linear infinite; }
+
+@utility marquee-paused {
+  animation-play-state: paused;
+}
 .marquee-paused { animation-play-state: paused; }
 
 .glass-panel { background: rgba(255,255,255,0.55); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.4); }
