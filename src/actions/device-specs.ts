@@ -1,12 +1,13 @@
 "use server";
 
 import { createAuthClient } from "@/lib/supabase-server-auth";
-import { searchPhones, getPhoneById, MobileApiError, MOBILE_API_ERROR_MESSAGES } from "@/lib/mobile-api";
+import { searchDevices, getDeviceById, MobileApiError, MOBILE_API_ERROR_MESSAGES } from "@/lib/mobile-api";
 import { normalizeMobileApiDevice } from "@/lib/phone-spec-normalizer";
 import type { ProductSpecifications } from "@/types/specifications";
 
 /**
- * Admin-only actions for importing phone specifications from MobileAPI.dev.
+ * Admin-only actions for importing device specifications from MobileAPI.dev
+ * (smartphones, tablets, smartwatches, laptops, ...).
  *
  * SECURITY:
  * - Every action here re-checks the Supabase session before calling the
@@ -37,21 +38,22 @@ function toHumanMessage(err: unknown): string {
   return MOBILE_API_ERROR_MESSAGES.unavailable;
 }
 
-export interface PhoneSearchResultItem {
+export interface DeviceSearchResultItem {
   id: number;
   name: string;
   manufacturer: string | null;
+  deviceType: string | null;
   image: string | null;
   summary: string | null;
 }
 
-export type PhoneSearchResponse = { results: PhoneSearchResultItem[] } | { error: string };
+export type DeviceSearchResponse = { results: DeviceSearchResultItem[] } | { error: string };
 
-export async function searchPhoneSpecifications(query: string): Promise<PhoneSearchResponse> {
+export async function searchDeviceSpecifications(query: string): Promise<DeviceSearchResponse> {
   try {
     await requireAdminSession();
   } catch {
-    return { error: "You must be signed in as an admin to search phone specifications." };
+    return { error: "You must be signed in as an admin to search device specifications." };
   }
 
   const trimmed = query.trim();
@@ -60,12 +62,13 @@ export async function searchPhoneSpecifications(query: string): Promise<PhoneSea
   }
 
   try {
-    const devices = await searchPhones(trimmed);
+    const devices = await searchDevices(trimmed);
     return {
       results: devices.map((device) => ({
         id: device.id,
         name: device.name,
         manufacturer: device.manufacturer_name || null,
+        deviceType: device.device_type || null,
         image: device.image_url || null,
         summary: [device.screen_resolution, device.hardware, device.storage].filter(Boolean).join(" · ") || null,
       })),
@@ -75,35 +78,37 @@ export async function searchPhoneSpecifications(query: string): Promise<PhoneSea
   }
 }
 
-export interface PhoneSpecPreview {
+export interface DeviceSpecPreview {
   deviceId: number;
   deviceName: string;
   manufacturer: string | null;
+  deviceType: string | null;
   image: string | null;
   specifications: ProductSpecifications;
 }
 
-export type PhoneSpecPreviewResponse = { preview: PhoneSpecPreview } | { error: string };
+export type DeviceSpecPreviewResponse = { preview: DeviceSpecPreview } | { error: string };
 
-export async function getPhoneSpecificationPreview(deviceId: number): Promise<PhoneSpecPreviewResponse> {
+export async function getDeviceSpecificationPreview(deviceId: number): Promise<DeviceSpecPreviewResponse> {
   try {
     await requireAdminSession();
   } catch {
-    return { error: "You must be signed in as an admin to import phone specifications." };
+    return { error: "You must be signed in as an admin to import device specifications." };
   }
 
   if (!Number.isFinite(deviceId)) {
-    return { error: "Invalid phone selected. Please search again." };
+    return { error: "Invalid device selected. Please search again." };
   }
 
   try {
-    const device = await getPhoneById(deviceId);
+    const device = await getDeviceById(deviceId);
     const specifications = normalizeMobileApiDevice(device);
     return {
       preview: {
         deviceId: device.id,
         deviceName: device.name,
         manufacturer: device.manufacturer_name || null,
+        deviceType: device.device_type || null,
         image: device.image_url || null,
         specifications,
       },

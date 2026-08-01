@@ -13,7 +13,7 @@ type ProductWithRelations = ProductRow & {
 
 type SearchProductRow = Pick<
   ProductRow,
-  "id" | "slug" | "name" | "price" | "old_price" | "main_image_url" | "stock_status" | "short_description"
+  "id" | "slug" | "name" | "price" | "old_price" | "main_image_url" | "stock_status" | "short_description" | "rating" | "review_count"
 > & {
   category?: { name?: string } | null;
   brand?: { name?: string } | null;
@@ -28,6 +28,8 @@ export interface PublicProduct {
   price: number;
   old_price: number | null;
   discount_percentage: number | null;
+  rating: number | null;
+  review_count: number | null;
   main_image_url: string | null;
   stock_status: string;
   is_featured: boolean;
@@ -50,6 +52,8 @@ export interface ProductsListResponse {
   total: number;
   categories: { id: string; name: string; slug: string }[];
   brands: { id: string; name: string; slug: string }[];
+  categoryCounts: Record<string, number>;
+  brandCounts: Record<string, number>;
 }
 
 export async function getPublicProducts(params: {
@@ -129,17 +133,26 @@ export async function getPublicProducts(params: {
   const to = from + pageSize - 1;
   query = query.range(from, to);
 
-  const [countResult, dataResult, categoriesResult, brandsResult] = await Promise.allSettled([
+  const [countResult, dataResult, categoriesResult, brandsResult, allRowsResult] = await Promise.allSettled([
     countQuery,
     query,
     supabase.from("categories").select("id, name, slug").eq("is_active", true).order("name"),
     supabase.from("brands").select("id, name, slug").eq("is_active", true).order("name"),
+    supabase.from("products").select("category_id, brand_id").eq("is_active", true),
   ]);
 
   const total = countResult.status === "fulfilled" ? (countResult.value.count ?? 0) : 0;
   const data = dataResult.status === "fulfilled" ? dataResult.value.data : null;
   const categories = categoriesResult.status === "fulfilled" ? (categoriesResult.value.data || []) : [];
   const brands = brandsResult.status === "fulfilled" ? (brandsResult.value.data || []) : [];
+
+  const allRows = allRowsResult.status === "fulfilled" ? (allRowsResult.value.data || []) : [];
+  const categoryCounts: Record<string, number> = {};
+  const brandCounts: Record<string, number> = {};
+  allRows.forEach((r) => {
+    if (r.category_id) categoryCounts[r.category_id] = (categoryCounts[r.category_id] || 0) + 1;
+    if (r.brand_id) brandCounts[r.brand_id] = (brandCounts[r.brand_id] || 0) + 1;
+  });
 
   const products: PublicProduct[] = (data || []).map((row: ProductWithRelations) => ({
     id: row.id,
@@ -150,6 +163,8 @@ export async function getPublicProducts(params: {
     price: Number(row.price),
     old_price: row.old_price ? Number(row.old_price) : null,
     discount_percentage: row.discount_percentage,
+    rating: row.rating ? Number(row.rating) : null,
+    review_count: row.review_count,
     main_image_url: row.main_image_url,
     stock_status: row.stock_status,
     is_featured: row.is_featured,
@@ -167,7 +182,7 @@ export async function getPublicProducts(params: {
     storage_options: toStorageOptions(row.storage_options),
   }));
 
-  return { products, total, categories, brands };
+  return { products, total, categories, brands, categoryCounts, brandCounts };
 }
 
 export async function getPublicProductBySlug(slug: string) {
@@ -190,7 +205,7 @@ export async function getPublicProductBySlug(slug: string) {
 
   const { data: related } = await supabase
     .from("products")
-    .select(`id, slug, name, price, old_price, main_image_url, stock_status, discount_percentage, short_description, category:category_id(name, slug), brand:brand_id(name)`)
+    .select(`id, slug, name, price, old_price, main_image_url, stock_status, discount_percentage, rating, review_count, short_description, category:category_id(name, slug), brand:brand_id(name)`)
     .eq("is_active", true)
     .or(`category_id.eq.${data.category_id},brand_id.eq.${data.brand_id}`)
     .neq("id", data.id)
@@ -207,6 +222,8 @@ export async function getPublicProductBySlug(slug: string) {
     price: Number(data.price),
     old_price: data.old_price ? Number(data.old_price) : null,
     discount_percentage: data.discount_percentage,
+    rating: data.rating ? Number(data.rating) : null,
+    review_count: data.review_count,
     main_image_url: data.main_image_url,
     stock_status: data.stock_status,
     is_featured: data.is_featured,
@@ -235,6 +252,8 @@ export async function getPublicProductBySlug(slug: string) {
       price: Number(r.price),
       old_price: r.old_price ? Number(r.old_price) : null,
       discount_percentage: r.discount_percentage,
+      rating: r.rating ? Number(r.rating) : null,
+      review_count: r.review_count,
       main_image_url: r.main_image_url,
       stock_status: r.stock_status,
       short_description: r.short_description,
@@ -274,6 +293,8 @@ export async function getPublicProductsByCategorySlug(slug: string) {
       price: Number(row.price),
       old_price: row.old_price ? Number(row.old_price) : null,
       discount_percentage: row.discount_percentage,
+      rating: row.rating ? Number(row.rating) : null,
+      review_count: row.review_count,
       main_image_url: row.main_image_url,
       stock_status: row.stock_status,
       is_featured: row.is_featured,
@@ -321,6 +342,8 @@ export async function getPublicBrandBySlug(slug: string) {
       price: Number(row.price),
       old_price: row.old_price ? Number(row.old_price) : null,
       discount_percentage: row.discount_percentage,
+      rating: row.rating ? Number(row.rating) : null,
+      review_count: row.review_count,
       main_image_url: row.main_image_url,
       stock_status: row.stock_status,
       is_featured: row.is_featured,
@@ -338,7 +361,7 @@ export async function searchProducts(query: string) {
 
   const { data } = await supabase
     .from("products")
-    .select(`id, slug, name, price, old_price, main_image_url, stock_status, short_description, category:category_id(name), brand:brand_id(name)`)
+    .select(`id, slug, name, price, old_price, main_image_url, stock_status, rating, review_count, short_description, category:category_id(name), brand:brand_id(name)`)
     .eq("is_active", true)
     .or(`name.ilike.${term},short_description.ilike.${term}`)
     .limit(20);
@@ -349,6 +372,8 @@ export async function searchProducts(query: string) {
     name: row.name,
     price: Number(row.price),
     old_price: row.old_price ? Number(row.old_price) : null,
+    rating: row.rating ? Number(row.rating) : null,
+    review_count: row.review_count,
     main_image_url: row.main_image_url,
     stock_status: row.stock_status,
     short_description: row.short_description,

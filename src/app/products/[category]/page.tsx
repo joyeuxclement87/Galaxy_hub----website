@@ -8,8 +8,9 @@ import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
-  const result = await getPublicProductsByCategorySlug(params.category);
+export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
+  const { category } = await params;
+  const result = await getPublicProductsByCategorySlug(category);
   if (!result) return { title: "Category Not Found" };
   return {
     title: `${result.category.name} | Galaxy Hub Rwanda`,
@@ -17,8 +18,9 @@ export async function generateMetadata({ params }: { params: { category: string 
   };
 }
 
-export default async function CategoryPage({ params }: { params: { category: string } }) {
-  const result = await getPublicProductsByCategorySlug(params.category);
+export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+  const { category: categorySlug } = await params;
+  const result = await getPublicProductsByCategorySlug(categorySlug);
   if (!result) notFound();
 
   const { category, products } = result;
@@ -27,7 +29,7 @@ export default async function CategoryPage({ params }: { params: { category: str
     <div className="min-h-screen bg-[#F8F9FA] selection:bg-ocean/20 selection:text-ocean">
       <Navbar />
 
-      <main className="pt-24 md:pt-32 pb-24">
+      <main className="pt-24 pb-24">
         <div className="mx-auto max-w-[1320px] px-6 md:px-12 mb-8">
           <div className="flex items-center gap-2 text-xs font-medium text-ocean/50">
             <Link href="/" className="hover:text-ocean transition-colors">Home</Link>
@@ -104,8 +106,8 @@ export default async function CategoryPage({ params }: { params: { category: str
                   specifications: {},
                   availability: p.stock_status === "available" ? "In Stock" : p.stock_status === "coming_soon" ? "Limited Stock" : "Out of Stock",
                   badge: p.is_new ? "NEW" : p.discount_percentage ? "SALE" : undefined,
-                  rating: 4.8,
-                  reviewCount: 32,
+                  rating: p.rating ?? 4.8,
+                  reviewCount: p.review_count ?? 32,
                 }))} />
               )}
             </div>

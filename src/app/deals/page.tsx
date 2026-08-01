@@ -11,7 +11,7 @@ export default function DealsPage() {
     <div className="min-h-screen bg-ivory flex flex-col">
       <Navbar />
 
-      <main className="flex-1 pt-32 px-6 md:px-12 pb-24 max-w-[1320px] mx-auto w-full space-y-12">
+      <main className="flex-1 pt-24 px-6 md:px-12 pb-24 max-w-[1320px] mx-auto w-full space-y-12">
         {/* Back Link */}
         <div>
           <Link
@@ -29,7 +29,7 @@ export default function DealsPage() {
             EXCLUSIVE OFFERS
           </span>
           <h1 className="font-clash text-4xl font-bold leading-tight text-[#10233D] sm:text-5xl">
-            Today's Best Tech Deals
+            Today&apos;s Best Tech Deals
           </h1>
           <p className="text-base leading-relaxed text-[#10233D]/65 font-manrope">
             Explore premium promotions, bundles, and student offers on genuine gadgets and creator gear across Rwanda.

@@ -217,7 +217,7 @@ function OrderContent() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-ivory text-ocean-deeper font-sans pt-20 lg:pt-24">
+    <div className="min-h-screen flex flex-col bg-ivory text-ocean-deeper font-sans pt-24">
       <Navbar />
 
       {/* Header Banner */}

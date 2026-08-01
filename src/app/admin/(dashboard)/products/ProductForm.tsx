@@ -3,13 +3,13 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useCallback, useMemo, useState, useTransition } from "react";
+import { useCallback, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Loader2, X, ImageIcon } from "lucide-react";
 import { uploadImage, createProduct, updateProduct } from "@/actions/products";
 import type { ProductFormData } from "@/actions/products";
 import type { ProductListItem } from "@/data/products";
-import { PhoneSpecImportPanel } from "./PhoneSpecImportPanel";
+import { MobileApiImportPanel } from "./MobileApiImportPanel";
 import { SpecificationsEditor } from "./SpecificationsEditor";
 import { HighlightsEditor } from "./HighlightsEditor";
 import { StorageOptionsEditor } from "./StorageOptionsEditor";
@@ -31,6 +31,8 @@ const productSchema = z.object({
   price: z.coerce.number().min(0, "Price must be 0 or more"),
   old_price: z.coerce.number().min(0).optional(),
   discount_percentage: z.coerce.number().min(0).max(100).optional(),
+  rating: z.coerce.number().min(0).max(5, "Rating must be between 0 and 5").optional(),
+  review_count: z.coerce.number().min(0).optional(),
   stock_status: z.string().min(1, "Stock status is required"),
   is_featured: z.boolean(),
   is_new: z.boolean(),
@@ -75,7 +77,6 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema) as any,
@@ -89,6 +90,8 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       price: product?.price ?? 0,
       old_price: product?.old_price ?? undefined,
       discount_percentage: product?.discount_percentage ?? undefined,
+      rating: product?.rating ?? 4.8,
+      review_count: product?.review_count ?? 32,
       stock_status: product?.stock_status ?? "available",
       is_featured: product?.is_featured ?? false,
       is_new: product?.is_new ?? false,
@@ -97,16 +100,6 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       main_image_url: product?.main_image_url ?? "",
     },
   });
-
-  const selectedCategoryId = watch("category_id");
-  const looksLikePhoneCategory = useMemo(() => {
-    const category = categories.find((c) => c.id === selectedCategoryId);
-    if (!category) return false;
-    const name = category.name.toLowerCase();
-    return ["phone", "smartphone", "mobile", "android", "ios"].some((keyword) => name.includes(keyword));
-  }, [categories, selectedCategoryId]);
-
-  const [showPhoneImport, setShowPhoneImport] = useState(looksLikePhoneCategory);
 
   const handleNameChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -379,6 +372,39 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
             </div>
           </div>
 
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+                Rating (0–5)
+              </label>
+              <input
+                type="number"
+                min="0"
+                max="5"
+                step="0.1"
+                placeholder="e.g. 4.8"
+                {...register("rating")}
+                className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+              />
+              {errors.rating && <p className="mt-1 text-xs text-red-300">{errors.rating.message}</p>}
+              <p className="mt-1 text-xs text-white/20">Shown as stars on product cards.</p>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+                Review Count
+              </label>
+              <input
+                type="number"
+                min="0"
+                {...register("review_count")}
+                className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+              />
+              {errors.review_count && <p className="mt-1 text-xs text-red-300">{errors.review_count.message}</p>}
+              <p className="mt-1 text-xs text-white/20">Number shown next to the rating.</p>
+            </div>
+          </div>
+
           <div className="space-y-3 rounded-xl border border-white/8 bg-white/[0.03] px-4 py-4">
             <p className="text-xs font-bold uppercase tracking-wider text-white/40">Flags & Visibility</p>
             <div className="flex flex-wrap gap-6">
@@ -407,24 +433,14 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         <div>
           <h2 className="text-sm font-bold text-white">Technical Specifications</h2>
           <p className="mt-1 text-xs text-white/40">
-            Optional. Import from a phone search or add specifications manually — either way, you can edit everything
-            before saving.
+            Optional. Import from MobileAPI.dev (smartphones, tablets, smartwatches, laptops...) or add specifications
+            manually — either way, you can edit everything before saving.
           </p>
         </div>
 
-        {showPhoneImport ? (
-          <PhoneSpecImportPanel
-            onImport={(imported) => setSpecifications((current) => [...current, ...imported])}
-          />
-        ) : (
-          <button
-            type="button"
-            onClick={() => setShowPhoneImport(true)}
-            className="inline-flex items-center gap-2 rounded-xl border border-ocean/20 bg-ocean/5 px-4 py-2.5 text-sm font-medium text-ocean-light hover:bg-ocean/10"
-          >
-            Import Phone Specifications
-          </button>
-        )}
+        <MobileApiImportPanel
+          onImport={(imported) => setSpecifications((current) => [...current, ...imported])}
+        />
 
         <SpecificationsEditor value={specifications} onChange={setSpecifications} />
       </div>

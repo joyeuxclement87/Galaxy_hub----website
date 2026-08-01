@@ -101,7 +101,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
       <Navbar />
 
-      <main className="pt-24 md:pt-32">
+      <main className="pt-24">
         {/* 1. Breadcrumb */}
         <div className="mx-auto max-w-[1320px] px-6 md:px-12">
           <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-medium text-ocean/45">
@@ -270,8 +270,8 @@ export default async function ProductPage({ params }: ProductPageParams) {
                     specifications: {},
                     availability: p.stock_status === "available" ? "In Stock" : "Out of Stock",
                     badge: p.discount_percentage ? "SALE" : undefined,
-                    rating: 4.8,
-                    reviewCount: 32,
+                    rating: p.rating ?? 4.8,
+                    reviewCount: p.review_count ?? 32,
                   }}
                 />
               ))}

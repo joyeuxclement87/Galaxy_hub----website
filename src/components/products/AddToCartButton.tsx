@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useRef, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,15 +21,23 @@ export function AddToCartButton({
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const goToCart = useRef(false);
 
   const handleClick = () => {
+    goToCart.current = true;
     startTransition(async () => {
       const sid = getSessionId();
       await addCartItem(sid, productId, storage);
       notifyCartChanged();
-      router.push("/cart");
     });
   };
+
+  useEffect(() => {
+    if (goToCart.current && !pending) {
+      goToCart.current = false;
+      router.push("/cart");
+    }
+  }, [pending, router]);
 
   return (
     <Button variant={variant} onClick={handleClick} disabled={pending} className={cn("justify-center gap-2", className)}>

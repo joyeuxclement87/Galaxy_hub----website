@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { getOrCreateCart, removeCartItem, clearCart } from "@/actions/cart";
+import { getOrCreateCart, updateCartItemQuantity, removeCartItem, clearCart } from "@/actions/cart";
 
 export interface CartLine {
   id: string;
@@ -83,6 +83,7 @@ export function useSupabaseCart() {
     async (itemId: string) => {
       await removeCartItem(itemId);
       await refresh();
+      notifyCartChanged();
     },
     [refresh]
   );
@@ -90,7 +91,18 @@ export function useSupabaseCart() {
   const clear = useCallback(async () => {
     await clearCart(getSessionId());
     await refresh();
+    notifyCartChanged();
   }, [refresh]);
 
-  return { items, loading, count, subtotal, refresh, remove, clear };
+  const updateQuantity = useCallback(
+    async (itemId: string, quantity: number) => {
+      if (quantity < 1) return;
+      await updateCartItemQuantity(itemId, quantity);
+      await refresh();
+      notifyCartChanged();
+    },
+    [refresh]
+  );
+
+  return { items, loading, count, subtotal, refresh, remove, clear, updateQuantity };
 }

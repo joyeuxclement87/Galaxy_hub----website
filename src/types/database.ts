@@ -351,6 +351,8 @@ export type Database = {
           name: string
           old_price: number | null
           price: number
+          rating: number | null
+          review_count: number | null
           short_description: string | null
           slug: string
           specifications: Json
@@ -373,6 +375,8 @@ export type Database = {
           name: string
           old_price?: number | null
           price?: number
+          rating?: number | null
+          review_count?: number | null
           short_description?: string | null
           slug: string
           specifications?: Json
@@ -395,6 +399,8 @@ export type Database = {
           name?: string
           old_price?: number | null
           price?: number
+          rating?: number | null
+          review_count?: number | null
           short_description?: string | null
           slug?: string
           specifications?: Json
@@ -460,6 +466,60 @@ export type Database = {
           is_active?: boolean
           starts_at?: string | null
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          author: string
+          avatar_url: string | null
+          category: string | null
+          content: string
+          created_at: string
+          featured: boolean
+          id: string
+          is_active: boolean
+          is_verified: boolean
+          location: string | null
+          purchased_product: string | null
+          rating: number
+          role: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          author: string
+          avatar_url?: string | null
+          category?: string | null
+          content: string
+          created_at?: string
+          featured?: boolean
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          location?: string | null
+          purchased_product?: string | null
+          rating: number
+          role?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          avatar_url?: string | null
+          category?: string | null
+          content?: string
+          created_at?: string
+          featured?: boolean
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          location?: string | null
+          purchased_product?: string | null
+          rating?: number
+          role?: string | null
+          sort_order?: number
           updated_at?: string
         }
         Relationships: []

@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Product } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
-import { Heart, Star, ShoppingCart, ArrowRight } from "lucide-react";
+import { Star, ShoppingCart, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useApp } from "@/context/AppContext";
 import { getSessionId, notifyCartChanged } from "@/hooks/use-cart";
 import { addCartItemBySlug } from "@/actions/cart";
 import Link from "next/link";
@@ -17,8 +16,6 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onReserve }: ProductCardProps) {
-  const { wishlist, toggleWishlist } = useApp();
-  const isWishlisted = wishlist.includes(product.id);
   const [isInCart, setIsInCart] = useState(false);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
@@ -59,20 +56,6 @@ export function ProductCard({ product, onReserve }: ProductCardProps) {
             {product.badge}
           </span>
         )}
-
-        <button
-          type="button"
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(product.id); }}
-          className={cn(
-            "absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-btn bg-white/80 backdrop-blur-sm border border-ocean/[0.06] shadow-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer",
-            isWishlisted
-              ? "text-rose-500 bg-rose-50/95 border-rose-100/60"
-              : "text-ocean/35 hover:text-ocean hover:border-ocean/15"
-          )}
-          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-        >
-          <Heart className={cn("h-4 w-4 transition-all duration-200", isWishlisted ? "fill-rose-500" : "")} />
-        </button>
 
         {product.externalUrl ? (
           <a href={product.externalUrl} target="_blank" rel="noopener noreferrer" className="absolute inset-0 flex items-center justify-center p-8">

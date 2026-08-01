@@ -7,7 +7,7 @@ import { z } from "zod";
  * SECURITY:
  * - This module must never be imported from a "use client" file or from any
  *   public-facing route/component. It is only ever called from admin server
- *   actions (see src/actions/phone-specs.ts).
+ *   actions (see src/actions/device-specs.ts).
  * - MOBILE_API_KEY is read from process.env only, on the server. It must
  *   never be exposed via NEXT_PUBLIC_* or returned to the browser.
  */
@@ -27,19 +27,19 @@ export type MobileApiErrorCode =
 /** Human-readable messages safe to show a non-technical admin. */
 export const MOBILE_API_ERROR_MESSAGES: Record<MobileApiErrorCode, string> = {
   missing_api_key:
-    "Phone specification service is not configured yet. You can enter specifications manually.",
+    "Device specification service is not configured yet. You can enter specifications manually.",
   unauthorized:
-    "Phone specification service rejected the request. Please check the API key configuration.",
+    "Device specification service rejected the request. Please check the API key configuration.",
   rate_limited:
-    "Phone specification service usage limit reached for now. Try again later or enter specifications manually.",
+    "Device specification service usage limit reached for now. Try again later or enter specifications manually.",
   timeout:
-    "Phone specification service took too long to respond. Please try again.",
+    "Device specification service took too long to respond. Please try again.",
   not_found:
-    "Couldn't find that phone. Try searching using the brand and model, e.g. \"Samsung Galaxy S25 Ultra\".",
+    "Couldn't find that device. Try searching using the brand and model, e.g. \"Samsung Galaxy S25 Ultra\".",
   invalid_response:
-    "Phone specification service returned unexpected data. Please try again or enter specifications manually.",
+    "Device specification service returned unexpected data. Please try again or enter specifications manually.",
   unavailable:
-    "Phone specification service is temporarily unavailable. You can enter the specifications manually.",
+    "Device specification service is temporarily unavailable. You can enter the specifications manually.",
 };
 
 export class MobileApiError extends Error {
@@ -152,33 +152,33 @@ async function mobileApiFetch(path: string): Promise<unknown> {
     });
   } catch (err) {
     if (err instanceof Error && err.name === "AbortError") {
-      throw new MobileApiError("timeout", "The phone specification service took too long to respond.");
+      throw new MobileApiError("timeout", "The device specification service took too long to respond.");
     }
-    throw new MobileApiError("unavailable", "Could not reach the phone specification service.");
+    throw new MobileApiError("unavailable", "Could not reach the device specification service.");
   } finally {
     clearTimeout(timeoutId);
   }
 
   if (response.status === 401 || response.status === 403) {
-    throw new MobileApiError("unauthorized", "The phone specification service rejected the API key.");
+    throw new MobileApiError("unauthorized", "The device specification service rejected the API key.");
   }
   if (response.status === 429) {
-    throw new MobileApiError("rate_limited", "The phone specification service rate limit was exceeded.");
+    throw new MobileApiError("rate_limited", "The device specification service rate limit was exceeded.");
   }
   if (response.status === 404) {
-    throw new MobileApiError("not_found", "No matching phone was found.");
+    throw new MobileApiError("not_found", "No matching device was found.");
   }
   if (!response.ok) {
     throw new MobileApiError(
       "unavailable",
-      `The phone specification service returned an unexpected error (${response.status}).`
+      `The device specification service returned an unexpected error (${response.status}).`
     );
   }
 
   try {
     return await response.json();
   } catch {
-    throw new MobileApiError("invalid_response", "The phone specification service returned an invalid response.");
+    throw new MobileApiError("invalid_response", "The device specification service returned an invalid response.");
   }
 }
 
@@ -197,12 +197,13 @@ function extractSearchArray(raw: unknown): unknown[] {
 }
 
 /**
- * Search for phones by name (partial names, "Brand + Model", etc. all work
- * since MobileAPI does fuzzy matching). Only device_type "phone" results are
- * returned. Returns an empty list when nothing matches — that is treated as
- * a normal "no results" outcome, not an error.
+ * Search for devices by name (partial names, "Brand + Model", etc. all
+ * work since MobileAPI does fuzzy matching). Results cover every supported
+ * device type — smartphones, tablets, smartwatches, laptops and more.
+ * Returns an empty list when nothing matches — that is treated as a normal
+ * "no results" outcome, not an error.
  */
-async function executePhoneSearch(queryText: string, limit: number): Promise<MobileApiDeviceSummary[]> {
+async function executeDeviceSearch(queryText: string, limit: number): Promise<MobileApiDeviceSummary[]> {
   const params = new URLSearchParams({ name: queryText, limit: String(limit) });
 
   let raw: unknown;
@@ -218,29 +219,42 @@ async function executePhoneSearch(queryText: string, limit: number): Promise<Mob
   const candidates = extractSearchArray(raw);
   const results: MobileApiDeviceSummary[] = [];
 
+  const ALLOWED_TYPES = new Set([
+    "phone",
+    "smartphone",
+    "mobile",
+    "tablet",
+    "wearable",
+    "smartwatch",
+    "laptop",
+    "notebook",
+    "computer",
+    "other",
+  ]);
+
   for (const candidate of candidates) {
     const parsed = deviceSummarySchema.safeParse(candidate);
     if (!parsed.success) continue;
     const deviceType = parsed.data.device_type?.toLowerCase();
-    if (deviceType && deviceType !== "phone" && deviceType !== "smartphone" && deviceType !== "mobile") continue;
+    if (deviceType && !ALLOWED_TYPES.has(deviceType)) continue;
     results.push(parsed.data);
   }
 
   return results;
 }
 
-export async function searchPhones(
+export async function searchDevices(
   query: string,
   options: { limit?: number } = {}
 ): Promise<MobileApiDeviceSummary[]> {
   const limit = Math.min(Math.max(options.limit ?? 8, 1), 30);
-  let results = await executePhoneSearch(query, limit);
+  let results = await executeDeviceSearch(query, limit);
 
   // Fallback: If no results, try stripping leading brand names (e.g., "Samsung Galaxy S24" -> "Galaxy S24")
   if (results.length === 0) {
-    const cleaned = query.replace(/^(samsung|apple|google|xiaomi|oneplus|tecno|infinix|sony)\s+/i, "").trim();
+    const cleaned = query.replace(/^(samsung|apple|google|xiaomi|oneplus|tecno|infinix|sony|huawei|nokia|motorola|dell|hp|lenovo|asus|acer|msi|razer)\s+/i, "").trim();
     if (cleaned && cleaned !== query.trim()) {
-      results = await executePhoneSearch(cleaned, limit);
+      results = await executeDeviceSearch(cleaned, limit);
     }
   }
 
@@ -248,11 +262,11 @@ export async function searchPhones(
 }
 
 /** Fetch full specifications for a single device by its MobileAPI.dev ID. */
-export async function getPhoneById(deviceId: number): Promise<MobileApiDeviceDetail> {
+export async function getDeviceById(deviceId: number): Promise<MobileApiDeviceDetail> {
   const raw = await mobileApiFetch(`/devices/${deviceId}/`);
   const parsed = deviceDetailSchema.safeParse(raw);
   if (!parsed.success) {
-    throw new MobileApiError("invalid_response", "The phone specification service returned an invalid device record.");
+    throw new MobileApiError("invalid_response", "The device specification service returned an invalid device record.");
   }
   return parsed.data;
 }

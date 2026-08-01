@@ -3,27 +3,45 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Loader2, Search, Smartphone, X, CheckCircle2 } from "lucide-react";
 import {
-  searchPhoneSpecifications,
-  getPhoneSpecificationPreview,
-  type PhoneSearchResultItem,
-  type PhoneSpecPreview,
-} from "@/actions/phone-specs";
+  searchDeviceSpecifications,
+  getDeviceSpecificationPreview,
+  type DeviceSearchResultItem,
+  type DeviceSpecPreview,
+} from "@/actions/device-specs";
 import type { ProductSpecifications } from "@/types/specifications";
 
-interface PhoneSpecImportPanelProps {
+interface MobileApiImportPanelProps {
   onImport: (specifications: ProductSpecifications) => void;
 }
 
 const SEARCH_DEBOUNCE_MS = 450;
 
-export function PhoneSpecImportPanel({ onImport }: PhoneSpecImportPanelProps) {
+const DEVICE_TYPE_LABELS: Record<string, string> = {
+  phone: "Phone",
+  smartphone: "Phone",
+  mobile: "Phone",
+  tablet: "Tablet",
+  wearable: "Smartwatch",
+  smartwatch: "Smartwatch",
+  laptop: "Laptop",
+  notebook: "Laptop",
+  computer: "Computer",
+  other: "Device",
+};
+
+/**
+ * Import technical specifications from MobileAPI.dev for any device type —
+ * smartphones, tablets, smartwatches, laptops and more. Same UX as before,
+ * no longer limited to phones.
+ */
+export function MobileApiImportPanel({ onImport }: MobileApiImportPanelProps) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<PhoneSearchResultItem[]>([]);
+  const [results, setResults] = useState<DeviceSearchResultItem[]>([]);
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const [preview, setPreview] = useState<PhoneSpecPreview | null>(null);
+  const [preview, setPreview] = useState<DeviceSpecPreview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
 
@@ -42,7 +60,7 @@ export function PhoneSpecImportPanel({ onImport }: PhoneSpecImportPanelProps) {
 
     setSearching(true);
     setSearchError(null);
-    const result = await searchPhoneSpecifications(trimmed);
+    const result = await searchDeviceSpecifications(trimmed);
     setSearching(false);
     setHasSearched(true);
 
@@ -66,7 +84,7 @@ export function PhoneSpecImportPanel({ onImport }: PhoneSpecImportPanelProps) {
     setPreviewLoading(true);
     setPreviewError(null);
     setPreview(null);
-    const result = await getPhoneSpecificationPreview(deviceId);
+    const result = await getDeviceSpecificationPreview(deviceId);
     setPreviewLoading(false);
 
     if ("error" in result) {
@@ -89,11 +107,11 @@ export function PhoneSpecImportPanel({ onImport }: PhoneSpecImportPanelProps) {
     <div className="space-y-4 rounded-xl border border-white/8 bg-white/[0.03] p-4">
       <div className="flex items-center gap-2">
         <Smartphone className="h-4 w-4 text-ocean-light" />
-        <p className="text-sm font-bold text-white">Import Phone Specifications</p>
+        <p className="text-sm font-bold text-white">Import Device Specifications (MobileAPI)</p>
       </div>
       <p className="text-xs text-white/40">
-        Search for the exact phone model to automatically fill in technical specifications. You can still edit
-        everything afterwards, and this never affects your price.
+        Search for the exact smartphone, tablet, smartwatch, or laptop model to automatically fill in technical
+        specifications. You can still edit everything afterwards, and this never affects your price.
       </p>
 
       <div className="flex gap-2">
@@ -103,7 +121,7 @@ export function PhoneSpecImportPanel({ onImport }: PhoneSpecImportPanelProps) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="e.g. Galaxy S24, iPhone 15 Pro, Pixel 8"
+            placeholder="e.g. Galaxy S25, iPhone 16 Pro, Galaxy Tab S10, MacBook Air"
             className="w-full rounded-xl border border-white/8 bg-white/5 py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
           />
         </div>
@@ -125,7 +143,9 @@ export function PhoneSpecImportPanel({ onImport }: PhoneSpecImportPanelProps) {
 
       {!searching && hasSearched && !searchError && results.length === 0 && (
         <p className="text-xs text-white/40">
-          Couldn&apos;t find an exact match. Try searching with model keywords like &ldquo;Galaxy S24&rdquo;, &ldquo;iPhone 15&rdquo;, or &ldquo;Pixel 8&rdquo;. You can also add specifications manually below.
+          Couldn&apos;t find an exact match. Try searching with model keywords like &ldquo;Galaxy S25&rdquo;,
+          &ldquo;iPhone 16&rdquo;, &ldquo;MacBook Pro&rdquo;, or &ldquo;Galaxy Watch&rdquo;. You can also add
+          specifications manually below.
         </p>
       )}
 
@@ -137,7 +157,14 @@ export function PhoneSpecImportPanel({ onImport }: PhoneSpecImportPanelProps) {
               className="flex items-center justify-between gap-3 rounded-lg border border-white/8 bg-white/[0.02] px-3 py-2"
             >
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-white/85">{result.name}</p>
+                <p className="truncate text-sm font-medium text-white/85">
+                  {result.name}
+                  {result.deviceType && (
+                    <span className="ml-2 rounded bg-ocean/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ocean-light/80">
+                      {DEVICE_TYPE_LABELS[result.deviceType] || result.deviceType}
+                    </span>
+                  )}
+                </p>
                 {result.summary && <p className="truncate text-xs text-white/35">{result.summary}</p>}
               </div>
               <button
@@ -171,7 +198,14 @@ export function PhoneSpecImportPanel({ onImport }: PhoneSpecImportPanelProps) {
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-ocean-light/70">Preview</p>
-              <p className="text-sm font-bold text-white">{preview.deviceName}</p>
+              <p className="text-sm font-bold text-white">
+                {preview.deviceName}
+                {preview.deviceType && (
+                  <span className="ml-2 rounded bg-ocean/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ocean-light/80">
+                    {DEVICE_TYPE_LABELS[preview.deviceType] || preview.deviceType}
+                  </span>
+                )}
+              </p>
             </div>
             <button
               type="button"

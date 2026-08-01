@@ -6,22 +6,22 @@ import { searchProducts } from "@/data/public-products";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ searchParams }: { searchParams?: { [key: string]: string } }) {
-  const q = searchParams?.q || "";
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
+  const q = (await searchParams).q || "";
   return {
     title: q ? `Search "${q}" — Galaxy Hub Rwanda` : "Search — Galaxy Hub Rwanda",
     description: `Search results for "${q}" — Find smartphones, laptops, accessories, and more.`,
   };
 }
 
-export default async function SearchPage({ searchParams }: { searchParams?: { [key: string]: string } }) {
-  const q = searchParams?.q || "";
+export default async function SearchPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
+  const q = (await searchParams).q || "";
   const results = q ? await searchProducts(q) : [];
 
   return (
     <div className="min-h-screen bg-ivory">
       <Navbar />
-      <main className="pt-24 md:pt-32 pb-24">
+      <main className="pt-24 pb-24">
         <div className="mx-auto max-w-[1320px] px-6 md:px-12">
           <div className="mb-8">
             <h1 className="font-clash text-3xl font-bold text-ocean-deeper">Search</h1>
@@ -73,8 +73,8 @@ export default async function SearchPage({ searchParams }: { searchParams?: { [k
                   image: p.main_image_url || "", featured: false,
                   specifications: {},
                   availability: p.stock_status === "available" ? "In Stock" : "Out of Stock",
-                  badge: undefined, rating: 4.8, reviewCount: 32,
-                }} onReserve={() => {}} />
+                  badge: undefined, rating: p.rating ?? 4.8, reviewCount: p.review_count ?? 32,
+                }} />
               ))}
             </div>
           )}

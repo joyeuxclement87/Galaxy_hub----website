@@ -16,6 +16,8 @@ export interface ProductFormData {
   price: number;
   old_price?: number | null;
   discount_percentage?: number | null;
+  rating?: number | null;
+  review_count?: number | null;
   stock_status: string;
   is_featured: boolean;
   is_new: boolean;
@@ -43,6 +45,8 @@ export async function createProduct(data: ProductFormData) {
     price: data.price,
     old_price: data.old_price || null,
     discount_percentage: data.discount_percentage || null,
+    rating: data.rating || null,
+    review_count: data.review_count || null,
     stock_status: data.stock_status,
     is_featured: data.is_featured,
     is_new: data.is_new,
@@ -88,6 +92,8 @@ export async function updateProduct(id: string, data: ProductFormData) {
       price: data.price,
       old_price: data.old_price || null,
       discount_percentage: data.discount_percentage || null,
+      rating: data.rating || null,
+      review_count: data.review_count || null,
       stock_status: data.stock_status,
       is_featured: data.is_featured,
       is_new: data.is_new,

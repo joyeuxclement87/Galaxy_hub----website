@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { ShoppingBag, Trash2, Minus, Plus, ArrowLeft, PackageOpen } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
@@ -8,82 +7,17 @@ import Footer from "@/components/ui/Footer";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { CartSkeleton } from "@/components/ui/LoadingSkeleton";
-import { getOrCreateCart, updateCartItemQuantity, removeCartItem, clearCart } from "@/actions/cart";
-
-function getSessionId() {
-  if (typeof window === "undefined") return "";
-  let sid = localStorage.getItem("gh-session");
-  if (!sid) {
-    sid = crypto.randomUUID();
-    localStorage.setItem("gh-session", sid);
-  }
-  return sid;
-}
-
-interface CartItem {
-  id: string;
-  quantity: number;
-  variant: string | null;
-  product: {
-    id: string; name: string; slug: string; price: number;
-    old_price: number | null; main_image_url: string | null;
-    stock_status: string; discount_percentage: number | null;
-  } | null;
-}
+import { useSupabaseCart } from "@/hooks/use-cart";
 
 export default function CartPage() {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [sessionId, setSessionId] = useState("");
+  const cart = useSupabaseCart();
 
-  const loadCart = useCallback(async () => {
-    const sid = getSessionId();
-    setSessionId(sid);
-    const result = await getOrCreateCart(sid);
-    if (result) setItems(result.items as CartItem[]);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      const sid = getSessionId();
-      setSessionId(sid);
-      const result = await getOrCreateCart(sid);
-      if (!cancelled) {
-        if (result) setItems(result.items as CartItem[]);
-        setLoading(false);
-      }
-    };
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const handleQuantity = async (itemId: string, qty: number) => {
-    if (qty < 1) return;
-    await updateCartItemQuantity(itemId, qty);
-    await loadCart();
-  };
-
-  const handleRemove = async (itemId: string) => {
-    await removeCartItem(itemId);
-    await loadCart();
-  };
-
-  const handleClear = async () => {
-    await clearCart(sessionId);
-    await loadCart();
-  };
-
-  const validItems = items.filter((i) => i.product);
-  const subtotal = validItems.reduce((sum, i) => sum + Number(i.product!.price) * i.quantity, 0);
+  const validItems = cart.items.filter((i) => i.product);
   const formatPrice = (v: number) => new Intl.NumberFormat("en-US").format(v);
 
-  if (loading) {
+  if (cart.loading) {
     return (
-      <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-ivory">
+      <div className="flex-1 pt-24 min-h-screen bg-ivory">
         <Navbar />
         <main className="mx-auto max-w-[1320px] px-6 py-12 md:px-12">
           <CartSkeleton />
@@ -94,7 +28,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-ivory">
+    <div className="flex-1 pt-24 min-h-screen bg-ivory">
       <Navbar />
       <main className="mx-auto max-w-[1320px] px-6 py-12 md:px-12">
         <div className="flex items-center justify-between mb-8">
@@ -103,10 +37,10 @@ export default function CartPage() {
               <ArrowLeft className="h-4 w-4" /> Continue Shopping
             </Link>
             <h1 className="font-clash text-3xl font-bold text-ocean-deeper mt-2">Shopping Cart</h1>
-            <p className="text-sm text-ocean/50 mt-1">{validItems.length} {validItems.length === 1 ? "item" : "items"}</p>
+            <p className="text-sm text-ocean/50 mt-1">{cart.count} {cart.count === 1 ? "item" : "items"}</p>
           </div>
           {validItems.length > 0 && (
-            <Button variant="ghost" onClick={handleClear} className="text-xs text-red-400 hover:text-red-500 hover:!bg-transparent">
+            <Button variant="ghost" onClick={() => cart.clear()} className="text-xs text-red-400 hover:text-red-500 hover:!bg-transparent">
               Clear Cart
             </Button>
           )}
@@ -151,17 +85,17 @@ export default function CartPage() {
                           )}
                           <p className="mt-0.5 text-xs text-ocean/45 capitalize">{p.stock_status.replace("_", " ")}</p>
                         </div>
-                        <Button variant="icon" onClick={() => handleRemove(item.id)} className="h-8 w-8 text-ocean/25 hover:text-red-500" aria-label="Remove item">
+                        <Button variant="icon" onClick={() => cart.remove(item.id)} className="h-8 w-8 text-ocean/25 hover:text-red-500" aria-label="Remove item">
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center gap-2">
-                          <button onClick={() => handleQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1} className="flex h-8 w-8 items-center justify-center rounded-btn border border-black/8 bg-white text-ocean/50 hover:bg-ocean/4 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed" aria-label="Decrease quantity">
+                          <button onClick={() => cart.updateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1} className="flex h-8 w-8 items-center justify-center rounded-btn border border-black/8 bg-white text-ocean/50 hover:bg-ocean/4 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed" aria-label="Decrease quantity">
                             <Minus className="h-3.5 w-3.5" />
                           </button>
                           <span className="w-8 text-center text-sm font-semibold text-ocean-deeper">{item.quantity}</span>
-                          <button onClick={() => handleQuantity(item.id, item.quantity + 1)} className="flex h-8 w-8 items-center justify-center rounded-btn border border-black/8 bg-white text-ocean/50 hover:bg-ocean/4 transition-colors cursor-pointer" aria-label="Increase quantity">
+                          <button onClick={() => cart.updateQuantity(item.id, item.quantity + 1)} className="flex h-8 w-8 items-center justify-center rounded-btn border border-black/8 bg-white text-ocean/50 hover:bg-ocean/4 transition-colors cursor-pointer" aria-label="Increase quantity">
                             <Plus className="h-3.5 w-3.5" />
                           </button>
                         </div>
@@ -182,7 +116,7 @@ export default function CartPage() {
                 <div className="space-y-3 text-sm">
                   <div className="flex items-center justify-between text-ocean/60">
                     <span>Subtotal ({validItems.length} {validItems.length === 1 ? "item" : "items"})</span>
-                    <span className="font-semibold text-ocean-deeper">RWF {formatPrice(subtotal)}</span>
+                    <span className="font-semibold text-ocean-deeper">RWF {formatPrice(cart.subtotal)}</span>
                   </div>
                   <div className="flex items-center justify-between text-ocean/60">
                     <span>Delivery</span>
@@ -191,7 +125,7 @@ export default function CartPage() {
                   <div className="border-t border-ocean/5 pt-3">
                     <div className="flex items-center justify-between">
                       <span className="font-semibold text-ocean-deeper">Estimated Total</span>
-                      <span className="font-clash text-xl font-bold text-ocean">RWF {formatPrice(subtotal)}</span>
+                      <span className="font-clash text-xl font-bold text-ocean">RWF {formatPrice(cart.subtotal)}</span>
                     </div>
                   </div>
                 </div>

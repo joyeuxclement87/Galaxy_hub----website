@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { Navbar } from "@/components/navbar/Navbar";
 import { useApp } from "@/context/AppContext";
 import { DEAL_OFFERS } from "@/data/mock-data";
 
@@ -56,10 +57,13 @@ export default function DealDetailPage() {
   }, [deal, router, setSearchQuery, setShowDealsOnly, setSelectedCategory, setSelectedBrand]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ivory">
-      <div className="text-center space-y-4">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-ocean border-t-transparent mx-auto" />
-        <p className="text-sm font-medium text-ocean/60 font-manrope">Activating {deal?.title || "Deal Offer"}...</p>
+    <div className="min-h-screen bg-ivory">
+      <Navbar />
+      <div className="flex min-h-screen items-center justify-center pt-24">
+        <div className="text-center space-y-4">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-ocean border-t-transparent mx-auto" />
+          <p className="text-sm font-medium text-ocean/60 font-manrope">Activating {deal?.title || "Deal Offer"}...</p>
+        </div>
       </div>
     </div>
   );

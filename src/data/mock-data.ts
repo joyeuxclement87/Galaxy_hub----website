@@ -769,6 +769,8 @@ export interface DealOffer {
   image: string;
   size: "large" | "medium" | "small";
   category: string; // for filtering
+  startsAt?: string | null; // ISO datetime from the promotions table
+  endsAt?: string | null;   // ISO datetime from the promotions table
 }
 
 export const DEALS_QUICK_FILTERS = [
@@ -794,6 +796,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=600",
     size: "large",
     category: "Phones",
+    startsAt: "2026-07-28T06:00:00+02:00",
+    endsAt: "2026-08-10T23:59:00+02:00",
   },
   {
     slug: "magsafe-bundle",
@@ -806,6 +810,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     image: "https://images.unsplash.com/photo-1601593346740-925612772716?auto=format&fit=crop&q=80&w=500",
     size: "medium",
     category: "Accessories",
+    startsAt: "2026-07-30T06:00:00+02:00",
+    endsAt: "2026-08-05T23:59:00+02:00",
   },
   {
     slug: "creator-bundle",
@@ -818,6 +824,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     image: "https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&q=80&w=500",
     size: "medium",
     category: "Creators",
+    startsAt: "2026-08-01T06:00:00+02:00",
+    endsAt: "2026-08-14T23:59:00+02:00",
   },
   {
     slug: "student-offers",
@@ -830,6 +838,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     image: "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&q=80&w=400",
     size: "small",
     category: "Students",
+    startsAt: "2026-07-25T06:00:00+02:00",
+    endsAt: "2026-09-30T23:59:00+02:00",
   },
   {
     slug: "audio-sale",
@@ -842,6 +852,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=400",
     size: "small",
     category: "Audio",
+    startsAt: "2026-08-02T06:00:00+02:00",
+    endsAt: "2026-08-09T23:59:00+02:00",
   },
   {
     slug: "gaming-essentials",
@@ -854,6 +866,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     image: "https://images.unsplash.com/photo-1600861195091-690c92f1d2cc?auto=format&fit=crop&q=80&w=400",
     size: "small",
     category: "Gaming",
+    startsAt: "2026-08-01T06:00:00+02:00",
+    endsAt: "2026-08-20T23:59:00+02:00",
   },
 ];
 

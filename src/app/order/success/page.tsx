@@ -15,7 +15,7 @@ function SuccessContent() {
   const formatPrice = (v: number) => new Intl.NumberFormat("en-US").format(v);
 
   return (
-    <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-[#F8F9FA]">
+    <div className="flex-1 pt-24 min-h-screen bg-[#F8F9FA]">
       <Navbar />
       <main className="mx-auto max-w-[600px] px-6 py-16 md:px-12">
         <div className="overflow-hidden rounded-[32px] border border-white/60 bg-white/90 p-8 text-center shadow-[0_30px_90px_rgba(11,84,151,0.14)] sm:p-12">

@@ -34,13 +34,22 @@ export async function getOrCreateCart(sessionId: string) {
 export async function addCartItem(sessionId: string, productId: string, variant?: string) {
   const supabase = createClient();
 
-  const { data: cart } = await supabase
+  let { data: cart } = await supabase
     .from("carts")
     .select("id")
     .eq("session_id", sessionId)
     .maybeSingle();
 
-  if (!cart) return { error: "Cart not found" };
+  if (!cart) {
+    const { data: newCart, error: createError } = await supabase
+      .from("carts")
+      .insert({ session_id: sessionId })
+      .select("id")
+      .single();
+
+    if (createError || !newCart) return { error: "Cart not found" };
+    cart = newCart;
+  }
 
   const variantValue = variant && variant.trim() ? variant.trim() : null;
 

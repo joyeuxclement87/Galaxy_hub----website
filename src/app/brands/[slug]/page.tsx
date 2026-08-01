@@ -8,8 +8,9 @@ import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const result = await getPublicBrandBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const result = await getPublicBrandBySlug(slug);
   if (!result) return { title: "Brand Not Found" };
   return {
     title: `${result.brand.name} | Galaxy Hub Rwanda`,
@@ -17,8 +18,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function BrandPage({ params }: { params: { slug: string } }) {
-  const result = await getPublicBrandBySlug(params.slug);
+export default async function BrandPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const result = await getPublicBrandBySlug(slug);
   if (!result) notFound();
 
   const { brand, products, allBrands } = result;
@@ -26,7 +28,7 @@ export default async function BrandPage({ params }: { params: { slug: string } }
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fffdf9_0%,#f5f9fe_100%)] text-[#10233D]">
       <Navbar />
-      <main className="pt-24 md:pt-32">
+      <main className="pt-24">
         <section className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-16 md:px-12 lg:flex-row lg:items-end lg:justify-between lg:py-24">
           <div className="max-w-2xl space-y-5">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#0b5497]/10 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#0b5497]">
@@ -83,9 +85,9 @@ export default async function BrandPage({ params }: { params: { slug: string } }
                   specifications: {},
                   availability: p.stock_status === "available" ? "In Stock" : "Out of Stock",
                   badge: p.is_new ? "NEW" : p.discount_percentage ? "SALE" : undefined,
-                  rating: 4.8,
-                  reviewCount: 32,
-                }} onReserve={() => {}} />
+                  rating: p.rating ?? 4.8,
+                  reviewCount: p.review_count ?? 32,
+                }} />
               ))}
             </div>
           )}

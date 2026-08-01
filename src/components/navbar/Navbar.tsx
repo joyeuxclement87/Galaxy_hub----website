@@ -20,16 +20,16 @@ const NAV_LINKS = [
   { label: "Categories", id: "categories" },
   { label: "Brands", id: "brands" },
   { label: "Promotions", id: "deals" },
-  { label: "About", id: "about" },
+  { label: "Contact Us", id: "faq" },
 ];
 
-function Wordmark({ large }: { large?: boolean }) {
+function Wordmark() {
   return (
     <Link href="/" className="flex shrink-0 items-center gap-2.5 transition-opacity duration-200 hover:opacity-80">
       <img
         src="/g-hub%20logo.png"
         alt="Galaxy Hub"
-        className={cn("block w-auto select-none object-contain transition-all duration-300", large ? "h-11" : "h-8")}
+        className="block h-8 w-auto select-none object-contain sm:h-9"
       />
     </Link>
   );
@@ -250,7 +250,6 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
     if (id === "home") return "/";
     if (id === "products") return "/products";
     if (pathname === "/") return `#${id}`;
-    if (id === "about") return "/";
     return `/#${id}`;
   };
 
@@ -283,6 +282,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
 
   const isActive = (linkId: string) => {
     if (linkId === "home") return pathname === "/";
+    if (linkId === "products") return pathname === "/products";
     return false;
   };
 
@@ -292,29 +292,26 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-all duration-300",
           scrolled
-            ? "bg-ivory/90 backdrop-blur-xl border-b border-ocean/[0.06] shadow-sm"
-            : "bg-transparent border-b border-transparent"
+            ? "bg-ivory/85 backdrop-blur-xl border-b border-ocean/[0.08] shadow-sm"
+            : "bg-ivory/40 backdrop-blur-md border-b border-ocean/[0.03]"
         )}
       >
         <div
-          className={cn(
-            "mx-auto flex items-center justify-between gap-6 px-6 sm:px-10 lg:px-16 transition-all duration-300",
-            scrolled ? "h-16" : "h-20"
-          )}
+          className="mx-auto flex h-16 items-center justify-between gap-6 px-6 sm:px-10 lg:px-16"
           style={{ maxWidth: "1440px" }}
         >
-          <Wordmark large={!scrolled} />
+          <Wordmark />
 
           {searchOpen ? (
-            <div className="flex flex-1 items-center gap-3 rounded-btn border border-ocean/[0.08] bg-white/70 backdrop-blur-sm px-4 py-2 mx-2">
-              <Search className="h-4 w-4 shrink-0 text-ocean/35" />
+            <div className="flex flex-1 items-center gap-3 rounded-btn border border-ocean/15 bg-white/90 backdrop-blur-md px-4 py-2 mx-2 shadow-sm">
+              <Search className="h-4 w-4 shrink-0 text-ocean" />
               <form onSubmit={handleSearchSubmit} className="flex-1">
                 <input
                   ref={searchInputRef}
                   type="text"
                   defaultValue={searchQuery}
                   placeholder="Search phones, laptops..."
-                  className="w-full border-none bg-transparent text-sm font-medium text-ocean-deeper placeholder:text-ocean/25 focus:outline-none"
+                  className="w-full border-none bg-transparent text-sm font-medium text-ocean-deeper placeholder:text-ocean/35 focus:outline-none font-manrope"
                 />
               </form>
               <div className="hidden items-center gap-1.5 sm:flex">
@@ -322,7 +319,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                   <button
                     key={chip}
                     onClick={() => handleSuggestedSearch(chip)}
-                    className="rounded-btn border border-ocean/[0.08] bg-ivory/60 px-2.5 py-1 text-[10px] font-semibold text-ocean/45 transition-all duration-200 hover:border-ocean/15 hover:text-ocean hover:bg-white cursor-pointer"
+                    className="rounded-btn border border-ocean/10 bg-ivory/80 px-2.5 py-1 text-[10px] font-bold text-ocean-deeper/70 transition-all duration-200 hover:border-ocean/25 hover:text-ocean hover:bg-white cursor-pointer font-manrope"
                   >
                     {chip}
                   </button>
@@ -338,17 +335,17 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
               </Button>
             </div>
           ) : (
-            <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main navigation">
+            <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.id}
                   href={getHref(link.id)}
                   onClick={(e) => handleNavClick(e, link.id)}
                   className={cn(
-                    "relative px-4 py-2 text-sm font-medium tracking-tight transition-all duration-200 rounded-btn",
+                    "relative px-4 py-2 text-sm font-display font-bold tracking-tight transition-all duration-200 rounded-btn",
                     isActive(link.id)
-                      ? "text-ocean bg-ocean/[0.06] font-semibold"
-                      : "text-ocean/50 hover:text-ocean hover:bg-ocean/[0.04]"
+                      ? "text-ocean bg-ocean/[0.08] font-bold"
+                      : "text-ocean-deeper/70 hover:text-ocean hover:bg-ocean/[0.05]"
                   )}
                 >
                   {link.label}
@@ -444,15 +441,15 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                   <X className="h-5 w-5" />
                 </Button>
               </div>
-              <nav className="flex flex-col gap-0.5 px-3 py-3" aria-label="Mobile navigation">
+              <nav className="flex flex-col gap-1 px-3 py-3" aria-label="Mobile navigation">
                 {NAV_LINKS.map((link) => (
                   <Link
                     key={link.id}
                     href={getHref(link.id)}
                     onClick={(e) => handleNavClick(e, link.id)}
                     className={cn(
-                      "flex items-center gap-2 rounded-btn px-4 py-3.5 text-base font-medium text-ocean/50 transition-all duration-200 hover:bg-ocean/[0.04] hover:text-ocean",
-                      isActive(link.id) && "text-ocean bg-ocean/[0.05] font-semibold"
+                      "flex items-center gap-2 rounded-btn px-4 py-3.5 text-base font-display font-bold text-ocean-deeper/80 transition-all duration-200 hover:bg-ocean/[0.04] hover:text-ocean",
+                      isActive(link.id) && "text-ocean bg-ocean/[0.08] font-bold"
                     )}
                   >
                     {link.label}

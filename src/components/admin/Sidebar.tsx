@@ -16,6 +16,7 @@ import {
   X,
   Menu,
   Zap,
+  Star,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -38,6 +39,7 @@ const NAV_GROUPS = [
     label: "Marketing",
     items: [
       { label: "Promotions", href: "/admin/promotions", icon: Percent },
+      { label: "Reviews", href: "/admin/reviews", icon: Star },
       { label: "Hero Section", href: "/admin/hero", icon: ImageIcon },
     ],
   },

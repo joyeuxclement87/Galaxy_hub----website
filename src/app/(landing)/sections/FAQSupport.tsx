@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const FAQ_ITEMS = [
@@ -50,29 +50,32 @@ export function FAQSupport() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="bg-ivory px-4 py-20 sm:px-6 md:px-12 md:py-28">
-      <div className="mx-auto max-w-3xl">
-        <div className="mb-10 space-y-3 text-center">
-          <span className="block text-[10px] font-bold uppercase tracking-[0.28em] text-accent font-manrope">
-            GOOD TO KNOW
-          </span>
-          <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
+    <section id="faq" className="relative bg-ivory px-4 py-20 sm:px-6 md:px-12 md:py-28 overflow-hidden">
+      {/* Background ambient glow */}
+      <div className="absolute inset-0 soft-radial-glow opacity-60 pointer-events-none" />
+
+      <div className="relative mx-auto max-w-3xl">
+        <div className="mb-12 max-w-2xl space-y-3">
+          <span className="section-label">GOOD TO KNOW</span>
+          <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-sm leading-[1.8] text-ocean/50 font-manrope">
+          <p className="text-sm leading-[1.8] text-ocean-deeper/70 font-manrope">
             Clear answers about ordering, delivery, payments, and support before you place your next request.
           </p>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {FAQ_ITEMS.map((item, index) => {
             const isOpen = openFaq === index;
             return (
               <div
                 key={item.q}
                 className={cn(
-                  "overflow-hidden rounded-card border bg-white shadow-sm transition-colors duration-200",
-                  isOpen ? "border-ocean/15" : "border-ocean/8"
+                  "transition-all duration-300 rounded-2xl border px-3 sm:px-5",
+                  isOpen
+                    ? "bg-white shadow-sm border-ocean/15"
+                    : "bg-white/40 border-ocean/8 hover:bg-white/70 hover:border-ocean/12"
                 )}
               >
                 <button
@@ -81,17 +84,42 @@ export function FAQSupport() {
                   aria-expanded={isOpen}
                   aria-controls={`faq-panel-${index}`}
                   onClick={() => setOpenFaq(isOpen ? null : index)}
-                  className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left min-h-[56px] sm:px-6"
+                  className="flex w-full items-center justify-between gap-4 py-5 text-left min-h-[64px] sm:py-6 cursor-pointer group"
                 >
-                  <span className="text-sm font-semibold text-ocean-deeper sm:text-base">{item.q}</span>
-                  <ChevronDown
+                  <span className="flex items-center gap-4 min-w-0">
+                    <span
+                      className={cn(
+                        "font-display text-sm font-bold leading-none shrink-0 transition-colors duration-300",
+                        isOpen ? "text-ocean" : "text-ocean/35 group-hover:text-ocean/60"
+                      )}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className={cn(
+                        "font-display text-sm font-bold sm:text-base leading-snug transition-colors duration-200",
+                        isOpen ? "text-ocean" : "text-ocean-deeper group-hover:text-ocean"
+                      )}
+                    >
+                      {item.q}
+                    </span>
+                  </span>
+                  <div
                     className={cn(
-                      "h-4 w-4 shrink-0 text-ocean/40 transition-transform duration-300",
-                      isOpen && "rotate-180 text-ocean"
+                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-300",
+                      isOpen ? "bg-ocean text-white shadow-xs" : "bg-ocean/5 text-ocean/50 group-hover:bg-ocean/10 group-hover:text-ocean"
                     )}
-                  />
+                  >
+                    <motion.span
+                      animate={{ rotate: isOpen ? 45 : 0 }}
+                      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                      className="font-clash text-lg leading-none select-none"
+                    >
+                      +
+                    </motion.span>
+                  </div>
                 </button>
-                <AnimatePresence>
+                <AnimatePresence initial={false}>
                   {isOpen && (
                     <motion.div
                       id={`faq-panel-${index}`}
@@ -100,12 +128,14 @@ export function FAQSupport() {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.22 }}
+                      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="border-t border-ocean/6 px-5 pb-5 pt-4 text-sm leading-[1.8] text-ocean-deeper/60 font-manrope sm:px-6">
-                        {item.a}
-                      </p>
+                      <div className="pb-5 sm:pb-6 pl-8 sm:pl-9 border-t border-ocean/[0.06] pt-4">
+                        <p className="text-sm leading-[1.85] text-ocean-deeper/80 font-manrope font-medium">
+                          {item.a}
+                        </p>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -114,26 +144,30 @@ export function FAQSupport() {
           })}
         </div>
 
-        <div className="mt-8 flex flex-col gap-4 rounded-card border border-ocean/8 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-sm text-ocean/65 font-manrope">
-            <Phone className="h-4 w-4 text-ocean shrink-0" />
-            <span>Still have questions?</span>
-            <a href="tel:+250785288910" className="font-semibold text-ocean hover:underline">
-              +250 785 288 910
-            </a>
+        <div className="mt-10 flex flex-col gap-5 rounded-2xl border border-ocean/10 bg-white/80 backdrop-blur-sm p-6 sm:flex-row sm:items-center sm:justify-between shadow-sm">
+          <div className="flex items-center gap-3 text-sm text-ocean-deeper/80 font-manrope">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-ocean/10 text-ocean">
+              <Phone className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-ocean-deeper/45 uppercase tracking-wider font-manrope">Still have questions?</p>
+              <a href="tel:+250785288910" className="text-sm font-bold text-ocean hover:text-ocean-dark transition-colors font-manrope">
+                +250 785 288 910
+              </a>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-3">
             <Link
               href="/order"
-              className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-11 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
             >
               Order Now
             </Link>
             <a
               href="tel:+250785288910"
-              className="inline-flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 backdrop-blur-sm px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-white hover:shadow-sm hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white px-7 h-11 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-ivory hover:shadow-sm hover:-translate-y-0.5"
             >
-              <Phone className="h-4 w-4" />
+              <Phone className="h-4 w-4 text-ocean" />
               Call Us
             </a>
           </div>

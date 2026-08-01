@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { Navbar } from "@/components/navbar/Navbar";
 import { BRAND_CATALOG, BRAND_FILTERS } from "@/data/brands";
 
 export const metadata = {
@@ -10,7 +11,8 @@ export const metadata = {
 export default function BrandsIndexPage() {
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,#fffdf9_0%,#f5f9fe_100%)] text-[#10233D]">
-      <section className="mx-auto max-w-7xl px-6 py-20 md:px-12 lg:py-24">
+      <Navbar />
+      <section className="mx-auto max-w-7xl px-6 pt-24 pb-20 md:px-12 lg:pb-32">
         <div className="max-w-3xl space-y-5">
           <span className="inline-flex items-center gap-2 rounded-full border border-[#0b5497]/10 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#0b5497]">
             <Sparkles className="h-3.5 w-3.5" />

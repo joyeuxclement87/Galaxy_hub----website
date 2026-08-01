@@ -1,6 +1,6 @@
 import "server-only";
 import { createClient } from "@/lib/supabase-server";
-import type { Product, Category, DealOffer } from "@/data/mock-data";
+import type { Product, Category, DealOffer, Review } from "@/data/mock-data";
 import type { HeroSlideData } from "@/components/hero/Hero";
 import type { BrandCatalogItem, BrandFilter } from "@/data/brands";
 import type { Database } from "@/types/database";
@@ -10,6 +10,7 @@ type CategoryRow = Database["public"]["Tables"]["categories"]["Row"];
 type BrandRow = Database["public"]["Tables"]["brands"]["Row"];
 type PromotionRow = Database["public"]["Tables"]["promotions"]["Row"];
 type HeroRow = Database["public"]["Tables"]["hero_sections"]["Row"];
+type ReviewRow = Database["public"]["Tables"]["reviews"]["Row"];
 
 interface ProductWithJoins extends ProductRow {
   category: { name: string } | null;
@@ -76,8 +77,8 @@ function toProduct(p: ProductWithJoins): Product {
     specifications: {},
     availability,
     badge,
-    rating: 4.8,
-    reviewCount: 32,
+    rating: p.rating ? Number(p.rating) : 4.8,
+    reviewCount: p.review_count ?? 32,
   };
 }
 
@@ -128,6 +129,24 @@ function toDealOffer(p: PromotionRow, index: number): DealOffer {
     image: p.image_url || FALLBACK_PROMO_IMG,
     size: sizes[index] || "small",
     category: "All",
+    startsAt: p.starts_at,
+    endsAt: p.ends_at,
+  };
+}
+
+function toReview(r: ReviewRow): Review {
+  return {
+    id: r.id,
+    author: r.author,
+    role: r.role || "",
+    rating: r.rating,
+    content: r.content,
+    avatar: r.avatar_url || "",
+    location: r.location || undefined,
+    purchasedProduct: r.purchased_product || undefined,
+    verified: r.is_verified,
+    category: r.category || undefined,
+    featured: r.featured,
   };
 }
 
@@ -139,13 +158,14 @@ export interface HomepageData {
   brandFilters: BrandFilter[];
   promotions: DealOffer[];
   newArrivals: Product[];
+  reviews: Review[];
   allProducts: Product[];
 }
 
 export async function getHomepageData(): Promise<HomepageData> {
   const supabase = createClient();
 
-  const [heroResult, featuredResult, categoriesResult, brandsResult, promotionsResult, newArrivalsResult, allResult] =
+  const [heroResult, featuredResult, categoriesResult, brandsResult, promotionsResult, newArrivalsResult, reviewsResult, allResult] =
     await Promise.allSettled([
       fetchHeroSection(supabase),
       fetchFeaturedProducts(supabase),
@@ -153,6 +173,7 @@ export async function getHomepageData(): Promise<HomepageData> {
       fetchBrands(supabase),
       fetchPromotions(supabase),
       fetchNewArrivals(supabase),
+      fetchReviews(supabase),
       fetchAllProducts(supabase),
     ]);
 
@@ -164,6 +185,7 @@ export async function getHomepageData(): Promise<HomepageData> {
     brandFilters: ["All"],
     promotions: [],
     newArrivals: [],
+    reviews: [],
     allProducts: [],
   };
 
@@ -175,8 +197,23 @@ export async function getHomepageData(): Promise<HomepageData> {
     brandFilters: ["All", "Phones", "Laptops", "Audio", "Accessories"],
     promotions: promotionsResult.status === "fulfilled" ? promotionsResult.value : (() => { console.error("promotions fetch failed", promotionsResult.reason); return empty.promotions; })(),
     newArrivals: newArrivalsResult.status === "fulfilled" ? newArrivalsResult.value : (() => { console.error("new arrivals fetch failed", newArrivalsResult.reason); return empty.newArrivals; })(),
+    reviews: reviewsResult.status === "fulfilled" ? reviewsResult.value : (() => { console.error("reviews fetch failed", reviewsResult.reason); return empty.reviews; })(),
     allProducts: allResult.status === "fulfilled" ? allResult.value : (() => { console.error("all products fetch failed", allResult.reason); return empty.allProducts; })(),
   };
+}
+
+async function fetchReviews(supabase: ReturnType<typeof createClient>): Promise<Review[]> {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("*")
+    .eq("is_active", true)
+    .order("featured", { ascending: false })
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false })
+    .limit(8);
+
+  if (error || !data) return [];
+  return (data as ReviewRow[]).map(toReview);
 }
 
 async function fetchHeroSection(supabase: ReturnType<typeof createClient>): Promise<HeroSlideData[]> {
@@ -239,7 +276,7 @@ async function fetchFeaturedProducts(supabase: ReturnType<typeof createClient>):
     .from("products")
     .select(`
       id, name, slug, short_description, description, price, old_price,
-      discount_percentage, main_image_url, is_featured, is_new, stock_status, created_at,
+      discount_percentage, main_image_url, is_featured, is_new, stock_status, rating, review_count, created_at,
       category:category_id(name),
       brand:brand_id(name, slug, logo_url)
     `)
@@ -293,7 +330,7 @@ async function fetchNewArrivals(supabase: ReturnType<typeof createClient>): Prom
     .from("products")
     .select(`
       id, name, slug, short_description, description, price, old_price,
-      discount_percentage, main_image_url, is_featured, is_new, stock_status, created_at,
+      discount_percentage, main_image_url, is_featured, is_new, stock_status, rating, review_count, created_at,
       category:category_id(name),
       brand:brand_id(name, slug, logo_url)
     `)
@@ -311,7 +348,7 @@ async function fetchAllProducts(supabase: ReturnType<typeof createClient>): Prom
     .from("products")
     .select(`
       id, name, slug, short_description, description, price, old_price,
-      discount_percentage, main_image_url, is_featured, is_new, stock_status, created_at,
+      discount_percentage, main_image_url, is_featured, is_new, stock_status, rating, review_count, created_at,
       category:category_id(name),
       brand:brand_id(name, slug, logo_url)
     `)
