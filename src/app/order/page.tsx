@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import {
@@ -21,8 +22,11 @@ import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { PRODUCTS } from "@/data/mock-data";
-import { useApp } from "@/context/AppContext";
+import { useSupabaseCart, getSessionId } from "@/hooks/use-cart";
+import { submitOrder } from "@/actions/checkout";
+import { toStorageOptions } from "@/types/specifications";
+import { getOrderRequestProduct, type OrderRequestProduct } from "@/actions/order-request";
+import { StorageSelector } from "@/components/products/StorageSelector";
 
 type FulfillmentMethod = "pickup" | "delivery";
 
@@ -30,6 +34,17 @@ interface ProvinceOption {
   name: string;
   fee: number;
   eta: string;
+}
+
+interface OrderItem {
+  key: string;
+  title: string;
+  price: number;
+  currency: string;
+  image: string;
+  storages: string[];
+  selectedVariant?: string | null;
+  lineId?: string;
 }
 
 const PROVINCES: ProvinceOption[] = [
@@ -41,7 +56,23 @@ const PROVINCES: ProvinceOption[] = [
 ];
 
 export default function OrderNowPage() {
-  const { cart, removeFromCart, clearCart, productsMap } = useApp();
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-ivory">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-ocean border-t-transparent" />
+        </div>
+      }
+    >
+      <OrderContent />
+    </Suspense>
+  );
+}
+
+function OrderContent() {
+  const searchParams = useSearchParams();
+  const cart = useSupabaseCart();
+  const [directProduct, setDirectProduct] = useState<OrderRequestProduct | null>(null);
   const [fulfillment, setFulfillment] = useState<FulfillmentMethod>("pickup");
   const [province, setProvince] = useState(PROVINCES[0].name);
 
@@ -55,30 +86,73 @@ export default function OrderNowPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
-  const [orderId, setOrderId] = useState("");
+  const [orderRef, setOrderRef] = useState("");
+  const [orderTotal, setOrderTotal] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [selectedStorage, setSelectedStorage] = useState<Record<string, string>>({});
 
-  // Cart items only — resolved from productsMap (populated on the homepage) or static PRODUCTS
-  const cartItems = cart.map((id) =>
-    productsMap[id] ||
-    PRODUCTS.find((p) => p.id === id) || {
-      id,
-      title: "Genuine Tech Product",
-      price: 0,
+  // Load the product preselected via ?product=slug (e.g. "Order Now" on a product page)
+  useEffect(() => {
+    const slug = searchParams.get("product");
+    if (!slug) return;
+    let cancelled = false;
+    getOrderRequestProduct(slug).then((product) => {
+      if (cancelled || !product) return;
+      setDirectProduct(product);
+      const requested = searchParams.get("storage");
+      if (requested && product.storage_options.includes(requested)) {
+        setSelectedStorage((prev) => ({ ...prev, [`product:${product.id}`]: requested }));
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [searchParams]);
+
+  // Items from the real shopping cart (same cart as /cart) plus the preselected product
+  const cartItems: OrderItem[] = [
+    ...cart.items.map((line) => ({
+      key: `line:${line.id}`,
+      lineId: line.id,
+      title: line.product!.name,
+      price: Number(line.product!.price),
       currency: "RWF",
-      image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=600",
-    }
-  );
+      image: line.product!.main_image_url || "",
+      storages: toStorageOptions(line.product!.storage_options),
+      selectedVariant: line.variant,
+    })),
+    ...(directProduct
+      ? [
+          {
+            key: `product:${directProduct.id}`,
+            title: directProduct.title,
+            price: directProduct.price,
+            currency: directProduct.currency,
+            image: directProduct.image,
+            storages: directProduct.storage_options,
+            selectedVariant: null as string | null,
+          },
+        ]
+      : []),
+  ];
+
+  const storageFor = (item: OrderItem) => {
+    if (item.storages.length === 0) return null;
+    return selectedStorage[item.key] || item.selectedVariant || item.storages[0];
+  };
 
   const selectedProvince = PROVINCES.find((p) => p.name === province) || PROVINCES[0];
   const deliveryFee = fulfillment === "delivery" ? selectedProvince.fee : 0;
   const itemsSubtotal = cartItems.reduce((sum, item) => sum + (item.price || 0), 0);
   const total = itemsSubtotal + deliveryFee;
+  const hasItems = cart.items.length > 0 || directProduct !== null;
 
   const formatPrice = (value: number) => new Intl.NumberFormat("en-US").format(value);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (cart.length === 0) newErrors.cart = "Please add at least one product to your cart before ordering.";
+    if (!hasItems) newErrors.cart = "Please add at least one product to your cart before ordering.";
     if (!formData.name.trim()) newErrors.name = "Full name is required";
     if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
     if (fulfillment === "delivery") {
@@ -89,12 +163,32 @@ export default function OrderNowPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    setOrderId(`GH-${Math.floor(100000 + Math.random() * 900000)}`);
+    setSubmitting(true);
+    setSubmitError("");
+
+    const result = await submitOrder({
+      customer_name: formData.name,
+      phone: formData.phone,
+      address: fulfillment === "delivery" ? `${formData.district ?? ""}${formData.address ? `, ${formData.address}` : ""}` : undefined,
+      notes: formData.notes || undefined,
+      session_id: getSessionId(),
+    });
+
+    setSubmitting(false);
+
+    if (result.error || !result.order) {
+      setSubmitError(result.error || "Something went wrong. Please try again.");
+      return;
+    }
+
+    setOrderRef(result.order.order_number);
+    setOrderTotal(Number(result.order.total_amount));
     setSubmitted(true);
-    clearCart();
+    setDirectProduct(null);
+    await cart.refresh();
     confetti({
       particleCount: 90,
       spread: 65,
@@ -107,7 +201,20 @@ export default function OrderNowPage() {
     setSubmitted(false);
     setFormData({ name: "", phone: "", district: "", address: "", notes: "" });
     setErrors({});
+    setSubmitError("");
   };
+
+  if (cart.loading) {
+    return (
+      <div className="min-h-screen bg-ivory">
+        <Navbar />
+        <main className="mx-auto flex max-w-[1320px] items-center justify-center px-6 py-24 md:px-12">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-ocean border-t-transparent" />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-ivory text-ocean-deeper font-sans pt-20 lg:pt-24">
@@ -176,7 +283,21 @@ export default function OrderNowPage() {
               <div className="mt-6 rounded-card border border-ocean/[0.06] bg-ivory/60 p-5 space-y-3 text-xs">
                 <div className="flex items-center justify-between pb-2 border-b border-ocean/[0.06]">
                   <span className="font-semibold text-ocean/50">Order Reference</span>
-                  <span className="font-display font-bold text-ocean">{orderId}</span>
+                  <span className="font-display font-bold text-ocean">{orderRef}</span>
+                </div>
+                <div className="flex items-start justify-between gap-4">
+                  <span className="text-ocean/60 shrink-0">Items ({cartItems.length})</span>
+                  <span className="text-right font-semibold text-ocean-deeper">
+                    {cartItems.map((item) => {
+                      const storage = storageFor(item);
+                      return (
+                        <span key={item.key} className="block">
+                          {item.title}
+                          {storage ? ` — ${storage}` : ""}
+                        </span>
+                      );
+                    })}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-ocean/60">Fulfillment</span>
@@ -187,7 +308,7 @@ export default function OrderNowPage() {
                 <div className="flex items-center justify-between border-t border-ocean/[0.06] pt-2">
                   <span className="font-semibold text-ocean-deeper">Total Estimated</span>
                   <span className="font-display text-base font-bold text-ocean-deeper">
-                    RWF {formatPrice(total)}
+                    RWF {formatPrice(submitted ? orderTotal : total)}
                   </span>
                 </div>
               </div>
@@ -249,16 +370,16 @@ export default function OrderNowPage() {
                     </span>
                     <h2 className="font-display text-base font-bold text-ocean-deeper">
                       Items in Your Order
-                      {cart.length > 0 && (
+                      {hasItems && (
                         <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-btn bg-ocean/[0.08] px-1.5 text-[10px] font-bold text-ocean">
-                          {cart.length}
+                          {cartItems.length}
                         </span>
                       )}
                     </h2>
                   </div>
 
                   {/* Empty cart state */}
-                  {cart.length === 0 ? (
+                  {!hasItems ? (
                     <div className="flex flex-col items-center gap-5 py-8 text-center">
                       <div className="flex h-16 w-16 items-center justify-center rounded-card bg-ocean/[0.04] border border-ocean/[0.06]">
                         <ShoppingBag className="h-7 w-7 text-ocean/20" />
@@ -270,7 +391,7 @@ export default function OrderNowPage() {
                         </p>
                       </div>
                       <Link
-                        href="/#products"
+                        href="/products"
                         className="inline-flex items-center gap-2 rounded-btn bg-ocean-deeper px-7 h-10 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:-translate-y-0.5"
                       >
                         Browse Products
@@ -282,32 +403,54 @@ export default function OrderNowPage() {
                   ) : (
                     /* List of cart items */
                     <div className="space-y-3">
-                      {cartItems.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center gap-4 rounded-btn border border-ocean/[0.06] bg-ivory/40 p-3.5"
-                        >
-                          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 flex items-center justify-center p-1 border border-ocean/[0.04]">
-                            <img src={item.image} alt={item.title} className="h-full w-full object-contain mix-blend-multiply" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="truncate font-display text-sm font-bold text-ocean-deeper">
-                              {item.title}
-                            </p>
-                            <p className="text-xs font-semibold text-ocean/50">
-                              {item.currency || "RWF"} {formatPrice(item.price)}
-                            </p>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeFromCart(item.id)}
-                            className="p-2 text-ocean/30 hover:text-red-500 transition-colors rounded-btn"
-                            aria-label={`Remove ${item.title}`}
+                      {cartItems.map((item) => {
+                        const isDirect = directProduct !== null && item.key === `product:${directProduct.id}`;
+                        const storage = storageFor(item);
+                        return (
+                          <div
+                            key={item.key}
+                            className="rounded-btn border border-ocean/[0.06] bg-ivory/40 p-3.5"
                           >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      ))}
+                            <div className="flex items-center gap-4">
+                              <div className="h-14 w-14 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 flex items-center justify-center p-1 border border-ocean/[0.04]">
+                                <img src={item.image} alt={item.title} className="h-full w-full object-contain mix-blend-multiply" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                {isDirect && (
+                                  <span className="mb-0.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-ocean">
+                                    Selected for you
+                                  </span>
+                                )}
+                                <p className="truncate font-display text-sm font-bold text-ocean-deeper">
+                                  {item.title}
+                                </p>
+                                <p className="text-xs font-semibold text-ocean/50">
+                                  {item.currency || "RWF"} {formatPrice(item.price)}
+                                </p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => (isDirect ? setDirectProduct(null) : item.lineId && cart.remove(item.lineId))}
+                                className="p-2 text-ocean/30 hover:text-red-500 transition-colors rounded-btn"
+                                aria-label={`Remove ${item.title}`}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </div>
+
+                            {item.storages.length > 0 && (
+                              <div className="mt-3 border-t border-ocean/[0.05] pt-3">
+                                <StorageSelector
+                                  compact
+                                  options={item.storages}
+                                  value={storage || item.storages[0]}
+                                  onChange={(s) => setSelectedStorage((prev) => ({ ...prev, [item.key]: s }))}
+                                />
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -333,7 +476,7 @@ export default function OrderNowPage() {
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Enter your name"
-                        className="w-full rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-2.5 text-sm text-ocean-deeper transition-all focus:border-accent focus:bg-white focus:outline-none"
+                        className="w-full rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-2.5 text-base sm:text-sm text-ocean-deeper transition-all focus:border-accent focus:bg-white focus:outline-none"
                       />
                       {errors.name && <p className="mt-1 text-xs font-medium text-red-500">{errors.name}</p>}
                     </div>
@@ -347,7 +490,7 @@ export default function OrderNowPage() {
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="e.g. 0785 288 910"
-                        className="w-full rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-2.5 text-sm text-ocean-deeper transition-all focus:border-accent focus:bg-white focus:outline-none"
+                        className="w-full rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-2.5 text-base sm:text-sm text-ocean-deeper transition-all focus:border-accent focus:bg-white focus:outline-none"
                       />
                       {errors.phone && <p className="mt-1 text-xs font-medium text-red-500">{errors.phone}</p>}
                     </div>
@@ -362,7 +505,7 @@ export default function OrderNowPage() {
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                       placeholder="e.g. Black Titanium, 256GB..."
-                      className="w-full rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-2.5 text-sm text-ocean-deeper transition-all focus:border-accent focus:bg-white focus:outline-none"
+                      className="w-full rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-2.5 text-base sm:text-sm text-ocean-deeper transition-all focus:border-accent focus:bg-white focus:outline-none"
                     />
                   </div>
                 </div>
@@ -442,7 +585,7 @@ export default function OrderNowPage() {
                             <select
                               value={province}
                               onChange={(e) => setProvince(e.target.value)}
-                              className="w-full cursor-pointer rounded-btn border border-ocean/[0.08] bg-white px-3.5 py-2 text-sm transition-all focus:border-accent focus:outline-none"
+                              className="w-full cursor-pointer rounded-btn border border-ocean/[0.08] bg-white px-3.5 py-2 text-base sm:text-sm transition-all focus:border-accent focus:outline-none"
                             >
                               {PROVINCES.map((p) => (
                                 <option key={p.name} value={p.name}>
@@ -462,7 +605,7 @@ export default function OrderNowPage() {
                                 value={formData.district}
                                 onChange={(e) => setFormData({ ...formData, district: e.target.value })}
                                 placeholder="Gasabo, Nyarugenge..."
-                                className="w-full rounded-btn border border-ocean/[0.08] bg-white px-3.5 py-2 text-sm text-ocean-deeper transition-all focus:border-accent focus:outline-none"
+                                className="w-full rounded-btn border border-ocean/[0.08] bg-white px-3.5 py-2 text-base sm:text-sm text-ocean-deeper transition-all focus:border-accent focus:outline-none"
                               />
                               {errors.district && <p className="mt-1 text-xs font-medium text-red-500">{errors.district}</p>}
                             </div>
@@ -475,7 +618,7 @@ export default function OrderNowPage() {
                                 value={formData.address}
                                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                                 placeholder="Street, landmark..."
-                                className="w-full rounded-btn border border-ocean/[0.08] bg-white px-3.5 py-2 text-sm text-ocean-deeper transition-all focus:border-accent focus:outline-none"
+                                className="w-full rounded-btn border border-ocean/[0.08] bg-white px-3.5 py-2 text-base sm:text-sm text-ocean-deeper transition-all focus:border-accent focus:outline-none"
                               />
                               {errors.address && <p className="mt-1 text-xs font-medium text-red-500">{errors.address}</p>}
                             </div>
@@ -494,7 +637,7 @@ export default function OrderNowPage() {
                     Order Summary
                   </h3>
 
-                  {cart.length === 0 ? (
+                  {!hasItems ? (
                     <div className="py-4 text-center space-y-2">
                       <p className="text-sm font-semibold text-ocean/50">No items selected</p>
                       <p className="text-xs text-ocean/40 leading-relaxed">
@@ -533,15 +676,30 @@ export default function OrderNowPage() {
                     <span>No online payment required. Inspect your device and pay on pickup or delivery.</span>
                   </div>
 
+                  {submitError && (
+                    <p className="rounded-btn border border-red-100 bg-red-50 px-3 py-2 text-xs font-medium text-red-600">
+                      {submitError}
+                    </p>
+                  )}
+
                   {/* Submit Button */}
                   <Button
                     type="submit"
                     variant="primary"
-                    disabled={cart.length === 0}
+                    disabled={!hasItems || submitting}
                     className="w-full rounded-btn h-12 text-xs font-bold uppercase tracking-[0.12em] gap-2 justify-center shadow-btn hover:shadow-btn-hover disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-btn disabled:hover:translate-y-0"
                   >
-                    <ShoppingBag className="h-4 w-4" />
-                    Submit Order Request
+                    {submitting ? (
+                      <>
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingBag className="h-4 w-4" />
+                        Submit Order Request
+                      </>
+                    )}
                   </Button>
                 </div>
               </div>

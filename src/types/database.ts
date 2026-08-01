@@ -77,6 +77,7 @@ export type Database = {
           id: string
           product_id: string
           quantity: number
+          variant: string | null
         }
         Insert: {
           cart_id: string
@@ -84,6 +85,7 @@ export type Database = {
           id?: string
           product_id: string
           quantity?: number
+          variant?: string | null
         }
         Update: {
           cart_id?: string
@@ -91,6 +93,7 @@ export type Database = {
           id?: string
           product_id?: string
           quantity?: number
+          variant?: string | null
         }
         Relationships: [
           {
@@ -219,6 +222,7 @@ export type Database = {
           product_id: string | null
           product_name: string
           quantity: number
+          variant: string | null
         }
         Insert: {
           created_at?: string
@@ -228,6 +232,7 @@ export type Database = {
           product_id?: string | null
           product_name: string
           quantity: number
+          variant?: string | null
         }
         Update: {
           created_at?: string
@@ -237,6 +242,7 @@ export type Database = {
           product_id?: string | null
           product_name?: string
           quantity?: number
+          variant?: string | null
         }
         Relationships: [
           {
@@ -336,6 +342,7 @@ export type Database = {
           created_at: string
           description: string | null
           discount_percentage: number | null
+          highlights: Json
           id: string
           is_active: boolean
           is_featured: boolean
@@ -346,7 +353,9 @@ export type Database = {
           price: number
           short_description: string | null
           slug: string
+          specifications: Json
           stock_status: string
+          storage_options: Json
           updated_at: string
         }
         Insert: {
@@ -355,6 +364,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           discount_percentage?: number | null
+          highlights?: Json
           id?: string
           is_active?: boolean
           is_featured?: boolean
@@ -365,7 +375,9 @@ export type Database = {
           price?: number
           short_description?: string | null
           slug: string
+          specifications?: Json
           stock_status?: string
+          storage_options?: Json
           updated_at?: string
         }
         Update: {
@@ -374,6 +386,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           discount_percentage?: number | null
+          highlights?: Json
           id?: string
           is_active?: boolean
           is_featured?: boolean
@@ -384,7 +397,9 @@ export type Database = {
           price?: number
           short_description?: string | null
           slug?: string
+          specifications?: Json
           stock_status?: string
+          storage_options?: Json
           updated_at?: string
         }
         Relationships: [

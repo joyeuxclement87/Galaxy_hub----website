@@ -1,44 +1,83 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronRight, ShoppingCart, Truck, Shield, RefreshCw, Star } from "lucide-react";
+import { ChevronRight, Truck, ShieldCheck, RefreshCw } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
 import { ProductCard } from "@/components/products/ProductCard";
-import { AddToCartButton } from "@/components/products/AddToCartButton";
+import { ProductGallery } from "@/components/products/ProductGallery";
+import { ProductActions } from "@/components/products/ProductActions";
+import { OrderCTA } from "@/components/products/OrderCTA";
+import { KeySpecifications, SpecificationsAccordion, ProductHighlightsList } from "@/components/products/ProductSpecifications";
+import { getKeySpecs } from "@/lib/product-specs";
 import { getPublicProductBySlug } from "@/data/public-products";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const result = await getPublicProductBySlug(params.slug);
+const SITE_URL = "https://galaxyhub.rw";
+
+interface ProductPageParams {
+  params: Promise<{ slug: string }>;
+}
+
+function displayTitle(product: { name: string; brand_name: string | null }): string {
+  const brand = product.brand_name?.trim();
+  if (brand && !product.name.toLowerCase().startsWith(brand.toLowerCase())) {
+    return `${brand} ${product.name} | Galaxy Hub`;
+  }
+  return `${product.name} | Galaxy Hub`;
+}
+
+export async function generateMetadata({ params }: ProductPageParams): Promise<Metadata> {
+  const { slug } = await params;
+  const result = await getPublicProductBySlug(slug);
   if (!result) return { title: "Product Not Found" };
   const { product } = result;
 
+  const description = product.short_description || product.description || "";
+  const image = product.main_image_url
+    ? [{ url: product.main_image_url, alt: product.name }]
+    : [];
+
   return {
-    title: `Buy ${product.name} in Rwanda | Galaxy Hub`,
-    description: product.short_description || product.description || "",
+    title: { absolute: displayTitle(product) },
+    description,
+    alternates: { canonical: `/product/${product.slug}` },
     openGraph: {
-      title: `${product.name} | Galaxy Hub Rwanda`,
-      description: product.short_description || "",
-      images: product.main_image_url ? [{ url: product.main_image_url }] : [],
+      title: displayTitle(product),
+      description,
+      url: `${SITE_URL}/product/${product.slug}`,
+      type: "website",
+      images: image,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${product.name} | Galaxy Hub Rwanda`,
-      description: product.short_description || "",
+      title: displayTitle(product),
+      description,
+      images: image,
     },
   };
 }
 
 const formatPrice = (v: number) => new Intl.NumberFormat("en-US").format(v);
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const result = await getPublicProductBySlug(params.slug);
+const stockLabel: Record<string, { label: string; chip: string; dot: string }> = {
+  available: { label: "In Stock", chip: "bg-emerald-50 text-emerald-700", dot: "bg-emerald-500" },
+  coming_soon: { label: "Coming Soon", chip: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
+  out_of_stock: { label: "Out of Stock", chip: "bg-red-50 text-red-700", dot: "bg-red-500" },
+};
+
+export default async function ProductPage({ params }: ProductPageParams) {
+  const { slug } = await params;
+  const result = await getPublicProductBySlug(slug);
   if (!result) notFound();
 
   const { product, relatedProducts } = result;
   const discount = product.old_price ? Math.round((1 - product.price / product.old_price) * 100) : 0;
-  const gallery = [product.main_image_url, ...(product.images || []).map((i: any) => i.image_url)].filter(Boolean);
+  const gallery = [product.main_image_url, ...(product.images || []).map((img) => img.image_url)].filter(
+    (src): src is string => Boolean(src)
+  );
+  const stock = stockLabel[product.stock_status] ?? stockLabel.out_of_stock;
+  const keySpecs = getKeySpecs(product.specifications, product.category_slug);
 
   const productSchema = {
     "@context": "https://schema.org/",
@@ -47,11 +86,13 @@ export default async function ProductPage({ params }: { params: { slug: string }
     image: gallery,
     description: product.short_description || product.description,
     brand: { "@type": "Brand", name: product.brand_name },
+    url: `${SITE_URL}/product/${product.slug}`,
     offers: {
       "@type": "Offer",
       priceCurrency: "RWF",
       price: product.price,
       availability: product.stock_status === "available" ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      url: `${SITE_URL}/product/${product.slug}`,
     },
   };
 
@@ -61,134 +102,187 @@ export default async function ProductPage({ params }: { params: { slug: string }
       <Navbar />
 
       <main className="pt-24 md:pt-32">
-        <div className="mx-auto max-w-[1320px] px-6 md:px-12 mb-8">
-          <div className="flex items-center gap-2 text-xs font-medium text-ocean/45">
-            <Link href="/" className="hover:text-ocean transition-colors">Home</Link>
-            <ChevronRight className="h-3 w-3" />
-            <Link href="/products" className="hover:text-ocean transition-colors">Products</Link>
-            <ChevronRight className="h-3 w-3" />
+        {/* 1. Breadcrumb */}
+        <div className="mx-auto max-w-[1320px] px-6 md:px-12">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-medium text-ocean/45">
+            <Link href="/products" className="transition-colors hover:text-ocean">Home</Link>
             {product.category_slug && (
               <>
-                <Link href={`/products/${product.category_slug}`} className="hover:text-ocean transition-colors capitalize">{product.category_name}</Link>
-                <ChevronRight className="h-3 w-3" />
+                <ChevronRight className="h-3 w-3 shrink-0" aria-hidden="true" />
+                <Link href={`/products?category=${product.category_slug}`} className="capitalize transition-colors hover:text-ocean">
+                  {product.category_name}
+                </Link>
               </>
             )}
-            <span className="text-ocean-deeper truncate max-w-[200px]">{product.name}</span>
-          </div>
+            {product.brand_slug && (
+              <>
+                <ChevronRight className="h-3 w-3 shrink-0" aria-hidden="true" />
+                <Link href={`/products?brand=${product.brand_slug}`} className="transition-colors hover:text-ocean">
+                  {product.brand_name}
+                </Link>
+              </>
+            )}
+            <ChevronRight className="h-3 w-3 shrink-0" aria-hidden="true" />
+            <span className="truncate text-ocean-deeper max-w-[200px]">{product.name}</span>
+          </nav>
         </div>
 
-        <div className="mx-auto max-w-[1320px] px-6 md:px-12 mb-20">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
-            <div className="space-y-4">
-              <div className="aspect-square w-full overflow-hidden rounded-2xl bg-ivory-dark/40 flex items-center justify-center p-8 lg:p-12">
-                {gallery[0] ? (
-                  <img src={gallery[0]} alt={product.name} className="h-full w-full object-contain" />
-                ) : (
-                  <div className="text-ocean/15 text-lg">No image</div>
-                )}
-              </div>
-              {gallery.length > 1 && (
-                <div className="grid grid-cols-4 gap-3">
-                  {gallery.slice(1, 5).map((img, i) => (
-                    <div key={i} className="aspect-square overflow-hidden rounded-xl bg-ivory-dark/30 flex items-center justify-center p-3 border border-ocean/5">
-                      <img src={img} alt={`${product.name} ${i + 2}`} className="h-full w-full object-contain" />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+        {/* 2. Product Header */}
+        <div className="mx-auto max-w-[1320px] px-6 md:px-12 mt-6 lg:mt-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-14">
+            <ProductGallery images={gallery} name={product.name} />
 
             <div className="flex flex-col">
-              {product.brand_name && (
-                <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-ocean/45">{product.brand_name}</span>
+              {product.brand_slug && product.brand_name ? (
+                <Link
+                  href={`/products?brand=${product.brand_slug}`}
+                  className="text-[10px] font-bold uppercase tracking-[0.24em] text-accent transition-colors hover:text-ocean"
+                >
+                  {product.brand_name}
+                </Link>
+              ) : (
+                product.brand_name && (
+                  <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-accent">{product.brand_name}</span>
+                )
               )}
-              <h1 className="font-clash text-3xl font-bold text-ocean-deeper mt-2 lg:text-4xl">{product.name}</h1>
 
-              <div className="flex items-center gap-1.5 mt-3">
-                <div className="flex items-center gap-0.5 text-amber-400">
-                  {[1, 2, 3, 4, 5].map((i) => <Star key={i} className={`h-3.5 w-3.5 ${i <= 4 ? "fill-current" : "fill-current opacity-30"}`} />)}
-                </div>
-                <span className="text-xs text-ocean/45">4.8 (32 reviews)</span>
-              </div>
+              <h1 className="mt-2 font-display text-3xl font-bold leading-[1.1] tracking-tight text-ocean-deeper sm:text-4xl">
+                {product.name}
+              </h1>
 
               {product.short_description && (
-                <p className="mt-4 text-sm leading-relaxed text-ocean/60">{product.short_description}</p>
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-ocean/60">{product.short_description}</p>
               )}
 
-              <div className="mt-6 flex items-baseline gap-3">
-                <span className="font-clash text-3xl font-bold text-ocean-deeper">RWF {formatPrice(product.price)}</span>
-                {product.old_price && (
+              <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="font-display text-3xl font-bold text-ocean-deeper">RWF {formatPrice(product.price)}</span>
+                {product.old_price && discount > 0 && (
                   <>
-                    <span className="text-lg text-ocean/35 line-through">RWF {formatPrice(product.old_price)}</span>
-                    <span className="rounded-full bg-red-50 px-3 py-1 text-xs font-bold text-red-500">-{discount}%</span>
+                    <span className="text-base text-ocean/35 line-through">RWF {formatPrice(product.old_price)}</span>
+                    <span className="rounded-full border border-red-100 bg-red-50 px-2.5 py-0.5 text-[10px] font-bold text-red-600">
+                      Save {discount}%
+                    </span>
                   </>
                 )}
               </div>
 
               <div className="mt-4 flex items-center gap-2">
-                <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-                  product.stock_status === "available" ? "bg-emerald-50 text-emerald-700" :
-                  product.stock_status === "coming_soon" ? "bg-amber-50 text-amber-700" : "bg-red-50 text-red-700"
-                }`}>
-                  <span className={`h-1.5 w-1.5 rounded-full ${
-                    product.stock_status === "available" ? "bg-emerald-500" :
-                    product.stock_status === "coming_soon" ? "bg-amber-500" : "bg-red-500"
-                  }`} />
-                  {product.stock_status === "available" ? "In Stock" :
-                   product.stock_status === "coming_soon" ? "Coming Soon" : "Out of Stock"}
+                <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${stock.chip}`}>
+                  <span className={`h-1.5 w-1.5 rounded-full ${stock.dot}`} aria-hidden="true" />
+                  {stock.label}
                 </span>
               </div>
 
-              {product.description && (
-                <div className="mt-8">
-                  <h2 className="font-clash text-lg font-bold text-ocean-deeper mb-3">Description</h2>
-                  <p className="text-sm leading-relaxed text-ocean/60">{product.description}</p>
-                </div>
-              )}
+              <ProductActions
+                productId={product.id}
+                productSlug={product.slug}
+                storageOptions={product.storage_options}
+              />
 
-              <div className="mt-8 flex flex-col gap-3">
-                <AddToCartButton productId={product.id} />
-                <Link href="/products" className="inline-flex items-center justify-center gap-2 rounded-full border border-ocean/15 bg-transparent px-8 py-3.5 text-base font-medium text-ocean transition-all duration-300 hover:bg-ocean hover:text-ivory">
-                  <ShoppingCart className="h-4 w-4" /> Continue Shopping
-                </Link>
-              </div>
-
-              <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="mt-6 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
                 {[
                   { icon: Truck, text: "Delivery across Rwanda" },
-                  { icon: Shield, text: "Genuine products guaranteed" },
+                  { icon: ShieldCheck, text: "Genuine products guaranteed" },
                   { icon: RefreshCw, text: "Warranty included" },
                 ].map((item) => (
-                  <div key={item.text} className="flex items-center gap-2 rounded-xl bg-white border border-ocean/5 px-4 py-3">
+                  <div key={item.text} className="flex items-center gap-2 rounded-xl border border-ocean/5 bg-white px-4 py-3">
                     <item.icon className="h-4 w-4 shrink-0 text-ocean" />
                     <span className="text-xs text-ocean/60">{item.text}</span>
                   </div>
                 ))}
               </div>
+
+              {product.description && product.description !== product.short_description && (
+                <div className="mt-6 border-t border-ocean/[0.06] pt-5">
+                  <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-ocean-deeper/45">About this product</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-ocean/60">{product.description}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
+        {/* 3. Key Specifications */}
+        {keySpecs.length > 0 && (
+          <section aria-labelledby="key-specs-heading" className="mx-auto max-w-[1320px] px-6 md:px-12 mt-14 md:mt-16">
+            <h2 id="key-specs-heading" className="mb-5 font-display text-xl font-bold text-ocean-deeper">
+              Key Specifications
+            </h2>
+            <KeySpecifications specifications={product.specifications} categorySlug={product.category_slug} />
+          </section>
+        )}
+
+        {/* 4. Product Highlights */}
+        {product.highlights.length > 0 && (
+          <section aria-labelledby="highlights-heading" className="mx-auto max-w-[1320px] px-6 md:px-12 mt-14 md:mt-16">
+            <h2 id="highlights-heading" className="mb-5 font-display text-xl font-bold text-ocean-deeper">
+              Why you&apos;ll like it
+            </h2>
+            <ProductHighlightsList highlights={product.highlights} />
+          </section>
+        )}
+
+        {/* 5. Full Specifications */}
+        {product.specifications.length > 0 && (
+          <section aria-labelledby="full-specs-heading" className="mx-auto max-w-[1320px] px-6 md:px-12 mt-14 md:mt-16">
+            <div className="mb-5 flex flex-wrap items-baseline justify-between gap-3">
+              <h2 id="full-specs-heading" className="font-display text-xl font-bold text-ocean-deeper">
+                Full Specifications
+              </h2>
+              <span className="text-xs font-medium text-ocean/40">
+                Everything you need to know before you order
+              </span>
+            </div>
+            <SpecificationsAccordion specifications={product.specifications} />
+          </section>
+        )}
+
+        {/* 6. Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="mx-auto max-w-[1320px] px-6 md:px-12">
-            <h2 className="font-clash text-2xl font-bold text-ocean-deeper mb-8">Related Products</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-              {relatedProducts.map((p: any) => (
-                <ProductCard key={p.id} product={{
-                  id: p.id, slug: p.slug, title: p.name,
-                  tagline: p.short_description || "", description: "",
-                  price: p.price, originalPrice: p.old_price || undefined, currency: "RWF",
-                  category: p.category_name || "", brand: p.brand_name || "",
-                  image: p.main_image_url || "", featured: false,
-                  specifications: {},
-                  availability: p.stock_status === "available" ? "In Stock" : "Out of Stock",
-                  badge: p.discount_percentage ? "SALE" : undefined,
-                  rating: 4.8, reviewCount: 32,
-                }} onReserve={() => {}} />
+          <section aria-labelledby="related-heading" className="mx-auto max-w-[1320px] px-6 md:px-12 mt-14 md:mt-16">
+            <div className="mb-5 flex flex-wrap items-baseline justify-between gap-3">
+              <h2 id="related-heading" className="font-display text-xl font-bold text-ocean-deeper">
+                You may also like
+              </h2>
+              {product.category_slug && (
+                <Link href={`/products?category=${product.category_slug}`} className="text-xs font-bold text-ocean transition-colors hover:text-ocean-dark">
+                  View all {product.category_name?.toLowerCase()}
+                </Link>
+              )}
+            </div>
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
+              {relatedProducts.map((p) => (
+                <ProductCard
+                  key={p.id}
+                  product={{
+                    id: p.id,
+                    slug: p.slug,
+                    title: p.name,
+                    tagline: p.short_description || "",
+                    description: "",
+                    price: p.price,
+                    originalPrice: p.old_price || undefined,
+                    currency: "RWF",
+                    category: p.category_name || "",
+                    brand: p.brand_name || "",
+                    image: p.main_image_url || "",
+                    featured: false,
+                    specifications: {},
+                    availability: p.stock_status === "available" ? "In Stock" : "Out of Stock",
+                    badge: p.discount_percentage ? "SALE" : undefined,
+                    rating: 4.8,
+                    reviewCount: 32,
+                  }}
+                />
               ))}
             </div>
-          </div>
+          </section>
         )}
+
+        {/* 7. Final Order CTA */}
+        <div className="mt-16 md:mt-20">
+          <OrderCTA productName={product.name} productSlug={product.slug} />
+        </div>
       </main>
     </div>
   );

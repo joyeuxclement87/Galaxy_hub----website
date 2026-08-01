@@ -1,8 +1,23 @@
 import "server-only";
 import { createClient } from "@/lib/supabase-server";
 import type { Database } from "@/types/database";
+import { toProductSpecifications, toProductHighlights, toStorageOptions } from "@/types/specifications";
+import type { ProductSpecifications, ProductHighlights } from "@/types/specifications";
 
 type ProductRow = Database["public"]["Tables"]["products"]["Row"];
+
+type ProductWithRelations = ProductRow & {
+  category?: { id?: string; name?: string; slug?: string } | null;
+  brand?: { id?: string; name?: string; slug?: string; logo_url?: string | null } | null;
+};
+
+type SearchProductRow = Pick<
+  ProductRow,
+  "id" | "slug" | "name" | "price" | "old_price" | "main_image_url" | "stock_status" | "short_description"
+> & {
+  category?: { name?: string } | null;
+  brand?: { name?: string } | null;
+};
 
 export interface PublicProduct {
   id: string;
@@ -25,6 +40,9 @@ export interface PublicProduct {
   brand_logo_url: string | null;
   brand_id: string | null;
   created_at: string;
+  specifications: ProductSpecifications;
+  highlights: ProductHighlights;
+  storage_options: string[];
 }
 
 export interface ProductsListResponse {
@@ -123,7 +141,7 @@ export async function getPublicProducts(params: {
   const categories = categoriesResult.status === "fulfilled" ? (categoriesResult.value.data || []) : [];
   const brands = brandsResult.status === "fulfilled" ? (brandsResult.value.data || []) : [];
 
-  const products: PublicProduct[] = (data || []).map((row: any) => ({
+  const products: PublicProduct[] = (data || []).map((row: ProductWithRelations) => ({
     id: row.id,
     slug: row.slug,
     name: row.name,
@@ -144,6 +162,9 @@ export async function getPublicProducts(params: {
     brand_logo_url: row.brand?.logo_url || null,
     brand_id: row.brand_id,
     created_at: row.created_at,
+    specifications: toProductSpecifications(row.specifications),
+    highlights: toProductHighlights(row.highlights),
+    storage_options: toStorageOptions(row.storage_options),
   }));
 
   return { products, total, categories, brands };
@@ -175,6 +196,8 @@ export async function getPublicProductBySlug(slug: string) {
     .neq("id", data.id)
     .limit(4);
 
+  const productWithRelations = data as ProductWithRelations;
+
   const product = {
     id: data.id,
     slug: data.slug,
@@ -188,21 +211,24 @@ export async function getPublicProductBySlug(slug: string) {
     stock_status: data.stock_status,
     is_featured: data.is_featured,
     is_new: data.is_new,
-    category_name: (data as any).category?.name || null,
-    category_slug: (data as any).category?.slug || null,
+    category_name: productWithRelations.category?.name || null,
+    category_slug: productWithRelations.category?.slug || null,
     category_id: data.category_id,
-    brand_name: (data as any).brand?.name || null,
-    brand_slug: (data as any).brand?.slug || null,
-    brand_logo_url: (data as any).brand?.logo_url || null,
+    brand_name: productWithRelations.brand?.name || null,
+    brand_slug: productWithRelations.brand?.slug || null,
+    brand_logo_url: productWithRelations.brand?.logo_url || null,
     brand_id: data.brand_id,
     created_at: data.created_at,
     images: images || [],
+    specifications: toProductSpecifications(data.specifications),
+    highlights: toProductHighlights(data.highlights),
+    storage_options: toStorageOptions(data.storage_options),
   };
 
-  const relatedProducts = ((related as any) || [])
-    .filter((r: any) => r.id !== data.id)
+  const relatedProducts = (related || [])
+    .filter((r) => r.id !== data.id)
     .slice(0, 4)
-    .map((r: any) => ({
+    .map((r) => ({
       id: r.id,
       slug: r.slug,
       name: r.name,
@@ -240,7 +266,7 @@ export async function getPublicProductsByCategorySlug(slug: string) {
 
   return {
     category,
-    products: (products || []).map((row: any) => ({
+    products: (products || []).map((row: ProductWithRelations) => ({
       id: row.id,
       slug: row.slug,
       name: row.name,
@@ -287,7 +313,7 @@ export async function getPublicBrandBySlug(slug: string) {
 
   return {
     brand,
-    products: (products || []).map((row: any) => ({
+    products: (products || []).map((row: ProductWithRelations) => ({
       id: row.id,
       slug: row.slug,
       name: row.name,
@@ -317,7 +343,7 @@ export async function searchProducts(query: string) {
     .or(`name.ilike.${term},short_description.ilike.${term}`)
     .limit(20);
 
-  return (data || []).map((row: any) => ({
+  return (data || []).map((row: SearchProductRow) => ({
     id: row.id,
     slug: row.slug,
     name: row.name,

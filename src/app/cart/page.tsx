@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { ShoppingBag, Trash2, Minus, Plus, ArrowLeft, PackageOpen } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
+import Footer from "@/components/ui/Footer";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { CartSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -22,6 +23,7 @@ function getSessionId() {
 interface CartItem {
   id: string;
   quantity: number;
+  variant: string | null;
   product: {
     id: string; name: string; slug: string; price: number;
     old_price: number | null; main_image_url: string | null;
@@ -42,7 +44,22 @@ export default function CartPage() {
     setLoading(false);
   }, []);
 
-  useEffect(() => { loadCart(); }, [loadCart]);
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      const sid = getSessionId();
+      setSessionId(sid);
+      const result = await getOrCreateCart(sid);
+      if (!cancelled) {
+        if (result) setItems(result.items as CartItem[]);
+        setLoading(false);
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleQuantity = async (itemId: string, qty: number) => {
     if (qty < 1) return;
@@ -66,11 +83,12 @@ export default function CartPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 pt-20 lg:pt-28">
+      <div className="flex-1 pt-20 lg:pt-28 min-h-screen bg-ivory">
         <Navbar />
         <main className="mx-auto max-w-[1320px] px-6 py-12 md:px-12">
           <CartSkeleton />
         </main>
+        <Footer />
       </div>
     );
   }
@@ -126,6 +144,11 @@ export default function CartPage() {
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <Link href={`/product/${p.slug}`} className="font-clash text-base font-bold text-ocean-deeper hover:text-ocean transition-colors">{p.name}</Link>
+                          {item.variant && (
+                            <span className="ml-1.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-2 py-0.5 text-[10px] font-bold text-ocean align-middle">
+                              {item.variant}
+                            </span>
+                          )}
                           <p className="mt-0.5 text-xs text-ocean/45 capitalize">{p.stock_status.replace("_", " ")}</p>
                         </div>
                         <Button variant="icon" onClick={() => handleRemove(item.id)} className="h-8 w-8 text-ocean/25 hover:text-red-500" aria-label="Remove item">
@@ -172,7 +195,7 @@ export default function CartPage() {
                     </div>
                   </div>
                 </div>
-                <Link href="/checkout">
+                <Link href="/order">
                 <Button variant="primary" className="mt-6 w-full gap-2 justify-center">
                   <ShoppingBag className="h-4 w-4" /> Proceed to Checkout
                 </Button>
@@ -183,6 +206,7 @@ export default function CartPage() {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

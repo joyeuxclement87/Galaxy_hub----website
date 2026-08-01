@@ -25,13 +25,13 @@ export async function getOrCreateCart(sessionId: string) {
 
   const { data: items } = await supabase
     .from("cart_items")
-    .select(`*, product:product_id(id, name, slug, price, old_price, main_image_url, stock_status, discount_percentage)`)
+    .select(`id, quantity, variant, product:product_id(id, name, slug, price, old_price, main_image_url, stock_status, discount_percentage, storage_options)`)
     .eq("cart_id", cart.id);
 
   return { id: cart.id, items: items || [] };
 }
 
-export async function addCartItem(sessionId: string, productId: string) {
+export async function addCartItem(sessionId: string, productId: string, variant?: string) {
   const supabase = createClient();
 
   const { data: cart } = await supabase
@@ -42,12 +42,19 @@ export async function addCartItem(sessionId: string, productId: string) {
 
   if (!cart) return { error: "Cart not found" };
 
-  const { data: existing } = await supabase
+  const variantValue = variant && variant.trim() ? variant.trim() : null;
+
+  let existingQuery = supabase
     .from("cart_items")
     .select("id, quantity")
     .eq("cart_id", cart.id)
-    .eq("product_id", productId)
-    .maybeSingle();
+    .eq("product_id", productId);
+
+  existingQuery = variantValue
+    ? existingQuery.eq("variant", variantValue)
+    : existingQuery.is("variant", null);
+
+  const { data: existing } = await existingQuery.maybeSingle();
 
   if (existing) {
     const { error } = await supabase
@@ -59,13 +66,28 @@ export async function addCartItem(sessionId: string, productId: string) {
   } else {
     const { error } = await supabase
       .from("cart_items")
-      .insert({ cart_id: cart.id, product_id: productId, quantity: 1 });
+      .insert({ cart_id: cart.id, product_id: productId, quantity: 1, variant: variantValue });
 
     if (error) return { error: error.message };
   }
 
   revalidatePath("/cart");
   return { success: true };
+}
+
+export async function addCartItemBySlug(sessionId: string, slug: string) {
+  const supabase = createClient();
+
+  const { data: product } = await supabase
+    .from("products")
+    .select("id")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (!product) return { error: "Product not found" };
+
+  return addCartItem(sessionId, product.id);
 }
 
 export async function updateCartItemQuantity(itemId: string, quantity: number) {

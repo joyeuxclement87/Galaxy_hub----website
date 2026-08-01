@@ -12,13 +12,29 @@ const TRUST_ITEMS = [
   "Friendly Customer Service",
 ];
 
+const CTA_BACKGROUND_IMAGE =
+  "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&q=80&w=1600";
+
 export function CTA() {
   return (
     <section aria-labelledby="cta-heading" className="px-4 py-10 sm:px-6 md:px-12 md:py-16">
       <div className="mx-auto max-w-[1280px]">
-        <div className="relative overflow-hidden rounded-card bg-gradient-to-br from-ocean via-ocean-dark to-[#062d54] px-8 py-12 md:px-16 md:py-20">
-          <div className="relative z-10 grid gap-10 lg:grid-cols-[1fr_0.45fr] lg:items-center">
-            <div className="text-white">
+        <div className="relative isolate min-h-[420px] overflow-hidden rounded-card md:min-h-[460px]">
+          {/* Background image — right side */}
+          <Image
+            src={CTA_BACKGROUND_IMAGE}
+            alt="Galaxy Hub tech devices"
+            fill
+            sizes="1280px"
+            className="object-cover object-right"
+            priority={false}
+          />
+
+          {/* Gradient overlay — solid on the left, fading into the image on the right */}
+          <div className="absolute inset-0 bg-gradient-to-r from-ocean via-ocean/95 to-transparent md:via-ocean-dark/90 md:to-ocean-dark/10" />
+
+          <div className="relative z-10 flex min-h-[420px] items-center px-8 py-12 md:min-h-[460px] md:px-16 md:py-20">
+            <div className="max-w-lg text-white">
               <span className="block text-[10px] font-bold uppercase tracking-[0.28em] text-white/60 font-manrope">
                 READY TO UPGRADE?
               </span>
@@ -56,19 +72,6 @@ export function CTA() {
                   </li>
                 ))}
               </ul>
-            </div>
-
-            <div className="flex items-center justify-center">
-              <div className="relative h-[220px] w-full max-w-[360px] md:h-[280px]">
-                <Image
-                  src="/cta-composition.svg"
-                  alt="Galaxy Hub tech devices"
-                  fill
-                  sizes="(min-width: 1024px) 360px, 90vw"
-                  className="object-contain"
-                  priority={false}
-                />
-              </div>
             </div>
           </div>
         </div>

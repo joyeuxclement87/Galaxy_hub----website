@@ -81,6 +81,7 @@ export const PRODUCTS: Product[] = [
     category: "Smartphones",
     brand: "Apple",
     image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=600",
+    storages: ["256GB", "512GB", "1TB"],
     featured: true,
     specifications: {
       Processor: "A17 Pro chip with 6-core GPU",
@@ -137,6 +138,7 @@ export const PRODUCTS: Product[] = [
     category: "Smartphones",
     brand: "Samsung",
     image: "https://images.unsplash.com/photo-1708649290066-5f617003b930?auto=format&fit=crop&q=80&w=600",
+    storages: ["256GB", "512GB", "1TB"],
     featured: true,
     specifications: {
       Processor: "Snapdragon 8 Gen 3 for Galaxy",
@@ -186,6 +188,7 @@ export const PRODUCTS: Product[] = [
     category: "Smartphones",
     brand: "Google",
     image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&q=80&w=600",
+    storages: ["128GB", "256GB", "512GB"],
     featured: false,
     specifications: {
       Processor: "Google Tensor G3 with Titan M2",

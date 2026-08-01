@@ -13,6 +13,8 @@ import {
   CATEGORIES as FALLBACK_CATEGORIES,
 } from "@/data/mock-data";
 import { useApp }             from "@/context/AppContext";
+import { getSessionId, notifyCartChanged } from "@/hooks/use-cart";
+import { addCartItemBySlug }  from "@/actions/cart";
 import { HeroSection, HeroSlideData } from "@/components/hero/Hero";
 import { FeaturedCategories } from "@/app/(landing)/sections/FeaturedCategories";
 import { Brands }             from "@/app/(landing)/sections/Brands";
@@ -89,7 +91,7 @@ export default function HomeClient({ data }: HomeClientProps) {
     selectedCategory, setSelectedCategory,
     selectedBrand, setSelectedBrand,
     showDealsOnly, setShowDealsOnly,
-    addToCart, wishlist, registerProducts,
+    wishlist, registerProducts,
   } = useApp();
 
   const products = data.allProducts;
@@ -166,7 +168,7 @@ export default function HomeClient({ data }: HomeClientProps) {
     <div className="flex-1 pt-[88px] sm:pt-[96px]">
       <Navbar />
 
-      <HeroSection slides={heroSlides} onAddToCart={addToCart} />
+      <HeroSection slides={heroSlides} />
 
       <FeaturedCategories categories={data.categories} />
 
@@ -385,7 +387,10 @@ export default function HomeClient({ data }: HomeClientProps) {
         key={selectedProduct?.id ?? "none"}
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
-        onSuccess={(prod) => addToCart(prod.id)}
+        onSuccess={(prod) => {
+          addCartItemBySlug(getSessionId(), prod.slug);
+          notifyCartChanged();
+        }}
       />
     </div>
   );

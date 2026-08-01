@@ -1,23 +1,33 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Product } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
 import { Heart, Star, ShoppingCart, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/context/AppContext";
+import { getSessionId, notifyCartChanged } from "@/hooks/use-cart";
+import { addCartItemBySlug } from "@/actions/cart";
 import Link from "next/link";
 
 interface ProductCardProps {
   product: Product;
-  onReserve: (product: Product) => void;
+  onReserve?: (product: Product) => void;
 }
 
 export function ProductCard({ product, onReserve }: ProductCardProps) {
-  const { wishlist, toggleWishlist, cart, addToCart, removeFromCart } = useApp();
+  const { wishlist, toggleWishlist } = useApp();
   const isWishlisted = wishlist.includes(product.id);
-  const isInCart     = cart.includes(product.id);
+  const [isInCart, setIsInCart] = useState(false);
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isInCart) return;
+    await addCartItemBySlug(getSessionId(), product.slug);
+    setIsInCart(true);
+    notifyCartChanged();
+  };
 
   const formattedPrice   = new Intl.NumberFormat("en-US").format(product.price);
   const formattedMonthly = product.monthlyInstallment
@@ -148,7 +158,7 @@ export function ProductCard({ product, onReserve }: ProductCardProps) {
         <div className="mt-4">
           <Button
             variant="primary"
-            onClick={(e) => { e.preventDefault(); if (isInCart) { removeFromCart(product.id); } else { addToCart(product.id); } }}
+            onClick={handleAddToCart}
             className={cn(
               "w-full justify-center gap-2 rounded-btn px-4 py-2.5 text-xs",
               isInCart && "!bg-gradient-to-b from-emerald-600 to-emerald-700"

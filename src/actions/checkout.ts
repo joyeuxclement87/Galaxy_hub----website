@@ -22,7 +22,7 @@ export async function submitOrder(formData: {
 
   const { data: items } = await supabase
     .from("cart_items")
-    .select(`quantity, product:product_id(id, name, price)`)
+    .select(`quantity, variant, product:product_id(id, name, price)`)
     .eq("cart_id", cart.id);
 
   if (!items || items.length === 0) return { error: "Cart is empty" };
@@ -37,6 +37,7 @@ export async function submitOrder(formData: {
       product_name: item.product.name,
       price,
       quantity: qty,
+      variant: item.variant || null,
     };
   });
 

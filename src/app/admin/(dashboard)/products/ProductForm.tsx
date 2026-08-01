@@ -3,12 +3,23 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Loader2, X, ImageIcon } from "lucide-react";
 import { uploadImage, createProduct, updateProduct } from "@/actions/products";
 import type { ProductFormData } from "@/actions/products";
 import type { ProductListItem } from "@/data/products";
+import { PhoneSpecImportPanel } from "./PhoneSpecImportPanel";
+import { SpecificationsEditor } from "./SpecificationsEditor";
+import { HighlightsEditor } from "./HighlightsEditor";
+import { StorageOptionsEditor } from "./StorageOptionsEditor";
+import {
+  toProductSpecifications,
+  toProductHighlights,
+  toStorageOptions,
+  type ProductSpecifications,
+  type ProductHighlights,
+} from "@/types/specifications";
 
 const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
@@ -50,10 +61,21 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
+  const [specifications, setSpecifications] = useState<ProductSpecifications>(() =>
+    toProductSpecifications(product?.specifications)
+  );
+  const [highlights, setHighlights] = useState<ProductHighlights>(() =>
+    toProductHighlights(product?.highlights)
+  );
+  const [storageOptions, setStorageOptions] = useState<string[]>(() =>
+    toStorageOptions(product?.storage_options)
+  );
+
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema) as any,
@@ -75,6 +97,16 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       main_image_url: product?.main_image_url ?? "",
     },
   });
+
+  const selectedCategoryId = watch("category_id");
+  const looksLikePhoneCategory = useMemo(() => {
+    const category = categories.find((c) => c.id === selectedCategoryId);
+    if (!category) return false;
+    const name = category.name.toLowerCase();
+    return ["phone", "smartphone", "mobile", "android", "ios"].some((keyword) => name.includes(keyword));
+  }, [categories, selectedCategoryId]);
+
+  const [showPhoneImport, setShowPhoneImport] = useState(looksLikePhoneCategory);
 
   const handleNameChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,16 +155,37 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   const onFormSubmit = useCallback(
     async (data: ProductFormData) => {
       setSubmitError(null);
+
+      const cleanedSpecifications = specifications
+        .map((group) => ({
+          name: group.name.trim(),
+          specs: group.specs
+            .map((spec) => ({ label: spec.label.trim(), value: spec.value.trim() }))
+            .filter((spec) => spec.label && spec.value),
+        }))
+        .filter((group) => group.name && group.specs.length > 0);
+
+      const cleanedHighlights = highlights.map((h) => h.trim()).filter(Boolean);
+
+      const cleanedStorageOptions = storageOptions.map((s) => s.trim()).filter(Boolean);
+
+      const payload: ProductFormData = {
+        ...data,
+        specifications: cleanedSpecifications,
+        highlights: cleanedHighlights,
+        storage_options: cleanedStorageOptions,
+      };
+
       startTransition(async () => {
         const result = product?.id
-          ? await updateProduct(product.id, data)
-          : await createProduct(data);
+          ? await updateProduct(product.id, payload)
+          : await createProduct(payload);
         if (result?.error) {
           setSubmitError(result.error);
         }
       });
     },
-    [product]
+    [product, specifications, highlights, storageOptions]
   );
 
   return (
@@ -348,6 +401,53 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="space-y-4 border-t border-white/5 pt-8">
+        <div>
+          <h2 className="text-sm font-bold text-white">Technical Specifications</h2>
+          <p className="mt-1 text-xs text-white/40">
+            Optional. Import from a phone search or add specifications manually — either way, you can edit everything
+            before saving.
+          </p>
+        </div>
+
+        {showPhoneImport ? (
+          <PhoneSpecImportPanel
+            onImport={(imported) => setSpecifications((current) => [...current, ...imported])}
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setShowPhoneImport(true)}
+            className="inline-flex items-center gap-2 rounded-xl border border-ocean/20 bg-ocean/5 px-4 py-2.5 text-sm font-medium text-ocean-light hover:bg-ocean/10"
+          >
+            Import Phone Specifications
+          </button>
+        )}
+
+        <SpecificationsEditor value={specifications} onChange={setSpecifications} />
+      </div>
+
+      <div className="space-y-4 border-t border-white/5 pt-8">
+        <div>
+          <h2 className="text-sm font-bold text-white">Product Highlights</h2>
+          <p className="mt-1 text-xs text-white/40">
+            3–5 short marketing bullet points shown on the product page (e.g. &ldquo;200MP Pro Camera&rdquo;). These
+            are written by you, not imported.
+          </p>
+        </div>
+        <HighlightsEditor value={highlights} onChange={setHighlights} />
+      </div>
+
+      <div className="space-y-4 border-t border-white/5 pt-8">
+        <div>
+          <h2 className="text-sm font-bold text-white">Storage Options</h2>
+          <p className="mt-1 text-xs text-white/40">
+            Selectable storage sizes for this listing (e.g. 128GB, 256GB). Shown on the product page and at ordering.
+          </p>
+        </div>
+        <StorageOptionsEditor value={storageOptions} onChange={setStorageOptions} />
       </div>
 
       <div className="flex items-center gap-3 border-t border-white/5 pt-6">

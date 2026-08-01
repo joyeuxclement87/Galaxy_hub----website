@@ -3,6 +3,8 @@
 import { createAdminClient } from "@/lib/supabase-admin";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import type { ProductSpecifications, ProductHighlights } from "@/types/specifications";
+import type { Json } from "@/types/database";
 
 export interface ProductFormData {
   name: string;
@@ -20,6 +22,12 @@ export interface ProductFormData {
   is_active: boolean;
   show_in_hero?: boolean;
   main_image_url: string;
+  /** Technical specifications — entered manually or imported via MobileAPI.dev and normalized. */
+  specifications?: ProductSpecifications;
+  /** Marketing highlights — always admin-authored, independent of any import. */
+  highlights?: ProductHighlights;
+  /** Selectable storage sizes offered for this listing, e.g. ["256GB", "512GB"]. */
+  storage_options?: string[];
 }
 
 export async function createProduct(data: ProductFormData) {
@@ -40,6 +48,9 @@ export async function createProduct(data: ProductFormData) {
     is_new: data.is_new,
     is_active: data.is_active,
     main_image_url: data.main_image_url || null,
+    specifications: (data.specifications ?? []) as unknown as Json,
+    highlights: (data.highlights ?? []) as unknown as Json,
+    storage_options: (data.storage_options ?? []) as unknown as Json,
   }).select("id").single();
 
   if (error) {
@@ -82,6 +93,9 @@ export async function updateProduct(id: string, data: ProductFormData) {
       is_new: data.is_new,
       is_active: data.is_active,
       main_image_url: data.main_image_url || null,
+      specifications: (data.specifications ?? []) as unknown as Json,
+      highlights: (data.highlights ?? []) as unknown as Json,
+      storage_options: (data.storage_options ?? []) as unknown as Json,
     })
     .eq("id", id);
 

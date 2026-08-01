@@ -7,7 +7,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ShoppingCart, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useApp } from "@/context/AppContext";
+import { getSessionId, notifyCartChanged } from "@/hooks/use-cart";
+import { addCartItemBySlug } from "@/actions/cart";
 
 export interface HeroSlideData {
   id: string;
@@ -23,7 +24,6 @@ export interface HeroSlideData {
 
 interface HeroSectionProps {
   slides: HeroSlideData[];
-  onAddToCart: (id: string) => void;
 }
 
 const contentVariants = {
@@ -32,15 +32,22 @@ const contentVariants = {
   exit: (d: number) => ({ y: d < 0 ? 20 : -20, opacity: 0 }),
 };
 
-export function HeroSection({ slides, onAddToCart }: HeroSectionProps) {
+export function HeroSection({ slides }: HeroSectionProps) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [addedSlugs, setAddedSlugs] = useState<Record<string, boolean>>({});
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { cart, addToCart, removeFromCart } = useApp();
   const slide = slides[current] || slides[0];
-  const isInCart = slide ? cart.includes(slide.id) : false;
+  const isInCart = slide ? addedSlugs[slide.slug] : false;
+
+  const handleAddToCart = async () => {
+    if (!slide || isInCart) return;
+    await addCartItemBySlug(getSessionId(), slide.slug);
+    setAddedSlugs((prev) => ({ ...prev, [slide.slug]: true }));
+    notifyCartChanged();
+  };
 
   const startTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -143,20 +150,7 @@ export function HeroSection({ slides, onAddToCart }: HeroSectionProps) {
                 <div className="flex flex-wrap items-center gap-3 pt-1">
                   <Button
                     variant="primary"
-                    onClick={() => {
-                      if (isInCart) {
-                        removeFromCart(slide.id);
-                      } else {
-                        addToCart(slide.id, {
-                          id: slide.id,
-                          title: slide.title,
-                          price: slide.price,
-                          currency: slide.currency,
-                          image: slide.image,
-                          slug: slide.slug,
-                        });
-                      }
-                    }}
+                    onClick={handleAddToCart}
                     className={cn(
                       "rounded-btn h-12 px-8 text-[11px] font-bold uppercase tracking-[0.14em] transition-all duration-300 shadow-btn hover:shadow-btn-hover hover:-translate-y-0.5 active:translate-y-0",
                       isInCart

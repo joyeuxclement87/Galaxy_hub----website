@@ -7,8 +7,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Search, ShoppingCart, X, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/context/AppContext";
+import { useSupabaseCart } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";
-import { PRODUCTS } from "@/data/mock-data";
 
 interface NavbarProps {
   onSearchFocus?: () => void;
@@ -38,11 +38,12 @@ function Wordmark({ large }: { large?: boolean }) {
 function CartDropdown({
   open,
   onClose,
+  cart,
 }: {
   open: boolean;
   onClose: () => void;
+  cart: ReturnType<typeof useSupabaseCart>;
 }) {
-  const { cart, removeFromCart, clearCart, productsMap } = useApp();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,29 +57,8 @@ function CartDropdown({
     return () => document.removeEventListener("mousedown", handleClick, true);
   }, [open, onClose]);
 
-  const cartItems = cart.map((id) => {
-    const meta = productsMap[id];
-    if (meta) return meta;
-    const mock = PRODUCTS.find((p) => p.id === id);
-    if (mock) {
-      return {
-        id: mock.id,
-        title: mock.title,
-        price: mock.price,
-        currency: mock.currency || "RWF",
-        image: mock.image,
-        slug: mock.slug,
-      };
-    }
-    return {
-      id,
-      title: "Genuine Tech Item",
-      price: 0,
-      currency: "RWF",
-      image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=600",
-    };
-  });
-  const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+  const cartItems = cart.items;
+  const total = cart.subtotal;
 
   return (
     <AnimatePresence>
@@ -101,7 +81,7 @@ function CartDropdown({
                 <p className="mt-1.5 text-xs text-ocean/45 leading-relaxed">Browse our products and add items you love.</p>
               </div>
               <Link
-                href="/"
+                href="/products"
                 onClick={onClose}
                 className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-10 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
               >
@@ -115,12 +95,12 @@ function CartDropdown({
                 <div className="flex items-center gap-2">
                   <span className="font-display text-sm font-bold text-ocean-deeper">Cart</span>
                   <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-btn bg-ocean/[0.08] px-1.5 text-[10px] font-bold text-ocean">
-                    {cartItems.length}
+                    {cart.count}
                   </span>
                 </div>
                 <button
                   type="button"
-                  onClick={() => { clearCart(); onClose(); }}
+                  onClick={() => { cart.clear(); onClose(); }}
                   className="rounded-btn px-2.5 py-1 text-[10px] font-semibold text-red-400 transition-all duration-200 hover:text-red-500 hover:bg-red-50 cursor-pointer"
                 >
                   Clear all
@@ -142,24 +122,29 @@ function CartDropdown({
                     >
                       <div className="h-12 w-12 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 border border-ocean/[0.04] flex items-center justify-center p-1">
                         <img
-                          src={item.image}
-                          alt={item.title}
+                          src={item.product!.main_image_url || ""}
+                          alt={item.product!.name}
                           className="h-full w-full object-contain mix-blend-multiply"
                         />
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-[13px] font-semibold text-ocean-deeper">
-                          {item.title}
+                          {item.product!.name}
+                          {item.variant && (
+                            <span className="ml-1.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-1.5 py-0.5 text-[9px] font-bold text-ocean align-middle">
+                              {item.variant}
+                            </span>
+                          )}
                         </p>
                         <p className="text-xs font-medium text-ocean/45">
-                          {item.currency} {item.price.toLocaleString()}
+                          {item.quantity} × RWF {Number(item.product!.price).toLocaleString()}
                         </p>
                       </div>
                       <button
                         type="button"
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => cart.remove(item.id)}
                         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-btn text-ocean/25 opacity-0 transition-all duration-200 hover:bg-red-50 hover:text-red-400 group-hover/item:opacity-100 cursor-pointer"
-                        aria-label={`Remove ${item.title} from cart`}
+                        aria-label={`Remove ${item.product!.name} from cart`}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -168,14 +153,21 @@ function CartDropdown({
                 </AnimatePresence>
               </div>
 
-              {/* Footer with total + CTA */}
-              <div className="border-t border-ocean/[0.06] px-5 py-4 space-y-3">
+              {/* Footer with total + CTAs */}
+              <div className="border-t border-ocean/[0.06] px-5 py-4 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-ocean/50">Subtotal</span>
                   <span className="font-display text-base font-bold text-ocean-deeper">
                     RWF {total.toLocaleString()}
                   </span>
                 </div>
+                <Link
+                  href="/cart"
+                  onClick={onClose}
+                  className="flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 w-full h-10 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-white"
+                >
+                  View Full Cart
+                </Link>
                 <Link
                   href="/order"
                   onClick={onClose}
@@ -194,7 +186,8 @@ function CartDropdown({
 }
 
 export function Navbar({ onSearchFocus }: NavbarProps) {
-  const { cart, searchQuery, setSearchQuery, setSelectedCategory, setSelectedBrand, setShowDealsOnly, productsMap } = useApp();
+  const { searchQuery, setSearchQuery, setSelectedCategory, setSelectedBrand, setShowDealsOnly } = useApp();
+  const cart = useSupabaseCart();
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -202,6 +195,12 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const pathname = usePathname();
   const router = useRouter();
+
+  const { refresh: refreshCart } = cart;
+
+  useEffect(() => {
+    refreshCart();
+  }, [pathname, refreshCart]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -232,6 +231,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
   const handleNavClick = (e: React.MouseEvent, id: string) => {
     setMobileOpen(false);
     if (id === "home") return;
+    if (id === "products") return;
     if (pathname !== "/") return;
     e.preventDefault();
     if (id === "deals") {
@@ -248,6 +248,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
 
   const getHref = (id: string) => {
     if (id === "home") return "/";
+    if (id === "products") return "/products";
     if (pathname === "/") return `#${id}`;
     if (id === "about") return "/";
     return `/#${id}`;
@@ -370,27 +371,27 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
               <Button
                 variant="icon"
                 onClick={() => { setCartOpen(v => !v); setSearchOpen(false); }}
-                aria-label={cart.length > 0 ? `Cart (${cart.length} items)` : "Cart is empty"}
-                title={cart.length > 0 ? `${cart.length} item${cart.length !== 1 ? "s" : ""} in cart` : "Cart is empty"}
+                aria-label={cart.count > 0 ? `Cart (${cart.count} items)` : "Cart is empty"}
+                title={cart.count > 0 ? `${cart.count} item${cart.count !== 1 ? "s" : ""} in cart` : "Cart is empty"}
                 className="relative h-10 w-10 rounded-btn border border-transparent hover:border-ocean/[0.08] hover:bg-white/60"
               >
                 <ShoppingCart className="h-[18px] w-[18px]" />
                 <AnimatePresence mode="popLayout">
-                  {cart.length > 0 && (
+                  {cart.count > 0 && (
                     <motion.span
-                      key={cart.length}
+                      key={cart.count}
                       initial={{ scale: 0.4, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0.4, opacity: 0 }}
                       transition={{ type: "spring", stiffness: 600, damping: 14 }}
                       className="absolute -right-0.5 -top-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-btn bg-ocean px-1 text-[9px] font-bold text-white shadow-sm"
                     >
-                      {cart.length}
+                      {cart.count}
                     </motion.span>
                   )}
                 </AnimatePresence>
               </Button>
-              <CartDropdown open={cartOpen} onClose={() => setCartOpen(false)} />
+              <CartDropdown open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} />
             </div>
 
             <Link
@@ -460,24 +461,21 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
               </nav>
 
               {/* Mobile cart preview */}
-              {cart.length > 0 && (
+              {cart.count > 0 && (
                 <div className="border-t border-ocean/[0.06] px-5 py-3">
                   <div className="flex items-center gap-2 mb-2">
                     <ShoppingCart className="h-3.5 w-3.5 text-ocean/40" />
-                    <span className="text-xs font-semibold text-ocean/50">{cart.length} item{cart.length !== 1 ? "s" : ""} in cart</span>
+                    <span className="text-xs font-semibold text-ocean/50">{cart.count} item{cart.count !== 1 ? "s" : ""} in cart</span>
                   </div>
                   <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                    {cart.slice(0, 4).map((id) => {
-                      const item = productsMap[id] || PRODUCTS.find((p) => p.id === id) || { id, title: "Item", image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=600" };
-                      return (
-                        <div key={id} className="h-10 w-10 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 border border-ocean/[0.04] flex items-center justify-center p-1">
-                          <img src={item.image} alt={item.title} className="h-full w-full object-contain mix-blend-multiply" />
-                        </div>
-                      );
-                    })}
-                    {cart.length > 4 && (
+                    {cart.items.slice(0, 4).map((item) => (
+                      <div key={item.id} className="h-10 w-10 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 border border-ocean/[0.04] flex items-center justify-center p-1">
+                        <img src={item.product!.main_image_url || ""} alt={item.product!.name} className="h-full w-full object-contain mix-blend-multiply" />
+                      </div>
+                    ))}
+                    {cart.items.length > 4 && (
                       <div className="h-10 w-10 shrink-0 flex items-center justify-center rounded-btn bg-ocean/[0.04] text-[10px] font-bold text-ocean/40">
-                        +{cart.length - 4}
+                        +{cart.items.length - 4}
                       </div>
                     )}
                   </div>
@@ -492,9 +490,9 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                 >
                   <ShoppingCart className="h-3.5 w-3.5" />
                   Order Now
-                  {cart.length > 0 && (
+                  {cart.count > 0 && (
                     <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-btn bg-white/20 px-1 text-[9px] font-bold">
-                      {cart.length}
+                      {cart.count}
                     </span>
                   )}
                 </Link>

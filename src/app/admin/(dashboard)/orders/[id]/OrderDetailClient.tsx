@@ -60,7 +60,10 @@ export function OrderDetailClient({ order: initial }: { order: OrderWithItems })
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/8 text-xs font-bold text-white/40">{item.quantity}x</div>
                       <div>
-                        <p className="text-sm font-medium text-white/80">{item.product_name || `Product #${item.product_id?.slice(0, 8)}`}</p>
+                        <p className="text-sm font-medium text-white/80">
+                          {item.product_name || `Product #${item.product_id?.slice(0, 8)}`}
+                          {item.variant && <span className="ml-1.5 text-xs font-semibold text-ocean-light">({item.variant})</span>}
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
