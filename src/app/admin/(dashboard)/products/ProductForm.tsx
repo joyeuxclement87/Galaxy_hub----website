@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Loader2, X, ImageIcon } from "lucide-react";
 import { uploadImage, createProduct, updateProduct } from "@/actions/products";
@@ -108,6 +108,24 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   const isSmartwatch = catText.includes("watch");
   const isComputer = catText.includes("laptop") || catText.includes("computer") || catText.includes("macbook");
   const storagePresets = isSmartwatch ? SMARTWATCH_STORAGE_OPTIONS : DEVICE_STORAGE_OPTIONS;
+
+  // New computers: pre-fill the four core key specifications so the admin
+  // only has to type values
+  useEffect(() => {
+    if (!product?.id && isComputer && specifications.length === 0) {
+      setSpecifications([
+        {
+          name: "Key Specifications",
+          specs: [
+            { label: "Processor", value: "" },
+            { label: "RAM", value: "" },
+            { label: "Storage", value: "" },
+            { label: "Operating System", value: "" },
+          ],
+        },
+      ]);
+    }
+  }, [product?.id, isComputer, specifications.length]);
 
   const handleNameChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

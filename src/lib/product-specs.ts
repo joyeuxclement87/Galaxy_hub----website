@@ -20,6 +20,7 @@ interface KeySpecDefinition {
   label: string;
   labelMatches: string[];
   combine?: string[];
+  exclude?: string[];
 }
 
 type CategoryType =
@@ -48,7 +49,7 @@ function categoryType(slug?: string | null): CategoryType {
 
 const D = { label: "Display", labelMatches: ["Screen Size", "Display Type"], combine: ["Screen Size", "Display Type"] };
 const P = { label: "Processor", labelMatches: ["Processor", "Chipset"] };
-const R = { label: "RAM", labelMatches: ["RAM"] };
+const R = { label: "RAM", labelMatches: ["RAM", "Memory"], exclude: ["internal", "flash", "rom", "storage"] };
 const S = { label: "Storage", labelMatches: ["Storage", "Internal Memory"] };
 const C = { label: "Camera", labelMatches: ["Main Camera", "Rear Camera"] };
 const B = { label: "Battery", labelMatches: ["Capacity", "Battery"] };
@@ -80,13 +81,19 @@ const KEY_SPEC_DEFINITIONS: Record<CategoryType, KeySpecDefinition[]> = {
  *  the stored data doesn't include them (shown as "N/A"). */
 const FORCED_LAPTOP_SPEC_LABELS = ["Processor", "RAM", "Storage", "Operating System"];
 
-function findSpecValues(specifications: ProductSpecifications, labelMatches: string[]): { value: string; group: string }[] {
+function findSpecValues(
+  specifications: ProductSpecifications,
+  labelMatches: string[],
+  exclude: string[] = []
+): { value: string; group: string }[] {
   const found: { value: string; group: string }[] = [];
   const seen = new Set<string>();
   for (const group of specifications) {
     for (const wanted of labelMatches) {
       for (const spec of group.specs) {
-        if (spec.label.toLowerCase().includes(wanted.toLowerCase()) && spec.value) {
+        const label = spec.label.toLowerCase();
+        if (label.includes(wanted.toLowerCase()) && spec.value) {
+          if (exclude.some((x) => label.includes(x.toLowerCase()))) continue;
           const key = `${group.name}:${spec.label}`;
           if (!seen.has(key)) {
             seen.add(key);
@@ -118,7 +125,7 @@ export function getKeySpecs(
   const entries: KeySpecEntry[] = [];
 
   for (const def of defs) {
-    const matches = findSpecValues(specifications, def.combine || def.labelMatches);
+    const matches = findSpecValues(specifications, def.combine || def.labelMatches, def.exclude);
     const forced = type === "laptops" && FORCED_LAPTOP_SPEC_LABELS.includes(def.label);
     if (matches.length === 0 && !forced) continue;
     entries.push({
