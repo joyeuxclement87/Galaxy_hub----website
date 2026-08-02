@@ -684,7 +684,7 @@ function OrderContent() {
                     type="submit"
                     variant="primary"
                     disabled={!hasItems || submitting}
-                    className="w-full rounded-btn h-12 text-sm font-bold uppercase tracking-[0.12em] gap-2 justify-center shadow-btn hover:shadow-btn-hover disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full rounded-btn h-11 text-sm font-bold gap-2 justify-center shadow-btn hover:shadow-btn-hover disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {submitting ? (
                       <>

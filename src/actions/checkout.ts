@@ -50,7 +50,7 @@ export async function submitOrder(formData: {
       address: formData.address || null,
       notes: formData.notes || null,
       total_amount: totalAmount,
-      order_number: "",
+      order_number: `ORD-${Date.now().toString().slice(-8)}`,
     })
     .select("id, order_number, total_amount")
     .single();
