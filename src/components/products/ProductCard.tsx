@@ -63,7 +63,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
     product.badge?.includes("SALE") || product.badge?.includes("OFF")
       ? "bg-rose-50 text-rose-600 border border-rose-100/60"
       : product.badge === "NEW" || product.badge === "NEW ARRIVAL"
-      ? "bg-ocean/10 text-ocean border border-ocean/20"
+      ? "bg-ocean text-white border border-ocean"
       : product.badge?.includes("LIMITED")
       ? "bg-amber-50 text-amber-700 border border-amber-100/60"
       : "bg-white/90 backdrop-blur-sm border border-black/5 text-ocean-deeper";
