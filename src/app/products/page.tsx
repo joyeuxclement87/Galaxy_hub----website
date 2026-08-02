@@ -116,12 +116,10 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
   ];
 
   // Smart pagination: first, ellipsis, window around current, ellipsis, last
-  // Max 5 page-number buttons shown — the rest are collapsed into ellipses.
-  const MAX_PAGE_BUTTONS = 5;
   function getPaginationPages(current: number, total: number): (number | "...")[] {
-    if (total <= MAX_PAGE_BUTTONS) return Array.from({ length: total }, (_, i) => i + 1);
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
     const pages: (number | "...")[] = [];
-    const window = Math.floor((MAX_PAGE_BUTTONS - 3) / 2);
+    const window = 1; // pages around current
     const left = Math.max(2, current - window);
     const right = Math.min(total - 1, current + window);
     pages.push(1);
@@ -252,12 +250,12 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
           </nav>
 
           <div className="mt-8">
-            <div className="flex flex-col lg:flex-row">
+            <div className="flex flex-col lg:flex-row gap-10">
 
-              {/* Desktop sidebar — fixed: never moves while scrolling */}
-              <aside className="hidden lg:block fixed top-[152px] bottom-6 z-30 w-64 left-[max(1.5rem,calc(50vw-636px))]">
-                <div className="flex h-full flex-col rounded-card border border-ocean/6 bg-white p-5 shadow-sm">
-                  <div className="flex items-center justify-between mb-5 shrink-0">
+              {/* Desktop sidebar */}
+              <aside className="hidden lg:block lg:w-64 shrink-0">
+                <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto overscroll-contain rounded-card border border-ocean/6 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between mb-5">
                     <span className="flex items-center gap-2 font-display text-sm font-bold text-ocean-deeper">
                       <SlidersHorizontal className="h-4 w-4 text-ocean/50" />
                       Filters
@@ -268,13 +266,11 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                       </span>
                     )}
                   </div>
-                  <div className="flex-1 overflow-y-auto overscroll-contain">
-                    <ProductFilters groups={filterGroups} activeCount={activeCount} />
-                  </div>
+                  <ProductFilters groups={filterGroups} activeCount={activeCount} />
                 </div>
               </aside>
 
-              <div className="flex-1 min-w-0 lg:pl-[18.5rem]">
+              <div className="flex-1 min-w-0">
                 {/* Results count + page info */}
                 <div className="mb-5 flex items-center justify-between">
                   <div className="text-xs text-ocean/50">

@@ -91,7 +91,7 @@ export function ProductFilters({
         <div className="pt-2">
           <Link
             href="/products"
-            className="flex items-center justify-center gap-1.5 rounded-btn border border-ocean/15 bg-white/60 px-4 py-2.5 text-sm font-bold text-ocean transition-all duration-250 hover:border-ocean/30 hover:bg-white"
+            className="flex items-center justify-center gap-1.5 rounded-btn border border-ocean/15 bg-white/60 px-4 py-2.5 text-base font-bold uppercase tracking-[0.12em] text-ocean transition-all duration-250 hover:border-ocean/30 hover:bg-white"
           >
             <X className="h-3 w-3" />
             Reset filters ({activeCount})
@@ -165,7 +165,7 @@ function FilterDrawerPortal({
             exit={{ x: "-100%" }}
             transition={{ type: "spring", stiffness: 320, damping: 32, mass: 0.9 }}
             style={{ zIndex: 9999 }}
-            className="fixed inset-y-0 left-0 flex w-[min(84vw,340px)] flex-col bg-ivory shadow-premium-lg"
+            className="fixed inset-y-0 left-0 flex w-[min(88vw,360px)] flex-col bg-ivory shadow-premium-lg"
             role="dialog"
             aria-modal="true"
             aria-label="Filter products"
@@ -173,7 +173,7 @@ function FilterDrawerPortal({
             {/* Header */}
             <div className="flex items-center justify-between border-b border-ocean/8 px-5 pt-safe py-4">
               <div>
-                <p className="font-display text-sm font-bold text-ocean-deeper">
+                <p className="font-display text-base font-bold text-ocean-deeper">
                   Filter products
                 </p>
                 <p className="mt-0.5 text-xs text-ocean/45">
@@ -236,7 +236,7 @@ function FilterDrawerPortal({
                             href={option.href}
                             onClick={onClose}
                             className={cn(
-                              "flex items-center justify-between gap-2 rounded-btn px-3 py-2 text-sm transition-all duration-200 min-h-[38px]",
+                              "flex items-center justify-between gap-2 rounded-btn px-3 py-2.5 text-base transition-all duration-200 min-h-[44px]",
                               option.active
                                 ? "bg-ocean text-white font-semibold shadow-btn"
                                 : "text-ocean-deeper/65 hover:bg-ocean/5 hover:text-ocean-deeper font-medium"
@@ -274,7 +274,7 @@ function FilterDrawerPortal({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex w-full items-center justify-center gap-2 rounded-btn bg-ocean-deeper h-10 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark active:scale-[0.98]"
+                className="flex w-full items-center justify-center gap-2 rounded-btn bg-ocean-deeper h-11 text-base font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark active:scale-[0.98]"
               >
                 Show results
                 {activeCount > 0 && (
@@ -321,7 +321,7 @@ export function MobileFilters({
         aria-expanded={open}
         aria-haspopup="dialog"
         className={cn(
-          "inline-flex items-center justify-center gap-1.5 rounded-btn border px-3.5 py-2 text-sm font-bold tracking-[0.04em] transition-all duration-250 min-h-[40px]",
+          "inline-flex items-center justify-center gap-1.5 rounded-btn border px-4 py-2.5 text-base font-bold uppercase tracking-[0.12em] transition-all duration-250 min-h-[44px]",
           activeCount > 0
             ? "border-ocean bg-ocean text-white shadow-btn"
             : "border-ocean/12 bg-white text-ocean-deeper hover:border-ocean/25 hover:bg-ocean/4"

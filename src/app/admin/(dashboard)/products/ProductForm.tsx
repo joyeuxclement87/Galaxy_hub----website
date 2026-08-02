@@ -12,7 +12,7 @@ import type { ProductListItem } from "@/data/products";
 import { MobileApiImportPanel } from "./MobileApiImportPanel";
 import { SpecificationsEditor } from "./SpecificationsEditor";
 import { HighlightsEditor } from "./HighlightsEditor";
-import { StorageOptionsEditor } from "./StorageOptionsEditor";
+import { StorageOptionsEditor, DEVICE_STORAGE_OPTIONS, SMARTWATCH_STORAGE_OPTIONS } from "./StorageOptionsEditor";
 import {
   toProductSpecifications,
   toProductHighlights,
@@ -77,6 +77,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema) as any,
@@ -100,6 +101,14 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       main_image_url: product?.main_image_url ?? "",
     },
   });
+
+  const watchedCategoryId = watch("category_id");
+  const selectedCategory = categories.find((c) => c.id === watchedCategoryId);
+  const isSmartwatch =
+    selectedCategory?.name?.toLowerCase().includes("watch") ||
+    selectedCategory?.slug?.toLowerCase().includes("watch") ||
+    product?.name?.toLowerCase().includes("watch");
+  const storagePresets = isSmartwatch ? SMARTWATCH_STORAGE_OPTIONS : DEVICE_STORAGE_OPTIONS;
 
   const handleNameChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -461,9 +470,10 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
           <h2 className="text-sm font-bold text-white">Storage Options</h2>
           <p className="mt-1 text-xs text-white/40">
             Selectable storage sizes for this listing (e.g. 128GB, 256GB). Shown on the product page and at ordering.
+            Presets update automatically based on the selected category — {isSmartwatch ? "smartwatch sizes (8GB – 64GB)" : "device sizes (64GB – 2TB)"}.
           </p>
         </div>
-        <StorageOptionsEditor value={storageOptions} onChange={setStorageOptions} />
+        <StorageOptionsEditor value={storageOptions} onChange={setStorageOptions} presets={storagePresets} />
       </div>
 
       <div className="flex items-center gap-3 border-t border-white/5 pt-6">

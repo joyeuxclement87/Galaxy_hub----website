@@ -3,9 +3,13 @@
 import { useCallback, useState } from "react";
 import { Plus, X } from "lucide-react";
 
+export const DEVICE_STORAGE_OPTIONS = ["64GB", "128GB", "256GB", "512GB", "1TB", "2TB"];
+export const SMARTWATCH_STORAGE_OPTIONS = ["8GB", "16GB", "32GB", "64GB"];
+
 interface StorageOptionsEditorProps {
   value: string[];
   onChange: (value: string[]) => void;
+  presets?: string[];
 }
 
 /**
@@ -13,7 +17,7 @@ interface StorageOptionsEditorProps {
  * 256GB, 512GB). Customers pick one of these when ordering. Empty for
  * products without storage variants.
  */
-export function StorageOptionsEditor({ value, onChange }: StorageOptionsEditorProps) {
+export function StorageOptionsEditor({ value, onChange, presets }: StorageOptionsEditorProps) {
   const [draft, setDraft] = useState("");
 
   const add = useCallback(() => {
@@ -34,8 +38,19 @@ export function StorageOptionsEditor({ value, onChange }: StorageOptionsEditorPr
     [value, onChange]
   );
 
+  const addPreset = useCallback(
+    (option: string) => {
+      if (option && !value.includes(option)) {
+        onChange([...value, option]);
+      }
+    },
+    [value, onChange]
+  );
+
+  const availablePresets = presets ? presets.filter((p) => !value.includes(p)) : [];
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
         {value.map((option) => (
           <span
@@ -54,6 +69,26 @@ export function StorageOptionsEditor({ value, onChange }: StorageOptionsEditorPr
           </span>
         ))}
       </div>
+
+      {availablePresets.length > 0 && (
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+            Add from presets
+          </label>
+          <select
+            value=""
+            onChange={(e) => addPreset(e.target.value)}
+            className="block w-full max-w-xs rounded-lg border border-white/8 bg-white/5 px-3 py-2 text-sm text-white focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/20"
+          >
+            <option value="">Select a storage size…</option>
+            {availablePresets.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="flex items-center gap-2">
         <input
@@ -78,7 +113,8 @@ export function StorageOptionsEditor({ value, onChange }: StorageOptionsEditorPr
         </button>
       </div>
       <p className="text-xs text-white/25">
-        Customers pick one of these sizes when ordering. Leave empty if the product has a single fixed size.
+        Pick sizes from the preset list above (or type a custom one). Customers pick one of these sizes when ordering.
+        Leave empty if the product has a single fixed size.
       </p>
     </div>
   );
