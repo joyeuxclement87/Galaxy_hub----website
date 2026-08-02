@@ -57,25 +57,29 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
 
           {!q ? (
             <div className="flex flex-col items-center justify-center py-16 text-center max-w-md mx-auto rounded-card border border-ocean/8 bg-white/60 p-6 shadow-sm">
-              <SearchIcon className="mb-3 h-10 w-10 text-ocean/30" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-ocean/5 mb-4">
+                <SearchIcon className="h-6 w-6 text-ocean/20" />
+              </div>
               <h2 className="font-clash text-xl font-bold text-ocean-deeper">Search our tech catalog</h2>
               <p className="mt-2 text-xs sm:text-sm text-ocean/60 leading-relaxed">
                 Enter any brand, device model, or accessory category above to search our Kigali inventory.
               </p>
             </div>
           ) : results.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-14 text-center max-w-lg mx-auto rounded-card border border-ocean/10 bg-white/80 p-6 sm:p-10 shadow-sm">
-              <PackageOpen className="mb-3 h-10 w-10 text-ocean/40" />
-              <h2 className="font-clash text-xl font-bold text-ocean-deeper">No matching products found</h2>
-              <p className="mt-2 text-xs sm:text-sm text-ocean/60 leading-relaxed">
-                We couldn&apos;t find any tech items matching &ldquo;<span className="font-semibold text-ocean-deeper">{q}</span>&rdquo;. Matches are case-insensitive. Try checking spelling or searching by broader keywords.
+            <div className="flex flex-col items-center justify-center text-center max-w-lg mx-auto rounded-card border border-ocean/10 bg-white py-12 px-6">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-ocean/5 mb-4">
+                <PackageOpen className="h-7 w-7 text-ocean/20" />
+              </div>
+              <h2 className="font-clash text-xl font-bold text-ocean-deeper mb-2">No matching products found</h2>
+              <p className="text-sm text-ocean/50 mb-6 max-w-sm">
+                We couldn&apos;t find any tech items matching &ldquo;<span className="font-semibold text-ocean-deeper">{q}</span>&rdquo;.
               </p>
-              <div className="mt-5 flex flex-wrap justify-center gap-2.5">
+              <div className="flex flex-wrap justify-center gap-3">
                 <Link href="/products" className="rounded-btn bg-ocean-deeper h-11 px-5 text-xs font-bold text-white hover:bg-ocean-dark transition-colors shadow-sm">
                   Browse All Products
                 </Link>
-                <Link href="/brands" className="rounded-btn border border-ocean/20 bg-white px-5 h-11 text-xs font-bold text-ocean-deeper hover:bg-ocean/5 transition-colors">
-                  Shop By Brand
+                <Link href="/" className="rounded-btn border border-ocean/15 bg-white px-5 h-11 text-xs font-bold text-ocean-deeper hover:border-ocean/30 hover:bg-white transition-colors">
+                  Back to Home
                 </Link>
               </div>
             </div>

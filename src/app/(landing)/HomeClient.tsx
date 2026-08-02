@@ -389,10 +389,20 @@ export default function HomeClient({ data }: HomeClientProps) {
                 ))}
               </div>
             ) : (
-              <div className="mt-8 flex flex-col items-center justify-center rounded-card border border-dashed border-ocean/[0.08] bg-white/50 py-16 text-center">
-                <SearchIcon className="mb-4 h-10 w-10 text-ocean/30" />
-                <h3 className="font-clash text-lg font-bold text-ocean-deeper">No products found</h3>
-                <p className="mt-2 text-sm text-ocean/50">Try searching by brand, model, or category name.</p>
+              <div className="mt-8 flex flex-col items-center justify-center rounded-card border border-ocean/8 bg-white py-16 text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-ocean/5 mb-4">
+                  <SearchIcon className="h-7 w-7 text-ocean/20" />
+                </div>
+                <h3 className="font-clash text-xl font-bold text-ocean-deeper mb-2">No products found</h3>
+                <p className="text-sm text-ocean/50 max-w-sm">
+                  Try searching with different keywords — check your spelling or use broader terms like "iPhone" or "headphones".
+                </p>
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="mt-4 rounded-btn bg-ocean-deeper h-11 px-5 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark"
+                >
+                  Clear Search
+                </button>
               </div>
             )}
           </div>

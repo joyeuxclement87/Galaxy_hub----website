@@ -605,13 +605,23 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
     return () => window.clearTimeout(timeout);
   }, [searchInputValue, searchOpen]);
 
+  const handleSearchClose = () => {
+    setSearchOpen(false);
+    setSearchInputValue("");
+    setSearchQuery("");
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setSearchOpen(false); setMobileOpen(false); setCartOpen(false); }
+      if (e.key === "Escape") {
+        if (searchOpen) handleSearchClose();
+        setMobileOpen(false);
+        setCartOpen(false);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [searchOpen]);
 
   const handleNavClick = (e: React.MouseEvent, id: string) => {
     setMobileOpen(false);
@@ -683,7 +693,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
       {/* Full-screen search overlay */}
       <SearchOverlay
         open={searchOpen}
-        onClose={() => setSearchOpen(false)}
+        onClose={handleSearchClose}
         searchInputRef={searchInputRef}
         searchInputValue={searchInputValue}
         onSearchInputChange={setSearchInputValue}
