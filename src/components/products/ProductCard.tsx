@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Product } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
-import { Star, ShoppingCart, Heart, Trash2 } from "lucide-react";
+import { Star, ShoppingCart, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getSessionId, notifyCartChanged, useSupabaseCart } from "@/hooks/use-cart";
 import { addCartItemBySlug } from "@/actions/cart";
@@ -105,15 +105,6 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
             {availabilityChip.label}
           </span>
         )}
-
-        {/* Wishlist heart icon */}
-        <button
-          type="button"
-          aria-label="Add to wishlist"
-          className="absolute right-2 top-2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm text-ocean/40 opacity-0 transition-all duration-200 hover:bg-white hover:text-ocean group-hover:opacity-100"
-        >
-          <Heart className="h-4 w-4" />
-        </button>
 
         <Link {...linkProps} className="absolute inset-0 flex items-center justify-center p-2">
           <img

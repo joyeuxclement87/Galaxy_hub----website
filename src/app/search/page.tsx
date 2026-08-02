@@ -74,11 +74,11 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
               <p className="text-sm text-ocean/50 mb-6 max-w-sm">
                 We couldn&apos;t find any tech items matching &ldquo;<span className="font-semibold text-ocean-deeper">{q}</span>&rdquo;.
               </p>
-              <div className="flex flex-wrap justify-center gap-3">
-                <Link href="/products" className="rounded-btn bg-ocean-deeper h-11 px-5 text-xs font-bold text-white hover:bg-ocean-dark transition-colors shadow-sm">
+              <div className="flex w-full max-w-sm flex-col gap-3 sm:flex-row">
+                <Link href="/products" className="flex h-11 flex-1 items-center justify-center rounded-btn bg-ocean-deeper px-5 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark active:scale-[0.98]">
                   Browse All Products
                 </Link>
-                <Link href="/" className="rounded-btn border border-ocean/15 bg-white px-5 h-11 text-xs font-bold text-ocean-deeper hover:border-ocean/30 hover:bg-white transition-colors">
+                <Link href="/" className="flex h-11 flex-1 items-center justify-center rounded-btn border border-ocean/15 bg-white px-5 text-sm font-bold text-ocean-deeper transition-all duration-250 hover:border-ocean/30 active:scale-[0.98]">
                   Back to Home
                 </Link>
               </div>
