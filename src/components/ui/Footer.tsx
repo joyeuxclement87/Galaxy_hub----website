@@ -43,11 +43,11 @@ function SocialIcon({ href, label, children }: { href: string; label: string; ch
 export function Footer() {
   return (
     <footer className="bg-[#0a1f3a] text-white border-t border-white/[0.06]">
-      <div className="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 sm:py-12">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+      <div className="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 sm:py-14">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-12 lg:gap-10">
           
           {/* Brand Col */}
-          <div className="lg:col-span-5 space-y-4">
+          <div className="sm:col-span-2 lg:col-span-5 space-y-4 flex flex-col items-center text-center sm:items-start sm:text-left pb-6 sm:pb-0 border-b border-white/[0.06] sm:border-b-0">
             <Link href="/" className="inline-flex items-center transition-opacity duration-200 hover:opacity-80">
               <img
                 src="/g-hub logo ii.png"
@@ -55,7 +55,7 @@ export function Footer() {
                 className="h-8 w-auto object-contain select-none"
               />
             </Link>
-            <p className="text-sm leading-relaxed text-white/70 max-w-sm">
+            <p className="text-sm leading-relaxed text-white/70 max-w-xs sm:max-w-sm">
               Rwanda&apos;s premier tech retailer. Genuine smartphones, laptops, audio gear, creator accessories, with express delivery.
             </p>
             {/* Social icons */}
@@ -84,11 +84,11 @@ export function Footer() {
           </div>
 
           {/* Quick Links */}
-          <nav aria-label="Shop links" className="lg:col-span-3 space-y-3">
-            <span className="text-caption font-bold uppercase tracking-[0.18em] text-white/40 block">
+          <nav aria-label="Shop links" className="lg:col-span-3 space-y-3 flex flex-col items-center sm:items-start">
+            <span className="text-caption font-bold uppercase tracking-[0.18em] text-white/40 block text-center sm:text-left">
               Quick Links
             </span>
-            <ul className="space-y-1.5 text-sm text-white/70">
+            <ul className="space-y-1.5 text-sm text-white/70 text-center sm:text-left">
               {[
                 { label: "Browse Products",    href: "/products" },
                 { label: "Deals & Promotions", href: "/deals" },
@@ -105,11 +105,11 @@ export function Footer() {
           </nav>
 
           {/* Contact Details */}
-          <address className="not-italic lg:col-span-4 space-y-3">
-            <span className="text-caption font-bold uppercase tracking-[0.18em] text-white/40 block">
+          <address className="not-italic lg:col-span-4 space-y-3 flex flex-col items-center sm:items-start">
+            <span className="text-caption font-bold uppercase tracking-[0.18em] text-white/40 block text-center sm:text-left">
               Store Information
             </span>
-            <div className="space-y-2 text-sm text-white/70">
+            <div className="space-y-2 text-sm text-white/70 flex flex-col items-center sm:items-start">
               <div className="flex items-start gap-2">
                 <MapPin className="h-3.5 w-3.5 shrink-0 text-accent mt-0.5" />
                 <span>KN 70 St, Kigali, Rwanda</span>
@@ -131,8 +131,19 @@ export function Footer() {
         </div>
 
         {/* Footer Bottom */}
-        <div className="mt-8 pt-5 border-t border-white/[0.06] flex flex-col gap-2 text-sm text-white/60 sm:flex-row sm:items-center sm:justify-between">
-          <span>© 2026 Galaxy Hub Rwanda. All rights reserved.</span>
+        <div className="mt-10 pt-5 border-t border-white/[0.06] flex flex-col items-center gap-3 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-center sm:text-left">
+            © 2026 Galaxy Hub Rwanda. All rights reserved.{" ·"}{" "}
+            Developed by{" "}
+            <a
+              href="https://linktr.ee/carpricorn_gboy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/70 hover:text-white transition-colors underline underline-offset-2 decoration-white/20"
+            >
+              Capricorn Graphics
+            </a>
+          </span>
           <div className="flex items-center gap-3">
             <span>Genuine Tech Guaranteed</span>
             <span>·</span>

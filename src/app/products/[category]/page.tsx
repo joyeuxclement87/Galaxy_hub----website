@@ -4,6 +4,7 @@ import { ChevronRight, Phone } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
 import { CategoryProductGrid } from "@/components/ui/category-product-grid";
+import { SortSelect } from "@/components/ui/SortSelect";
 import { getPublicProductsByCategorySlug } from "@/data/public-products";
 import type { Metadata } from "next";
 
@@ -19,9 +20,11 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   };
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+export default async function CategoryPage({ params, searchParams }: { params: Promise<{ category: string }>, searchParams: Promise<{ [key: string]: string | undefined }> }) {
   const { category: categorySlug } = await params;
-  const result = await getPublicProductsByCategorySlug(categorySlug);
+  const sp = await searchParams;
+  const sort = sp.sort || "newest";
+  const result = await getPublicProductsByCategorySlug(categorySlug, sort);
   if (!result) notFound();
 
   const { category, products } = result;
@@ -80,8 +83,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             </aside>
 
             <div className="flex-1 space-y-8">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-4">
                 <p className="text-sm text-ocean/60">Showing <span className="font-bold text-[#10233D]">{products.length}</span> results</p>
+                <SortSelect currentSort={sort} params={{}} basePath={`/products/${categorySlug}`} />
               </div>
 
               {products.length === 0 ? (

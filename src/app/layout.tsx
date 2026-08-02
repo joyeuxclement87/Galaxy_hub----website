@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import { AppProvider } from "@/context/AppContext";
 import { CartProvider } from "@/context/CartContext";
+import { WhatsAppFloatingButton } from "@/components/ui/WhatsAppFloatingButton";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -77,6 +78,7 @@ export default function RootLayout({
         <AppProvider>
           <CartProvider>{children}</CartProvider>
         </AppProvider>
+        <WhatsAppFloatingButton />
       </body>
     </html>
   );

@@ -127,14 +127,26 @@ export async function getPublicProducts(params: {
     countQuery = countQuery.eq("is_new", is_new);
   }
 
-  // New products (NEW pill) always rank first, then the chosen sort
-  query = query.order("is_new", { ascending: false });
+  // "newest" (default): is_new=true products float to the top, then most recently added.
+  // All other sorts use created_at as a tiebreaker so order is always deterministic.
   switch (sort) {
-    case "price_asc": query = query.order("price", { ascending: true }); break;
-    case "price_desc": query = query.order("price", { ascending: false }); break;
-    case "newest": query = query.order("created_at", { ascending: false }); break;
-    case "name": query = query.order("name", { ascending: true }); break;
-    default: query = query.order("created_at", { ascending: false }); break;
+    case "newest":
+    default:
+      query = query.order("is_new", { ascending: false });
+      query = query.order("created_at", { ascending: false });
+      break;
+    case "price_asc":
+      query = query.order("price", { ascending: true });
+      query = query.order("created_at", { ascending: false });
+      break;
+    case "price_desc":
+      query = query.order("price", { ascending: false });
+      query = query.order("created_at", { ascending: false });
+      break;
+    case "name":
+      query = query.order("name", { ascending: true });
+      query = query.order("created_at", { ascending: false });
+      break;
   }
 
   const from = (page - 1) * pageSize;
@@ -189,6 +201,11 @@ export async function getPublicProducts(params: {
     highlights: toProductHighlights(row.highlights),
     storage_options: toStorageOptions(row.storage_options),
   }));
+
+  // Guarantee case-insensitive A–Z order regardless of DB collation.
+  if (sort === "name") {
+    products.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+  }
 
   return { products, total, categories, brands, categoryCounts, brandCounts };
 }
@@ -272,7 +289,7 @@ export async function getPublicProductBySlug(slug: string) {
   return { product, relatedProducts };
 }
 
-export async function getPublicProductsByCategorySlug(slug: string) {
+export async function getPublicProductsByCategorySlug(slug: string, sort = "newest") {
   const supabase = createClient();
 
   const { data: category } = await supabase
@@ -284,17 +301,37 @@ export async function getPublicProductsByCategorySlug(slug: string) {
 
   if (!category) return null;
 
-  const { data: products } = await supabase
+  let query = supabase
     .from("products")
     .select(`*, category:category_id(id, name, slug), brand:brand_id(id, name, slug, logo_url)`)
     .eq("category_id", category.id)
-    .eq("is_active", true)
-    .order("is_new", { ascending: false })
-    .order("created_at", { ascending: false });
+    .eq("is_active", true);
 
-  return {
-    category,
-    products: (products || []).map((row: ProductWithRelations) => ({
+  // "newest" (default): is_new=true products float to the top, then most recently added.
+  // All other sorts use created_at as a tiebreaker so order is always deterministic.
+  switch (sort) {
+    case "newest":
+    default:
+      query = query.order("is_new", { ascending: false });
+      query = query.order("created_at", { ascending: false });
+      break;
+    case "price_asc":
+      query = query.order("price", { ascending: true });
+      query = query.order("created_at", { ascending: false });
+      break;
+    case "price_desc":
+      query = query.order("price", { ascending: false });
+      query = query.order("created_at", { ascending: false });
+      break;
+    case "name":
+      query = query.order("name", { ascending: true });
+      query = query.order("created_at", { ascending: false });
+      break;
+  }
+
+  const { data: products } = await query;
+
+  const mapped = (products || []).map((row: ProductWithRelations) => ({
       id: row.id,
       slug: row.slug,
       name: row.name,
@@ -312,8 +349,14 @@ export async function getPublicProductsByCategorySlug(slug: string) {
       brand_name: row.brand?.name || null,
       brand_slug: row.brand?.slug || null,
       created_at: row.created_at,
-    })),
-  };
+    }));
+
+  // Guarantee case-insensitive A–Z order regardless of DB collation.
+  if (sort === "name") {
+    mapped.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+  }
+
+  return { category, products: mapped };
 }
 
 export async function getPublicBrandBySlug(slug: string) {

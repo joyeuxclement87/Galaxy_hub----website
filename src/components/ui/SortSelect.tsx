@@ -3,13 +3,13 @@
 import { useCallback } from "react";
 import { ArrowUpDown } from "lucide-react";
 
-function buildHref(params: Record<string, string | number | undefined>) {
+function buildHref(params: Record<string, string | number | undefined>, basePath = "/products") {
   const u = new URLSearchParams();
   Object.entries(params).forEach(([k, v]) => {
     if (v !== undefined && v !== null && String(v) !== "") u.set(k, String(v));
   });
   const s = u.toString();
-  return s ? `/products?${s}` : "/products";
+  return s ? `${basePath}?${s}` : basePath;
 }
 
 const SORT_OPTIONS = [
@@ -22,16 +22,18 @@ const SORT_OPTIONS = [
 export function SortSelect({
   currentSort,
   params,
+  basePath = "/products",
 }: {
   currentSort: string;
   params: Record<string, string>;
+  basePath?: string;
 }) {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const url = buildHref({ ...params, sort: e.target.value, page: 1 });
+      const url = buildHref({ ...params, sort: e.target.value, page: 1 }, basePath);
       window.location.href = url;
     },
-    [params]
+    [params, basePath]
   );
 
   return (
