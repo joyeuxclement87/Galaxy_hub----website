@@ -161,7 +161,7 @@ export default function ProductDetails({ product, relatedProducts }: { product: 
                 <div className="flex items-end gap-3">
                   <div className="font-space text-3xl font-bold text-[#10233D]">{product.currency} {new Intl.NumberFormat("en-US").format(product.price)}</div>
                   {product.originalPrice && <div className="text-sm line-through text-ocean/40">{new Intl.NumberFormat("en-US").format(product.originalPrice)}</div>}
-                  {product.badge && <div className="ml-auto rounded-full bg-rose-50 text-rose-600 px-3 py-1 text-xs font-bold">{product.badge}</div>}
+                  {product.badge && <div className="ml-auto rounded-full bg-rose-50 text-rose-600 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] border border-rose-100/60">{product.badge}</div>}
                 </div>
 
                 <div className="mt-4 grid grid-cols-2 gap-3">

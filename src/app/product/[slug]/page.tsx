@@ -63,9 +63,9 @@ export async function generateMetadata({ params }: ProductPageParams): Promise<M
 const formatPrice = (v: number) => new Intl.NumberFormat("en-US").format(v);
 
 const stockLabel: Record<string, { label: string; chip: string; dot: string }> = {
-  available:    { label: "In Stock",     chip: "bg-emerald-50 text-emerald-700 border border-emerald-100", dot: "bg-emerald-500" },
-  coming_soon:  { label: "Coming Soon",  chip: "bg-amber-50 text-amber-700 border border-amber-100",       dot: "bg-amber-400" },
-  out_of_stock: { label: "Out of Stock", chip: "bg-red-50 text-red-600 border border-red-100",             dot: "bg-red-400" },
+  available:    { label: "In Stock",     chip: "bg-emerald-50 text-emerald-700 border border-emerald-100/60", dot: "bg-emerald-500" },
+  coming_soon:  { label: "Coming Soon",  chip: "bg-amber-50 text-amber-700 border border-amber-100/60",       dot: "bg-amber-400" },
+  out_of_stock: { label: "Out of Stock", chip: "bg-red-50 text-red-600 border border-red-100/60",               dot: "bg-red-400" },
 };
 
 export default async function ProductPage({ params }: ProductPageParams) {
@@ -194,10 +194,10 @@ export default async function ProductPage({ params }: ProductPageParams) {
 
                {/* Stock status */}
                <div className="mt-2.5">
-                 <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-caption font-semibold ${stock.chip}`}>
-                   <span className={`h-1.5 w-1.5 rounded-full ${stock.dot}`} aria-hidden="true" />
-                   {stock.label}
-                 </span>
+                <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-[0.08em] ${stock.chip}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${stock.dot}`} aria-hidden="true" />
+                    {stock.label}
+                  </span>
                </div>
 
                 {/* Storage + action buttons — hidden on mobile (shown in sticky bar) */}

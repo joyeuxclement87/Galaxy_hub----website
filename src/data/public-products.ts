@@ -357,16 +357,83 @@ export async function getPublicBrandBySlug(slug: string) {
 
 export async function searchProducts(query: string) {
   const supabase = createClient();
-  const term = `%${query}%`;
+  const rawTerm = query.trim();
+  if (!rawTerm) return [];
+
+  // Match pattern: case-insensitive containing phrase or exact terms
+  const term = `%${rawTerm}%`;
 
   const { data } = await supabase
     .from("products")
     .select(`id, slug, name, price, old_price, main_image_url, stock_status, rating, review_count, short_description, category:category_id(name), brand:brand_id(name)`)
     .eq("is_active", true)
     .or(`name.ilike.${term},short_description.ilike.${term}`)
-    .limit(20);
+    .limit(40);
 
-  return (data || []).map((row: SearchProductRow) => ({
+  const lowerTerm = rawTerm.toLowerCase();
+
+  // Also check if any category or brand matches exact query term
+  const { data: catData } = await supabase
+    .from("categories")
+    .select("id")
+    .ilike("name", term)
+    .eq("is_active", true);
+
+  const { data: brandData } = await supabase
+    .from("brands")
+    .select("id")
+    .ilike("name", term)
+    .eq("is_active", true);
+
+  let additionalByCatOrBrand: SearchProductRow[] = [];
+  const catIds = (catData || []).map((c) => c.id);
+  const brandIds = (brandData || []).map((b) => b.id);
+
+  if (catIds.length > 0 || brandIds.length > 0) {
+    let orConditions: string[] = [];
+    if (catIds.length > 0) orConditions.push(`category_id.in.(${catIds.join(",")})`);
+    if (brandIds.length > 0) orConditions.push(`brand_id.in.(${brandIds.join(",")})`);
+
+    const { data: extra } = await supabase
+      .from("products")
+      .select(`id, slug, name, price, old_price, main_image_url, stock_status, rating, review_count, short_description, category:category_id(name), brand:brand_id(name)`)
+      .eq("is_active", true)
+      .or(orConditions.join(","))
+      .limit(40);
+
+    additionalByCatOrBrand = (extra || []) as SearchProductRow[];
+  }
+
+  // Combine and deduplicate
+  const combinedMap = new Map<string, SearchProductRow>();
+  ((data || []) as SearchProductRow[]).forEach((row) => combinedMap.set(row.id, row));
+  additionalByCatOrBrand.forEach((row) => combinedMap.set(row.id, row));
+
+  const allResults = Array.from(combinedMap.values());
+
+  // Rank exact/prefix matches higher regardless of capitalization
+  allResults.sort((a, b) => {
+    const aName = a.name.toLowerCase();
+    const bName = b.name.toLowerCase();
+    const aBrand = (a.brand?.name || "").toLowerCase();
+    const bBrand = (b.brand?.name || "").toLowerCase();
+    const aCat = (a.category?.name || "").toLowerCase();
+    const bCat = (b.category?.name || "").toLowerCase();
+
+    const aExact = aName === lowerTerm || aBrand === lowerTerm || aCat === lowerTerm;
+    const bExact = bName === lowerTerm || bBrand === lowerTerm || bCat === lowerTerm;
+    if (aExact && !bExact) return -1;
+    if (!aExact && bExact) return 1;
+
+    const aStarts = aName.startsWith(lowerTerm) || aBrand.startsWith(lowerTerm) || aCat.startsWith(lowerTerm);
+    const bStarts = bName.startsWith(lowerTerm) || bBrand.startsWith(lowerTerm) || bCat.startsWith(lowerTerm);
+    if (aStarts && !bStarts) return -1;
+    if (!aStarts && bStarts) return 1;
+
+    return aName.localeCompare(bName);
+  });
+
+  return allResults.slice(0, 24).map((row) => ({
     id: row.id,
     slug: row.slug,
     name: row.name,

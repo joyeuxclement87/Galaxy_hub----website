@@ -17,8 +17,14 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const fuse = new Fuse(PRODUCTS, {
-    keys: ["title", "tagline", "description", "category", "brand", "specifications"],
-    threshold: 0.3,
+    keys: [
+      { name: "title", weight: 0.5 },
+      { name: "brand", weight: 0.25 },
+      { name: "category", weight: 0.15 },
+      { name: "tagline", weight: 0.1 },
+    ],
+    threshold: 0.25,
+    ignoreLocation: true,
   });
 
   const categories = ["All", ...Array.from(new Set(PRODUCTS.map((p) => p.category)))];
@@ -27,7 +33,28 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
   let displayedProducts = PRODUCTS;
 
   if (searchQuery.trim() !== "") {
-    displayedProducts = fuse.search(searchQuery).map((result) => result.item);
+    const rawTerm = searchQuery.trim().toLowerCase();
+    const fuseResults = fuse.search(searchQuery).map((result) => result.item);
+    
+    // Sort exact & prefix matches first regardless of capitalization
+    displayedProducts = fuseResults.sort((a, b) => {
+      const aTitle = a.title.toLowerCase();
+      const bTitle = b.title.toLowerCase();
+      const aBrand = a.brand.toLowerCase();
+      const bBrand = b.brand.toLowerCase();
+
+      const aExact = aTitle === rawTerm || aBrand === rawTerm;
+      const bExact = bTitle === rawTerm || bBrand === rawTerm;
+      if (aExact && !bExact) return -1;
+      if (!aExact && bExact) return 1;
+
+      const aStarts = aTitle.startsWith(rawTerm) || aBrand.startsWith(rawTerm);
+      const bStarts = bTitle.startsWith(rawTerm) || bBrand.startsWith(rawTerm);
+      if (aStarts && !bStarts) return -1;
+      if (!aStarts && bStarts) return 1;
+
+      return 0;
+    });
   }
 
   if (selectedCategory !== "All") {
@@ -126,12 +153,30 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
           ))}
         </div>
       ) : (
-        <div className="space-y-3 rounded-card border border-dashed border-ocean/[0.08] bg-white/50 backdrop-blur-sm py-16 text-center">
-          <AlertCircle className="mx-auto h-10 w-10 text-ocean/30" />
-          <h3 className="font-display text-lg font-bold text-ocean-deeper">No shop items matched</h3>
-          <p className="mx-auto max-w-md text-sm text-ocean/55">
-            We couldn&apos;t find matches for your search. Try resetting filters or search terms.
-          </p>
+        <div className="space-y-4 rounded-card border border-ocean/10 bg-white/80 backdrop-blur-md p-8 sm:p-12 text-center shadow-sm max-w-xl mx-auto my-6">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-ocean/5 text-ocean">
+            <AlertCircle className="h-7 w-7" />
+          </div>
+          <div>
+            <h3 className="font-display text-lg font-bold text-ocean-deeper">
+              No matching products found {searchQuery ? `for "${searchQuery}"` : ""}
+            </h3>
+            <p className="mt-1.5 text-xs sm:text-sm text-ocean/60 leading-relaxed">
+              We couldn&apos;t find any tech items matching your search. Search terms are case-insensitive — try checking for typos or searching by brand like &ldquo;Samsung&rdquo; or &ldquo;Apple&rdquo;.
+            </p>
+          </div>
+          <div className="pt-2 flex flex-wrap justify-center gap-3">
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategory("All");
+                setSelectedBrand("All");
+              }}
+              className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-5 h-10 text-xs font-bold text-white uppercase tracking-wider transition-all hover:bg-ocean-dark shadow-sm"
+            >
+              Reset Filters &amp; Search
+            </button>
+          </div>
         </div>
       )}
     </section>
