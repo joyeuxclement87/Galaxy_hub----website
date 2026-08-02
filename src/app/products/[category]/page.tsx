@@ -55,7 +55,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               </span>
               <h1 className="font-clash text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">{category.name}</h1>
               {category.description && (
-                <p className="text-sm md:text-base leading-relaxed text-white/80 font-manrope max-w-xl">{category.description}</p>
+                <p className="text-sm md:text-base leading-relaxed text-white/80 max-w-xl">{category.description}</p>
               )}
             </div>
           </div>
@@ -69,7 +69,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                   <Phone className="h-5 w-5 text-ocean shrink-0 mt-0.5" />
                   <div className="space-y-2">
                     <h4 className="text-sm font-bold text-[#10233D]">Need Help Choosing?</h4>
-                    <p className="text-xs text-ocean/70 font-manrope">Call our tech experts in Kigali for personalized recommendations.</p>
+                    <p className="text-xs text-ocean/70">Call our tech experts in Kigali for personalized recommendations.</p>
                     <a href="tel:+250785288910" className="inline-flex items-center gap-1.5 text-xs font-bold text-ocean hover:text-ocean-dark transition-colors mt-2">
                       <Phone className="h-3 w-3" />
                       +250 785 288 910
@@ -81,7 +81,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
 
             <div className="flex-1 space-y-8">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-ocean/60 font-manrope">Showing <span className="font-bold text-[#10233D]">{products.length}</span> results</p>
+                <p className="text-sm text-ocean/60">Showing <span className="font-bold text-[#10233D]">{products.length}</span> results</p>
               </div>
 
               {products.length === 0 ? (

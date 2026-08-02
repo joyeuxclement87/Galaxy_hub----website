@@ -60,7 +60,7 @@ export function FAQSupport() {
           <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-sm leading-[1.8] text-ocean-deeper/70 font-manrope">
+          <p className="text-sm leading-[1.8] text-ocean-deeper/70">
             Clear answers about ordering, delivery, payments, and support before you place your next request.
           </p>
         </div>
@@ -132,7 +132,7 @@ export function FAQSupport() {
                       className="overflow-hidden"
                     >
                       <div className="pb-5 sm:pb-6 pl-8 sm:pl-9 border-t border-ocean/[0.06] pt-4">
-                        <p className="text-sm leading-[1.85] text-ocean-deeper/80 font-manrope font-medium">
+                        <p className="text-sm leading-[1.85] text-ocean-deeper/80 font-medium">
                           {item.a}
                         </p>
                       </div>
@@ -145,13 +145,13 @@ export function FAQSupport() {
         </div>
 
         <div className="mt-10 flex flex-col gap-5 rounded-2xl border border-ocean/10 bg-white/80 backdrop-blur-sm p-6 sm:flex-row sm:items-center sm:justify-between shadow-sm">
-          <div className="flex items-center gap-3 text-sm text-ocean-deeper/80 font-manrope">
+          <div className="flex items-center gap-3 text-sm text-ocean-deeper/80">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-ocean/10 text-ocean">
               <Phone className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-xs font-bold text-ocean-deeper/45 uppercase tracking-wider font-manrope">Still have questions?</p>
-              <a href="tel:+250785288910" className="text-sm font-bold text-ocean hover:text-ocean-dark transition-colors font-manrope">
+              <p className="text-xs font-bold text-ocean-deeper/45 uppercase tracking-wider">Still have questions?</p>
+              <a href="tel:+250785288910" className="text-sm font-bold text-ocean hover:text-ocean-dark transition-colors">
                 +250 785 288 910
               </a>
             </div>

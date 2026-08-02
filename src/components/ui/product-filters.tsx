@@ -57,7 +57,7 @@ export function ProductFilters({
                   <Link
                     href={option.href}
                     className={cn(
-                      "flex items-center justify-between gap-2 rounded-btn px-3 py-2.5 text-[13px] transition-all duration-200",
+                      "flex items-center justify-between gap-2 rounded-btn px-3 py-2.5 text-body-sm transition-all duration-200",
                       option.active
                         ? "bg-ocean text-white font-semibold shadow-btn"
                         : "text-ocean-deeper/65 hover:bg-ocean/5 hover:text-ocean-deeper font-medium"
@@ -236,7 +236,7 @@ function FilterDrawerPortal({
                             href={option.href}
                             onClick={onClose}
                             className={cn(
-                              "flex items-center justify-between gap-2 rounded-btn px-3 py-3 text-[13px] transition-all duration-200 min-h-[44px]",
+                              "flex items-center justify-between gap-2 rounded-btn px-3 py-3 text-body-sm transition-all duration-200 min-h-[44px]",
                               option.active
                                 ? "bg-ocean text-white font-semibold shadow-btn"
                                 : "text-ocean-deeper/65 hover:bg-ocean/5 hover:text-ocean-deeper font-medium"

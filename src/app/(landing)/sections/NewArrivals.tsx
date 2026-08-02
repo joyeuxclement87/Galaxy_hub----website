@@ -26,7 +26,7 @@ export function NewArrivals({ products, onReserve }: NewArrivalsProps) {
           <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper mt-3">
             Fresh Out Of The Box
           </h2>
-          <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/60 font-manrope max-w-xl">
+          <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/60 max-w-xl">
             The latest stock to land at our Kigali shop — inspect it in person before you pay.
           </p>
         </div>

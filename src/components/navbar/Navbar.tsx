@@ -72,7 +72,7 @@ function SearchOverlay({
                 type="text"
                 defaultValue={searchQuery}
                 placeholder="Search phones, laptops, accessories…"
-                className="w-full border-none bg-transparent text-base font-medium text-ocean-deeper placeholder:text-ocean/30 focus:outline-none font-manrope"
+                className="w-full border-none bg-transparent text-base font-medium text-ocean-deeper placeholder:text-ocean/30 focus:outline-none"
                 autoComplete="off"
               />
             </form>
@@ -96,7 +96,7 @@ function SearchOverlay({
                 <button
                   key={chip}
                   onClick={() => onSuggestion(chip)}
-                  className="flex items-center gap-1.5 rounded-btn border border-ocean/10 bg-white px-4 py-2 text-sm font-semibold text-ocean-deeper/70 transition-all duration-200 hover:border-ocean/25 hover:text-ocean hover:bg-ocean/[0.03] cursor-pointer font-manrope"
+                  className="flex items-center gap-1.5 rounded-btn border border-ocean/10 bg-white px-4 py-2 text-sm font-semibold text-ocean-deeper/70 transition-all duration-200 hover:border-ocean/25 hover:text-ocean hover:bg-ocean/[0.03] cursor-pointer"
                 >
                   {chip}
                   <ArrowRight className="h-3 w-3 opacity-40" />
@@ -204,7 +204,7 @@ function CartDropdown({
                         />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-[13px] font-semibold text-ocean-deeper">
+                        <p className="truncate text-body-sm font-semibold text-ocean-deeper">
                           {item.product!.name}
                           {item.variant && (
                             <span className="ml-1.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-1.5 py-0.5 text-xs font-bold text-ocean align-middle">
@@ -571,7 +571,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                   href={getHref(link.id)}
                   onClick={(e) => handleNavClick(e, link.id)}
                   className={cn(
-                    "relative px-3.5 py-2 text-[13px] font-display font-bold tracking-tight transition-all duration-200 rounded-xl",
+                    "relative px-3.5 py-2 text-body-sm font-display font-bold tracking-tight transition-all duration-200 rounded-xl",
                     isActive(link.id)
                       ? "text-ocean bg-ocean/[0.08]"
                       : "text-ocean-deeper/65 hover:text-ocean hover:bg-ocean/[0.05]"
@@ -685,7 +685,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                     href={getHref(link.id)}
                     onClick={(e) => handleNavClick(e, link.id)}
                     className={cn(
-                      "flex items-center gap-2 rounded-xl px-4 py-3.5 text-[15px] font-display font-bold text-ocean-deeper/75 transition-all duration-200 hover:bg-ocean/[0.04] hover:text-ocean",
+                      "flex items-center gap-2 rounded-xl px-4 py-3.5 text-body font-display font-bold text-ocean-deeper/75 transition-all duration-200 hover:bg-ocean/[0.04] hover:text-ocean",
                       isActive(link.id) && "text-ocean bg-ocean/[0.08]"
                     )}
                   >

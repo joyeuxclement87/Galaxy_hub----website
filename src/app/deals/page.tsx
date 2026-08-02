@@ -26,13 +26,13 @@ export default function DealsPage() {
 
         {/* Section Header */}
         <div className="space-y-4 max-w-2xl">
-          <span className="block text-caption font-bold uppercase tracking-[0.24em] text-accent font-manrope">
+          <span className="block text-caption font-bold uppercase tracking-[0.24em] text-accent">
             EXCLUSIVE OFFERS
           </span>
           <h1 className="font-clash text-4xl font-bold leading-tight text-[#10233D] sm:text-5xl">
             Today&apos;s Best Tech Deals
           </h1>
-          <p className="text-base leading-relaxed text-[#10233D]/65 font-manrope">
+          <p className="text-base leading-relaxed text-[#10233D]/65">
             Explore premium promotions, bundles, and student offers on genuine gadgets and creator gear across Rwanda.
           </p>
         </div>
@@ -69,14 +69,14 @@ export default function DealsPage() {
                   <h3 className="font-clash text-xl font-bold text-[#10233D] tracking-tight">
                     {deal.title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-[#10233D]/60 font-manrope">
+                  <p className="text-sm leading-relaxed text-[#10233D]/60">
                     {deal.description}
                   </p>
                 </div>
               </div>
 
               {/* Action */}
-              <div className="mt-6 flex items-center gap-1.5 text-xs font-bold text-ocean font-manrope">
+              <div className="mt-6 flex items-center gap-1.5 text-xs font-bold text-ocean">
                 <span>{deal.ctaText}</span>
                 <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
               </div>

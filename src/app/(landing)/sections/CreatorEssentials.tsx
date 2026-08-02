@@ -15,7 +15,7 @@ export function CreatorEssentials() {
       <div className="mx-auto max-w-[1320px]">
         <div className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div className="max-w-xl space-y-3">
-            <span className="block text-caption font-bold uppercase tracking-[0.28em] text-ocean-light/60 font-manrope">
+            <span className="block text-caption font-bold uppercase tracking-[0.28em] text-ocean-light/60">
               CREATOR ESSENTIALS
             </span>
             <h2
@@ -24,7 +24,7 @@ export function CreatorEssentials() {
             >
               For Creators Who Refuse to Compromise.
             </h2>
-            <p className="text-sm leading-[1.8] text-white/70 font-manrope">
+            <p className="text-sm leading-[1.8] text-white/70">
               Ring lights, tripods, microphones, phone holders, and power banks — everything you need to create beautiful content, available in Kigali.
             </p>
           </div>
@@ -57,7 +57,7 @@ export function CreatorEssentials() {
               </div>
               <div className="p-4">
                 <h3 className="font-clash text-sm font-bold text-white sm:text-base">{cat.name}</h3>
-                <p className="mt-0.5 text-xs text-white/60 font-manrope">{cat.count} items</p>
+                <p className="mt-0.5 text-xs text-white/60">{cat.count} items</p>
               </div>
             </Link>
           ))}
@@ -70,7 +70,7 @@ export function CreatorEssentials() {
             </div>
             <div>
               <p className="font-clash text-base font-bold text-white">{CREATOR_BUNDLE.name}</p>
-              <p className="text-sm text-white/70 font-manrope">{CREATOR_BUNDLE.description}</p>
+              <p className="text-sm text-white/70">{CREATOR_BUNDLE.description}</p>
             </div>
           </div>
           <Link

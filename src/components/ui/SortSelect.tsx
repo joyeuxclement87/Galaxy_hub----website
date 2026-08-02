@@ -44,7 +44,7 @@ export function SortSelect({
         name="sort"
         value={currentSort}
         onChange={handleChange}
-        className="border-none bg-transparent text-[13px] font-semibold text-ocean-deeper cursor-pointer focus:outline-none min-w-[130px]"
+        className="border-none bg-transparent text-body-sm font-semibold text-ocean-deeper cursor-pointer focus:outline-none min-w-[130px]"
       >
         {SORT_OPTIONS.map((opt) => (
           <option key={opt.value} value={opt.value}>

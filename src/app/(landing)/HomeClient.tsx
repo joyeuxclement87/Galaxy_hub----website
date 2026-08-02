@@ -113,13 +113,13 @@ function DealCountdown({
     return (
       <div className="rounded-card border border-red-500/15 bg-red-500/[0.04] px-4 py-3">
         <div className="flex items-center justify-between gap-3">
-          <span className="text-xs font-bold uppercase tracking-[0.18em] text-red-500/70 font-manrope">OFFER ENDED</span>
+          <span className="text-xs font-bold uppercase tracking-[0.18em] text-red-500/70">OFFER ENDED</span>
           {endDate && (
-            <span className="text-caption font-bold text-red-500/60 font-manrope">Ended {formatDayTime(endDate)}</span>
+            <span className="text-caption font-bold text-red-500/60">Ended {formatDayTime(endDate)}</span>
           )}
         </div>
         {(startDate || endDate) && (
-          <p className="mt-1.5 text-caption font-semibold text-ocean/40 font-manrope">
+          <p className="mt-1.5 text-caption font-semibold text-ocean/40">
             {startDate && <span>Starts {formatDayTime(startDate)}</span>}
             {startDate && endDate && <span className="mx-1.5 text-ocean/20">→</span>}
             {endDate && <span>Ends {formatDayTime(endDate)}</span>}
@@ -132,9 +132,9 @@ function DealCountdown({
   return (
     <div className="rounded-card border border-ocean/[0.08] bg-ivory/70 px-4 py-3">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-xs font-bold uppercase tracking-[0.2em] text-ocean-deeper/40 font-manrope">{label}</span>
+        <span className="text-xs font-bold uppercase tracking-[0.2em] text-ocean-deeper/40">{label}</span>
         {endDate && (
-          <span className="text-caption font-bold text-ocean/60 font-manrope">
+          <span className="text-caption font-bold text-ocean/60">
             Ends <span className="font-clash text-xs text-ocean-deeper">{formatDayTime(endDate)}</span>
           </span>
         )}
@@ -151,7 +151,7 @@ function DealCountdown({
               <span className={cn("font-clash font-bold leading-none text-ocean-deeper", large ? "text-2xl sm:text-3xl" : "text-lg")}>
                 {unit.value}
               </span>
-              <span className={cn("mt-1 font-manrope text-caption font-bold uppercase tracking-[0.14em] text-ocean/35", large && "text-xs")}>
+              <span className={cn("mt-1 text-caption font-bold uppercase tracking-[0.14em] text-ocean/35", large && "text-xs")}>
                 {unit.label}
               </span>
             </div>
@@ -161,7 +161,7 @@ function DealCountdown({
       {(startDate || endDate) && (
         <div className="mt-2.5 flex items-center justify-between gap-3 border-t border-ocean/[0.06] pt-2">
           {startDate ? (
-            <span className="min-w-0 truncate text-caption font-semibold text-ocean/45 font-manrope">
+            <span className="min-w-0 truncate text-caption font-semibold text-ocean/45">
               <span className="mr-1 text-caption font-bold uppercase tracking-wider text-ocean/30">Starts</span>
               {formatDayTime(startDate)}
             </span>
@@ -170,7 +170,7 @@ function DealCountdown({
           )}
           <span className="shrink-0 text-ocean/20">→</span>
           {endDate ? (
-            <span className="min-w-0 truncate text-caption font-bold text-ocean-deeper/80 font-manrope">
+            <span className="min-w-0 truncate text-caption font-bold text-ocean-deeper/80">
               <span className="mr-1 text-caption font-bold uppercase tracking-wider text-ocean/40">Ends</span>
               {formatDayTime(endDate)}
             </span>
@@ -288,7 +288,7 @@ export default function HomeClient({ data }: HomeClientProps) {
             <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ocean-deeper mt-4">
               Today&apos;s Best Tech Deals
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/60 font-manrope max-w-xl">
+            <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/60 max-w-xl">
               Grab genuine smartphones, laptops and accessories at unbeatable prices across Rwanda.
             </p>
           </div>
@@ -339,7 +339,7 @@ export default function HomeClient({ data }: HomeClientProps) {
                       {deal.title}
                     </h3>
                     {deal.description && (
-                      <p className={cn("mt-1 text-xs leading-relaxed text-ocean/55 font-manrope line-clamp-2", displayDeals.length === 1 && "text-sm sm:text-base line-clamp-3 mt-3")}>
+                      <p className={cn("mt-1 text-xs leading-relaxed text-ocean/55 line-clamp-2", displayDeals.length === 1 && "text-sm sm:text-base line-clamp-3 mt-3")}>
                         {deal.description}
                       </p>
                     )}
@@ -362,7 +362,7 @@ export default function HomeClient({ data }: HomeClientProps) {
           ) : (
             <div className="mt-10 flex flex-col items-center justify-center rounded-card border border-dashed border-ocean/[0.08] bg-white/50 py-20 text-center">
               <AlertCircle className="mx-auto h-12 w-12 text-ocean/30" />
-              <p className="mt-4 text-sm text-ocean/45 font-manrope">No active deals at this time. Check back soon!</p>
+              <p className="mt-4 text-sm text-ocean/45">No active deals at this time. Check back soon!</p>
             </div>
           )}
         </div>
@@ -394,7 +394,7 @@ export default function HomeClient({ data }: HomeClientProps) {
                       else if (tab === "Deals") { setShowDealsOnly(true); }
                       else                 { setSelectedCategory(tab);  setShowDealsOnly(false); }
                     }}
-                    className={`whitespace-nowrap rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer font-manrope ${
+                    className={`whitespace-nowrap rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer ${
                       isActive ? "bg-ocean text-white shadow-sm" : "text-ocean/40 hover:text-ocean hover:bg-ocean/4"
                     }`}
                   >
@@ -404,8 +404,8 @@ export default function HomeClient({ data }: HomeClientProps) {
               })}
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <span className="text-xs text-ocean/40 font-manrope">Sort by:</span>
-              <select className="bg-transparent border-none text-xs font-bold text-ocean-deeper focus:ring-0 outline-none cursor-pointer font-manrope">
+              <span className="text-xs text-ocean/40">Sort by:</span>
+              <select className="bg-transparent border-none text-xs font-bold text-ocean-deeper focus:ring-0 outline-none cursor-pointer">
                 <option>Popular</option>
                 <option>Newest</option>
                 <option>Price: Low to High</option>
@@ -435,7 +435,7 @@ export default function HomeClient({ data }: HomeClientProps) {
             <div className="space-y-4 rounded-2xl border border-dashed border-black/6 bg-white/40 py-24 text-center">
               <AlertCircle className="mx-auto h-10 w-10 text-ocean/15" />
               <h3 className="font-clash text-lg font-bold text-ocean-deeper">No products found</h3>
-              <p className="mx-auto max-w-sm text-sm text-ocean/45 font-manrope">
+              <p className="mx-auto max-w-sm text-sm text-ocean/45">
                 We couldn&apos;t find matches for your current filters.
               </p>
             </div>

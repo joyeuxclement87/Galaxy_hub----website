@@ -35,7 +35,7 @@ function BrandLogoCard({ brand, index }: { brand: BrandCatalogItem; index: numbe
       </div>
       <div className="whitespace-nowrap pr-1">
         <p className="text-sm font-bold text-ocean-deeper leading-tight">{brand.name}</p>
-        <p className="text-xs text-ocean-deeper/50 font-manrope leading-tight">{brand.category}</p>
+        <p className="text-xs text-ocean-deeper/50 leading-tight">{brand.category}</p>
       </div>
     </div>
   );
@@ -61,7 +61,7 @@ export function Brands({ brands }: BrandsProps) {
           <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
             Trusted Technology Brands
           </h2>
-          <p className="text-sm leading-[1.8] text-ocean-deeper/60 font-manrope">
+          <p className="text-sm leading-[1.8] text-ocean-deeper/60">
             A showcase of the genuine technology brands stocked at Galaxy Hub, available in Kigali and delivered across Rwanda.
           </p>
         </div>

@@ -22,7 +22,7 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
           <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
             Loved By Tech Users In Rwanda
           </h2>
-          <p className="text-sm leading-[1.8] text-ocean-deeper/60 font-manrope">
+          <p className="text-sm leading-[1.8] text-ocean-deeper/60">
             Real experiences from customers who purchased smartphones, accessories, and technology products from Galaxy Hub.
           </p>
         </div>
@@ -37,7 +37,7 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
                     <Star key={i} className="h-4 w-4 fill-current" />
                   ))}
                 </div>
-                <p className="mt-1.5 text-xs text-ocean-deeper/55 font-manrope">
+                <p className="mt-1.5 text-xs text-ocean-deeper/55">
                   Based on customer reviews across Rwanda
                 </p>
               </div>
@@ -46,7 +46,7 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
             <div className="mt-10 flex-1">
               {STATS.map((stat, index) => (
                 <div key={stat.label} className="flex items-baseline justify-between gap-4 border-t border-ocean/10 py-4 first:border-t">
-                  <span className="text-sm text-ocean-deeper/55 font-manrope">{stat.label}</span>
+                  <span className="text-sm text-ocean-deeper/55">{stat.label}</span>
                   <span className="font-clash text-2xl font-bold text-ocean-deeper">{stat.value}</span>
                 </div>
               ))}
@@ -73,7 +73,7 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
                       )}
                       <div>
                         <h3 className="text-sm font-bold text-ocean-deeper">{review.author}</h3>
-                        <p className="text-xs text-ocean-deeper/55 font-manrope">{review.location ?? review.role}</p>
+                        <p className="text-xs text-ocean-deeper/55">{review.location ?? review.role}</p>
                       </div>
                     </div>
                     {review.verified && (
@@ -90,12 +90,12 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
                     ))}
                   </div>
 
-                  <p className="mt-3 flex-1 text-sm leading-[1.75] text-ocean-deeper/60 font-manrope">
+                  <p className="mt-3 flex-1 text-sm leading-[1.75] text-ocean-deeper/60">
                     &ldquo;{review.content}&rdquo;
                   </p>
 
                   {review.purchasedProduct && (
-                    <p className="mt-3 text-caption font-bold uppercase tracking-[0.14em] text-ocean/60 font-manrope">
+                    <p className="mt-3 text-caption font-bold uppercase tracking-[0.14em] text-ocean/60">
                       Purchased: {review.purchasedProduct}
                     </p>
                   )}
@@ -116,7 +116,7 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
         </div>
 
         <div className="mt-14 flex flex-col gap-4 border-t border-ocean/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-ocean-deeper/60 font-manrope">
+          <p className="text-sm text-ocean-deeper/60">
             Trusted by customers ordering phones, accessories, and gadgets across Rwanda.
           </p>
           <Link

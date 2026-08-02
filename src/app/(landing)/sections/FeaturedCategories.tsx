@@ -87,7 +87,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
                     {cat.name}
                   </h3>
                   {cat.productCount > 0 && (
-                    <p className="mt-1 text-xs font-semibold text-white/65 font-manrope">
+                    <p className="mt-1 text-xs font-semibold text-white/65">
                       {cat.productCount}+ Products
                     </p>
                   )}

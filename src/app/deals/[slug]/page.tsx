@@ -62,7 +62,7 @@ export default function DealDetailPage() {
       <div className="flex min-h-screen items-center justify-center pt-24">
         <div className="text-center space-y-4">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-ocean border-t-transparent mx-auto" />
-          <p className="text-sm font-medium text-ocean/60 font-manrope">Activating {deal?.title || "Deal Offer"}...</p>
+          <p className="text-sm font-medium text-ocean/60">Activating {deal?.title || "Deal Offer"}...</p>
         </div>
       </div>
     </div>

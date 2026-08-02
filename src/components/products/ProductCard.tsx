@@ -162,7 +162,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
           ) : (
             <div>
               <div className="flex items-end gap-2">
-                <span className="font-display text-[15px] font-bold text-ocean-deeper leading-none">
+                <span className="font-display text-body font-bold text-ocean-deeper leading-none">
                   {product.currency} {formattedPrice}
                 </span>
                 {product.originalPrice && (

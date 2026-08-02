@@ -139,7 +139,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
         <div className="mx-auto max-w-330 px-4 sm:px-6 md:px-12">
 
           {/* Breadcrumbs */}
-          <nav className="flex items-center gap-1.5 text-xs font-medium text-ocean/45 font-manrope">
+          <nav className="flex items-center gap-1.5 text-xs font-medium text-ocean/45">
             <Link href="/" className="hover:text-ocean transition-colors">Home</Link>
             <ChevronRight className="h-3 w-3" />
             <span className="text-ocean-deeper">{q ? "Search Results" : "Products"}</span>
@@ -154,7 +154,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                   {q ? `Results for "${q}"` : "Find Your Next Device"}
                 </h1>
                 {!q && (
-                  <p className="mt-2 text-sm leading-relaxed text-ocean-deeper/55 font-manrope max-w-xl">
+                  <p className="mt-2 text-sm leading-relaxed text-ocean-deeper/55 max-w-xl">
                     Genuine smartphones, laptops, accessories & audio — in Kigali, delivered across Rwanda.
                   </p>
                 )}
@@ -193,7 +193,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                   name="q"
                   defaultValue={q}
                   placeholder="Search products, brands, categories…"
-                  className="w-full rounded-btn border border-ocean/8 bg-white pl-11 pr-10 py-2.5 text-sm text-ocean-deeper placeholder:text-ocean/25 focus:border-ocean/30 focus:outline-none focus:ring-2 focus:ring-ocean/6 font-manrope"
+                  className="w-full rounded-btn border border-ocean/8 bg-white pl-11 pr-10 py-2.5 text-sm text-ocean-deeper placeholder:text-ocean/25 focus:border-ocean/30 focus:outline-none focus:ring-2 focus:ring-ocean/6"
                 />
                 {q && (
                   <Link
@@ -271,7 +271,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
               <div className="flex-1 min-w-0">
                 {/* Results count + page info */}
                 <div className="mb-5 flex items-center justify-between">
-                  <div className="text-xs text-ocean/50 font-manrope">
+                  <div className="text-xs text-ocean/50">
                     {result.total > 0 ? (
                       <>
                         Showing{" "}
@@ -284,7 +284,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                     )}
                   </div>
                   {totalPages > 1 && (
-                    <div className="hidden sm:block text-xs text-ocean/40 font-manrope">
+                    <div className="hidden sm:block text-xs text-ocean/40">
                       Page {page} of {totalPages}
                     </div>
                   )}
@@ -308,7 +308,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                       <Search className="h-6 w-6 text-ocean/25" />
                     </div>
                     <h3 className="font-display text-lg font-bold text-ocean-deeper mt-5">No products found</h3>
-                    <p className="mt-2 text-sm text-ocean/50 font-manrope max-w-xs">
+                    <p className="mt-2 text-sm text-ocean/50 max-w-xs">
                       Try a different search term or clear your filters to browse all products.
                     </p>
                     <Link

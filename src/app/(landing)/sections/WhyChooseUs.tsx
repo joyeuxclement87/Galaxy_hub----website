@@ -28,7 +28,7 @@ export function WhyChooseUs() {
           <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
             Built On Trust, Not Just Transactions.
           </h2>
-          <p className="text-sm leading-[1.8] text-ocean-deeper/60 font-manrope">
+          <p className="text-sm leading-[1.8] text-ocean-deeper/60">
             We&apos;re a Kigali-based shop that customers keep coming back to — here&apos;s what sets Galaxy Hub apart.
           </p>
         </div>
@@ -43,7 +43,7 @@ export function WhyChooseUs() {
                 <span className="h-px flex-1 bg-ocean/15" />
               </div>
               <h3 className="mt-5 font-clash text-base font-bold text-ocean-deeper">{reason.title}</h3>
-              <p className="mt-1.5 text-sm leading-[1.7] text-ocean-deeper/60 font-manrope">{reason.description}</p>
+              <p className="mt-1.5 text-sm leading-[1.7] text-ocean-deeper/60">{reason.description}</p>
             </div>
           ))}
         </div>
