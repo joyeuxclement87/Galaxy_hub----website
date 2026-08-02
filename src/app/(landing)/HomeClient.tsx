@@ -420,45 +420,10 @@ export default function HomeClient({ data }: HomeClientProps) {
               </h2>
             </div>
 
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-ocean/5 pb-4">
-            <div className="flex items-center gap-1.5 overflow-x-auto flex-nowrap no-scrollbar">
-              {["All", "Smartphones", "Laptops", "Audio", "Accessories", "Creator Gear", "Deals"].map((tab) => {
-                const isActive =
-                  tab === "All"   ? selectedCategory === "All" && !showDealsOnly :
-                  tab === "Deals" ? showDealsOnly :
-                                    selectedCategory === tab && !showDealsOnly;
-                return (
-                  <button key={tab}
-                    onClick={() => {
-                      if (tab === "All")   { setSelectedCategory("All"); setShowDealsOnly(false); }
-                      else if (tab === "Deals") { setShowDealsOnly(true); }
-                      else                 { setSelectedCategory(tab);  setShowDealsOnly(false); }
-                    }}
-                    className={`whitespace-nowrap rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer ${
-                      isActive ? "bg-ocean text-white shadow-sm" : "text-ocean/40 hover:text-ocean hover:bg-ocean/4"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-xs text-ocean/40">Sort by:</span>
-              <select className="bg-transparent border-none text-xs font-bold text-ocean-deeper focus:ring-0 outline-none cursor-pointer">
-                <option>Popular</option>
-                <option>Newest</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Rating</option>
-              </select>
-            </div>
-          </div>
-
-          {displayedProducts.length > 0 ? (
+          {products.length > 0 ? (
             <>
               <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
-                {displayedProducts.map((product) => (
+                {products.map((product) => (
                   <ProductCard key={product.id} product={product} onReserve={setSelectedProduct} />
                 ))}
               </div>
@@ -475,7 +440,7 @@ export default function HomeClient({ data }: HomeClientProps) {
             <div className="rounded-2xl border border-dashed border-ocean/10 bg-white/80 py-16 text-center">
               <AlertCircle className="mx-auto h-10 w-10 text-ocean/30" />
               <h3 className="font-clash text-lg font-bold text-ocean-deeper mt-4">No products found</h3>
-              <p className="mt-2 text-sm text-ocean/50">We couldn&apos;t find matches for your current filters.</p>
+              <p className="mt-2 text-sm text-ocean/50">New products are on the way — check back soon.</p>
             </div>
           )}
           </div>
