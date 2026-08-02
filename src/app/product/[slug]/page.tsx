@@ -99,7 +99,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
   };
 
   return (
-    <div className="min-h-screen bg-ivory pb-40 lg:pb-32">
+     <div className="min-h-screen bg-ivory pb-32 lg:pb-16">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
       <Navbar />
 
