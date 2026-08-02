@@ -72,7 +72,7 @@ export default function RootLayout({
       lang="en"
       className={`${manrope.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-ivory text-ocean select-none overflow-x-hidden">
+      <body className="min-h-full flex flex-col font-sans bg-ivory text-ocean select-none overflow-x-clip">
         <AppProvider>{children}</AppProvider>
       </body>
     </html>
