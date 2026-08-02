@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils";
 import type { Category } from "@/data/mock-data";
 
 const FALLBACK_CATEGORIES: { name: string; description: string; image: string; href: string; productCount: number }[] = [
-  { name: "Smartphones", description: "Latest flagship phones and everyday devices", image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=800", href: "/products/smartphones", productCount: 124 },
-  { name: "Laptops", description: "Powerful machines for work and creativity", image: "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&q=80&w=800", href: "/products/laptops", productCount: 86 },
-  { name: "Smart Watches", description: "Stay connected wherever you go", image: "https://images.unsplash.com/photo-1546868871-af0de0ae72aa?auto=format&fit=crop&q=80&w=800", href: "/products/smart-watches", productCount: 52 },
-  { name: "Audio", description: "Premium sound everywhere", image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=800", href: "/products/audio", productCount: 78 },
-  { name: "Gaming", description: "Upgrade your gaming experience", image: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&q=80&w=800", href: "/products/gaming", productCount: 34 },
-  { name: "Accessories", description: "Essential tech for your devices", image: "https://images.unsplash.com/photo-1609592424085-f5b2257d7620?auto=format&fit=crop&q=80&w=800", href: "/products/accessories", productCount: 342 },
+  { name: "Smartphones", description: "Latest flagship phones and everyday devices", image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=800", href: "/products?category=smartphones", productCount: 124 },
+  { name: "Laptops", description: "Powerful machines for work and creativity", image: "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&q=80&w=800", href: "/products?category=laptops", productCount: 86 },
+  { name: "Smart Watches", description: "Stay connected wherever you go", image: "https://images.unsplash.com/photo-1546868871-af0de0ae72aa?auto=format&fit=crop&q=80&w=800", href: "/products?category=smart-watches", productCount: 52 },
+  { name: "Audio", description: "Premium sound everywhere", image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=800", href: "/products?category=audio", productCount: 78 },
+  { name: "Gaming", description: "Upgrade your gaming experience", image: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&q=80&w=800", href: "/products?category=gaming", productCount: 34 },
+  { name: "Accessories", description: "Essential tech for your devices", image: "https://images.unsplash.com/photo-1609592424085-f5b2257d7620?auto=format&fit=crop&q=80&w=800", href: "/products?category=accessories", productCount: 342 },
 ];
 
 // Preferred display order, regardless of how categories are sorted in the
@@ -38,7 +38,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
         name: c.name,
         description: c.description,
         image: c.image,
-        href: `/products/${c.slug}`,
+        href: `/products?category=${c.slug}`,
         productCount: c.productCount,
       }))
     : FALLBACK_CATEGORIES;
