@@ -1,29 +1,41 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Product } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
 import { Star, ShoppingCart, ArrowRight, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getSessionId, notifyCartChanged } from "@/hooks/use-cart";
+import { getSessionId, notifyCartChanged, useSupabaseCart } from "@/hooks/use-cart";
 import { addCartItemBySlug } from "@/actions/cart";
 import Link from "next/link";
 
 interface ProductCardProps {
   product: Product;
   onReserve?: (product: Product) => void;
+  storage?: string;
 }
 
-export function ProductCard({ product, onReserve }: ProductCardProps) {
+export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
   const [isInCart, setIsInCart] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { items, loading: cartLoading } = useSupabaseCart();
+
+  useEffect(() => {
+    if (!cartLoading) {
+      const inCart = items.some(item => 
+        item.product?.slug === product.slug && 
+        (!storage || item.variant === storage)
+      );
+      setIsInCart(inCart);
+    }
+  }, [items, cartLoading, product.slug, storage]);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (isInCart || loading) return;
     setLoading(true);
-    await addCartItemBySlug(getSessionId(), product.slug);
+    await addCartItemBySlug(getSessionId(), product.slug, storage);
     setIsInCart(true);
     setLoading(false);
     notifyCartChanged();

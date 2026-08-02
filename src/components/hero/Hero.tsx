@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ShoppingCart, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { getSessionId, notifyCartChanged } from "@/hooks/use-cart";
+import { getSessionId, notifyCartChanged, useSupabaseCart } from "@/hooks/use-cart";
 import { addCartItemBySlug } from "@/actions/cart";
 
 export interface HeroSlideData {
@@ -36,16 +36,27 @@ export function HeroSection({ slides }: HeroSectionProps) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [addedSlugs, setAddedSlugs] = useState<Record<string, boolean>>({});
+  const [addingSlugs, setAddingSlugs] = useState<Record<string, boolean>>({});
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const { items: cartItems, refresh: refreshCart, loading: cartLoading } = useSupabaseCart();
+
   const slide = slides[current] || slides[0];
-  const isInCart = slide ? addedSlugs[slide.slug] : false;
+  
+  const getSlug = (slide: HeroSlideData | undefined) => {
+    if (!slide) return "";
+    return slide.slug;
+  };
+
+  const isInCart = !cartLoading && !!slide && cartItems.some(item => item.product?.slug === slide.slug);
+  const isAdding = slide ? !!addingSlugs[getSlug(slide)] : false;
 
   const handleAddToCart = async () => {
-    if (!slide || isInCart) return;
+    if (!slide || isInCart || isAdding) return;
+    setAddingSlugs((prev) => ({ ...prev, [slide.slug]: true }));
     await addCartItemBySlug(getSessionId(), slide.slug);
-    setAddedSlugs((prev) => ({ ...prev, [slide.slug]: true }));
+    setAddingSlugs((prev) => ({ ...prev, [slide.slug]: false }));
+    await refreshCart();
     notifyCartChanged();
   };
 
@@ -151,15 +162,17 @@ export function HeroSection({ slides }: HeroSectionProps) {
                   <Button
                     variant="primary"
                     onClick={handleAddToCart}
+                    disabled={isAdding || isInCart}
                     className={cn(
                       "rounded-btn h-12 px-8 text-[11px] font-bold uppercase tracking-[0.14em] transition-all duration-300 shadow-btn hover:shadow-btn-hover hover:-translate-y-0.5 active:translate-y-0",
-                      isInCart
+                      isInCart || isAdding
                         ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                        : "bg-ocean-deeper text-white hover:bg-ocean-dark"
+                        : "bg-ocean-deeper text-white hover:bg-ocean-dark",
+                      isAdding && "opacity-80"
                     )}
                   >
                     <ShoppingCart className="mr-2 h-4 w-4" />
-                    {isInCart ? "Added to Cart" : "Add to Cart"}
+                    {isAdding ? "Adding..." : isInCart ? "Added to Cart" : "Add to Cart"}
                   </Button>
 
                   <Link

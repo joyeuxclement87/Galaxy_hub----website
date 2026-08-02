@@ -84,7 +84,7 @@ export async function addCartItem(sessionId: string, productId: string, variant?
   return { success: true };
 }
 
-export async function addCartItemBySlug(sessionId: string, slug: string) {
+export async function addCartItemBySlug(sessionId: string, slug: string, variant?: string) {
   const supabase = createClient();
 
   const { data: product } = await supabase
@@ -96,7 +96,7 @@ export async function addCartItemBySlug(sessionId: string, slug: string) {
 
   if (!product) return { error: "Product not found" };
 
-  return addCartItem(sessionId, product.id);
+  return addCartItem(sessionId, product.id, variant);
 }
 
 export async function updateCartItemQuantity(itemId: string, quantity: number) {
