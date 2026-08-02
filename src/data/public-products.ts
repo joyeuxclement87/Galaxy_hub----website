@@ -121,6 +121,8 @@ export async function getPublicProducts(params: {
     countQuery = countQuery.eq("is_featured", is_featured);
   }
 
+  // New products (NEW pill) always rank first, then the chosen sort
+  query = query.order("is_new", { ascending: false });
   switch (sort) {
     case "price_asc": query = query.order("price", { ascending: true }); break;
     case "price_desc": query = query.order("price", { ascending: false }); break;
@@ -281,6 +283,7 @@ export async function getPublicProductsByCategorySlug(slug: string) {
     .select(`*, category:category_id(id, name, slug), brand:brand_id(id, name, slug, logo_url)`)
     .eq("category_id", category.id)
     .eq("is_active", true)
+    .order("is_new", { ascending: false })
     .order("created_at", { ascending: false });
 
   return {
@@ -324,6 +327,7 @@ export async function getPublicBrandBySlug(slug: string) {
     .select(`*, category:category_id(name, slug)`)
     .eq("brand_id", brand.id)
     .eq("is_active", true)
+    .order("is_new", { ascending: false })
     .order("created_at", { ascending: false });
 
   const { data: allBrands } = await supabase
