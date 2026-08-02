@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s | Galaxy Hub Rwanda",
   },
   description:
-    "Galaxy Hub is Rwanda's premium technology showroom in Kigali. Shop genuine smartphones, laptops, earbuds, creator gear, and accessories from Apple, Samsung, Sony, DJI, and more. Nationwide delivery across Rwanda.",
+    "Galaxy Hub is Rwanda's premium technology shop in Kigali. Shop genuine smartphones, laptops, earbuds, creator gear, and accessories from Apple, Samsung, Sony, DJI, and more. Nationwide delivery across Rwanda.",
   keywords: [
     "buy smartphones Rwanda",
     "buy iPhone Kigali",

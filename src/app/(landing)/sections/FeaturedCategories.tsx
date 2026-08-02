@@ -46,7 +46,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
   const display = sortByPriority(source);
 
   return (
-    <section className="bg-ivory px-6 py-20 md:px-12 md:py-28">
+    <section id="categories" className="bg-ivory px-6 py-20 md:px-12 md:py-28">
       <div className="mx-auto max-w-[1320px]">
         <span className="section-label">CATEGORIES</span>
         <h2 className="mt-4 font-display text-[clamp(1.5rem,4vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ocean-deeper max-w-xl">

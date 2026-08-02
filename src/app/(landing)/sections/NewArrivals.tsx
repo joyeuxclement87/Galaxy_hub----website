@@ -10,7 +10,7 @@ interface NewArrivalsProps {
 }
 
 /**
- * Fresh stock, straight from the showroom floor. Uses products flagged
+ * Fresh stock, straight from the shop floor. Uses products flagged
  * `is_new` in the catalog; falls back to the newest products when nothing
  * is flagged yet.
  */
@@ -27,7 +27,7 @@ export function NewArrivals({ products, onReserve }: NewArrivalsProps) {
             Fresh Out Of The Box
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/60 font-manrope max-w-xl">
-            The latest stock to land at our Kigali showroom — inspect it in person before you pay.
+            The latest stock to land at our Kigali shop — inspect it in person before you pay.
           </p>
         </div>
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import { ArrowRight, ChevronLeft } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
+import Footer from "@/components/ui/Footer";
 import { DEAL_OFFERS } from "@/data/mock-data";
 
 export default function DealsPage() {
@@ -19,7 +20,7 @@ export default function DealsPage() {
             className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-ocean/60 transition-colors duration-200 hover:text-ocean"
           >
             <ChevronLeft className="h-4 w-4" />
-            Back to Showroom
+            Back to Shop
           </Link>
         </div>
 
@@ -83,6 +84,7 @@ export default function DealsPage() {
           ))}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

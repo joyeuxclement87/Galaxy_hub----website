@@ -229,7 +229,7 @@ function OrderContent() {
             className="inline-flex items-center gap-2 text-xs font-semibold text-ocean/60 transition-colors hover:text-ocean mb-4"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            Back to Showroom
+            Back to Shop
           </Link>
 
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
@@ -344,7 +344,7 @@ function OrderContent() {
                   className="inline-flex items-center gap-1.5 text-xs font-semibold text-ocean/60 hover:text-ocean transition-colors"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" />
-                  Return to Showroom
+                  Return to Shop
                 </Link>
               </div>
             </motion.div>
@@ -387,7 +387,7 @@ function OrderContent() {
                       <div>
                         <p className="font-display text-sm font-bold text-ocean-deeper">Your cart is empty</p>
                         <p className="mt-1 text-xs text-ocean/50 leading-relaxed max-w-xs">
-                          Browse our showroom and add products to your cart before placing an order.
+                          Browse our shop and add products to your cart before placing an order.
                         </p>
                       </div>
                       <Link
@@ -541,7 +541,7 @@ function OrderContent() {
                         </span>
                       </div>
                       <p className="mt-3 text-sm font-bold text-ocean-deeper">Store Pickup (Kigali)</p>
-                      <p className="mt-1 text-xs text-ocean/55">TCB Floor 1B, KN 2 Ave, Kigali</p>
+                      <p className="mt-1 text-xs text-ocean/55">KN 70 St, Kigali</p>
                     </button>
 
                     <button
@@ -641,7 +641,7 @@ function OrderContent() {
                     <div className="py-4 text-center space-y-2">
                       <p className="text-sm font-semibold text-ocean/50">No items selected</p>
                       <p className="text-xs text-ocean/40 leading-relaxed">
-                        Add products to your cart from the showroom first.
+                        Add products to your cart from the shop first.
                       </p>
                     </div>
                   ) : (

@@ -93,7 +93,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
                 </div>
                 <div>
                   <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.2em] text-ocean/50">
-                    Product Showroom Order
+                    Product Shop Order
                   </span>
                   <h3 className="font-clash text-2xl font-bold leading-tight text-[#10233D]">
                     Order Now: {product.title}
@@ -166,7 +166,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
 
                 <div>
                   <label className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-ocean/70">
-                    Preferred Showroom Visit Date
+                    Preferred Shop Visit Date
                   </label>
                   <input
                     type="date"
@@ -215,7 +215,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
 
               <div className="space-y-2 rounded-[20px] border border-ocean/10 bg-white/60 p-4 text-left text-xs text-ocean/70 shadow-[0_10px_30px_rgba(11,84,151,0.06)] backdrop-blur-sm">
                 <p><strong>Order ID:</strong> {reservationId}</p>
-                <p><strong>Showroom Visit:</strong> {formData.date}</p>
+                <p><strong>Shop Visit:</strong> {formData.date}</p>
                 <p><strong>Support Phone:</strong> +250 785 288 910</p>
               </div>
 
@@ -232,7 +232,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
                   onClick={onClose}
                   className="w-full gap-2 !border-white/20 !text-ocean hover:!bg-white/10"
                 >
-                  Return to Showroom
+                  Return to Shop
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </div>

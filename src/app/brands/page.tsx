@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
+import Footer from "@/components/ui/Footer";
 import { BRAND_CATALOG, BRAND_FILTERS } from "@/data/brands";
 
 export const metadata = {
@@ -53,6 +54,7 @@ export default function BrandsIndexPage() {
           ))}
         </div>
       </section>
+      <Footer />
     </main>
   );
 }

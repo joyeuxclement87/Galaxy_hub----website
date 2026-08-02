@@ -128,7 +128,7 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
       ) : (
         <div className="space-y-4 rounded-card border border-dashed border-ocean/[0.08] bg-white/50 backdrop-blur-sm py-20 text-center">
           <AlertCircle className="mx-auto h-12 w-12 text-ocean/30" />
-          <h3 className="font-display text-lg font-bold text-ocean-deeper">No showroom items matched</h3>
+          <h3 className="font-display text-lg font-bold text-ocean-deeper">No shop items matched</h3>
           <p className="mx-auto max-w-md text-sm text-ocean/55">
             We couldn&apos;t find matches for your search. Try resetting filters or search terms.
           </p>

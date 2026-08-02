@@ -29,7 +29,7 @@ export function WhyChooseUs() {
             Built On Trust, Not Just Transactions.
           </h2>
           <p className="text-sm leading-[1.8] text-ocean-deeper/60 font-manrope">
-            We&apos;re a Kigali-based showroom that customers keep coming back to — here&apos;s what sets Galaxy Hub apart.
+            We&apos;re a Kigali-based shop that customers keep coming back to — here&apos;s what sets Galaxy Hub apart.
           </p>
         </div>
 

@@ -21,7 +21,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "What happens after I submit my order request?",
-    a: "You'll receive an on-screen confirmation with an order reference. Our showroom team will contact you via phone or WhatsApp within a few hours to confirm stock, pricing, and your preferred pickup or delivery time.",
+    a: "You'll receive an on-screen confirmation with an order reference. Our shop team will contact you via phone or WhatsApp within a few hours to confirm stock, pricing, and your preferred pickup or delivery time.",
   },
   {
     q: "Can I change my order after submitting it?",

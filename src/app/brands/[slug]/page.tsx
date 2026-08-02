@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, BadgeCheck, PackageCheck, Sparkles } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
+import Footer from "@/components/ui/Footer";
 import { ProductCard } from "@/components/products/ProductCard";
 import { getPublicBrandBySlug } from "@/data/public-products";
 import type { Metadata } from "next";
@@ -105,6 +106,7 @@ export default async function BrandPage({ params }: { params: Promise<{ slug: st
           </div>
         </section>
       </main>
+      <Footer />
     </div>
   );
 }

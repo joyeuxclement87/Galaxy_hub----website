@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2, ArrowLeft, Package, MessageCircle } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
+import Footer from "@/components/ui/Footer";
 import { Button } from "@/components/ui/button";
 
 function SuccessContent() {
@@ -57,10 +58,11 @@ function SuccessContent() {
           </div>
 
           <Link href="/" className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ocean/60 hover:text-ocean transition-colors">
-            <ArrowLeft className="h-4 w-4" /> Back to Showroom
+            <ArrowLeft className="h-4 w-4" /> Back to Shop
           </Link>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

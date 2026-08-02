@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { ArrowUpDown } from "lucide-react";
 
 function buildHref(params: Record<string, string | number | undefined>) {
   const u = new URLSearchParams();
@@ -10,6 +11,13 @@ function buildHref(params: Record<string, string | number | undefined>) {
   const s = u.toString();
   return s ? `/products?${s}` : "/products";
 }
+
+const SORT_OPTIONS = [
+  { value: "newest",     label: "Newest first" },
+  { value: "price_asc",  label: "Price: Low → High" },
+  { value: "price_desc", label: "Price: High → Low" },
+  { value: "name",       label: "Name A–Z" },
+];
 
 export function SortSelect({
   currentSort,
@@ -27,16 +35,23 @@ export function SortSelect({
   );
 
   return (
-    <select
-      name="sort"
-      defaultValue={currentSort}
-      onChange={handleChange}
-      className="rounded-xl border border-black/8 bg-white px-3 py-3 text-sm text-[#10233D] focus:outline-none cursor-pointer"
+    <label
+      className="inline-flex items-center gap-2.5 rounded-btn border border-ocean/12 bg-white px-4 py-2.5 shadow-sm shadow-ocean/4 cursor-pointer hover:border-ocean/25 transition-colors duration-200"
+      title="Sort products"
     >
-      <option value="newest">Newest</option>
-      <option value="price_asc">Price: Low to High</option>
-      <option value="price_desc">Price: High to Low</option>
-      <option value="name">Name</option>
-    </select>
+      <ArrowUpDown className="h-3.5 w-3.5 text-ocean/40 shrink-0" />
+      <select
+        name="sort"
+        value={currentSort}
+        onChange={handleChange}
+        className="border-none bg-transparent text-[13px] font-semibold text-ocean-deeper cursor-pointer focus:outline-none min-w-[130px]"
+      >
+        {SORT_OPTIONS.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }

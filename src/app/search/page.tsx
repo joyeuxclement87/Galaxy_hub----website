@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Search as SearchIcon, PackageOpen } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
+import Footer from "@/components/ui/Footer";
 import { ProductCard } from "@/components/products/ProductCard";
 import { searchProducts } from "@/data/public-products";
 
@@ -80,6 +81,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

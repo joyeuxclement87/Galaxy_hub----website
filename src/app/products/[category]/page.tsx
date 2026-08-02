@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight, Phone } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
+import Footer from "@/components/ui/Footer";
 import { CategoryProductGrid } from "@/components/ui/category-product-grid";
 import { getPublicProductsByCategorySlug } from "@/data/public-products";
 import type { Metadata } from "next";
@@ -114,6 +115,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
