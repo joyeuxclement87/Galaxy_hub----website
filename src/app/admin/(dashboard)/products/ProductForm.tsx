@@ -12,7 +12,7 @@ import type { ProductListItem } from "@/data/products";
 import { MobileApiImportPanel } from "./MobileApiImportPanel";
 import { SpecificationsEditor } from "./SpecificationsEditor";
 import { HighlightsEditor } from "./HighlightsEditor";
-import { StorageOptionsEditor, DEVICE_STORAGE_OPTIONS, SMARTWATCH_STORAGE_OPTIONS } from "./StorageOptionsEditor";
+import { StorageOptionsEditor, DEVICE_STORAGE_OPTIONS, SMARTWATCH_STORAGE_OPTIONS, LAPTOP_RAM_OPTIONS } from "./StorageOptionsEditor";
 import {
   toProductSpecifications,
   toProductHighlights,
@@ -104,10 +104,9 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
   const watchedCategoryId = watch("category_id");
   const selectedCategory = categories.find((c) => c.id === watchedCategoryId);
-  const isSmartwatch =
-    selectedCategory?.name?.toLowerCase().includes("watch") ||
-    selectedCategory?.slug?.toLowerCase().includes("watch") ||
-    product?.name?.toLowerCase().includes("watch");
+  const catText = `${selectedCategory?.name ?? ""} ${selectedCategory?.slug ?? ""} ${product?.name ?? ""}`.toLowerCase();
+  const isSmartwatch = catText.includes("watch");
+  const isComputer = catText.includes("laptop") || catText.includes("computer") || catText.includes("macbook");
   const storagePresets = isSmartwatch ? SMARTWATCH_STORAGE_OPTIONS : DEVICE_STORAGE_OPTIONS;
 
   const handleNameChange = useCallback(
@@ -473,7 +472,12 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
             Presets update automatically based on the selected category — {isSmartwatch ? "smartwatch sizes (8GB – 64GB)" : "device sizes (64GB – 2TB)"}.
           </p>
         </div>
-        <StorageOptionsEditor value={storageOptions} onChange={setStorageOptions} presets={storagePresets} />
+        <StorageOptionsEditor
+          value={storageOptions}
+          onChange={setStorageOptions}
+          presets={storagePresets}
+          ramPresets={isComputer ? LAPTOP_RAM_OPTIONS : undefined}
+        />
       </div>
 
       <div className="flex items-center gap-3 border-t border-white/5 pt-6">
