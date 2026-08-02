@@ -115,8 +115,8 @@ export function HeroSection({ slides }: HeroSectionProps) {
       {/* Grid texture — very subtle */}
       <div className="absolute inset-0 hero-grid-texture opacity-40 pointer-events-none" />
 
-      <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10 pt-8 pb-8 lg:pt-16 lg:pb-10">
-        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12 min-h-[430px] lg:min-h-[560px]">
+      <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10 pt-6 pb-6 lg:pt-14 lg:pb-8">
+        <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-10 min-h-[380px] lg:min-h-[560px]">
 
           {/* ── Left: Content ── */}
           <div className="lg:col-span-5 flex flex-col justify-center z-10">
@@ -133,73 +133,73 @@ export function HeroSection({ slides }: HeroSectionProps) {
               >
                 {/* Category label */}
                  <div className="flex items-center gap-3">
-                   <span className="text-caption font-bold uppercase tracking-[0.16em] text-accent">
-                     {slide.badge || "FEATURED TECH"}
-                   </span>
-                   {discount > 0 && (
-                     <span className="text-caption font-bold uppercase tracking-wider text-red-500">
-                       — Save {discount}%
-                     </span>
-                   )}
+                <span className="text-caption font-bold uppercase tracking-[0.16em] text-accent">
+                      {slide.badge || "FEATURED TECH"}
+                    </span>
+                    {discount > 0 && (
+                      <span className="text-xs font-bold text-red-500 uppercase tracking-wider">
+                        Save {discount}%
+                      </span>
+                    )}
                  </div>
 
                  {/* Title */}
-                 <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-[1.05] tracking-tight text-ocean-deeper">
-                   {slide.title}
-                 </h1>
+                  <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold leading-[1.05] tracking-tight text-ocean-deeper">
+                    {slide.title}
+                  </h1>
 
-                 {/* Description */}
-                 <p className="max-w-[480px] text-sm leading-relaxed text-ocean-deeper/65 sm:text-base">
-                   {slide.description}
-                 </p>
+                  {/* Description */}
+                  <p className="max-w-[480px] text-sm leading-relaxed text-ocean-deeper/65">
+                    {slide.description}
+                  </p>
 
-                 {/* Price block */}
-                 <div className="space-y-1 pt-1">
-                   <span className="block text-caption font-bold uppercase tracking-[0.18em] text-ocean/45">
-                     Starting from
-                   </span>
-                   <div className="flex items-baseline gap-4">
-                     <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-none text-ocean-deeper">
-                       {slide.currency} {slide.price.toLocaleString()}
-                     </span>
-                     {slide.originalPrice && slide.originalPrice > slide.price && (
-                       <span className="text-base text-ocean-deeper/30 line-through font-medium">
-                         {slide.currency} {slide.originalPrice.toLocaleString()}
-                       </span>
-                     )}
-                   </div>
-                 </div>
+                  {/* Price block */}
+                  <div className="space-y-1 pt-1">
+                    <span className="block text-xs font-bold uppercase tracking-[0.16em] text-ocean/45">
+                      Starting from
+                    </span>
+                    <div className="flex items-baseline gap-3">
+                      <span className="font-display text-xl sm:text-2xl lg:text-4xl font-bold leading-none text-ocean-deeper">
+                        {slide.currency} {slide.price.toLocaleString()}
+                      </span>
+                      {slide.originalPrice && slide.originalPrice > slide.price && (
+                        <span className="text-sm text-ocean-deeper/30 line-through font-medium">
+                          {slide.currency} {slide.originalPrice.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
 
                  {/* Action buttons */}
                  <div className="flex flex-wrap items-center gap-3 pt-1">
                    <Button
-                     variant="primary"
-                     onClick={handleAddToCart}
-                     disabled={isAdding}
-                     className={cn(
-                       "rounded-btn h-10 min-h-[40px] px-4 py-0 text-[12px] font-bold uppercase tracking-[0.12em] transition-all duration-250 shadow-btn hover:bg-ocean-dark hover:shadow-btn-hover active:scale-[0.98] sm:text-[13px]",
-                       isInCart
-                         ? "bg-red-600 text-white hover:bg-red-700"
-                         : "bg-ocean-deeper text-white hover:bg-ocean-dark",
-                       isAdding && "opacity-80"
-                     )}
-                   >
-                     {isAdding ? (
-                       <>Adding...</>
-                     ) : isInCart ? (
-                       "Remove from Cart"
-                     ) : (
-                       <>Add to Cart</>
-                     )}
-                   </Button>
+                      variant="primary"
+                      onClick={handleAddToCart}
+                      disabled={isAdding}
+                      className={cn(
+                        "w-full sm:w-auto rounded-btn h-11 min-h-[44px] px-6 text-sm font-bold transition-all duration-250 shadow-btn hover:bg-ocean-dark hover:shadow-btn-hover active:scale-[0.98]",
+                        isInCart
+                          ? "bg-red-600 text-white hover:bg-red-700"
+                          : "bg-ocean-deeper text-white hover:bg-ocean-dark",
+                        isAdding && "opacity-80"
+                      )}
+                    >
+                      {isAdding ? (
+                        <>Adding...</>
+                      ) : isInCart ? (
+                        "Remove from Cart"
+                      ) : (
+                        <>Add to Cart</>
+                      )}
+                    </Button>
 
-                   <Link
-                     href={`/product/${slide.slug}`}
-                     className="group inline-flex items-center gap-2 rounded-btn h-10 min-h-[40px] px-4 border border-ocean/20 bg-white/70 text-ocean-deeper text-[12px] font-bold uppercase tracking-[0.12em] transition-all duration-250 hover:border-ocean/35 hover:bg-white hover:shadow-sm sm:text-[13px]"
-                   >
-                     View Details
-                     <ArrowUpRight className="h-4 w-4 opacity-50 group-hover:opacity-100 transition-opacity" />
-                   </Link>
+                    <Link
+                      href={`/product/${slide.slug}`}
+                      className="group inline-flex items-center justify-center gap-2 rounded-btn h-11 min-h-[44px] px-5 border border-ocean/20 bg-white/70 text-ocean-deeper text-sm font-bold transition-all duration-250 hover:border-ocean/35 hover:bg-white hover:shadow-sm"
+                    >
+                      View Details
+                      <ArrowUpRight className="h-4 w-4 opacity-50 group-hover:opacity-100 transition-opacity" />
+                    </Link>
                  </div>
               </motion.div>
             </AnimatePresence>
@@ -207,12 +207,12 @@ export function HeroSection({ slides }: HeroSectionProps) {
 
           {/* ── Right: Product Image ── */}
           <div className="lg:col-span-7 relative flex items-center justify-center">
-            {/* Radial glow behind the image */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-[480px] h-[350px] rounded-[100px] bg-[radial-gradient(ellipse,_rgba(11,84,151,0.06)_0%,_transparent_68%)] lg:w-[620px] lg:h-[440px]" />
-            </div>
+             {/* Radial glow behind the image */}
+             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+               <div className="w-[380px] h-[250px] rounded-[100px] bg-[radial-gradient(ellipse,_rgba(11,84,151,0.06)_0%,_transparent_68%)] lg:w-[540px] lg:h-[400px]" />
+             </div>
 
-            <div className="relative z-10 w-full max-w-[580px] aspect-[16/11] overflow-hidden rounded-card bg-gradient-to-br from-white to-ivory-dark/40">
+             <div className="relative z-10 w-full max-w-[480px] lg:max-w-[520px] aspect-[16/11] overflow-hidden rounded-card bg-gradient-to-br from-white to-ivory-dark/40">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={slide.id + "-img"}
@@ -237,7 +237,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
         </div>
 
         {/* ── Bottom bar: nav controls only ── */}
-        <div className="relative mt-6 pt-4 border-t border-ocean/[0.06] flex items-center justify-between">
+        <div className="relative mt-4 pt-3 border-t border-ocean/[0.06] flex items-center justify-between">
           {/* Dot indicators */}
           <div className="flex items-center gap-2">
             {slides.map((s, index) => (
@@ -267,11 +267,11 @@ export function HeroSection({ slides }: HeroSectionProps) {
 
           {/* Prev / Next arrows */}
           <div className="flex items-center gap-2">
-            <Button
+             <Button
               variant="icon"
               onClick={goPrev}
               aria-label="Previous slide"
-              className="h-10 w-10 rounded-btn border border-ocean/10 bg-white/60 text-ocean/50 hover:bg-white hover:text-ocean hover:border-ocean/20 transition-all duration-200"
+              className="h-11 w-11 rounded-btn border border-ocean/10 bg-white/60 text-ocean/50 hover:bg-white hover:text-ocean hover:border-ocean/20 transition-all duration-250"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -279,7 +279,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
               variant="icon"
               onClick={goNext}
               aria-label="Next slide"
-              className="h-10 w-10 rounded-btn border border-ocean/10 bg-white/60 text-ocean/50 hover:bg-white hover:text-ocean hover:border-ocean/20 transition-all duration-200"
+              className="h-11 w-11 rounded-btn border border-ocean/10 bg-white/60 text-ocean/50 hover:bg-white hover:text-ocean hover:border-ocean/20 transition-all duration-250"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
