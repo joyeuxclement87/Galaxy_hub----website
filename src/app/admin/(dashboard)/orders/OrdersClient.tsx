@@ -1,7 +1,10 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import Link from "next/link";
-import { ShoppingBag, Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ShoppingBag, Eye, Trash2, Loader2 } from "lucide-react";
+import { deleteOrder } from "@/actions/orders";
 
 const statusStyles: Record<string, string> = {
   pending: "bg-amber-500/10 text-amber-300 ring-amber-500/20",
@@ -22,6 +25,19 @@ const statusDots: Record<string, string> = {
 };
 
 export function OrdersTable({ orders }: { orders: { id: string; order_number: string; customer_name: string; email: string | null; total_amount: number; status: string; created_at: string }[] }) {
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+
+  const handleDelete = (order: { id: string; order_number: string }) => {
+    const number = order.order_number || order.id.slice(0, 8);
+    if (!window.confirm(`Delete order #${number}? This cannot be undone.`)) return;
+    startTransition(async () => {
+      const result = await deleteOrder(order.id);
+      if (result?.error) { alert(result.error); return; }
+      router.refresh();
+    });
+  };
+
   if (orders.length === 0) return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/8 bg-white/[0.02] px-6 py-16 text-center">
       <ShoppingBag className="mb-4 h-12 w-12 text-white/20" />
@@ -66,7 +82,18 @@ export function OrdersTable({ orders }: { orders: { id: string; order_number: st
                   <span className="text-xs text-white/30">{new Date(o.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</span>
                 </td>
                 <td className="px-5 py-3.5 text-right">
-                  <Link href={`/admin/orders/${o.id}`} className="inline-flex cursor-pointer items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-ocean hover:bg-ocean/15 transition-colors"><Eye className="h-3 w-3" /> View</Link>
+                  <div className="flex items-center justify-end gap-1">
+                    <Link href={`/admin/orders/${o.id}`} className="inline-flex cursor-pointer items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-ocean hover:bg-ocean/15 transition-colors"><Eye className="h-3 w-3" /> View</Link>
+                    <button
+                      type="button"
+                      disabled={pending}
+                      onClick={() => handleDelete(o)}
+                      className="inline-flex cursor-pointer items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-red-400 transition-colors hover:bg-red-500/15 disabled:opacity-50"
+                    >
+                      {pending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3" />}
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

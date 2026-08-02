@@ -4,6 +4,15 @@ import { createAdminClient } from "@/lib/supabase-admin";
 import { sendNotification } from "@/lib/notifications";
 import { revalidatePath } from "next/cache";
 
+export const ORDER_STATUSES = [
+  "pending",
+  "confirmed",
+  "processing",
+  "shipped",
+  "delivered",
+  "cancelled",
+] as const;
+
 /**
  * Updates an order's status, records the change in
  * order_status_changes and pings the staff Telegram group.
@@ -11,6 +20,10 @@ import { revalidatePath } from "next/cache";
  * the source of truth and is never rolled back on notify failure.
  */
 export async function updateOrderStatus(id: string, status: string) {
+  if (!ORDER_STATUSES.includes(status as (typeof ORDER_STATUSES)[number])) {
+    return { error: `Invalid status: "${status}"` };
+  }
+
   const supabase = await createAdminClient();
 
   const { data: existing } = await supabase
@@ -44,4 +57,26 @@ export async function updateOrderStatus(id: string, status: string) {
 
   revalidatePath("/admin/orders");
   return { success: true };
+}
+
+/**
+ * Permanently deletes an order. Items and status-change history
+ * are removed via on-delete cascade.
+ */
+export async function deleteOrder(id: string) {
+  const supabase = await createAdminClient();
+
+  const { data: existing } = await supabase
+    .from("orders")
+    .select("id, order_number")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (!existing) return { error: "Order not found" };
+
+  const { error } = await supabase.from("orders").delete().eq("id", id);
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/orders");
+  return { success: true, order_number: existing.order_number };
 }

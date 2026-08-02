@@ -4,10 +4,10 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, ArrowLeft, Package } from "lucide-react";
 import Link from "next/link";
-import { updateOrderStatus } from "@/actions/orders";
+import { updateOrderStatus, ORDER_STATUSES } from "@/actions/orders";
 import type { OrderWithItems } from "@/data/admin-orders";
 
-const statuses = ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"];
+const statuses = [...ORDER_STATUSES];
 
 const statusColors: Record<string, string> = {
   pending: "bg-amber-500/10 text-amber-300 border-amber-500/20",
