@@ -285,7 +285,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                       <span>No results</span>
                     )}
                   </div>
-                  {totalPages > 1 && (
+                  {result.total >= 6 && (
                     <div className="hidden sm:block text-xs text-ocean/40">
                       Page {page} of {totalPages}
                     </div>
@@ -330,15 +330,21 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                       image: p.main_image_url || "", featured: p.is_featured,
                       specifications: {},
                       availability: p.stock_status === "available" ? "In Stock" : p.stock_status === "coming_soon" ? "Limited Stock" : "Out of Stock",
-                      badge: p.is_new ? "NEW" : p.discount_percentage ? "SALE" : undefined,
+                      badge: p.is_new ? "NEW" : p.discount_percentage ? "ON SALE" : undefined,
                       rating: p.rating ?? 4.8, reviewCount: p.review_count ?? 32,
                     }))}
                   />
                 )}
 
-                {/* Pagination */}
-                {totalPages > 1 && (
+                {/* Pagination — shown once products span 2+ rows (≥6 products) */}
+                {result.total >= 6 && (
                   <div className="mt-8 flex items-center justify-center gap-1.5">
+                    {totalPages === 1 ? (
+                      <span className="rounded-btn border border-ocean/8 bg-white px-4 py-2 text-sm font-semibold text-ocean-deeper/60">
+                        Page 1 of 1
+                      </span>
+                    ) : (
+                      <>
                     <Link
                       href={buildHref({ ...params, page: Math.max(1, page - 1) })}
                       className={cn(
@@ -383,6 +389,8 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                     >
                       Next →
                     </Link>
+                    </>
+                    )}
                   </div>
                 )}
               </div>

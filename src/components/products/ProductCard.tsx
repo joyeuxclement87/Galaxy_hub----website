@@ -59,19 +59,25 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
     ? new Intl.NumberFormat("en-US").format(product.monthlyInstallment)
     : null;
 
+  const badgeLower = product.badge?.toLowerCase() ?? "";
+  const badgeLabel =
+    badgeLower.includes("sale") || badgeLower.includes("off")
+      ? "on sale"
+      : product.badge;
+
   const badgeClass =
-    product.badge?.includes("SALE") || product.badge?.includes("OFF")
+    badgeLower.includes("sale") || badgeLower.includes("off")
       ? "bg-rose-50 text-rose-600 border border-rose-100/60"
-      : product.badge === "NEW" || product.badge === "NEW ARRIVAL"
+      : badgeLower === "new" || badgeLower === "new arrival"
       ? "bg-ocean text-white border border-ocean"
-      : product.badge?.includes("LIMITED")
+      : badgeLower.includes("limited")
       ? "bg-amber-50 text-amber-700 border border-amber-100/60"
       : "bg-white/90 backdrop-blur-sm border border-black/5 text-ocean-deeper";
 
   const availabilityChip = product.availability === "In Stock"
-    ? { label: "In Stock", cls: "bg-emerald-50 text-emerald-700 border border-emerald-100/60" }
+    ? { label: "in stock", cls: "bg-emerald-50 text-emerald-700 border border-emerald-100/60" }
     : product.availability === "Limited Stock"
-    ? { label: "Coming Soon", cls: "bg-amber-50 text-amber-700 border border-amber-100/60" }
+    ? { label: "coming soon", cls: "bg-amber-50 text-amber-700 border border-amber-100/60" }
     : null;
 
   const href = product.externalUrl ?? `/product/${product.slug}`;
@@ -91,15 +97,15 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
       <div className="relative aspect-square w-full overflow-hidden bg-[#f8f9fa] p-3">
         {product.badge && (
           <span className={cn(
-            "absolute left-2 top-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em]",
+            "absolute left-2 top-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold lowercase tracking-[0.08em]",
             badgeClass
           )}>
-            {product.badge}
+            {badgeLabel}
           </span>
         )}
         {availabilityChip && !product.badge && (
           <span className={cn(
-            "absolute left-2 top-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em]",
+            "absolute left-2 top-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold lowercase tracking-[0.08em]",
             availabilityChip.cls
           )}>
             {availabilityChip.label}
