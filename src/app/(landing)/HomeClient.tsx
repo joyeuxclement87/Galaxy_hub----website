@@ -189,6 +189,35 @@ interface HomeClientProps {
 
 export default function HomeClient({ data }: HomeClientProps) {
   const [selectedProduct,       setSelectedProduct]       = useState<Product | null>(null);
+  const [showPreloader,         setShowPreloader]         = useState(false);
+  const [preloaderFadeOut,      setPreloaderFadeOut]      = useState(false);
+
+  useEffect(() => {
+    const isClientNavigated = typeof window !== "undefined" && (window as any).__gh_loaded;
+    
+    if (!isClientNavigated) {
+      setShowPreloader(true);
+      document.body.style.overflow = "hidden";
+      
+      const fadeTimer = setTimeout(() => {
+        setPreloaderFadeOut(true);
+      }, 1600);
+      
+      const removeTimer = setTimeout(() => {
+        setShowPreloader(false);
+        document.body.style.overflow = "";
+        if (typeof window !== "undefined") {
+          (window as any).__gh_loaded = true;
+        }
+      }, 2100);
+      
+      return () => {
+        clearTimeout(fadeTimer);
+        clearTimeout(removeTimer);
+        document.body.style.overflow = "";
+      };
+    }
+  }, []);
 
   const {
     searchQuery, setSearchQuery,
@@ -265,6 +294,45 @@ export default function HomeClient({ data }: HomeClientProps) {
 
   return (
     <div className="flex-1 pt-24">
+      {showPreloader && (
+        <div
+          className={cn(
+            "fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0a1f3a] transition-all duration-500 ease-in-out",
+            preloaderFadeOut ? "opacity-0 pointer-events-none scale-105" : "opacity-100"
+          )}
+        >
+          {/* Soft background glow design */}
+          <div className="absolute top-1/4 left-1/4 h-[300px] w-[300px] rounded-full bg-[#0b5497]/15 blur-[80px] animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 h-[300px] w-[300px] rounded-full bg-[#0f70c9]/10 blur-[100px] animate-pulse [animation-delay:1s]" />
+
+          <div className="relative z-10 flex flex-col items-center text-center px-4">
+            {/* Logo display */}
+            <div className="mb-6 relative scale-110">
+              <img
+                src="/g-hub logo ii.png"
+                alt="Galaxy Hub"
+                className="h-10 w-auto object-contain select-none animate-pulse duration-1500"
+              />
+              <div className="absolute -inset-4 bg-white/5 blur-xl rounded-full -z-10" />
+            </div>
+
+            {/* Moving Loading Line */}
+            <div className="w-40 h-[3px] bg-white/10 rounded-full overflow-hidden relative">
+              <div className="h-full bg-gradient-to-r from-[#0b5497] via-[#0f70c9] to-[#0b5497] w-1/2 rounded-full absolute animate-loading-bar" />
+            </div>
+
+            {/* Subtext info */}
+            <div className="mt-5 space-y-1">
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#0f70c9] animate-pulse">
+                Galaxy Hub Rwanda
+              </p>
+              <p className="text-xs text-white/40 font-medium">
+                Genuine Tech Guaranteed
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       <Navbar />
 
       <HeroSection slides={heroSlides} />

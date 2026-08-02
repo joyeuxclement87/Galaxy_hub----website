@@ -127,26 +127,18 @@ export async function getPublicProducts(params: {
     countQuery = countQuery.eq("is_new", is_new);
   }
 
-  // "newest" (default): is_new=true products float to the top, then most recently added.
-  // All other sorts use created_at as a tiebreaker so order is always deterministic.
-  switch (sort) {
-    case "newest":
-    default:
-      query = query.order("is_new", { ascending: false });
-      query = query.order("created_at", { ascending: false });
-      break;
-    case "price_asc":
-      query = query.order("price", { ascending: true });
-      query = query.order("created_at", { ascending: false });
-      break;
-    case "price_desc":
-      query = query.order("price", { ascending: false });
-      query = query.order("created_at", { ascending: false });
-      break;
-    case "name":
-      query = query.order("name", { ascending: true });
-      query = query.order("created_at", { ascending: false });
-      break;
+  // Apply ordering — "newest" puts is_new=true first then most recent;
+  // all others add created_at as a deterministic tiebreaker.
+  if (sort === "price_asc") {
+    query = query.order("price", { ascending: true }).order("created_at", { ascending: false });
+  } else if (sort === "price_desc") {
+    query = query.order("price", { ascending: false }).order("created_at", { ascending: false });
+  } else if (sort === "name") {
+    // DB sort is a best-effort; JS localeCompare below guarantees case-insensitive order.
+    query = query.order("name", { ascending: true });
+  } else {
+    // "newest" and any unknown value
+    query = query.order("is_new", { ascending: false }).order("created_at", { ascending: false });
   }
 
   const from = (page - 1) * pageSize;
@@ -307,26 +299,18 @@ export async function getPublicProductsByCategorySlug(slug: string, sort = "newe
     .eq("category_id", category.id)
     .eq("is_active", true);
 
-  // "newest" (default): is_new=true products float to the top, then most recently added.
-  // All other sorts use created_at as a tiebreaker so order is always deterministic.
-  switch (sort) {
-    case "newest":
-    default:
-      query = query.order("is_new", { ascending: false });
-      query = query.order("created_at", { ascending: false });
-      break;
-    case "price_asc":
-      query = query.order("price", { ascending: true });
-      query = query.order("created_at", { ascending: false });
-      break;
-    case "price_desc":
-      query = query.order("price", { ascending: false });
-      query = query.order("created_at", { ascending: false });
-      break;
-    case "name":
-      query = query.order("name", { ascending: true });
-      query = query.order("created_at", { ascending: false });
-      break;
+  // Apply ordering — "newest" puts is_new=true first then most recent;
+  // all others add created_at as a deterministic tiebreaker.
+  if (sort === "price_asc") {
+    query = query.order("price", { ascending: true }).order("created_at", { ascending: false });
+  } else if (sort === "price_desc") {
+    query = query.order("price", { ascending: false }).order("created_at", { ascending: false });
+  } else if (sort === "name") {
+    // DB sort is a best-effort; JS localeCompare below guarantees case-insensitive order.
+    query = query.order("name", { ascending: true });
+  } else {
+    // "newest" and any unknown value
+    query = query.order("is_new", { ascending: false }).order("created_at", { ascending: false });
   }
 
   const { data: products } = await query;

@@ -200,3 +200,13 @@ body {
   height: 1px;
   background: linear-gradient(to right, transparent, rgba(11,84,151,0.08), transparent);
 }
+
+@keyframes loading-bar {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-loading-bar {
+  animation: loading-bar 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
