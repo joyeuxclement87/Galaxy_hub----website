@@ -254,7 +254,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 
               {/* Desktop sidebar */}
               <aside className="hidden lg:block lg:w-64 shrink-0">
-                <div className="sticky top-40 rounded-card border border-ocean/6 bg-white p-5 shadow-sm">
+                <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto overscroll-contain rounded-card border border-ocean/6 bg-white p-5 shadow-sm">
                   <div className="flex items-center justify-between mb-5">
                     <span className="flex items-center gap-2 font-display text-sm font-bold text-ocean-deeper">
                       <SlidersHorizontal className="h-4 w-4 text-ocean/50" />
