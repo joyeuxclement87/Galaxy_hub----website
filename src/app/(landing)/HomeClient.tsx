@@ -2,17 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Fuse from "fuse.js";
-import { AlertCircle, ArrowRight } from "lucide-react";
+import { AlertCircle, ArrowRight, Search as SearchIcon } from "lucide-react";
 import { cn }                      from "@/lib/utils";
 import { Navbar }             from "@/components/navbar/Navbar";
 import { ProductCard }        from "@/components/products/ProductCard";
 import { ReservationModal }   from "@/components/ui/reservation-modal";
 import {
   Product,
+  Product as MockProduct,
   DEAL_OFFERS,
 } from "@/data/mock-data";
 import { useApp }             from "@/context/AppContext";
+import { useSearch }          from "@/hooks/useSearch";
 import { getSessionId, notifyCartChanged } from "@/hooks/use-cart";
 import { addCartItemBySlug }  from "@/actions/cart";
 import { HeroSection, HeroSlideData } from "@/components/hero/Hero";
@@ -208,10 +209,17 @@ export default function HomeClient({ data }: HomeClientProps) {
         price: p.price,
         currency: p.currency || "RWF",
         image: p.image,
-        slug: p.slug,
       })));
     }
   }, [products, registerProducts]);
+
+  const displayedProducts = useSearch(products, searchQuery, {
+    category: selectedCategory,
+    brand: selectedBrand,
+    dealsOnly: showDealsOnly,
+  });
+
+  const hasActiveSearch = searchQuery.trim().length > 0;
 
   useEffect(() => {
     const handleHash = () => {
@@ -232,37 +240,6 @@ export default function HomeClient({ data }: HomeClientProps) {
     window.addEventListener("hashchange", handleHash);
     return () => window.removeEventListener("hashchange", handleHash);
   }, [setSelectedCategory, setSelectedBrand, setShowDealsOnly]);
-
-  let displayedProducts = products;
-  if (searchQuery.trim()) {
-    const rawTerm = searchQuery.trim().toLowerCase();
-    displayedProducts = products.filter((p) => {
-      const title = p.title.toLowerCase();
-      const brand = p.brand.toLowerCase();
-      const category = p.category.toLowerCase();
-      const tagline = (p.tagline || "").toLowerCase();
-      return (
-        title.includes(rawTerm) ||
-        brand.includes(rawTerm) ||
-        category.includes(rawTerm) ||
-        tagline.includes(rawTerm)
-      );
-    });
-
-    displayedProducts.sort((a, b) => {
-      const aTitle = a.title.toLowerCase();
-      const bTitle = b.title.toLowerCase();
-      const aExact = aTitle === rawTerm || aTitle.startsWith(rawTerm);
-      const bExact = bTitle === rawTerm || bTitle.startsWith(rawTerm);
-      if (aExact && !bExact) return -1;
-      if (!aExact && bExact) return 1;
-      return 0;
-    });
-  }
-  if (showDealsOnly)          displayedProducts = displayedProducts.filter((p) => p.originalPrice !== undefined || p.availability === "Limited Stock");
-  if (selectedCategory === "Wishlist") displayedProducts = displayedProducts.filter((p) => wishlist.includes(p.id));
-  else if (selectedCategory !== "All") displayedProducts = displayedProducts.filter((p) => p.category === selectedCategory);
-  if (selectedBrand !== "All") displayedProducts = displayedProducts.filter((p) => p.brand === selectedBrand);
 
   const scrollToProducts = () => document.getElementById("products")?.scrollIntoView({ behavior: "smooth" });
 
@@ -389,15 +366,49 @@ export default function HomeClient({ data }: HomeClientProps) {
 
       <Brands brands={data.brands} />
 
-      {/* ── TRENDING PRODUCTS ── */}
-      <section id="products" className="bg-white px-4 py-16 sm:px-6">
-        <div className="mx-auto max-w-[1320px] space-y-6">
-          <div className="max-w-2xl">
-            <span className="section-label">TRENDING NOW</span>
-            <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper mt-3">
-              Popular Tech Picks
-            </h2>
+      {/* ── SEARCH RESULTS ── */}
+      {hasActiveSearch && (
+        <section className="bg-white px-4 py-16 sm:px-6">
+          <div className="mx-auto max-w-[1320px]">
+            <div className="max-w-2xl">
+              <span className="section-label">SEARCH RESULTS</span>
+              <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper mt-3">
+                "{searchQuery}"
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/60 max-w-xl">
+                {displayedProducts.length === 0
+                  ? "No products matched your search. Try a different term."
+                  : `${displayedProducts.length} product${displayedProducts.length !== 1 ? "s" : ""} found`}
+              </p>
+            </div>
+
+            {displayedProducts.length > 0 ? (
+              <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
+                {displayedProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} onReserve={setSelectedProduct} />
+                ))}
+              </div>
+            ) : (
+              <div className="mt-8 flex flex-col items-center justify-center rounded-card border border-dashed border-ocean/[0.08] bg-white/50 py-16 text-center">
+                <SearchIcon className="mb-4 h-10 w-10 text-ocean/30" />
+                <h3 className="font-clash text-lg font-bold text-ocean-deeper">No products found</h3>
+                <p className="mt-2 text-sm text-ocean/50">Try searching by brand, model, or category name.</p>
+              </div>
+            )}
           </div>
+        </section>
+      )}
+
+      {/* ── TRENDING PRODUCTS (hidden when search active) ── */}
+      {!hasActiveSearch && (
+        <section id="products" className="bg-white px-4 py-16 sm:px-6">
+          <div className="mx-auto max-w-[1320px] space-y-6">
+            <div className="max-w-2xl">
+              <span className="section-label">TRENDING NOW</span>
+              <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper mt-3">
+                Popular Tech Picks
+              </h2>
+            </div>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-ocean/5 pb-4">
             <div className="flex items-center gap-1.5 overflow-x-auto flex-nowrap no-scrollbar">
@@ -451,16 +462,15 @@ export default function HomeClient({ data }: HomeClientProps) {
               </div>
             </>
           ) : (
-            <div className="space-y-4 rounded-2xl border border-dashed border-black/6 bg-white/40 py-24 text-center">
-              <AlertCircle className="mx-auto h-10 w-10 text-ocean/15" />
-              <h3 className="font-clash text-lg font-bold text-ocean-deeper">No products found</h3>
-              <p className="mx-auto max-w-sm text-sm text-ocean/45">
-                We couldn&apos;t find matches for your current filters.
-              </p>
+            <div className="rounded-2xl border border-dashed border-ocean/10 bg-white/80 py-16 text-center">
+              <AlertCircle className="mx-auto h-10 w-10 text-ocean/30" />
+              <h3 className="font-clash text-lg font-bold text-ocean-deeper mt-4">No products found</h3>
+              <p className="mt-2 text-sm text-ocean/50">We couldn&apos;t find matches for your current filters.</p>
             </div>
           )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       <WhyChooseUs />
       <Reviews reviews={data.reviews} />

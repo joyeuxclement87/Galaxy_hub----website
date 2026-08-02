@@ -4,14 +4,30 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Search, ShoppingCart, X, Trash2, ArrowRight } from "lucide-react";
+import { Menu, Search, ShoppingCart, X, Trash2, ArrowRight, Loader2, PackageOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/context/AppContext";
 import { useSupabaseCart } from "@/hooks/use-cart";
-import { Button } from "@/components/ui/button";
+import { ProductCard } from "@/components/products/ProductCard";
+import type { Product } from "@/data/mock-data";
 
 interface NavbarProps {
   onSearchFocus?: () => void;
+}
+
+interface SearchResultItem {
+  id: string;
+  slug: string;
+  name: string;
+  price: number;
+  old_price: number | null;
+  rating: number | null;
+  review_count: number | null;
+  main_image_url: string | null;
+  stock_status: string;
+  short_description: string | null;
+  category_name: string | null;
+  brand_name: string | null;
 }
 
 const NAV_LINKS = [
@@ -35,23 +51,59 @@ function Wordmark() {
   );
 }
 
+function buildSearchCardProduct(result: SearchResultItem): Product {
+  const availability: Product["availability"] = result.stock_status === "available"
+    ? "In Stock"
+    : result.stock_status === "limited"
+      ? "Limited Stock"
+      : "Out of Stock";
+
+  return {
+    id: result.id,
+    slug: result.slug,
+    title: result.name,
+    tagline: result.short_description || "",
+    description: "",
+    price: result.price,
+    originalPrice: result.old_price || undefined,
+    currency: "RWF",
+    category: result.category_name || "",
+    brand: result.brand_name || "",
+    image: result.main_image_url || "",
+    featured: false,
+    specifications: {},
+    availability,
+    badge: undefined,
+    rating: result.rating ?? 4.8,
+    reviewCount: result.review_count ?? 32,
+  };
+}
+
 /* ─── Full-screen search overlay ─── */
 function SearchOverlay({
   open,
   onClose,
   searchInputRef,
-  searchQuery,
+  searchInputValue,
+  onSearchInputChange,
   onSubmit,
   onSuggestion,
   suggestedSearches,
+  searchResults,
+  isSearching,
+  hasSearched,
 }: {
   open: boolean;
   onClose: () => void;
   searchInputRef: React.RefObject<HTMLInputElement | null>;
-  searchQuery: string;
+  searchInputValue: string;
+  onSearchInputChange: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   onSuggestion: (q: string) => void;
   suggestedSearches: string[];
+  searchResults: SearchResultItem[];
+  isSearching: boolean;
+  hasSearched: boolean;
 }) {
   return (
     <AnimatePresence>
@@ -70,7 +122,8 @@ function SearchOverlay({
               <input
                 ref={searchInputRef}
                 type="text"
-                defaultValue={searchQuery}
+                value={searchInputValue}
+                onChange={(e) => onSearchInputChange(e.target.value)}
                 placeholder="Search phones, laptops, accessories…"
                 className="w-full border-none bg-transparent text-base font-medium text-ocean-deeper placeholder:text-ocean/30 focus:outline-none"
                 autoComplete="off"
@@ -86,23 +139,66 @@ function SearchOverlay({
             </button>
           </div>
 
-          {/* Suggestions */}
+          {/* Suggestions / results */}
           <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-8">
-            <p className="mb-3 text-caption font-bold uppercase tracking-[0.18em] text-ocean/35">
-              Popular Searches
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {suggestedSearches.map((chip) => (
-                <button
-                  key={chip}
-                  onClick={() => onSuggestion(chip)}
-                  className="flex items-center gap-1.5 rounded-btn border border-ocean/10 bg-white px-4 py-2 text-sm font-semibold text-ocean-deeper/70 transition-all duration-200 hover:border-ocean/25 hover:text-ocean hover:bg-ocean/[0.03] cursor-pointer"
-                >
-                  {chip}
-                  <ArrowRight className="h-3 w-3 opacity-40" />
-                </button>
-              ))}
-            </div>
+            {searchInputValue.trim() ? (
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-caption font-bold uppercase tracking-[0.18em] text-ocean/35">
+                    Search Results
+                  </p>
+                  <div className="text-sm font-semibold text-ocean/55">
+                    {isSearching ? (
+                      <span className="inline-flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Searching…
+                      </span>
+                    ) : (
+                      <span>{searchResults.length} result{searchResults.length === 1 ? "" : "s"}</span>
+                    )}
+                  </div>
+                </div>
+
+                {isSearching ? (
+                  <div className="rounded-card border border-ocean/[0.08] bg-white/70 p-6 text-center text-sm font-medium text-ocean/60 shadow-sm">
+                    Looking up matching products…
+                  </div>
+                ) : hasSearched && searchResults.length === 0 ? (
+                  <div className="rounded-card border border-ocean/[0.08] bg-white/70 p-8 text-center shadow-sm">
+                    <PackageOpen className="mx-auto mb-3 h-10 w-10 text-ocean/35" />
+                    <p className="font-display text-base font-bold text-ocean-deeper">No matching products found</p>
+                    <p className="mt-2 text-sm text-ocean/55">Try another keyword or browse the popular searches below.</p>
+                  </div>
+                ) : (
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {searchResults.map((result) => (
+                      <ProductCard
+                        key={result.id}
+                        product={buildSearchCardProduct(result)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                <p className="mb-3 text-caption font-bold uppercase tracking-[0.18em] text-ocean/35">
+                  Popular Searches
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {suggestedSearches.map((chip) => (
+                    <button
+                      key={chip}
+                      onClick={() => onSuggestion(chip)}
+                      className="flex items-center gap-1.5 rounded-btn border border-ocean/10 bg-white px-4 py-2 text-sm font-semibold text-ocean-deeper/70 transition-all duration-200 hover:border-ocean/25 hover:text-ocean hover:bg-ocean/[0.03] cursor-pointer"
+                    >
+                      {chip}
+                      <ArrowRight className="h-3 w-3 opacity-40" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </motion.div>
       )}
@@ -440,7 +536,12 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [searchInputValue, setSearchInputValue] = useState(searchQuery);
+  const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchRequestRef = useRef(0);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -465,6 +566,44 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
       return () => clearTimeout(t);
     }
   }, [searchOpen]);
+
+  useEffect(() => {
+    if (!searchOpen) {
+      return;
+    }
+
+    const trimmed = searchInputValue.trim();
+    if (!trimmed) {
+      setSearchResults([]);
+      setHasSearched(false);
+      setIsSearching(false);
+      return;
+    }
+
+    const requestId = ++searchRequestRef.current;
+    setHasSearched(true);
+    setIsSearching(true);
+
+    const timeout = window.setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}`);
+        const data = await res.json();
+        if (requestId === searchRequestRef.current) {
+          setSearchResults(data.results || []);
+        }
+      } catch {
+        if (requestId === searchRequestRef.current) {
+          setSearchResults([]);
+        }
+      } finally {
+        if (requestId === searchRequestRef.current) {
+          setIsSearching(false);
+        }
+      }
+    }, 220);
+
+    return () => window.clearTimeout(timeout);
+  }, [searchInputValue, searchOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -502,9 +641,10 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const val = searchInputRef.current?.value?.trim();
+    const val = searchInputValue.trim();
     if (!val) return;
     setSearchQuery(val);
+    setSearchInputValue(val);
     setSearchOpen(false);
     if (pathname === "/") {
       const el = document.getElementById("products");
@@ -516,6 +656,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
 
   const handleSuggestedSearch = (query: string) => {
     setSearchQuery(query);
+    setSearchInputValue(query);
     setSearchOpen(false);
     if (pathname === "/") {
       const el = document.getElementById("products");
@@ -544,10 +685,14 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
         open={searchOpen}
         onClose={() => setSearchOpen(false)}
         searchInputRef={searchInputRef}
-        searchQuery={searchQuery}
+        searchInputValue={searchInputValue}
+        onSearchInputChange={setSearchInputValue}
         onSubmit={handleSearchSubmit}
         onSuggestion={handleSuggestedSearch}
         suggestedSearches={suggestedSearches}
+        searchResults={searchResults}
+        isSearching={isSearching}
+        hasSearched={hasSearched}
       />
 
       {/* ── Floating navbar ── */}
@@ -588,7 +733,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
               {/* Search */}
               <button
                 type="button"
-                onClick={() => { setSearchOpen(true); onSearchFocus?.(); setCartOpen(false); }}
+                onClick={() => { setSearchInputValue(searchQuery); setSearchOpen(true); onSearchFocus?.(); setCartOpen(false); }}
                 aria-label="Search"
                 className="flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer"
               >
