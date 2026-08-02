@@ -297,7 +297,7 @@ function MobileCartSheet({
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 380, damping: 40 }}
             className="fixed bottom-0 inset-x-0 z-[81] rounded-t-[20px] bg-ivory/98 backdrop-blur-xl border-t border-ocean/[0.06] shadow-premium-lg sm:hidden"
-            style={{ maxHeight: "80dvh" }}
+            style={{ maxHeight: "70dvh" }}
           >
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1">
@@ -325,7 +325,7 @@ function MobileCartSheet({
             </div>
 
             {/* Content */}
-            <div className="overflow-y-auto" style={{ maxHeight: "calc(80dvh - 120px)" }}>
+            <div className="overflow-y-auto" style={{ maxHeight: "calc(70dvh - 120px)" }}>
               {cart.items.length === 0 ? (
                 <div className="flex flex-col items-center gap-4 px-6 py-12 text-center">
                   <div className="flex h-16 w-16 items-center justify-center rounded-card bg-ocean/[0.04]">
