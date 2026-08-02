@@ -161,7 +161,22 @@ export default function ProductDetails({ product, relatedProducts }: { product: 
                 <div className="flex items-end gap-3">
                   <div className="font-space text-3xl font-bold text-[#10233D]">{product.currency} {new Intl.NumberFormat("en-US").format(product.price)}</div>
                   {product.originalPrice && <div className="text-sm line-through text-ocean/40">{new Intl.NumberFormat("en-US").format(product.originalPrice)}</div>}
-                  {product.badge && <div className="ml-auto rounded-full bg-rose-50 text-rose-600 px-2.5 py-0.5 text-[10px] font-bold lowercase tracking-[0.08em] border border-rose-100/60">{product.badge.toLowerCase()}</div>}
+                  {product.badge && (() => {
+                    const b = product.badge!.toLowerCase();
+                    const label = b.charAt(0).toUpperCase() + b.slice(1);
+                    const isDiscount = b.includes("sale") || b.includes("off") || b.includes("discount");
+                    const isNew = b === "new" || b === "new arrival";
+                    return (
+                      <div className={cn(
+                        "ml-auto rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-[0.08em] border",
+                        isDiscount ? "bg-orange-50 text-orange-600 border-orange-100/60"
+                        : isNew ? "bg-ocean text-white border-ocean"
+                        : "bg-white border-black/5 text-ocean-deeper"
+                      )}>
+                        {isDiscount ? "On discount" : label}
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div className="mt-4 grid grid-cols-2 gap-3">

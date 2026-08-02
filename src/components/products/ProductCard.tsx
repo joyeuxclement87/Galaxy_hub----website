@@ -60,14 +60,15 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
     : null;
 
   const badgeLower = product.badge?.toLowerCase() ?? "";
+  const capFirst = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
   const badgeLabel =
     badgeLower.includes("sale") || badgeLower.includes("off") || badgeLower.includes("discount")
-      ? "on discount"
-      : product.badge;
+      ? "On discount"
+      : product.badge ? capFirst(product.badge.toLowerCase()) : "";
 
   const badgeClass =
-    badgeLower.includes("sale") || badgeLower.includes("off")
-      ? "bg-rose-50 text-rose-600 border border-rose-100/60"
+    badgeLower.includes("sale") || badgeLower.includes("off") || badgeLower.includes("discount")
+      ? "bg-orange-50 text-orange-600 border border-orange-100/60"
       : badgeLower === "new" || badgeLower === "new arrival"
       ? "bg-ocean text-white border border-ocean"
       : badgeLower.includes("limited")
@@ -75,9 +76,9 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
       : "bg-white/90 backdrop-blur-sm border border-black/5 text-ocean-deeper";
 
   const availabilityChip = product.availability === "In Stock"
-    ? { label: "in stock", cls: "bg-emerald-50 text-emerald-700 border border-emerald-100/60" }
+    ? { label: "In stock", cls: "bg-emerald-50 text-emerald-700 border border-emerald-100/60" }
     : product.availability === "Limited Stock"
-    ? { label: "coming soon", cls: "bg-amber-50 text-amber-700 border border-amber-100/60" }
+    ? { label: "Coming soon", cls: "bg-amber-50 text-amber-700 border border-amber-100/60" }
     : null;
 
   const href = product.externalUrl ?? `/product/${product.slug}`;
@@ -97,7 +98,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
       <div className="relative aspect-square w-full overflow-hidden bg-[#f8f9fa] p-3">
         {product.badge && (
           <span className={cn(
-            "absolute left-2 top-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold lowercase tracking-[0.08em]",
+            "absolute left-2 top-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold tracking-[0.08em]",
             badgeClass
           )}>
             {badgeLabel}
@@ -105,7 +106,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
         )}
         {availabilityChip && !product.badge && (
           <span className={cn(
-            "absolute left-2 top-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold lowercase tracking-[0.08em]",
+            "absolute left-2 top-2 z-10 rounded-full px-2 py-0.5 text-[10px] font-bold tracking-[0.08em]",
             availabilityChip.cls
           )}>
             {availabilityChip.label}
