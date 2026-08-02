@@ -281,11 +281,11 @@ export default function HomeClient({ data }: HomeClientProps) {
       <NewArrivals products={newArrivals} onReserve={setSelectedProduct} />
 
       {/* ── FEATURED DEALS — matches the current card design language ── */}
-      <section id="deals" className="bg-white px-4 py-20 sm:px-6 md:px-12 md:py-28">
+      <section id="deals" className="bg-white px-4 py-16 sm:px-6">
         <div className="mx-auto max-w-[1320px]">
           <div className="max-w-2xl">
             <span className="section-label">FEATURED DEALS</span>
-            <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ocean-deeper mt-4">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-ocean-deeper mt-3">
               Today&apos;s Best Tech Deals
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/60 max-w-xl">
@@ -296,7 +296,7 @@ export default function HomeClient({ data }: HomeClientProps) {
           {displayDeals.length > 0 ? (
             <div
               className={cn(
-                "mt-10 grid grid-cols-1 gap-5",
+                "mt-8 grid grid-cols-1 gap-4",
                 displayDeals.length === 1
                   ? "sm:grid-cols-1"
                   : displayDeals.length === 2
@@ -308,7 +308,7 @@ export default function HomeClient({ data }: HomeClientProps) {
                 <div
                   key={deal.slug}
                   className={cn(
-                    "group relative flex flex-col overflow-hidden rounded-card border border-ocean/[0.06] bg-white shadow-sm transition-all duration-300 hover:-translate-y-[2px] hover:border-ocean/15 hover:shadow-md",
+                    "group relative flex flex-col overflow-hidden rounded-card border border-ocean/[0.06] bg-white shadow-sm transition-all duration-250 hover:border-ocean/15 hover:shadow-md",
                     displayDeals.length === 1 && "lg:flex-row"
                   )}
                 >
@@ -316,43 +316,43 @@ export default function HomeClient({ data }: HomeClientProps) {
                     className={cn(
                       "relative overflow-hidden bg-ivory-dark/30 flex items-center justify-center",
                       displayDeals.length === 1
-                        ? "aspect-[16/9] w-full lg:aspect-auto lg:w-[45%] lg:min-h-[300px] p-8"
-                        : "aspect-[16/10] w-full p-5"
+                        ? "aspect-[16/9] w-full lg:aspect-auto lg:w-[45%] lg:min-h-[280px] p-6"
+                        : "aspect-[16/10] w-full p-4"
                     )}
                   >
                     <img
                       src={deal.image}
                       alt={deal.title}
                       loading="lazy"
-                      className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.04] select-none"
+                      className="h-full w-full object-contain transition-transform duration-300 ease-out group-hover:scale-[1.04] select-none"
                     />
                     <span
-                      className={`absolute left-4 top-4 rounded-full px-3 py-1 text-caption font-bold uppercase tracking-wider shadow-sm ${
+                      className={`absolute left-3 top-3 rounded-full px-2 py-0.5 text-xs font-bold uppercase tracking-wider shadow-sm ${
                         deal.badgeType === "red" ? "bg-red-500 text-white" : "bg-ocean text-white"
                       }`}
                     >
                       {deal.badge}
                     </span>
                   </div>
-                  <div className={cn("flex flex-1 flex-col", displayDeals.length === 1 ? "p-6 sm:p-8 lg:justify-center" : "p-5")}>
-                    <h3 className={cn("font-clash font-bold text-ocean-deeper tracking-tight", displayDeals.length === 1 ? "text-xl sm:text-2xl" : "text-base")}>
+                  <div className={cn("flex flex-1 flex-col", displayDeals.length === 1 ? "p-5 sm:p-6 lg:justify-center" : "p-4")}>
+                    <h3 className={cn("font-clash font-bold text-ocean-deeper tracking-tight", displayDeals.length === 1 ? "text-lg sm:text-xl" : "text-sm sm:text-base")}>
                       {deal.title}
                     </h3>
                     {deal.description && (
-                      <p className={cn("mt-1 text-xs leading-relaxed text-ocean/55 line-clamp-2", displayDeals.length === 1 && "text-sm sm:text-base line-clamp-3 mt-3")}>
+                      <p className={cn("mt-1 text-xs leading-relaxed text-ocean/55 line-clamp-2", displayDeals.length === 1 && "text-sm line-clamp-3 mt-2")}>
                         {deal.description}
                       </p>
                     )}
-                    <div className={cn(displayDeals.length === 1 ? "mt-6" : "mt-4")}>
+                    <div className={cn(displayDeals.length === 1 ? "mt-4" : "mt-3")}>
                       <DealCountdown startDate={deal.startsAt} endDate={deal.endsAt} large={displayDeals.length === 1} />
                     </div>
-                    <div className={cn(displayDeals.length === 1 ? "mt-5" : "mt-4")}>
+                    <div className={cn(displayDeals.length === 1 ? "mt-4" : "mt-3")}>
                       <Link
                         href={DEAL_PRODUCT_HREF}
-                        className="inline-flex h-11 items-center justify-center gap-1.5 rounded-btn bg-ocean-deeper px-6 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
+                        className="inline-flex h-11 items-center justify-center gap-1.5 rounded-btn bg-ocean-deeper px-5 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover"
                       >
                         {deal.ctaText}
-                        <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                        <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
                       </Link>
                     </div>
                   </div>
@@ -360,9 +360,9 @@ export default function HomeClient({ data }: HomeClientProps) {
               ))}
             </div>
           ) : (
-            <div className="mt-10 flex flex-col items-center justify-center rounded-card border border-dashed border-ocean/[0.08] bg-white/50 py-20 text-center">
-              <AlertCircle className="mx-auto h-12 w-12 text-ocean/30" />
-              <p className="mt-4 text-sm text-ocean/45">No active deals at this time. Check back soon!</p>
+            <div className="mt-8 flex flex-col items-center justify-center rounded-card border border-dashed border-ocean/[0.08] bg-white/50 py-14 text-center">
+              <AlertCircle className="mx-auto h-10 w-10 text-ocean/30" />
+              <p className="mt-3 text-sm text-ocean/45">No active deals at this time. Check back soon!</p>
             </div>
           )}
         </div>
@@ -371,11 +371,11 @@ export default function HomeClient({ data }: HomeClientProps) {
       <Brands brands={data.brands} />
 
       {/* ── TRENDING PRODUCTS ── */}
-      <section id="products" className="bg-white px-4 py-20 sm:px-6 md:px-12 md:py-28">
-        <div className="mx-auto max-w-[1320px] space-y-8">
+      <section id="products" className="bg-white px-4 py-16 sm:px-6">
+        <div className="mx-auto max-w-[1320px] space-y-6">
           <div className="max-w-2xl">
             <span className="section-label">TRENDING NOW</span>
-            <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper mt-3">
+            <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper mt-3">
               Popular Tech Picks
             </h2>
           </div>
