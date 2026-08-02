@@ -102,7 +102,7 @@ function buildOrderMessage(data: TelegramNotificationData): string {
   const items = data.items ?? [];
 
   const lines: string[] = ["🛒 *New Order Received*", ""];
-  lines.push(`*Order:* #${escapeMarkdownV2(order.order_number)}`);
+  lines.push(`*Order:* \\#${escapeMarkdownV2(order.order_number)}`);
   lines.push(`*Customer:* ${escapeMarkdownV2(customer.name)}`);
   lines.push(`*Phone:* ${escapeMarkdownV2(customer.phone)}`);
   if (customer.email) lines.push(`*Email:* ${escapeMarkdownV2(customer.email)}`);
@@ -138,7 +138,7 @@ function buildStatusMessage(data: TelegramNotificationData): string {
   const status: Partial<NonNullable<TelegramNotificationData["status"]>> = data.status ?? { next: "" };
 
   const lines: string[] = ["📦 *Order Status Updated*", ""];
-  lines.push(`*Order:* #${escapeMarkdownV2(order.order_number)}`);
+  lines.push(`*Order:* \\#${escapeMarkdownV2(order.order_number)}`);
   if (status.previous) {
     lines.push(`*Previous:* ${escapeMarkdownV2(status.previous)}`);
   }
