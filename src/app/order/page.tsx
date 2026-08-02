@@ -91,6 +91,7 @@ function OrderContent() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [selectedStorage, setSelectedStorage] = useState<Record<string, string>>({});
+  const [orderReceipt, setOrderReceipt] = useState<{ key: string; title: string; storage: string | null }[]>([]);
 
   // Load the product preselected via ?product=slug (e.g. "Order Now" on a product page)
   useEffect(() => {
@@ -169,6 +170,12 @@ function OrderContent() {
     setSubmitting(true);
     setSubmitError("");
 
+    const receipt = cartItems.map((item) => ({
+      key: item.key,
+      title: item.title,
+      storage: storageFor(item),
+    }));
+
     const result = await submitOrder({
       customer_name: formData.name,
       phone: formData.phone,
@@ -200,6 +207,7 @@ function OrderContent() {
 
     setOrderRef(result.order.order_number);
     setOrderTotal(Number(result.order.total_amount));
+    setOrderReceipt(receipt);
     setSubmitted(true);
     setDirectProduct(null);
     await cart.refresh();
@@ -214,6 +222,7 @@ function OrderContent() {
 
   const startNewOrder = () => {
     setSubmitted(false);
+    setOrderReceipt([]);
     setFormData({ name: "", phone: "", district: "", address: "", notes: "" });
     setErrors({});
     setSubmitError("");
@@ -300,17 +309,14 @@ function OrderContent() {
                   <span className="font-display font-bold text-ocean">{orderRef}</span>
                 </div>
                 <div className="flex items-start justify-between gap-4">
-                  <span className="text-ocean/60 shrink-0">Items ({cartItems.length})</span>
+                  <span className="text-ocean/60 shrink-0">Items ({orderReceipt.length})</span>
                   <span className="text-right font-semibold text-ocean-deeper">
-                    {cartItems.map((item) => {
-                      const storage = storageFor(item);
-                      return (
-                        <span key={item.key} className="block">
-                          {item.title}
-                          {storage ? ` — ${storage}` : ""}
-                        </span>
-                      );
-                    })}
+                    {orderReceipt.map((item) => (
+                      <span key={item.key} className="block">
+                        {item.title}
+                        {item.storage ? ` — ${item.storage}` : ""}
+                      </span>
+                    ))}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
