@@ -88,17 +88,17 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
     >
       {/* Image area */}
       <div className="relative aspect-square w-full overflow-hidden bg-[#f8f9fa] flex items-center justify-center p-5">
-        {product.badge && (
-          <span className={cn(
-            "absolute left-3 top-3 z-10 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest",
-            badgeClass
-          )}>
+          {product.badge && (
+            <span className={cn(
+              "absolute left-3 top-3 z-10 rounded-full px-2.5 py-1 text-xs font-bold uppercase tracking-widest",
+              badgeClass
+            )}>
             {product.badge}
           </span>
         )}
         {availabilityChip && !product.badge && (
           <span className={cn(
-            "absolute left-3 top-3 z-10 rounded-full px-2.5 py-1 text-[9px] font-bold",
+            "absolute left-3 top-3 z-10 rounded-full px-2.5 py-1 text-xs font-bold",
             availabilityChip.cls
           )}>
             {availabilityChip.label}
@@ -121,7 +121,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
         {/* Brand + Rating row */}
         <div className="flex items-center justify-between gap-2 mb-2">
           {product.brand ? (
-            <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-ocean/50 truncate">
+            <span className="text-xs font-bold uppercase tracking-[0.16em] text-ocean/50 truncate">
               {product.brand}
             </span>
           ) : <span />}
@@ -132,7 +132,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
               ))}
               <Star className="h-2.5 w-2.5 fill-current opacity-30" />
             </div>
-            <span className="text-[10px] font-semibold text-ocean-deeper/70 tabular-nums">
+            <span className="text-xs font-semibold text-ocean-deeper/70 tabular-nums">
               {product.rating ?? "4.8"}
             </span>
           </div>
@@ -147,7 +147,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
 
         {/* Tagline / specs */}
         {(product.specsSummary || product.tagline) && (
-          <p className="mt-1 text-[11px] text-ocean/40 line-clamp-1 leading-relaxed">
+          <p className="mt-1 text-xs text-ocean/40 line-clamp-1 leading-relaxed">
             {product.specsSummary ?? product.tagline}
           </p>
         )}
@@ -162,17 +162,17 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
           ) : (
             <div>
               <div className="flex items-end gap-2">
-                <span className="font-display text-[17px] font-bold text-ocean-deeper leading-none">
+                <span className="font-display text-[15px] font-bold text-ocean-deeper leading-none">
                   {product.currency} {formattedPrice}
                 </span>
                 {product.originalPrice && (
-                  <span className="text-[10px] text-ocean/30 line-through mb-0.5">
+                  <span className="text-xs text-ocean/30 line-through mb-0.5">
                     {new Intl.NumberFormat("en-US").format(product.originalPrice)}
                   </span>
                 )}
               </div>
               {formattedMonthly && (
-                <span className="mt-0.5 block text-[9px] font-bold text-ocean/35 uppercase tracking-wide">
+                <span className="mt-0.5 block text-[10px] font-bold text-ocean/35 uppercase tracking-wide">
                   From RWF {formattedMonthly}/mo
                 </span>
               )}
@@ -187,10 +187,8 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
             onClick={handleAddToCart}
             disabled={loading}
             className={cn(
-              "flex-1 justify-center gap-1.5 rounded-btn px-3 py-2.5 text-[11px] min-h-0 transition-all duration-200",
-              isInCart
-                ? "!bg-gradient-to-b from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
-                : "bg-ocean-deeper text-white hover:bg-ocean-dark"
+              "flex-1 justify-center gap-1.5 rounded-btn px-3 py-2.5 text-xs min-h-0",
+              isInCart && "!bg-gradient-to-b from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
             )}
           >
             {isInCart
