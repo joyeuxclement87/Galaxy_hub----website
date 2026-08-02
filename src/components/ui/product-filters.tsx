@@ -39,7 +39,7 @@ export function ProductFilters({
           <div key={group.id}>
             {gi > 0 && <div className="divider-subtle mb-6" />}
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-ocean-deeper/50">
+              <h3 className="text-sm font-bold text-ocean-deeper/60">
                 {group.title}
               </h3>
               {activeOption && activeOption.label !== allOption?.label && (
@@ -57,7 +57,7 @@ export function ProductFilters({
                   <Link
                     href={option.href}
                     className={cn(
-                      "flex items-center justify-between gap-2 rounded-btn px-3 py-2.5 text-base transition-all duration-200",
+                      "flex items-center justify-between gap-2 rounded-btn px-3 py-2 text-sm transition-all duration-200",
                       option.active
                         ? "bg-ocean text-white font-semibold shadow-btn"
                         : "text-ocean-deeper/65 hover:bg-ocean/5 hover:text-ocean-deeper font-medium"
@@ -91,7 +91,7 @@ export function ProductFilters({
         <div className="pt-2">
           <Link
             href="/products"
-            className="flex items-center justify-center gap-1.5 rounded-btn border border-ocean/15 bg-white/60 px-4 py-2.5 text-base font-bold uppercase tracking-[0.12em] text-ocean transition-all duration-250 hover:border-ocean/30 hover:bg-white"
+            className="flex items-center justify-center gap-1.5 rounded-btn border border-ocean/15 bg-white/60 px-4 py-2.5 text-sm font-bold text-ocean transition-all duration-250 hover:border-ocean/30 hover:bg-white"
           >
             <X className="h-3 w-3" />
             Reset filters ({activeCount})
@@ -216,7 +216,7 @@ function FilterDrawerPortal({
                   <div key={group.id}>
                     {gi > 0 && <div className="divider-subtle mb-6" />}
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-ocean-deeper/45">
+                      <h3 className="text-sm font-bold text-ocean-deeper/60">
                         {group.title}
                       </h3>
                       {activeOption && activeOption.label !== allOption?.label && (
@@ -236,7 +236,7 @@ function FilterDrawerPortal({
                             href={option.href}
                             onClick={onClose}
                             className={cn(
-                              "flex items-center justify-between gap-2 rounded-btn px-3 py-2.5 text-base transition-all duration-200 min-h-[44px]",
+                              "flex items-center justify-between gap-2 rounded-btn px-3 py-2 text-sm transition-all duration-200 min-h-[44px]",
                               option.active
                                 ? "bg-ocean text-white font-semibold shadow-btn"
                                 : "text-ocean-deeper/65 hover:bg-ocean/5 hover:text-ocean-deeper font-medium"
@@ -274,7 +274,7 @@ function FilterDrawerPortal({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex w-full items-center justify-center gap-2 rounded-btn bg-ocean-deeper h-11 text-base font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark active:scale-[0.98]"
+                className="flex w-full items-center justify-center gap-2 rounded-btn bg-ocean-deeper h-11 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark active:scale-[0.98]"
               >
                 Show results
                 {activeCount > 0 && (
@@ -305,8 +305,11 @@ export function MobileFilters({
   const [mounted, setMounted] = useState(false);
   const close = useCallback(() => setOpen(false), []);
 
-  // Only render portal on client
-  useEffect(() => { setMounted(true); }, []);
+  // Only render portal on client (async so it never cascades a render)
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   const clearAllHref = currentQ
     ? `/products?q=${encodeURIComponent(currentQ)}`
@@ -321,7 +324,7 @@ export function MobileFilters({
         aria-expanded={open}
         aria-haspopup="dialog"
         className={cn(
-          "inline-flex items-center justify-center gap-1.5 rounded-btn border px-4 py-2.5 text-base font-bold uppercase tracking-[0.12em] transition-all duration-250 min-h-[44px]",
+          "inline-flex items-center justify-center gap-1.5 rounded-btn border px-4 py-2.5 text-sm font-bold transition-all duration-250 min-h-[44px]",
           activeCount > 0
             ? "border-ocean bg-ocean text-white shadow-btn"
             : "border-ocean/12 bg-white text-ocean-deeper hover:border-ocean/25 hover:bg-ocean/4"
