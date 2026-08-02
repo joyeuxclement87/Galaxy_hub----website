@@ -135,7 +135,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
                 <div className="flex items-center gap-3">
                   <span className="section-label">{slide.badge || "FEATURED TECH"}</span>
                   {discount > 0 && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-red-500">
+                    <span className="text-caption font-bold uppercase tracking-wider text-red-500">
                       — Save {discount}%
                     </span>
                   )}

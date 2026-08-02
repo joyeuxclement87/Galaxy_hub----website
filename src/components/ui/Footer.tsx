@@ -85,7 +85,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <nav aria-label="Shop links" className="lg:col-span-3 space-y-3">
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/40 block">
+            <span className="text-caption font-bold uppercase tracking-[0.18em] text-white/40 block">
               Quick Links
             </span>
             <ul className="space-y-2 text-xs text-white/50 font-manrope">
@@ -106,7 +106,7 @@ export function Footer() {
 
           {/* Contact Details */}
           <address className="not-italic lg:col-span-4 space-y-3">
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/40 block">
+            <span className="text-caption font-bold uppercase tracking-[0.18em] text-white/40 block">
               Store Information
             </span>
             <div className="space-y-2.5 text-xs text-white/50 font-manrope">
@@ -131,7 +131,7 @@ export function Footer() {
         </div>
 
         {/* Footer Bottom */}
-        <div className="mt-10 pt-6 border-t border-white/[0.06] flex flex-col gap-3 text-[10px] text-white/30 sm:flex-row sm:items-center sm:justify-between font-manrope">
+        <div className="mt-10 pt-6 border-t border-white/[0.06] flex flex-col gap-3 text-caption text-white/30 sm:flex-row sm:items-center sm:justify-between font-manrope">
           <span>© 2026 Galaxy Hub Rwanda. All rights reserved.</span>
           <div className="flex items-center gap-3">
             <span>Genuine Tech Guaranteed</span>

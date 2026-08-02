@@ -63,11 +63,11 @@ export default async function AdminDashboardPage() {
           <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="space-y-3">
               <div className="flex items-center gap-2.5">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/8 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/50 ring-1 ring-white/10">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/8 px-3 py-1 text-caption font-bold uppercase tracking-[0.18em] text-white/50 ring-1 ring-white/10">
                   <Zap className="h-3 w-3 fill-white/30 text-white/30" />
                   Store Overview
                 </span>
-                <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-400 ring-1 ring-emerald-500/20">
+                <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-caption font-bold uppercase tracking-[0.18em] text-emerald-400 ring-1 ring-emerald-500/20">
                   <Activity className="h-3 w-3" />
                   Live
                 </span>
@@ -263,7 +263,7 @@ function QuickActions() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <h2 className="font-clash text-lg font-bold text-white">Quick Actions</h2>
-          <span className="rounded-full bg-white/8 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white/30">4 shortcuts</span>
+          <span className="rounded-full bg-white/8 px-2 py-0.5 text-caption font-bold uppercase tracking-wider text-white/30">4 shortcuts</span>
         </div>
         <TrendingUp className="h-4 w-4 text-white/20" />
       </div>
@@ -318,7 +318,7 @@ async function RecentOrders() {
       <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
         <div className="flex items-center gap-2">
           <h2 className="font-clash text-base font-bold text-white">Recent Orders</h2>
-          <span className="rounded-full bg-white/8 px-2 py-0.5 text-[10px] font-bold text-white/40">{recentOrders.length}</span>
+          <span className="rounded-full bg-white/8 px-2 py-0.5 text-caption font-bold text-white/40">{recentOrders.length}</span>
         </div>
         <Link
           href="/admin/orders"
@@ -340,11 +340,11 @@ async function RecentOrders() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/5">
-                <th className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Order</th>
-                <th className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Customer</th>
-                <th className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Status</th>
-                <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Total</th>
-                <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Date</th>
+                <th className="px-5 py-3 text-left text-caption font-bold uppercase tracking-[0.12em] text-white/30">Order</th>
+                <th className="px-5 py-3 text-left text-caption font-bold uppercase tracking-[0.12em] text-white/30">Customer</th>
+                <th className="px-5 py-3 text-left text-caption font-bold uppercase tracking-[0.12em] text-white/30">Status</th>
+                <th className="px-5 py-3 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Total</th>
+                <th className="px-5 py-3 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Date</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -366,7 +366,7 @@ async function RecentOrders() {
                     </td>
                     <td className="px-5 py-3.5 text-right">
                       <span className="text-sm font-bold text-white">{Number(order.total_amount).toLocaleString()}</span>
-                      <span className="ml-1 text-[10px] font-medium text-white/30">RWF</span>
+                      <span className="ml-1 text-caption font-medium text-white/30">RWF</span>
                     </td>
                     <td className="px-5 py-3.5 text-right">
                       <span className="text-xs text-white/30 whitespace-nowrap">
@@ -392,7 +392,7 @@ async function RecentProducts() {
       <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
         <div className="flex items-center gap-2">
           <h2 className="font-clash text-base font-bold text-white">Recent Products</h2>
-          <span className="rounded-full bg-white/8 px-2 py-0.5 text-[10px] font-bold text-white/40">{recentProducts.length}</span>
+          <span className="rounded-full bg-white/8 px-2 py-0.5 text-caption font-bold text-white/40">{recentProducts.length}</span>
         </div>
         <Link
           href="/admin/products"
@@ -414,10 +414,10 @@ async function RecentProducts() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/5">
-                <th className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Product</th>
-                <th className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Category</th>
-                <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Price</th>
-                <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Added</th>
+                <th className="px-5 py-3 text-left text-caption font-bold uppercase tracking-[0.12em] text-white/30">Product</th>
+                <th className="px-5 py-3 text-left text-caption font-bold uppercase tracking-[0.12em] text-white/30">Category</th>
+                <th className="px-5 py-3 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Price</th>
+                <th className="px-5 py-3 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Added</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -451,7 +451,7 @@ async function RecentProducts() {
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <span className="text-sm font-bold text-white">{Number(product.price).toLocaleString()}</span>
-                    <span className="ml-1 text-[10px] font-medium text-white/30">RWF</span>
+                    <span className="ml-1 text-caption font-medium text-white/30">RWF</span>
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <span className="text-xs text-white/30 whitespace-nowrap">

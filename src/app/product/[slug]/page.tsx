@@ -155,12 +155,12 @@ export default async function ProductPage({ params }: ProductPageParams) {
               {product.brand_slug && product.brand_name ? (
                 <Link
                   href={`/products?brand=${product.brand_slug}`}
-                  className="text-[10px] font-bold uppercase tracking-[0.24em] text-accent transition-colors hover:text-ocean"
+                  className="text-caption font-bold uppercase tracking-[0.24em] text-accent transition-colors hover:text-ocean"
                 >
                   {product.brand_name}
                 </Link>
               ) : product.brand_name && (
-                <span className="text-[10px] font-bold uppercase tracking-[0.24em] text-accent">{product.brand_name}</span>
+                <span className="text-caption font-bold uppercase tracking-[0.24em] text-accent">{product.brand_name}</span>
               )}
 
               {/* Product name */}
@@ -185,7 +185,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
                     <span className="text-base text-ocean/30 line-through">
                       RWF {formatPrice(product.old_price)}
                     </span>
-                    <span className="rounded-full border border-red-100 bg-red-50 px-2.5 py-0.5 text-[10px] font-bold text-red-600">
+                    <span className="rounded-full border border-red-100 bg-red-50 px-2.5 py-0.5 text-caption font-bold text-red-600">
                       Save {discount}%
                     </span>
                   </>
@@ -223,7 +223,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-ocean/[0.06] text-ocean mb-2">
                       <item.icon className="h-4 w-4" />
                     </div>
-                    <span className="text-[10px] font-bold text-ocean-deeper leading-tight block">
+                    <span className="text-caption font-bold text-ocean-deeper leading-tight block">
                       {item.text}
                     </span>
                     <span className="text-[9px] text-ocean/40 mt-0.5 block truncate max-w-full">
@@ -236,7 +236,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
               {/* Full description */}
               {product.description && product.description !== product.short_description && (
                 <div className="mt-6 border-t border-ocean/[0.06] pt-5">
-                  <h2 className="text-[10px] font-bold uppercase tracking-[0.16em] text-ocean-deeper/40">About this product</h2>
+                  <h2 className="text-caption font-bold uppercase tracking-[0.16em] text-ocean-deeper/40">About this product</h2>
                   <p className="mt-2 text-sm leading-relaxed text-ocean/55">{product.description}</p>
                 </div>
               )}

@@ -137,7 +137,7 @@ export default function ProductDetails({ product, relatedProducts }: { product: 
         {/* Info (right 45%) */}
         <div className="lg:col-span-5 flex flex-col">
           <div className="mb-3 flex items-center gap-3">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-ocean/70">{product.category}</span>
+            <span className="text-caption font-bold uppercase tracking-widest text-ocean/70">{product.category}</span>
             <span className="text-sm font-medium text-[#10233D]">{product.brand}</span>
           </div>
 

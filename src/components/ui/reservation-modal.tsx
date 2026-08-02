@@ -92,7 +92,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
                   <ShoppingBag className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.2em] text-ocean/50">
+                  <span className="mb-1 block text-caption font-semibold uppercase tracking-[0.2em] text-ocean/50">
                     Product Shop Order
                   </span>
                   <h3 className="font-clash text-2xl font-bold leading-tight text-[#10233D]">
@@ -122,7 +122,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
               {/* Inputs */}
               <div className="space-y-4">
                 <div>
-                  <label className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-ocean/70">
+                  <label className="mb-1.5 block text-caption font-medium uppercase tracking-[0.05em] text-ocean/70">
                     Full Name
                   </label>
                   <input
@@ -137,7 +137,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-ocean/70">
+                    <label className="mb-1.5 block text-caption font-medium uppercase tracking-[0.05em] text-ocean/70">
                       Phone Number
                     </label>
                     <input
@@ -150,7 +150,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
                     {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-ocean/70">
+                    <label className="mb-1.5 block text-caption font-medium uppercase tracking-[0.05em] text-ocean/70">
                       Email Address
                     </label>
                     <input
@@ -165,7 +165,7 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-ocean/70">
+                  <label className="mb-1.5 block text-caption font-medium uppercase tracking-[0.05em] text-ocean/70">
                     Preferred Shop Visit Date
                   </label>
                   <input

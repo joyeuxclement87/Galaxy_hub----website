@@ -77,7 +77,7 @@ export function KeySpecifications({
             <div className="flex h-8 w-8 items-center justify-center rounded-btn bg-ocean/7 text-ocean">
               <Icon className="h-4 w-4" />
             </div>
-            <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.14em] text-ocean-deeper/45">
+            <p className="mt-3 text-caption font-bold uppercase tracking-[0.14em] text-ocean-deeper/45">
               {spec.label}
             </p>
             <p className="mt-1 text-sm font-bold text-ocean-deeper leading-snug">{spec.value}</p>
@@ -123,7 +123,7 @@ export function SpecificationsAccordion({ specifications }: { specifications: Sp
             type="button"
             onClick={toggleAll}
             aria-expanded={allExpanded}
-            className="inline-flex items-center gap-1.5 rounded-btn border border-ocean/12 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.12em] text-ocean-deeper/60 transition-all duration-200 hover:border-ocean/25 hover:text-ocean-deeper cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-btn border border-ocean/12 bg-white px-4 py-2 text-caption font-bold uppercase tracking-[0.12em] text-ocean-deeper/60 transition-all duration-200 hover:border-ocean/25 hover:text-ocean-deeper cursor-pointer"
           >
             {allExpanded ? "Collapse all" : "Expand all"}
           </button>

@@ -41,7 +41,7 @@ export function MobileOrderBar({
         {expanded && storageOptions.length > 0 && (
           <div className="border-b border-ocean/8 px-4 py-3 bg-ivory/60">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-ocean/50">Select Storage</span>
+              <span className="text-caption font-bold uppercase tracking-[0.18em] text-ocean/50">Select Storage</span>
               <button
                 type="button"
                 onClick={() => setExpanded(false)}

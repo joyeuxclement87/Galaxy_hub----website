@@ -160,7 +160,7 @@ export function MobileApiImportPanel({ onImport }: MobileApiImportPanelProps) {
                 <p className="truncate text-sm font-medium text-white/85">
                   {result.name}
                   {result.deviceType && (
-                    <span className="ml-2 rounded bg-ocean/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ocean-light/80">
+                    <span className="ml-2 rounded bg-ocean/20 px-1.5 py-0.5 text-caption font-bold uppercase tracking-wider text-ocean-light/80">
                       {DEVICE_TYPE_LABELS[result.deviceType] || result.deviceType}
                     </span>
                   )}
@@ -201,7 +201,7 @@ export function MobileApiImportPanel({ onImport }: MobileApiImportPanelProps) {
               <p className="text-sm font-bold text-white">
                 {preview.deviceName}
                 {preview.deviceType && (
-                  <span className="ml-2 rounded bg-ocean/20 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ocean-light/80">
+                  <span className="ml-2 rounded bg-ocean/20 px-1.5 py-0.5 text-caption font-bold uppercase tracking-wider text-ocean-light/80">
                     {DEVICE_TYPE_LABELS[preview.deviceType] || preview.deviceType}
                   </span>
                 )}

@@ -26,7 +26,7 @@ export default function DealsPage() {
 
         {/* Section Header */}
         <div className="space-y-4 max-w-2xl">
-          <span className="block text-[10px] font-bold uppercase tracking-[0.24em] text-accent font-manrope">
+          <span className="block text-caption font-bold uppercase tracking-[0.24em] text-accent font-manrope">
             EXCLUSIVE OFFERS
           </span>
           <h1 className="font-clash text-4xl font-bold leading-tight text-[#10233D] sm:text-5xl">
@@ -54,7 +54,7 @@ export default function DealsPage() {
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <span
-                    className={`absolute left-4 top-4 rounded-full px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider shadow-sm ${
+                    className={`absolute left-4 top-4 rounded-full px-3.5 py-1 text-caption font-bold uppercase tracking-wider shadow-sm ${
                       deal.badgeType === "red"
                         ? "bg-red-500 text-white"
                         : "bg-ocean text-white"

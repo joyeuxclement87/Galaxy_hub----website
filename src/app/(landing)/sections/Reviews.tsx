@@ -77,7 +77,7 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
                       </div>
                     </div>
                     {review.verified && (
-                      <span className="inline-flex shrink-0 items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-ocean">
+                      <span className="inline-flex shrink-0 items-center gap-1.5 text-caption font-bold uppercase tracking-[0.14em] text-ocean">
                         <span className="h-1.5 w-1.5 rounded-full bg-ocean" />
                         Verified
                       </span>
@@ -95,7 +95,7 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
                   </p>
 
                   {review.purchasedProduct && (
-                    <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.14em] text-ocean/60 font-manrope">
+                    <p className="mt-3 text-caption font-bold uppercase tracking-[0.14em] text-ocean/60 font-manrope">
                       Purchased: {review.purchasedProduct}
                     </p>
                   )}

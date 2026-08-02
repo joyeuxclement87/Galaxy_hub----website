@@ -234,7 +234,7 @@ function OrderContent() {
 
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
-              <span className="inline-flex items-center rounded-btn bg-ocean/[0.07] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-2">
+              <span className="inline-flex items-center rounded-btn bg-ocean/[0.07] px-4 py-1.5 text-caption font-bold uppercase tracking-[0.2em] text-accent mb-2">
                 EXPRESS ORDER
               </span>
               <h1 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-ocean-deeper">
@@ -371,7 +371,7 @@ function OrderContent() {
                     <h2 className="font-display text-base font-bold text-ocean-deeper">
                       Items in Your Order
                       {hasItems && (
-                        <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-btn bg-ocean/[0.08] px-1.5 text-[10px] font-bold text-ocean">
+                        <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-btn bg-ocean/[0.08] px-1.5 text-caption font-bold text-ocean">
                           {cartItems.length}
                         </span>
                       )}
@@ -468,7 +468,7 @@ function OrderContent() {
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-ocean/50">
+                      <label className="mb-1.5 flex items-center gap-1.5 text-caption font-bold uppercase tracking-wider text-ocean/50">
                         <User className="h-3.5 w-3.5" /> Full Name *
                       </label>
                       <input
@@ -482,7 +482,7 @@ function OrderContent() {
                     </div>
 
                     <div>
-                      <label className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-ocean/50">
+                      <label className="mb-1.5 flex items-center gap-1.5 text-caption font-bold uppercase tracking-wider text-ocean/50">
                         <Phone className="h-3.5 w-3.5" /> Phone Number (Call / WhatsApp) *
                       </label>
                       <input
@@ -497,7 +497,7 @@ function OrderContent() {
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-ocean/50">
+                    <label className="mb-1.5 block text-caption font-bold uppercase tracking-wider text-ocean/50">
                       Order Notes / Color & Storage Preference (optional)
                     </label>
                     <input
@@ -536,7 +536,7 @@ function OrderContent() {
                         <div className="flex h-9 w-9 items-center justify-center rounded-btn bg-ocean/10 text-ocean">
                           <Store className="h-4 w-4" />
                         </div>
-                        <span className="rounded-btn bg-emerald-50 border border-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600">
+                        <span className="rounded-btn bg-emerald-50 border border-emerald-100 px-2.5 py-0.5 text-caption font-bold text-emerald-600">
                           FREE
                         </span>
                       </div>
@@ -558,7 +558,7 @@ function OrderContent() {
                         <div className="flex h-9 w-9 items-center justify-center rounded-btn bg-ocean/10 text-ocean">
                           <Truck className="h-4 w-4" />
                         </div>
-                        <span className="rounded-btn bg-ocean/10 px-2.5 py-0.5 text-[10px] font-bold text-ocean">
+                        <span className="rounded-btn bg-ocean/10 px-2.5 py-0.5 text-caption font-bold text-ocean">
                           FROM RWF 3,000
                         </span>
                       </div>
@@ -579,7 +579,7 @@ function OrderContent() {
                       >
                         <div className="space-y-3 rounded-btn border border-ocean/[0.08] bg-ivory/60 p-4">
                           <div>
-                            <label className="mb-1 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-ocean/50">
+                            <label className="mb-1 flex items-center gap-1.5 text-caption font-bold uppercase tracking-wider text-ocean/50">
                               <MapPin className="h-3.5 w-3.5" /> Province
                             </label>
                             <select
@@ -597,7 +597,7 @@ function OrderContent() {
 
                           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                             <div>
-                              <label className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-ocean/50">
+                              <label className="mb-1 block text-caption font-bold uppercase tracking-wider text-ocean/50">
                                 District *
                               </label>
                               <input
@@ -610,7 +610,7 @@ function OrderContent() {
                               {errors.district && <p className="mt-1 text-xs font-medium text-red-500">{errors.district}</p>}
                             </div>
                             <div>
-                              <label className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-ocean/50">
+                              <label className="mb-1 block text-caption font-bold uppercase tracking-wider text-ocean/50">
                                 Delivery Address *
                               </label>
                               <input

@@ -15,7 +15,7 @@ export function CreatorEssentials() {
       <div className="mx-auto max-w-[1320px]">
         <div className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div className="max-w-xl space-y-3">
-            <span className="block text-[10px] font-bold uppercase tracking-[0.28em] text-ocean-light/60 font-manrope">
+            <span className="block text-caption font-bold uppercase tracking-[0.28em] text-ocean-light/60 font-manrope">
               CREATOR ESSENTIALS
             </span>
             <h2

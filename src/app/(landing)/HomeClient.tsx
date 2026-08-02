@@ -115,11 +115,11 @@ function DealCountdown({
         <div className="flex items-center justify-between gap-3">
           <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-500/70 font-manrope">OFFER ENDED</span>
           {endDate && (
-            <span className="text-[10px] font-bold text-red-500/60 font-manrope">Ended {formatDayTime(endDate)}</span>
+            <span className="text-caption font-bold text-red-500/60 font-manrope">Ended {formatDayTime(endDate)}</span>
           )}
         </div>
         {(startDate || endDate) && (
-          <p className="mt-1.5 text-[10px] font-semibold text-ocean/40 font-manrope">
+          <p className="mt-1.5 text-caption font-semibold text-ocean/40 font-manrope">
             {startDate && <span>Starts {formatDayTime(startDate)}</span>}
             {startDate && endDate && <span className="mx-1.5 text-ocean/20">→</span>}
             {endDate && <span>Ends {formatDayTime(endDate)}</span>}
@@ -134,7 +134,7 @@ function DealCountdown({
       <div className="flex items-center justify-between gap-3">
         <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-ocean-deeper/40 font-manrope">{label}</span>
         {endDate && (
-          <span className="text-[10px] font-bold text-ocean/60 font-manrope">
+          <span className="text-caption font-bold text-ocean/60 font-manrope">
             Ends <span className="font-clash text-xs text-ocean-deeper">{formatDayTime(endDate)}</span>
           </span>
         )}
@@ -161,7 +161,7 @@ function DealCountdown({
       {(startDate || endDate) && (
         <div className="mt-2.5 flex items-center justify-between gap-3 border-t border-ocean/[0.06] pt-2">
           {startDate ? (
-            <span className="min-w-0 truncate text-[10px] font-semibold text-ocean/45 font-manrope">
+            <span className="min-w-0 truncate text-caption font-semibold text-ocean/45 font-manrope">
               <span className="mr-1 text-[8px] font-bold uppercase tracking-wider text-ocean/30">Starts</span>
               {formatDayTime(startDate)}
             </span>
@@ -170,7 +170,7 @@ function DealCountdown({
           )}
           <span className="shrink-0 text-ocean/20">→</span>
           {endDate ? (
-            <span className="min-w-0 truncate text-[10px] font-bold text-ocean-deeper/80 font-manrope">
+            <span className="min-w-0 truncate text-caption font-bold text-ocean-deeper/80 font-manrope">
               <span className="mr-1 text-[8px] font-bold uppercase tracking-wider text-ocean/40">Ends</span>
               {formatDayTime(endDate)}
             </span>
@@ -327,7 +327,7 @@ export default function HomeClient({ data }: HomeClientProps) {
                       className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.04] select-none"
                     />
                     <span
-                      className={`absolute left-4 top-4 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider shadow-sm ${
+                      className={`absolute left-4 top-4 rounded-full px-3 py-1 text-caption font-bold uppercase tracking-wider shadow-sm ${
                         deal.badgeType === "red" ? "bg-red-500 text-white" : "bg-ocean text-white"
                       }`}
                     >
@@ -349,7 +349,7 @@ export default function HomeClient({ data }: HomeClientProps) {
                     <div className={cn(displayDeals.length === 1 ? "mt-5" : "mt-4")}>
                       <Link
                         href={DEAL_PRODUCT_HREF}
-                        className="inline-flex h-10 items-center justify-center gap-1.5 rounded-btn bg-ocean-deeper px-6 text-[10px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
+                        className="inline-flex h-10 items-center justify-center gap-1.5 rounded-btn bg-ocean-deeper px-6 text-caption font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
                       >
                         {deal.ctaText}
                         <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />

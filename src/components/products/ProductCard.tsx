@@ -172,7 +172,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
                 )}
               </div>
               {formattedMonthly && (
-                <span className="mt-0.5 block text-[10px] font-bold text-ocean/35 uppercase tracking-wide">
+                <span className="mt-0.5 block text-caption font-bold text-ocean/35 uppercase tracking-wide">
                   From RWF {formattedMonthly}/mo
                 </span>
               )}

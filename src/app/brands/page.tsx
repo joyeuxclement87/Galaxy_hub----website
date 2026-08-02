@@ -38,7 +38,7 @@ export default function BrandsIndexPage() {
             <Link key={brand.slug} href={`/brands/${brand.slug}`} className="group rounded-[28px] border border-[#0b5497]/10 bg-white p-6 shadow-[0_16px_50px_rgba(11,84,151,0.06)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_22px_65px_rgba(11,84,151,0.1)]">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#0b5497]/70">{brand.filter}</p>
+                  <p className="text-caption font-semibold uppercase tracking-[0.24em] text-[#0b5497]/70">{brand.filter}</p>
                   <h2 className="mt-2 font-clash text-2xl font-semibold text-[#10233D]">{brand.name}</h2>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#0b5497]/10 bg-[#f6fbff] text-lg font-semibold text-[#0b5497]">

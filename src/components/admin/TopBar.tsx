@@ -42,7 +42,7 @@ export function TopBar({ userEmail }: { userEmail: string }) {
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3 pl-10 lg:pl-0">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/30">
+            <p className="text-caption font-bold uppercase tracking-[0.18em] text-white/30">
               Galaxy Hub
             </p>
             <h1 className="font-clash text-lg font-bold leading-tight text-white lg:text-xl">
@@ -74,7 +74,7 @@ export function TopBar({ userEmail }: { userEmail: string }) {
             </div>
             <div className="hidden lg:block">
               <p className="text-xs font-semibold text-white/80 leading-none">{userEmail.split("@")[0]}</p>
-              <p className="text-[10px] text-white/30 mt-0.5">{userEmail.split("@")[1] ?? "Admin"}</p>
+              <p className="text-caption text-white/30 mt-0.5">{userEmail.split("@")[1] ?? "Admin"}</p>
             </div>
           </div>
 

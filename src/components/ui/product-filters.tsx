@@ -39,13 +39,13 @@ export function ProductFilters({
           <div key={group.id}>
             {gi > 0 && <div className="divider-subtle mb-6" />}
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-ocean-deeper/50">
+              <h3 className="text-caption font-bold uppercase tracking-[0.18em] text-ocean-deeper/50">
                 {group.title}
               </h3>
               {activeOption && activeOption.label !== allOption?.label && (
                 <Link
                   href={allOption?.href ?? "/products"}
-                  className="text-[10px] font-semibold text-ocean/40 hover:text-ocean transition-colors"
+                  className="text-caption font-semibold text-ocean/40 hover:text-ocean transition-colors"
                 >
                   Clear
                 </Link>
@@ -216,14 +216,14 @@ function FilterDrawerPortal({
                   <div key={group.id}>
                     {gi > 0 && <div className="divider-subtle mb-6" />}
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-ocean-deeper/45">
+                      <h3 className="text-caption font-bold uppercase tracking-[0.18em] text-ocean-deeper/45">
                         {group.title}
                       </h3>
                       {activeOption && activeOption.label !== allOption?.label && (
                         <Link
                           href={allOption?.href ?? "/products"}
                           onClick={onClose}
-                          className="text-[10px] font-semibold text-ocean/40 hover:text-ocean transition-colors"
+                          className="text-caption font-semibold text-ocean/40 hover:text-ocean transition-colors"
                         >
                           Clear
                         </Link>
@@ -278,7 +278,7 @@ function FilterDrawerPortal({
               >
                 Show results
                 {activeCount > 0 && (
-                  <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white/20 px-1.5 text-[10px]">
+                  <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white/20 px-1.5 text-caption">
                     {activeCount}
                   </span>
                 )}
@@ -330,7 +330,7 @@ export function MobileFilters({
         <SlidersHorizontal className="h-3.5 w-3.5" />
         Filters
         {activeCount > 0 && (
-          <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white/25 px-1.5 text-[10px] font-bold">
+          <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white/25 px-1.5 text-caption font-bold">
             {activeCount}
           </span>
         )}

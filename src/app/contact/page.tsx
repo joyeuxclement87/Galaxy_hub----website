@@ -64,7 +64,7 @@ export default function ContactPage() {
     "w-full rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-2.5 text-base sm:text-sm text-ocean-deeper transition-all focus:border-accent focus:bg-white focus:outline-none placeholder:text-ocean/30";
 
   const fieldLabel =
-    "mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-ocean/50";
+    "mb-1.5 block text-caption font-bold uppercase tracking-wider text-ocean/50";
 
   return (
     <div className="min-h-screen flex flex-col bg-ivory text-ocean-deeper font-sans pt-24">
@@ -83,7 +83,7 @@ export default function ContactPage() {
           </Link>
 
           <div>
-            <span className="inline-flex items-center rounded-btn bg-ocean/[0.07] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-2">
+            <span className="inline-flex items-center rounded-btn bg-ocean/[0.07] px-4 py-1.5 text-caption font-bold uppercase tracking-[0.2em] text-accent mb-2">
               CONTACT US
             </span>
             <h1 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-ocean-deeper">

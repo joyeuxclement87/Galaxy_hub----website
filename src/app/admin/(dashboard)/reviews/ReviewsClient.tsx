@@ -46,13 +46,13 @@ export function ReviewsTable({ reviews }: { reviews: AdminReview[] }) {
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/5 text-left">
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Customer</th>
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Rating</th>
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Review</th>
-              <th className="px-5 py-3.5 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Featured</th>
-              <th className="px-5 py-3.5 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Verified</th>
-              <th className="px-5 py-3.5 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Active</th>
-              <th className="px-5 py-3.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Actions</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Customer</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Rating</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Review</th>
+              <th className="px-5 py-3.5 text-center text-caption font-bold uppercase tracking-[0.12em] text-white/30">Featured</th>
+              <th className="px-5 py-3.5 text-center text-caption font-bold uppercase tracking-[0.12em] text-white/30">Verified</th>
+              <th className="px-5 py-3.5 text-center text-caption font-bold uppercase tracking-[0.12em] text-white/30">Active</th>
+              <th className="px-5 py-3.5 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
@@ -77,7 +77,7 @@ export function ReviewsTable({ reviews }: { reviews: AdminReview[] }) {
                     &ldquo;{r.content}&rdquo;
                   </p>
                   {r.purchased_product && (
-                    <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/25">
+                    <p className="mt-0.5 text-caption font-bold uppercase tracking-[0.12em] text-white/25">
                       Purchased: {r.purchased_product}
                     </p>
                   )}
@@ -98,7 +98,7 @@ export function ReviewsTable({ reviews }: { reviews: AdminReview[] }) {
                 </td>
                 <td className="px-5 py-3.5 text-center">
                   {r.is_verified
-                    ? <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-300 ring-1 ring-emerald-500/20">✓</span>
+                    ? <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-caption font-bold uppercase tracking-wider text-emerald-300 ring-1 ring-emerald-500/20">✓</span>
                     : <span className="text-white/20">—</span>}
                 </td>
                 <td className="px-5 py-3.5 text-center">

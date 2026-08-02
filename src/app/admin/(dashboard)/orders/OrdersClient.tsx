@@ -36,13 +36,13 @@ export function OrdersTable({ orders }: { orders: { id: string; order_number: st
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/5 text-left">
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Order</th>
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Customer</th>
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Email</th>
-              <th className="px-5 py-3.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Total</th>
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Status</th>
-              <th className="px-5 py-3.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Date</th>
-              <th className="px-5 py-3.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Actions</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Order</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Customer</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Email</th>
+              <th className="px-5 py-3.5 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Total</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Status</th>
+              <th className="px-5 py-3.5 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Date</th>
+              <th className="px-5 py-3.5 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">

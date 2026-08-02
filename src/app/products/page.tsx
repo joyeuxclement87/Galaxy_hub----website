@@ -220,25 +220,25 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
             {activeCount > 0 && (
               <div className="mt-2.5 flex flex-wrap items-center gap-2 lg:hidden">
                 {category_slug && (
-                  <Link href={buildHref({ ...params, category: "", page: 1 })} className="inline-flex items-center gap-1 rounded-full bg-ocean px-3 py-1.5 text-[10px] font-bold text-white">
+                  <Link href={buildHref({ ...params, category: "", page: 1 })} className="inline-flex items-center gap-1 rounded-full bg-ocean px-3 py-1.5 text-caption font-bold text-white">
                     {result.categories.find(c => c.slug === category_slug)?.name ?? category_slug}
                     <X className="h-2.5 w-2.5" />
                   </Link>
                 )}
                 {brand_slug && (
-                  <Link href={buildHref({ ...params, brand: "", page: 1 })} className="inline-flex items-center gap-1 rounded-full bg-ocean px-3 py-1.5 text-[10px] font-bold text-white">
+                  <Link href={buildHref({ ...params, brand: "", page: 1 })} className="inline-flex items-center gap-1 rounded-full bg-ocean px-3 py-1.5 text-caption font-bold text-white">
                     {result.brands.find(b => b.slug === brand_slug)?.name ?? brand_slug}
                     <X className="h-2.5 w-2.5" />
                   </Link>
                 )}
                 {stock_status && (
-                  <Link href={buildHref({ ...params, stock: "", page: 1 })} className="inline-flex items-center gap-1 rounded-full bg-ocean px-3 py-1.5 text-[10px] font-bold text-white">
+                  <Link href={buildHref({ ...params, stock: "", page: 1 })} className="inline-flex items-center gap-1 rounded-full bg-ocean px-3 py-1.5 text-caption font-bold text-white">
                     {stock_status === "available" ? "In Stock" : "Coming Soon"}
                     <X className="h-2.5 w-2.5" />
                   </Link>
                 )}
                 {featured && (
-                  <Link href={buildHref({ ...params, featured: "", page: 1 })} className="inline-flex items-center gap-1 rounded-full bg-ocean px-3 py-1.5 text-[10px] font-bold text-white">
+                  <Link href={buildHref({ ...params, featured: "", page: 1 })} className="inline-flex items-center gap-1 rounded-full bg-ocean px-3 py-1.5 text-caption font-bold text-white">
                     Featured
                     <X className="h-2.5 w-2.5" />
                   </Link>

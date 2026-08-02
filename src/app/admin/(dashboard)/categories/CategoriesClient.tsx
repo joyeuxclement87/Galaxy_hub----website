@@ -122,13 +122,13 @@ export function CategoriesTable({
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/5 text-left">
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Category</th>
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Slug</th>
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Description</th>
-              <th className="px-5 py-3.5 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Products</th>
-              <th className="px-5 py-3.5 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Active</th>
-              <th className="px-5 py-3.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Created</th>
-              <th className="px-5 py-3.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Actions</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Category</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Slug</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Description</th>
+              <th className="px-5 py-3.5 text-center text-caption font-bold uppercase tracking-[0.12em] text-white/30">Products</th>
+              <th className="px-5 py-3.5 text-center text-caption font-bold uppercase tracking-[0.12em] text-white/30">Active</th>
+              <th className="px-5 py-3.5 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Created</th>
+              <th className="px-5 py-3.5 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">

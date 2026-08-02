@@ -35,7 +35,7 @@ export function CTA() {
 
           <div className="relative z-10 flex min-h-[420px] items-center px-8 py-12 md:min-h-[460px] md:px-16 md:py-20">
             <div className="max-w-lg text-white">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.28em] text-white/60 font-manrope">
+              <span className="block text-caption font-bold uppercase tracking-[0.28em] text-white/60 font-manrope">
                 READY TO UPGRADE?
               </span>
               <h2

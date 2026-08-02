@@ -50,7 +50,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               <div className="absolute inset-0 bg-gradient-to-r from-[#10233D] via-[#10233D]/80 to-transparent" />
             </div>
             <div className="relative z-10 max-w-2xl space-y-6">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-white backdrop-blur-md">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-caption font-bold uppercase tracking-[0.24em] text-white backdrop-blur-md">
                 {products.length}+ Products
               </span>
               <h1 className="font-clash text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">{category.name}</h1>

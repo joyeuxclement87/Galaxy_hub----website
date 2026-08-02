@@ -23,7 +23,7 @@ export function StorageSelector({
 
   return (
     <div>
-      <p className={cn("flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-ocean/50", compact ? "mb-1.5" : "mb-2")}>
+      <p className={cn("flex items-center gap-1.5 text-caption font-bold uppercase tracking-wider text-ocean/50", compact ? "mb-1.5" : "mb-2")}>
         <HardDrive className="h-3.5 w-3.5" />
         Storage
       </p>

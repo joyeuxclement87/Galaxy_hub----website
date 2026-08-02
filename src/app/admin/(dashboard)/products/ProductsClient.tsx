@@ -202,16 +202,16 @@ export function ProductTable({
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/5 text-left">
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Product</th>
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Brand</th>
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Category</th>
-              <th className="px-5 py-3.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Price</th>
-              <th className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Stock</th>
-              <th className="px-5 py-3.5 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Feat.</th>
-              <th className="px-5 py-3.5 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">New</th>
-              <th className="px-5 py-3.5 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Active</th>
-              <th className="px-5 py-3.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Date</th>
-              <th className="px-5 py-3.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-white/30">Actions</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Product</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Brand</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Category</th>
+              <th className="px-5 py-3.5 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Price</th>
+              <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Stock</th>
+              <th className="px-5 py-3.5 text-center text-caption font-bold uppercase tracking-[0.12em] text-white/30">Feat.</th>
+              <th className="px-5 py-3.5 text-center text-caption font-bold uppercase tracking-[0.12em] text-white/30">New</th>
+              <th className="px-5 py-3.5 text-center text-caption font-bold uppercase tracking-[0.12em] text-white/30">Active</th>
+              <th className="px-5 py-3.5 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Date</th>
+              <th className="px-5 py-3.5 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
@@ -242,7 +242,7 @@ export function ProductTable({
                 <td className="px-5 py-3.5 text-sm text-white/50">{product.category?.name ?? "—"}</td>
                 <td className="px-5 py-3.5 text-right">
                   <span className="text-sm font-bold text-white">{Number(product.price).toLocaleString()}</span>
-                  <span className="ml-1 text-[10px] font-medium text-white/30">RWF</span>
+                  <span className="ml-1 text-caption font-medium text-white/30">RWF</span>
                 </td>
                 <td className="px-5 py-3.5">
                   <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${stockLabel[product.stock_status]?.color || "bg-white/5 text-white/50"}`}>

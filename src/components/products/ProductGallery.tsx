@@ -47,7 +47,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
           />
 
           {/* Zoom hint */}
-          <div className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white/80 px-3 py-1.5 text-[10px] font-semibold text-ocean/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm">
+          <div className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white/80 px-3 py-1.5 text-caption font-semibold text-ocean/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm">
             <ZoomIn className="h-3 w-3" />
             Tap to zoom
           </div>

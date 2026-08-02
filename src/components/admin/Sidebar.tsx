@@ -82,7 +82,7 @@ export function Sidebar() {
             <p className="font-clash text-sm font-bold text-white leading-none tracking-wide">
               GALAXY HUB
             </p>
-            <p className="text-[10px] text-white/40 font-medium tracking-widest uppercase mt-0.5">
+            <p className="text-caption text-white/40 font-medium tracking-widest uppercase mt-0.5">
               Admin Panel
             </p>
           </div>
@@ -100,7 +100,7 @@ export function Sidebar() {
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6 no-scrollbar">
         {NAV_GROUPS.map((group) => (
           <div key={group.label}>
-            <p className="px-3 mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white/25">
+            <p className="px-3 mb-2 text-caption font-bold uppercase tracking-[0.2em] text-white/25">
               {group.label}
             </p>
             <ul className="space-y-0.5">
@@ -145,7 +145,7 @@ export function Sidebar() {
           </div>
           <div>
             <p className="text-xs font-semibold text-white/70">Galaxy Hub</p>
-            <p className="text-[10px] text-white/30">v1.0.0 · Rwanda</p>
+            <p className="text-caption text-white/30">v1.0.0 · Rwanda</p>
           </div>
         </div>
       </div>

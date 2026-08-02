@@ -88,7 +88,7 @@ function SearchOverlay({
 
           {/* Suggestions */}
           <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-8">
-            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-ocean/35">
+            <p className="mb-3 text-caption font-bold uppercase tracking-[0.18em] text-ocean/35">
               Popular Searches
             </p>
             <div className="flex flex-wrap gap-2">
@@ -170,14 +170,14 @@ function CartDropdown({
               <div className="flex items-center justify-between border-b border-ocean/[0.06] px-5 py-3.5">
                 <div className="flex items-center gap-2">
                   <span className="font-display text-sm font-bold text-ocean-deeper">Cart</span>
-                  <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-btn bg-ocean/[0.08] px-1.5 text-[10px] font-bold text-ocean">
+                  <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-btn bg-ocean/[0.08] px-1.5 text-caption font-bold text-ocean">
                     {cart.count}
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => { cart.clear(); onClose(); }}
-                  className="rounded-btn px-2.5 py-1 text-[10px] font-semibold text-red-400 transition-all duration-200 hover:text-red-500 hover:bg-red-50 cursor-pointer"
+                  className="rounded-btn px-2.5 py-1 text-caption font-semibold text-red-400 transition-all duration-200 hover:text-red-500 hover:bg-red-50 cursor-pointer"
                 >
                   Clear all
                 </button>
@@ -309,7 +309,7 @@ function MobileCartSheet({
               <div className="flex items-center gap-2">
                 <span className="font-display text-sm font-bold text-ocean-deeper">Cart</span>
                 {cart.count > 0 && (
-                  <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-btn bg-ocean/[0.08] px-1.5 text-[10px] font-bold text-ocean">
+                  <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-btn bg-ocean/[0.08] px-1.5 text-caption font-bold text-ocean">
                     {cart.count}
                   </span>
                 )}
@@ -708,7 +708,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                       </div>
                     ))}
                     {cart.items.length > 4 && (
-                      <div className="h-10 w-10 shrink-0 flex items-center justify-center rounded-btn bg-ocean/[0.04] text-[10px] font-bold text-ocean/40">
+                      <div className="h-10 w-10 shrink-0 flex items-center justify-center rounded-btn bg-ocean/[0.04] text-caption font-bold text-ocean/40">
                         +{cart.items.length - 4}
                       </div>
                     )}
