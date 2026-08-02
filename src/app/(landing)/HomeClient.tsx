@@ -201,7 +201,7 @@ export default function HomeClient({ data }: HomeClientProps) {
       
       const fadeTimer = setTimeout(() => {
         setPreloaderFadeOut(true);
-      }, 1600);
+      }, 3000);
       
       const removeTimer = setTimeout(() => {
         setShowPreloader(false);
@@ -209,7 +209,7 @@ export default function HomeClient({ data }: HomeClientProps) {
         if (typeof window !== "undefined") {
           (window as any).__gh_loaded = true;
         }
-      }, 2100);
+      }, 3500);
       
       return () => {
         clearTimeout(fadeTimer);
