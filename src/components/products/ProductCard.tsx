@@ -89,7 +89,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
       <div className="relative aspect-square w-full overflow-hidden bg-[#f8f9fa] p-3">
         {product.badge && (
           <span className={cn(
-            "absolute left-2 top-2 z-10 rounded-badge px-2.5 py-1 text-caption font-bold uppercase tracking-widest",
+            "absolute left-2 top-2 z-10 rounded-badge px-2 py-0.5 text-xs font-bold uppercase tracking-widest",
             badgeClass
           )}>
             {product.badge}
@@ -97,7 +97,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
         )}
         {availabilityChip && !product.badge && (
           <span className={cn(
-            "absolute left-2 top-2 z-10 rounded-badge px-2.5 py-1 text-caption font-bold",
+            "absolute left-2 top-2 z-10 rounded-badge px-2 py-0.5 text-xs font-bold",
             availabilityChip.cls
           )}>
             {availabilityChip.label}
@@ -134,7 +134,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
 
         {/* Title */}
         <Link {...linkProps} className="mt-1.5 block">
-          <h3 className="font-display text-title-mobile font-bold leading-snug text-ocean-deeper line-clamp-2 hover:text-ocean transition-colors duration-200 group-hover:text-ocean sm:text-title-tablet lg:text-title-desktop">
+          <h3 className="font-display text-[1rem] font-bold leading-snug text-ocean-deeper line-clamp-2 hover:text-ocean transition-colors duration-200 group-hover:text-ocean sm:text-[1.15rem] lg:text-[1.25rem]">
             {product.title}
           </h3>
         </Link>
@@ -169,7 +169,7 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
           ) : (
             <div>
               <div className="flex items-end gap-2">
-                <span className="font-display text-price-mobile font-bold text-ocean-deeper leading-none sm:text-price-tablet lg:text-price-desktop">
+                <span className="font-display text-[0.9rem] font-bold text-ocean-deeper leading-none sm:text-[1rem] lg:text-[1.1rem]">
                   {product.currency} {formattedPrice}
                 </span>
                 {product.originalPrice && (
@@ -194,13 +194,13 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
             onClick={handleAddToCart}
             disabled={loading}
             className={cn(
-              "w-full justify-center gap-2 rounded-btn px-4 py-3 text-sm font-semibold",
+              "w-full justify-center gap-1.5 rounded-btn px-2 py-2.5 text-[10px] sm:text-[11px] lg:text-[12px] font-bold whitespace-nowrap",
               isInCart && "!bg-gradient-to-b from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
             )}
           >
             {isInCart
-              ? <><Trash2 className="h-4 w-4 shrink-0" /> Remove from Cart</>
-              : <><ShoppingCart className="h-4 w-4 shrink-0" /> Add to Cart</>
+              ? <><Trash2 className="h-3.5 w-3.5 shrink-0" /> Remove<span className="hidden sm:inline"> from Cart</span></>
+              : <><ShoppingCart className="h-3.5 w-3.5 shrink-0" /> Add to Cart</>
             }
           </Button>
         </div>

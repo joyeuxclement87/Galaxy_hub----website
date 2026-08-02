@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ShoppingCart } from "lucide-react";
 import { StorageSelector } from "@/components/products/StorageSelector";
 import { AddToCartButton } from "@/components/products/AddToCartButton";
 import { cn } from "@/lib/utils";
 
 /**
  * Floating bottom purchase bar shown only on mobile/tablet (hidden lg:).
- * Compact sticky bar showing price + primary actions only.
- * Height: 72-80px as per mobile redesign spec.
+ * Compact sticky bar: price → storage chip → cart icon btn → Order CTA.
  */
 export function MobileOrderBar({
   productName,
@@ -35,56 +34,71 @@ export function MobileOrderBar({
   const formattedPrice = new Intl.NumberFormat("en-US").format(price);
 
   return (
-    <div className="fixed bottom-3 inset-x-0 z-50 lg:hidden safe-bottom mx-3">
-      <div className="rounded-2xl border border-ocean/10 bg-white/95 backdrop-blur-xl shadow-[0_8px_24px_rgba(15,23,42,0.08)] overflow-hidden">
-        {/* Storage selector - expanded */}
+    <div className="fixed bottom-3 inset-x-0 z-50 lg:hidden mx-3">
+      <div className="rounded-2xl border border-ocean/10 bg-white/96 backdrop-blur-xl shadow-[0_8px_32px_rgba(11,84,151,0.12)] overflow-hidden">
+        {/* Storage selector — slides in above the bar */}
         {expanded && storageOptions.length > 0 && (
-          <div className="border-b border-ocean/[0.06] px-4 py-3 bg-ivory/60">
-            <StorageSelector options={storageOptions} value={storage} onChange={setStorage} />
+          <div className="border-b border-ocean/[0.06] px-4 py-3 bg-ivory/70">
+            <StorageSelector
+              options={storageOptions}
+              value={storage}
+              onChange={(s) => { setStorage(s); setExpanded(false); }}
+              compact
+            />
           </div>
         )}
 
-        {/* Main bar - compact height */}
-        <div className="px-3 py-2.5 flex items-center gap-2.5">
-          {/* Price */}
+        {/* Main bar */}
+        <div className="px-3 py-2.5 flex items-center gap-2">
+          {/* Price + storage chip */}
           <div className="flex-1 min-w-0">
-            <span className="text-caption font-bold uppercase tracking-wider text-ocean/40 block">
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-ocean/40 block leading-none mb-0.5">
               Price
             </span>
-            <span className="font-display text-lg font-bold text-ocean-deeper leading-none">
+            <span className="font-display text-base font-bold text-ocean-deeper leading-none">
               {currency} {formattedPrice}
             </span>
-            {storageOptions.length > 0 && !expanded && (
+            {storageOptions.length > 0 && (
               <button
                 type="button"
-                onClick={() => setExpanded(true)}
-                className="mt-0.5 flex items-center gap-1 rounded-full border border-ocean/15 bg-ocean/5 px-2.5 py-0.5 text-xs font-bold text-ocean-deeper"
+                onClick={() => setExpanded((e) => !e)}
+                className={cn(
+                  "mt-1 flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-bold transition-all duration-200",
+                  expanded
+                    ? "border-ocean bg-ocean text-white"
+                    : "border-ocean/15 bg-ocean/5 text-ocean-deeper hover:border-ocean/30"
+                )}
               >
-                Storage: {storage || storageOptions[0]}
+                <ShoppingCart className="h-3 w-3" />
+                {storage || storageOptions[0]}
               </button>
             )}
           </div>
 
-          {/* CTAs */}
+          {/* CTAs — consistent button design */}
           <div className="flex items-center gap-2 shrink-0">
+            {/* Add to cart — icon only, uses design system secondary style */}
             <AddToCartButton
               productId={productId}
               variant="secondary"
               storage={storage || undefined}
               showText={false}
-              className="h-10 w-10 rounded-btn border-ocean/15 bg-white shadow-sm"
+              redirectOnAdd={false}
+              className="h-10 w-10 min-w-[40px] rounded-btn border-ocean/20 bg-white text-ocean-deeper shadow-sm hover:border-ocean/35 hover:bg-ocean/[0.04]"
             />
-            <Link
-              href={`/order?product=${productSlug}${storage ? `&storage=${encodeURIComponent(storage)}` : ""}`}
-              className={cn(
-                "inline-flex h-10 items-center justify-center gap-1.5 rounded-btn px-4 text-sm font-bold uppercase tracking-[0.1em] text-white shadow-btn transition-all duration-250 active:scale-[0.97]",
-                isAvailable
-                  ? "bg-ocean-deeper hover:bg-ocean-dark hover:shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
-                  : "bg-ocean/40 pointer-events-none"
-              )}
-            >
+
+            {/* Order CTA — primary style, consistent with Button "primary" */}
+             <Link
+               href={`/order?product=${productSlug}${storage ? `&storage=${encodeURIComponent(storage)}` : ""}`}
+               className={cn(
+                 "inline-flex h-11 min-h-[44px] items-center justify-center gap-1.5 rounded-btn px-4 text-sm font-bold text-white shadow-btn transition-all duration-250 active:scale-[0.97]",
+                 isAvailable
+                   ? "bg-ocean-deeper hover:bg-ocean-dark hover:shadow-btn-hover"
+                   : "bg-ocean/40 pointer-events-none"
+               )}
+             >
               Order
-              {isAvailable && <ArrowRight className="h-4 w-4" />}
+              {isAvailable && <ArrowRight className="h-3.5 w-3.5" />}
             </Link>
           </div>
         </div>

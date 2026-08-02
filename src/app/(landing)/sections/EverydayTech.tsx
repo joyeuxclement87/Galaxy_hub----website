@@ -3,6 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { btnBase, btnVariants } from "@/components/ui/button";
 
 const EVERYDAY_COLLECTIONS = [
   {
@@ -58,7 +60,7 @@ export function EverydayTech() {
           </h2>
           <Link
             href="/products"
-            className="group hidden md:inline-flex shrink-0 items-center gap-2 rounded-btn border border-ocean/15 bg-white/60 backdrop-blur-sm px-6 h-11 text-sm font-semibold text-ocean hover:text-ocean-dark hover:bg-white hover:border-ocean/25 hover:shadow-sm transition-all duration-250 mt-2 md:mt-0"
+            className={cn(btnBase, btnVariants.secondary, "hidden md:inline-flex shrink-0 gap-2 px-6")}
           >
             Browse All <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
@@ -80,7 +82,7 @@ export function EverydayTech() {
               <span className="text-caption font-bold uppercase tracking-[0.22em] text-ocean-deeper/60">{featured.subtitle}</span>
               <h3 className="font-display text-lg sm:text-xl font-bold text-ocean-deeper mt-2">{featured.title}</h3>
               <p className="mt-2 text-sm leading-[1.75] text-ocean-deeper/60 max-w-md">{featured.description}</p>
-              <div className="mt-4 inline-flex items-center gap-2 rounded-btn bg-ocean-deeper text-white px-5 h-11 text-sm font-bold uppercase tracking-[0.12em] transition-all duration-250 group-hover:bg-ocean group-hover:shadow-btn">
+              <div className={cn(btnBase, btnVariants.primary, "mt-4 gap-2 px-5 group-hover:bg-ocean")}>
                 <span>Explore Collection</span>
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
               </div>

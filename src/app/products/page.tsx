@@ -315,7 +315,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                     </p>
                     <Link
                       href="/products"
-                      className="mt-6 inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-6 h-10 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover"
+                       className="mt-4 inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-6 h-11 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover"
                     >
                       Clear all filters
                     </Link>

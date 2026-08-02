@@ -389,7 +389,7 @@ function OrderContent() {
                       </div>
                       <Link
                         href="/products"
-                        className="inline-flex items-center gap-2 rounded-btn bg-ocean-deeper px-6 h-11 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark"
+                         className="inline-flex items-center gap-2 rounded-btn bg-ocean-deeper px-6 h-11 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark"
                       >
                         Browse Products
                       </Link>

@@ -4,6 +4,8 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, Camera } from "lucide-react";
 import { CREATOR_CATEGORIES, CREATOR_BUNDLE } from "@/data/mock-data";
+import { cn } from "@/lib/utils";
+import { btnBase, btnVariants } from "@/components/ui/button";
 
 export function CreatorEssentials() {
   return (
@@ -30,7 +32,7 @@ export function CreatorEssentials() {
           </div>
           <Link
             href="/products/creator-gear"
-            className="group inline-flex shrink-0 items-center gap-2 rounded-btn border border-white/15 px-7 h-11 py-0 text-xs font-bold uppercase tracking-[0.12em] text-white transition-all duration-250 hover:bg-white/10 hover:-translate-y-0.5"
+            className={cn(btnBase, btnVariants.ghostWhite, "gap-2 px-6")}
           >
             Shop All Creator Gear
             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -75,7 +77,7 @@ export function CreatorEssentials() {
           </div>
           <Link
             href="/products/creator-gear"
-            className="inline-flex shrink-0 items-center gap-2 rounded-btn bg-white px-7 h-11 py-0 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper shadow-btn transition-all duration-250 hover:bg-white/90 hover:shadow-btn-hover hover:-translate-y-0.5"
+            className={cn(btnBase, btnVariants.primaryWhite, "gap-2 px-6")}
           >
             <ShoppingBagIcon />
             From RWF {new Intl.NumberFormat("en-US").format(CREATOR_BUNDLE.startingPrice)}

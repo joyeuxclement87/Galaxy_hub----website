@@ -36,7 +36,7 @@ export default async function BrandPage({ params }: { params: Promise<{ slug: st
               <BadgeCheck className="h-3.5 w-3.5" /> Trusted Brand
             </span>
             <div className="space-y-3">
-              <h1 className="font-clash text-4xl font-semibold leading-tight sm:text-5xl">{brand.name}</h1>
+              <h1 className="font-clash text-3xl font-semibold leading-tight sm:text-4xl">{brand.name}</h1>
               {brand.description && <p className="text-lg text-[#10233D]/70">{brand.description}</p>}
             </div>
             {brand.description && <p className="text-sm leading-7 text-[#10233D]/65">{brand.description}</p>}

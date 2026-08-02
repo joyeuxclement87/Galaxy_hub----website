@@ -164,7 +164,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
                )}
 
                {/* Product name - responsive sizing */}
-               <h1 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-[1.1] tracking-tight text-ocean-deeper">
+               <h1 className="mt-2 font-display text-xl sm:text-2xl lg:text-3xl font-bold leading-[1.1] tracking-tight text-ocean-deeper">
                  {product.name}
                </h1>
 
@@ -177,7 +177,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
 
                {/* Price block */}
                <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                 <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-ocean-deeper leading-none">
+                 <span className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-ocean-deeper leading-none">
                    RWF {formatPrice(product.price)}
                  </span>
                  {product.old_price && discount > 0 && (

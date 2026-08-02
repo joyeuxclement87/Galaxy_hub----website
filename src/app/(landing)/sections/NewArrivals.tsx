@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Product } from "@/data/mock-data";
 import { ProductCard } from "@/components/products/ProductCard";
+import { cn } from "@/lib/utils";
+import { btnBase, btnVariants } from "@/components/ui/button";
 
 interface NewArrivalsProps {
   products: Product[];
@@ -40,7 +42,7 @@ export function NewArrivals({ products, onReserve }: NewArrivalsProps) {
         <div className="flex justify-center">
           <Link
             href="/products"
-            className="group inline-flex items-center gap-2 rounded-btn border border-ocean/15 bg-white px-7 h-11 text-sm font-bold text-ocean transition-all duration-250 hover:border-ocean/30 hover:text-ocean-dark"
+            className={cn(btnBase, btnVariants.secondary, "gap-2 px-6")}
           >
             View All Products <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>

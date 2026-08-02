@@ -4,6 +4,8 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { btnBase, btnVariants } from "@/components/ui/button";
 
 const TRUST_ITEMS = [
   "Genuine Products",
@@ -40,7 +42,7 @@ export function CTA() {
               </span>
               <h2
                 id="cta-heading"
-                className="mt-3 font-clash text-2xl sm:text-3xl md:text-[clamp(2rem,4vw,3rem)] font-bold leading-tight text-white"
+                className="mt-3 font-clash text-xl sm:text-2xl md:text-[clamp(1.75rem,3.5vw,2.5rem)] font-bold leading-tight text-white"
               >
                 Your Next Device<br />Starts Here.
               </h2>
@@ -51,14 +53,14 @@ export function CTA() {
   <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   href="/order"
-                  className="group inline-flex items-center gap-2 rounded-btn bg-white px-6 h-11 py-0 text-sm font-bold uppercase tracking-[0.12em] text-ocean shadow-btn transition-all duration-250 hover:bg-white/90 hover:shadow-btn-hover"
+                  className={cn(btnBase, btnVariants.primaryWhite, "gap-2 px-6")}
                 >
                   Order Now
                   <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   href="/products"
-                  className="group inline-flex items-center gap-2 rounded-btn border border-white/15 px-6 h-11 py-0 text-sm font-bold uppercase tracking-[0.12em] text-white transition-all duration-250 hover:bg-white/10"
+                  className={cn(btnBase, btnVariants.ghostWhite, "gap-2 px-6")}
                 >
                   Browse Products
                 </Link>

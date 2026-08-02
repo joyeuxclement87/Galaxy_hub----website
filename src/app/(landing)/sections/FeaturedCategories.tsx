@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/data/mock-data";
+import { btnBase, btnVariants } from "@/components/ui/button";
 
 const FALLBACK_CATEGORIES: { name: string; description: string; image: string; href: string; productCount: number }[] = [
   { name: "Smartphones", description: "Latest flagship phones and everyday devices", image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=800", href: "/products?category=smartphones", productCount: 124 },
@@ -46,7 +47,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
     <section id="categories" className="bg-ivory px-4 py-12 md:px-8 md:py-16">
       <div className="mx-auto max-w-[1320px]">
         <span className="section-label">CATEGORIES</span>
-        <h2 className="mt-3 font-display text-2xl sm:text-3xl md:text-[clamp(2rem,4vw,2.5rem)] font-bold leading-tight tracking-[-0.02em] text-ocean-deeper max-w-xl">
+        <h2 className="mt-3 font-display text-xl sm:text-2xl md:text-[clamp(1.75rem,3.25vw,2.25rem)] font-bold leading-tight tracking-[-0.02em] text-ocean-deeper max-w-xl">
           Explore Our Collections
         </h2>
 
@@ -78,7 +79,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
                   <h3
                     className={cn(
                       "font-clash font-bold text-white leading-tight",
-                      isFeatured ? "text-lg sm:text-xl" : "text-sm sm:text-base"
+                      isFeatured ? "text-base sm:text-lg" : "text-sm sm:text-[15px]"
                     )}
                   >
                     {cat.name}
@@ -100,7 +101,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
         <div className="mt-8 flex justify-center">
           <Link
             href="/products"
-            className="group inline-flex items-center gap-2 rounded-btn border border-ocean/15 bg-white px-6 h-11 text-sm font-semibold text-ocean transition-all duration-250 hover:border-ocean/30 hover:text-ocean-dark"
+            className={cn(btnBase, btnVariants.secondary, "gap-2 px-6")}
           >
             All Categories <ArrowUpRight className="h-4 w-4 transition-transform duration-250 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>

@@ -53,7 +53,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-caption font-bold uppercase tracking-[0.24em] text-white backdrop-blur-md">
                 {products.length}+ Products
               </span>
-              <h1 className="font-clash text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">{category.name}</h1>
+              <h1 className="font-clash text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl">{category.name}</h1>
               {category.description && (
                 <p className="text-sm md:text-base leading-relaxed text-white/80 max-w-xl">{category.description}</p>
               )}

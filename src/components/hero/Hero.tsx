@@ -144,7 +144,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
                  </div>
 
                  {/* Title */}
-                 <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.05] tracking-tight text-ocean-deeper">
+                 <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-[1.05] tracking-tight text-ocean-deeper">
                    {slide.title}
                  </h1>
 
@@ -177,7 +177,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
                      onClick={handleAddToCart}
                      disabled={isAdding}
                      className={cn(
-                       "rounded-btn h-12 px-6 py-0 text-sm font-bold uppercase tracking-[0.12em] transition-all duration-250 shadow-btn hover:bg-ocean-dark hover:shadow-btn-hover active:scale-[0.98]",
+                       "rounded-btn h-10 min-h-[40px] px-4 py-0 text-[12px] font-bold uppercase tracking-[0.12em] transition-all duration-250 shadow-btn hover:bg-ocean-dark hover:shadow-btn-hover active:scale-[0.98] sm:text-[13px]",
                        isInCart
                          ? "bg-red-600 text-white hover:bg-red-700"
                          : "bg-ocean-deeper text-white hover:bg-ocean-dark",
@@ -195,7 +195,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
 
                    <Link
                      href={`/product/${slide.slug}`}
-                     className="group inline-flex items-center gap-2 rounded-btn h-12 px-6 border border-ocean/20 bg-white/70 text-ocean-deeper text-sm font-bold uppercase tracking-[0.12em] transition-all duration-250 hover:border-ocean/35 hover:bg-white hover:shadow-sm"
+                     className="group inline-flex items-center gap-2 rounded-btn h-10 min-h-[40px] px-4 border border-ocean/20 bg-white/70 text-ocean-deeper text-[12px] font-bold uppercase tracking-[0.12em] transition-all duration-250 hover:border-ocean/35 hover:bg-white hover:shadow-sm sm:text-[13px]"
                    >
                      View Details
                      <ArrowUpRight className="h-4 w-4 opacity-50 group-hover:opacity-100 transition-opacity" />

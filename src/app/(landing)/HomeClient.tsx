@@ -349,7 +349,7 @@ export default function HomeClient({ data }: HomeClientProps) {
                     <div className={cn(displayDeals.length === 1 ? "mt-5" : "mt-4")}>
                       <Link
                         href={DEAL_PRODUCT_HREF}
-                        className="inline-flex h-10 items-center justify-center gap-1.5 rounded-btn bg-ocean-deeper px-6 text-caption font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
+                        className="inline-flex h-11 items-center justify-center gap-1.5 rounded-btn bg-ocean-deeper px-6 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
                       >
                         {deal.ctaText}
                         <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />

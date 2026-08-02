@@ -19,7 +19,7 @@ export default function BrandsIndexPage() {
             <Sparkles className="h-3.5 w-3.5" />
             Shop by Brand
           </span>
-          <h1 className="font-clash text-4xl font-semibold leading-tight sm:text-5xl">Premium tech brands, made easy to explore.</h1>
+          <h1 className="font-clash text-3xl font-semibold leading-tight sm:text-4xl">Premium tech brands, made easy to explore.</h1>
           <p className="text-lg leading-8 text-[#10233D]/70">
             From flagship smartphones to premium audio, Galaxy Hub brings the world&apos;s best technology names closer to Rwanda.
           </p>

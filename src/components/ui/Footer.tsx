@@ -55,7 +55,7 @@ export function Footer() {
                 className="h-8 w-auto object-contain select-none"
               />
             </Link>
-            <p className="text-xs leading-relaxed text-white/50 max-w-sm">
+            <p className="text-sm leading-relaxed text-white/70 max-w-sm">
               Rwanda&apos;s premier tech retailer. Genuine smartphones, laptops, audio gear, creator accessories, with express delivery.
             </p>
             {/* Social icons */}
@@ -88,7 +88,7 @@ export function Footer() {
             <span className="text-caption font-bold uppercase tracking-[0.18em] text-white/40 block">
               Quick Links
             </span>
-            <ul className="space-y-1.5 text-xs text-white/50">
+            <ul className="space-y-1.5 text-sm text-white/70">
               {[
                 { label: "Browse Products",    href: "/products" },
                 { label: "Deals & Promotions", href: "/deals" },
@@ -109,7 +109,7 @@ export function Footer() {
             <span className="text-caption font-bold uppercase tracking-[0.18em] text-white/40 block">
               Store Information
             </span>
-            <div className="space-y-2 text-xs text-white/50">
+            <div className="space-y-2 text-sm text-white/70">
               <div className="flex items-start gap-2">
                 <MapPin className="h-3.5 w-3.5 shrink-0 text-accent mt-0.5" />
                 <span>KN 70 St, Kigali, Rwanda</span>
@@ -131,7 +131,7 @@ export function Footer() {
         </div>
 
         {/* Footer Bottom */}
-        <div className="mt-8 pt-5 border-t border-white/[0.06] flex flex-col gap-2 text-caption text-white/30 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 pt-5 border-t border-white/[0.06] flex flex-col gap-2 text-sm text-white/60 sm:flex-row sm:items-center sm:justify-between">
           <span>© 2026 Galaxy Hub Rwanda. All rights reserved.</span>
           <div className="flex items-center gap-3">
             <span>Genuine Tech Guaranteed</span>
