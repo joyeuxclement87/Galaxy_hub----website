@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, Star } from "lucide-react";
-import { REVIEWS } from "@/data/mock-data";
 import type { Review } from "@/data/mock-data";
 
 const STATS = [
@@ -13,7 +12,8 @@ const STATS = [
 ];
 
 export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
-  const visibleReviews = reviews.length > 0 ? reviews : REVIEWS;
+  const hasReviews = reviews && reviews.length > 0;
+
   return (
     <section id="reviews" className="bg-white px-4 py-20 sm:px-6 md:px-12 md:py-28">
       <div className="mx-auto max-w-[1320px]">
@@ -54,52 +54,64 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
           </div>
 
           <div className="grid gap-x-10 gap-y-10 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
-            {visibleReviews.slice(0, 4).map((review) => (
-              <article key={review.id} className="flex flex-col border-t border-ocean/10 pt-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    {review.avatar ? (
-                      <img
-                        src={review.avatar}
-                        alt={review.author}
-                        loading="lazy"
-                        className="h-9 w-9 rounded-full object-cover shrink-0"
-                      />
-                    ) : (
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ocean/10 font-clash text-sm font-bold text-ocean">
-                        {review.author.charAt(0).toUpperCase()}
+            {hasReviews ? (
+              reviews!.slice(0, 4).map((review) => (
+                <article key={review.id} className="flex flex-col border-t border-ocean/10 pt-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      {review.avatar ? (
+                        <img
+                          src={review.avatar}
+                          alt={review.author}
+                          loading="lazy"
+                          className="h-9 w-9 rounded-full object-cover shrink-0"
+                        />
+                      ) : (
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ocean/10 font-clash text-sm font-bold text-ocean">
+                          {review.author.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                      <div>
+                        <h3 className="text-sm font-bold text-ocean-deeper">{review.author}</h3>
+                        <p className="text-xs text-ocean-deeper/55 font-manrope">{review.location ?? review.role}</p>
+                      </div>
+                    </div>
+                    {review.verified && (
+                      <span className="inline-flex shrink-0 items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-ocean">
+                        <span className="h-1.5 w-1.5 rounded-full bg-ocean" />
+                        Verified
                       </span>
                     )}
-                    <div>
-                      <h3 className="text-sm font-bold text-ocean-deeper">{review.author}</h3>
-                      <p className="text-xs text-ocean-deeper/55 font-manrope">{review.location ?? review.role}</p>
-                    </div>
                   </div>
-                  {review.verified && (
-                    <span className="inline-flex shrink-0 items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-ocean">
-                      <span className="h-1.5 w-1.5 rounded-full bg-ocean" />
-                      Verified
-                    </span>
-                  )}
-                </div>
 
-                <div className="mt-3 flex items-center gap-0.5 text-amber-400">
-                  {Array.from({ length: review.rating }).map((_, i) => (
-                    <Star key={i} className="h-3.5 w-3.5 fill-current" />
-                  ))}
-                </div>
+                  <div className="mt-3 flex items-center gap-0.5 text-amber-400">
+                    {Array.from({ length: review.rating }).map((_, i) => (
+                      <Star key={i} className="h-3.5 w-3.5 fill-current" />
+                    ))}
+                  </div>
 
-                <p className="mt-3 flex-1 text-sm leading-[1.75] text-ocean-deeper/60 font-manrope">
-                  &ldquo;{review.content}&rdquo;
-                </p>
-
-                {review.purchasedProduct && (
-                  <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.14em] text-ocean/60 font-manrope">
-                    Purchased: {review.purchasedProduct}
+                  <p className="mt-3 flex-1 text-sm leading-[1.75] text-ocean-deeper/60 font-manrope">
+                    &ldquo;{review.content}&rdquo;
                   </p>
-                )}
-              </article>
-            ))}
+
+                  {review.purchasedProduct && (
+                    <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.14em] text-ocean/60 font-manrope">
+                      Purchased: {review.purchasedProduct}
+                    </p>
+                  )}
+                </article>
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 text-center border-t border-ocean/10 pt-5">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-ocean/5 mb-3">
+                  <Star className="h-6 w-6 text-ocean/20" />
+                </div>
+                <p className="text-sm font-semibold text-ocean/50">No reviews yet</p>
+                <p className="mt-2 text-xs text-ocean/35 leading-relaxed max-w-xs">
+                  Be the first to share your experience with Galaxy Hub.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
