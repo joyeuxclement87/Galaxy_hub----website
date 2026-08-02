@@ -42,6 +42,12 @@ export async function submitOrder(formData: {
     };
   });
 
+  const { data: orderNumber, error: numberError } = await supabase.rpc("next_order_number");
+  if (numberError || !orderNumber) {
+    console.error("[checkout] Failed to generate order number:", numberError);
+    return { error: "Failed to generate order number" };
+  }
+
   const { data: order, error: orderError } = await supabase
     .from("orders")
     .insert({
@@ -51,7 +57,7 @@ export async function submitOrder(formData: {
       address: formData.address || null,
       notes: formData.notes || null,
       total_amount: totalAmount,
-      order_number: `ORD-${Date.now().toString().slice(-8)}`,
+      order_number: orderNumber,
     })
     .select("id, order_number, total_amount")
     .single();

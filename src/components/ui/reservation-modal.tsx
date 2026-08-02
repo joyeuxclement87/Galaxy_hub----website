@@ -43,7 +43,8 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
     e.preventDefault();
     if (validate()) {
       setStep("success");
-      setReservationId(`GH-${Math.floor(100000 + Math.random() * 900000)}`);
+      const year = new Date().getFullYear();
+      setReservationId(`GH-${year}-${String(Math.floor(100000 + Math.random() * 900000))}`);
       onSuccess?.(product);
       confetti({
         particleCount: 80,
