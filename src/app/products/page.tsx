@@ -116,10 +116,12 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
   ];
 
   // Smart pagination: first, ellipsis, window around current, ellipsis, last
+  // Max 5 page-number buttons shown — the rest are collapsed into ellipses.
+  const MAX_PAGE_BUTTONS = 5;
   function getPaginationPages(current: number, total: number): (number | "...")[] {
-    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    if (total <= MAX_PAGE_BUTTONS) return Array.from({ length: total }, (_, i) => i + 1);
     const pages: (number | "...")[] = [];
-    const window = 1; // pages around current
+    const window = Math.floor((MAX_PAGE_BUTTONS - 3) / 2);
     const left = Math.max(2, current - window);
     const right = Math.min(total - 1, current + window);
     pages.push(1);
