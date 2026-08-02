@@ -79,7 +79,7 @@ export default function CartPage() {
                         <div className="min-w-0">
                           <Link href={`/product/${p.slug}`} className="font-clash text-sm sm:text-base font-bold text-ocean-deeper hover:text-ocean transition-colors truncate block">{p.name}</Link>
                           {item.variant && (
-                            <span className="ml-1.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-1.5 py-0.5 text-[9px] sm:text-caption font-bold text-ocean align-middle mt-1">
+                            <span className="ml-1.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-1.5 py-0.5 text-xs sm:text-caption font-bold text-ocean align-middle mt-1">
                               {item.variant}
                             </span>
                           )}
@@ -101,7 +101,7 @@ export default function CartPage() {
                         </div>
                         <div className="text-right sm:text-right w-full sm:w-auto">
                           <span className="font-clash text-base sm:text-lg font-bold text-ocean-deeper">RWF {formatPrice(Number(p.price) * item.quantity)}</span>
-                          {discount > 0 && <p className="text-[9px] sm:text-caption text-ocean/35 mt-0.5">RWF {formatPrice(Number(p.price))} each</p>}
+                          {discount > 0 && <p className="text-xs sm:text-caption text-ocean/35 mt-0.5">RWF {formatPrice(Number(p.price))} each</p>}
                         </div>
                       </div>
                     </div>
@@ -134,7 +134,7 @@ export default function CartPage() {
                   <ShoppingBag className="h-4 w-4" /> Proceed to Checkout
                 </Button>
                 </Link>
-                <p className="mt-3 text-center text-[9px] sm:text-caption text-ocean/35">No payment required now. Pay on pickup or delivery.</p>
+                <p className="mt-3 text-center text-xs sm:text-caption text-ocean/35">No payment required now. Pay on pickup or delivery.</p>
               </div>
             </div>
           </div>

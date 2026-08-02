@@ -226,7 +226,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
                     <span className="text-caption font-bold text-ocean-deeper leading-tight block">
                       {item.text}
                     </span>
-                    <span className="text-[9px] text-ocean/40 mt-0.5 block truncate max-w-full">
+                    <span className="text-xs text-ocean/40 mt-0.5 block truncate max-w-full">
                       {item.sub}
                     </span>
                   </div>

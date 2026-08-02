@@ -207,7 +207,7 @@ function CartDropdown({
                         <p className="truncate text-[13px] font-semibold text-ocean-deeper">
                           {item.product!.name}
                           {item.variant && (
-                            <span className="ml-1.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-1.5 py-0.5 text-[9px] font-bold text-ocean align-middle">
+                            <span className="ml-1.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-1.5 py-0.5 text-xs font-bold text-ocean align-middle">
                               {item.variant}
                             </span>
                           )}
@@ -611,7 +611,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.4, opacity: 0 }}
                         transition={{ type: "spring", stiffness: 600, damping: 14 }}
-                        className="absolute -right-0.5 -top-0.5 inline-flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-ocean px-1 text-[9px] font-bold text-white shadow-sm"
+                        className="absolute -right-0.5 -top-0.5 inline-flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-ocean px-1 text-xs font-bold text-white shadow-sm"
                       >
                         {cart.count}
                       </motion.span>

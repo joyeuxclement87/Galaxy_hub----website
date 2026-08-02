@@ -113,7 +113,7 @@ function DealCountdown({
     return (
       <div className="rounded-card border border-red-500/15 bg-red-500/[0.04] px-4 py-3">
         <div className="flex items-center justify-between gap-3">
-          <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-red-500/70 font-manrope">OFFER ENDED</span>
+          <span className="text-xs font-bold uppercase tracking-[0.18em] text-red-500/70 font-manrope">OFFER ENDED</span>
           {endDate && (
             <span className="text-caption font-bold text-red-500/60 font-manrope">Ended {formatDayTime(endDate)}</span>
           )}
@@ -132,7 +132,7 @@ function DealCountdown({
   return (
     <div className="rounded-card border border-ocean/[0.08] bg-ivory/70 px-4 py-3">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-ocean-deeper/40 font-manrope">{label}</span>
+        <span className="text-xs font-bold uppercase tracking-[0.2em] text-ocean-deeper/40 font-manrope">{label}</span>
         {endDate && (
           <span className="text-caption font-bold text-ocean/60 font-manrope">
             Ends <span className="font-clash text-xs text-ocean-deeper">{formatDayTime(endDate)}</span>
@@ -151,7 +151,7 @@ function DealCountdown({
               <span className={cn("font-clash font-bold leading-none text-ocean-deeper", large ? "text-2xl sm:text-3xl" : "text-lg")}>
                 {unit.value}
               </span>
-              <span className={cn("mt-1 font-manrope text-[8px] font-bold uppercase tracking-[0.14em] text-ocean/35", large && "text-[9px]")}>
+              <span className={cn("mt-1 font-manrope text-[10px] font-bold uppercase tracking-[0.14em] text-ocean/35", large && "text-xs")}>
                 {unit.label}
               </span>
             </div>
@@ -162,7 +162,7 @@ function DealCountdown({
         <div className="mt-2.5 flex items-center justify-between gap-3 border-t border-ocean/[0.06] pt-2">
           {startDate ? (
             <span className="min-w-0 truncate text-caption font-semibold text-ocean/45 font-manrope">
-              <span className="mr-1 text-[8px] font-bold uppercase tracking-wider text-ocean/30">Starts</span>
+              <span className="mr-1 text-[10px] font-bold uppercase tracking-wider text-ocean/30">Starts</span>
               {formatDayTime(startDate)}
             </span>
           ) : (
@@ -171,7 +171,7 @@ function DealCountdown({
           <span className="shrink-0 text-ocean/20">→</span>
           {endDate ? (
             <span className="min-w-0 truncate text-caption font-bold text-ocean-deeper/80 font-manrope">
-              <span className="mr-1 text-[8px] font-bold uppercase tracking-wider text-ocean/40">Ends</span>
+              <span className="mr-1 text-[10px] font-bold uppercase tracking-wider text-ocean/40">Ends</span>
               {formatDayTime(endDate)}
             </span>
           ) : (

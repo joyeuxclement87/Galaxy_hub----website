@@ -417,7 +417,7 @@ function OrderContent() {
                               </div>
                               <div className="min-w-0 flex-1">
                                 {isDirect && (
-                                  <span className="mb-0.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-ocean">
+                                  <span className="mb-0.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-ocean">
                                     Selected for you
                                   </span>
                                 )}

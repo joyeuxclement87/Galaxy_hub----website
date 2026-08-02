@@ -98,7 +98,7 @@ export default async function AdminDashboardPage() {
               { label: "Platform", value: "Galaxy Hub v1.0" },
             ].map((item, i) => (
               <div key={item.label} className="bg-[#0a1628] px-4 py-3 sm:px-5">
-                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/25">{item.label}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/25">{item.label}</p>
                 <p className="mt-0.5 text-xs font-semibold text-white/70 truncate">{item.value}</p>
               </div>
             ))}

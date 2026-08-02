@@ -70,7 +70,7 @@ export function ProductFilters({
                     {option.count !== undefined && (
                       <span
                         className={cn(
-                          "shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold tabular-nums",
+                          "shrink-0 rounded-full px-2 py-0.5 text-xs font-bold tabular-nums",
                           option.active
                             ? "bg-white/20 text-white"
                             : "bg-ocean/6 text-ocean/40"
@@ -251,7 +251,7 @@ function FilterDrawerPortal({
                             {option.count !== undefined && (
                               <span
                                 className={cn(
-                                  "shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold tabular-nums",
+                                  "shrink-0 rounded-full px-2 py-0.5 text-xs font-bold tabular-nums",
                                   option.active
                                     ? "bg-white/20 text-white"
                                     : "bg-ocean/8 text-ocean/40"

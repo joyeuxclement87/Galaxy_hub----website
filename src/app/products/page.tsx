@@ -259,7 +259,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                       Filters
                     </span>
                     {activeCount > 0 && (
-                      <span className="rounded-full bg-ocean px-2 py-0.5 text-[9px] font-bold text-white">
+                      <span className="rounded-full bg-ocean px-2 py-0.5 text-xs font-bold text-white">
                         {activeCount}
                       </span>
                     )}
