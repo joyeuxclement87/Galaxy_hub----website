@@ -14,9 +14,6 @@ const FALLBACK_CATEGORIES: { name: string; description: string; image: string; h
   { name: "Accessories", description: "Essential tech for your devices", image: "https://images.unsplash.com/photo-1609592424085-f5b2257d7620?auto=format&fit=crop&q=80&w=800", href: "/products?category=accessories", productCount: 342 },
 ];
 
-// Preferred display order, regardless of how categories are sorted in the
-// database. Anything not matched here keeps its original relative order and
-// is appended after these.
 const CATEGORY_PRIORITY = ["smartphone", "phone", "laptop", "computer", "audio", "accessor", "gaming", "watch", "wearable"];
 
 function categoryRank(name: string): number {
@@ -46,14 +43,14 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
   const display = sortByPriority(source);
 
   return (
-    <section id="categories" className="bg-ivory px-6 py-20 md:px-12 md:py-28">
+    <section id="categories" className="bg-ivory px-4 py-12 md:px-8 md:py-16">
       <div className="mx-auto max-w-[1320px]">
         <span className="section-label">CATEGORIES</span>
-        <h2 className="mt-4 font-display text-[clamp(1.5rem,4vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ocean-deeper max-w-xl">
+        <h2 className="mt-3 font-display text-2xl sm:text-3xl md:text-[clamp(2rem,4vw,2.5rem)] font-bold leading-tight tracking-[-0.02em] text-ocean-deeper max-w-xl">
           Explore Our Collections
         </h2>
 
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-4 md:auto-rows-[150px] lg:auto-rows-[165px]">
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:auto-rows-[140px] lg:auto-rows-[165px]">
           {display.map((cat, index) => {
             const isFeatured = index === 0;
             return (
@@ -61,7 +58,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
                 key={cat.name}
                 href={cat.href}
                 className={cn(
-                  "group relative overflow-hidden rounded-card bg-ocean-deeper shadow-sm transition-all duration-300 hover:shadow-lg",
+                  "group relative overflow-hidden rounded-card bg-ocean-deeper shadow-sm transition-all duration-250 hover:shadow-lg",
                   isFeatured
                     ? "col-span-2 aspect-[16/10] sm:aspect-[16/9] md:aspect-auto md:col-span-2 md:row-span-2"
                     : "aspect-square md:aspect-auto"
@@ -73,25 +70,25 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
                   fill
                   loading="lazy"
                   sizes="(min-width: 1024px) 30vw, (min-width: 768px) 40vw, 50vw"
-                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent transition-opacity duration-300 group-hover:from-black/90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent transition-opacity duration-250 group-hover:from-black/90" />
 
-                <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-5 md:p-6">
+                <div className="absolute inset-0 flex flex-col justify-end p-3 sm:p-4 md:p-5">
                   <h3
                     className={cn(
                       "font-clash font-bold text-white leading-tight",
-                      isFeatured ? "text-xl sm:text-2xl" : "text-sm sm:text-base"
+                      isFeatured ? "text-lg sm:text-xl" : "text-sm sm:text-base"
                     )}
                   >
                     {cat.name}
                   </h3>
                   {cat.productCount > 0 && (
-                    <p className="mt-1 text-xs font-semibold text-white/65">
+                    <p className="mt-0.5 text-xs font-semibold text-white/65">
                       {cat.productCount}+ Products
                     </p>
                   )}
-                  <div className="mt-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white opacity-0 -translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                  <div className="mt-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white opacity-0 -translate-y-1 transition-all duration-250 group-hover:opacity-100 group-hover:translate-y-0">
                     Shop Now <ArrowUpRight className="h-3.5 w-3.5" />
                   </div>
                 </div>
@@ -100,12 +97,12 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
           })}
         </div>
 
-        <div className="mt-10 flex justify-center">
+        <div className="mt-8 flex justify-center">
           <Link
             href="/products"
-            className="group inline-flex items-center gap-2 rounded-btn border border-ocean/15 bg-white px-7 h-11 text-sm font-semibold text-ocean transition-all duration-300 hover:border-ocean/30 hover:text-ocean-dark"
+            className="group inline-flex items-center gap-2 rounded-btn border border-ocean/15 bg-white px-6 h-11 text-sm font-semibold text-ocean transition-all duration-250 hover:border-ocean/30 hover:text-ocean-dark"
           >
-            All Categories <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            All Categories <ArrowUpRight className="h-4 w-4 transition-transform duration-250 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </div>
       </div>

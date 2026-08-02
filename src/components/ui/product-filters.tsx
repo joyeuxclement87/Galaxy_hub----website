@@ -91,7 +91,7 @@ export function ProductFilters({
         <div className="pt-2">
           <Link
             href="/products"
-            className="flex items-center justify-center gap-1.5 rounded-btn border border-ocean/15 bg-white/60 px-4 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-ocean transition-all duration-300 hover:border-ocean/30 hover:bg-white"
+            className="flex items-center justify-center gap-1.5 rounded-btn border border-ocean/15 bg-white/60 px-4 py-2.5 text-sm font-bold uppercase tracking-[0.12em] text-ocean transition-all duration-250 hover:border-ocean/30 hover:bg-white"
           >
             <X className="h-3.5 w-3.5" />
             Reset filters ({activeCount})
@@ -274,7 +274,7 @@ function FilterDrawerPortal({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex w-full items-center justify-center gap-2 rounded-btn bg-ocean-deeper h-12 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-200 hover:bg-ocean-dark active:scale-[0.98]"
+                className="flex w-full items-center justify-center gap-2 rounded-btn bg-ocean-deeper h-11 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark active:scale-[0.98]"
               >
                 Show results
                 {activeCount > 0 && (
@@ -321,13 +321,13 @@ export function MobileFilters({
         aria-expanded={open}
         aria-haspopup="dialog"
         className={cn(
-          "inline-flex items-center justify-center gap-2 rounded-btn border px-4 py-2.5 text-xs font-bold uppercase tracking-[0.12em] transition-all duration-200 min-h-[44px]",
+          "inline-flex items-center justify-center gap-2 rounded-btn border px-4 py-2.5 text-sm font-bold uppercase tracking-[0.12em] transition-all duration-250 min-h-[44px]",
           activeCount > 0
             ? "border-ocean bg-ocean text-white shadow-btn"
             : "border-ocean/12 bg-white text-ocean-deeper hover:border-ocean/25 hover:bg-ocean/4"
         )}
       >
-        <SlidersHorizontal className="h-3.5 w-3.5" />
+        <SlidersHorizontal className="h-4 w-4" />
         Filters
         {activeCount > 0 && (
           <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white/25 px-1.5 text-caption font-bold">

@@ -162,11 +162,11 @@ export function SpecificationsAccordion({ specifications }: { specifications: Sp
                 </span>
               </span>
               <ChevronDown
-                className={cn(
-                  "h-4 w-4 shrink-0 text-ocean-deeper/35 transition-transform duration-300 ease-in-out",
-                  isOpen && "rotate-180 text-ocean"
-                )}
-              />
+               className={cn(
+                   "h-4 w-4 shrink-0 text-ocean-deeper/35 transition-transform duration-250 ease-in-out",
+                   isOpen && "rotate-180 text-ocean"
+                 )}
+               />
             </button>
 
             {/* Animated panel */}
@@ -174,11 +174,11 @@ export function SpecificationsAccordion({ specifications }: { specifications: Sp
               id={panelId}
               role="region"
               aria-labelledby={buttonId}
-              className={cn(
-                "grid transition-all duration-300 ease-in-out",
-                isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-              )}
-            >
+               className={cn(
+                   "grid transition-all duration-250 ease-in-out",
+                   isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                 )}
+             >
               <div className="overflow-hidden">
                 <div className="border-t border-ocean/6 px-5 py-4 sm:pl-16">
                   <dl className="divide-y divide-ocean/5">
