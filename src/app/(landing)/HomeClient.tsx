@@ -130,28 +130,28 @@ function DealCountdown({
   }
 
   return (
-    <div className="rounded-card border border-ocean/[0.08] bg-ivory/70 px-4 py-3">
+    <div className="rounded-card border border-ocean/[0.08] bg-ivory/70 px-3 py-2.5">
       <div className="flex items-center justify-between gap-3">
-        <span className="text-xs font-bold uppercase tracking-[0.2em] text-ocean-deeper/40">{label}</span>
+        <span className="text-xs font-bold uppercase tracking-[0.18em] text-ocean-deeper/40">{label}</span>
         {endDate && (
-          <span className="text-caption font-bold text-ocean/60">
+          <span className="text-xs font-bold text-ocean/60">
             Ends <span className="font-clash text-xs text-ocean-deeper">{formatDayTime(endDate)}</span>
           </span>
         )}
       </div>
-      <div className={cn("mt-2.5 flex items-stretch gap-1.5", large && "sm:gap-2")}>
+      <div className={cn("mt-2 flex items-stretch gap-1", large && "sm:gap-1.5")}>
         {units.map((unit, i) => (
           <React.Fragment key={unit.label}>
             {i > 0 && (
-              <span className={cn("font-clash font-bold leading-none text-ocean-deeper/25 pt-1", large ? "text-xl sm:text-2xl" : "text-sm")}>
+              <span className={cn("font-clash font-bold leading-none text-ocean-deeper/25 pt-1", large ? "text-sm sm:text-base" : "text-xs")}>
                 :
               </span>
             )}
-            <div className="flex flex-1 flex-col items-center rounded-btn border border-ocean/[0.08] bg-white px-1 py-1.5 shadow-sm sm:px-2">
-              <span className={cn("font-clash font-bold leading-none text-ocean-deeper", large ? "text-2xl sm:text-3xl" : "text-lg")}>
+            <div className="flex flex-1 flex-col items-center rounded-btn border border-ocean/[0.08] bg-white px-1 py-1.5 shadow-sm sm:px-1.5">
+              <span className={cn("font-clash font-bold leading-none text-ocean-deeper", large ? "text-lg sm:text-xl" : "text-sm")}>
                 {unit.value}
               </span>
-              <span className={cn("mt-1 text-caption font-bold uppercase tracking-[0.14em] text-ocean/35", large && "text-xs")}>
+              <span className={cn("mt-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-ocean/35", large && "sm:text-[10px]")}>
                 {unit.label}
               </span>
             </div>
