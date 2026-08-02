@@ -80,7 +80,7 @@ export function EverydayTech() {
               <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-ocean-deeper/60 font-manrope">{featured.subtitle}</span>
               <h3 className="font-display text-xl font-bold text-ocean-deeper mt-2.5 lg:text-2xl">{featured.title}</h3>
               <p className="mt-2.5 text-sm leading-[1.75] text-ocean-deeper/60 max-w-md">{featured.description}</p>
-              <div className="mt-5 inline-flex items-center gap-2 rounded-btn bg-ocean-deeper text-white px-5 h-9 text-[11px] font-bold uppercase tracking-[0.12em] transition-all duration-300 group-hover:bg-ocean group-hover:shadow-btn">
+              <div className="mt-5 inline-flex items-center gap-2 rounded-btn bg-ocean-deeper text-white px-5 h-9 text-xs font-bold uppercase tracking-[0.12em] transition-all duration-300 group-hover:bg-ocean group-hover:shadow-btn">
                 <span>Explore Collection</span>
                 <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
               </div>

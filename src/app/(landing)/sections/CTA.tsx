@@ -51,14 +51,14 @@ export function CTA() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/order"
-                  className="group inline-flex items-center gap-2 rounded-btn bg-white px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean shadow-btn transition-all duration-300 hover:bg-white/90 hover:shadow-btn-hover hover:-translate-y-0.5"
+                  className="group inline-flex items-center gap-2 rounded-btn bg-white px-7 h-11 py-0 text-xs font-bold uppercase tracking-[0.12em] text-ocean shadow-btn transition-all duration-300 hover:bg-white/90 hover:shadow-btn-hover hover:-translate-y-0.5"
                 >
                   Order Now
                   <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   href="/products"
-                  className="group inline-flex items-center gap-2 rounded-btn border border-white/15 px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white/10 hover:-translate-y-0.5"
+                  className="group inline-flex items-center gap-2 rounded-btn border border-white/15 px-7 h-11 py-0 text-xs font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white/10 hover:-translate-y-0.5"
                 >
                   Browse Products
                 </Link>

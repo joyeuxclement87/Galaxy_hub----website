@@ -30,7 +30,7 @@ export function CreatorEssentials() {
           </div>
           <Link
             href="/products/creator-gear"
-            className="group inline-flex shrink-0 items-center gap-2 rounded-btn border border-white/15 px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white/10 hover:-translate-y-0.5"
+            className="group inline-flex shrink-0 items-center gap-2 rounded-btn border border-white/15 px-7 h-11 py-0 text-xs font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white/10 hover:-translate-y-0.5"
           >
             Shop All Creator Gear
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -57,7 +57,7 @@ export function CreatorEssentials() {
               </div>
               <div className="p-4">
                 <h3 className="font-clash text-sm font-bold text-white sm:text-base">{cat.name}</h3>
-                <p className="mt-0.5 text-[11px] text-white/60 font-manrope">{cat.count} items</p>
+                <p className="mt-0.5 text-xs text-white/60 font-manrope">{cat.count} items</p>
               </div>
             </Link>
           ))}
@@ -75,7 +75,7 @@ export function CreatorEssentials() {
           </div>
           <Link
             href="/products/creator-gear"
-            className="inline-flex shrink-0 items-center gap-2 rounded-btn bg-white px-7 h-11 py-0 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean-deeper shadow-btn transition-all duration-300 hover:bg-white/90 hover:shadow-btn-hover hover:-translate-y-0.5"
+            className="inline-flex shrink-0 items-center gap-2 rounded-btn bg-white px-7 h-11 py-0 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper shadow-btn transition-all duration-300 hover:bg-white/90 hover:shadow-btn-hover hover:-translate-y-0.5"
           >
             <ShoppingBagIcon />
             From RWF {new Intl.NumberFormat("en-US").format(CREATOR_BUNDLE.startingPrice)}

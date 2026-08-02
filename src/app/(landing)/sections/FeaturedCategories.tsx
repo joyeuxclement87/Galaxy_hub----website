@@ -87,11 +87,11 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
                     {cat.name}
                   </h3>
                   {cat.productCount > 0 && (
-                    <p className="mt-1 text-[11px] font-semibold text-white/65 font-manrope">
+                    <p className="mt-1 text-xs font-semibold text-white/65 font-manrope">
                       {cat.productCount}+ Products
                     </p>
                   )}
-                  <div className="mt-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-white opacity-0 -translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                  <div className="mt-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white opacity-0 -translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
                     Shop Now <ArrowUpRight className="h-3.5 w-3.5" />
                   </div>
                 </div>

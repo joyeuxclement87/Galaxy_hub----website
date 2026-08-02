@@ -159,13 +159,13 @@ export function FAQSupport() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/order"
-              className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-11 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-11 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
             >
               Order Now
             </Link>
             <a
               href="tel:+250785288910"
-              className="inline-flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white px-7 h-11 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-ivory hover:shadow-sm hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white px-7 h-11 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-ivory hover:shadow-sm hover:-translate-y-0.5"
             >
               <Phone className="h-4 w-4 text-ocean" />
               Call Us

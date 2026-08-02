@@ -135,7 +135,7 @@ function DealCountdown({
         <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-ocean-deeper/40 font-manrope">{label}</span>
         {endDate && (
           <span className="text-[10px] font-bold text-ocean/60 font-manrope">
-            Ends <span className="font-clash text-[11px] text-ocean-deeper">{formatDayTime(endDate)}</span>
+            Ends <span className="font-clash text-xs text-ocean-deeper">{formatDayTime(endDate)}</span>
           </span>
         )}
       </div>

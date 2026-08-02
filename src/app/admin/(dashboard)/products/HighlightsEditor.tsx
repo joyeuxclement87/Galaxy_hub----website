@@ -69,7 +69,7 @@ export function HighlightsEditor({ value, onChange }: HighlightsEditorProps) {
           <Plus className="h-3.5 w-3.5" /> Add Highlight
         </button>
       )}
-      <p className="text-[11px] text-white/25">Up to {MAX_HIGHLIGHTS} short highlights, shown on the product page.</p>
+      <p className="text-xs text-white/25">Up to {MAX_HIGHLIGHTS} short highlights, shown on the product page.</p>
     </div>
   );
 }

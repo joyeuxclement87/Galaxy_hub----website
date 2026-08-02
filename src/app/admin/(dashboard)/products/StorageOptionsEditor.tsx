@@ -77,7 +77,7 @@ export function StorageOptionsEditor({ value, onChange }: StorageOptionsEditorPr
           <Plus className="h-3.5 w-3.5" /> Add Storage Option
         </button>
       </div>
-      <p className="text-[11px] text-white/25">
+      <p className="text-xs text-white/25">
         Customers pick one of these sizes when ordering. Leave empty if the product has a single fixed size.
       </p>
     </div>

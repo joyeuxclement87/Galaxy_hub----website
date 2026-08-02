@@ -52,7 +52,7 @@ export default async function AdminLoginPage() {
           <LoginForm />
         </div>
 
-        <p className="text-center text-[11px] text-white/20 font-medium">
+        <p className="text-center text-xs text-white/20 font-medium">
           Galaxy Hub Admin Panel &copy; {new Date().getFullYear()}
         </p>
       </div>

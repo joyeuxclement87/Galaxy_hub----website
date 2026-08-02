@@ -32,7 +32,7 @@ export default async function BrandPage({ params }: { params: Promise<{ slug: st
       <main className="pt-24">
         <section className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-16 md:px-12 lg:flex-row lg:items-end lg:justify-between lg:py-24">
           <div className="max-w-2xl space-y-5">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#0b5497]/10 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#0b5497]">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#0b5497]/10 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#0b5497]">
               <BadgeCheck className="h-3.5 w-3.5" /> Trusted Brand
             </span>
             <div className="space-y-3">

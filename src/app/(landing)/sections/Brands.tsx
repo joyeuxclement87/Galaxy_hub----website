@@ -35,7 +35,7 @@ function BrandLogoCard({ brand, index }: { brand: BrandCatalogItem; index: numbe
       </div>
       <div className="whitespace-nowrap pr-1">
         <p className="text-sm font-bold text-ocean-deeper leading-tight">{brand.name}</p>
-        <p className="text-[11px] text-ocean-deeper/50 font-manrope leading-tight">{brand.category}</p>
+        <p className="text-xs text-ocean-deeper/50 font-manrope leading-tight">{brand.category}</p>
       </div>
     </div>
   );
