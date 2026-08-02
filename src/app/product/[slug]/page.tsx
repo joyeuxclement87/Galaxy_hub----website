@@ -311,7 +311,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
                     featured: false,
                     specifications: {},
                     availability: p.stock_status === "available" ? "In Stock" : "Out of Stock",
-                    badge: p.discount_percentage ? "ON SALE" : undefined,
+                    badge: p.discount_percentage ? "ON DISCOUNT" : undefined,
                     rating: p.rating ?? 4.8,
                     reviewCount: p.review_count ?? 32,
                   }}

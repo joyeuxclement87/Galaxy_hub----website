@@ -61,8 +61,8 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
 
   const badgeLower = product.badge?.toLowerCase() ?? "";
   const badgeLabel =
-    badgeLower.includes("sale") || badgeLower.includes("off")
-      ? "on sale"
+    badgeLower.includes("sale") || badgeLower.includes("off") || badgeLower.includes("discount")
+      ? "on discount"
       : product.badge;
 
   const badgeClass =

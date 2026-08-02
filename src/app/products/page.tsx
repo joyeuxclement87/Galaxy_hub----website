@@ -330,7 +330,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                       image: p.main_image_url || "", featured: p.is_featured,
                       specifications: {},
                       availability: p.stock_status === "available" ? "In Stock" : p.stock_status === "coming_soon" ? "Limited Stock" : "Out of Stock",
-                      badge: p.is_new ? "NEW" : p.discount_percentage ? "ON SALE" : undefined,
+                      badge: p.is_new ? "NEW" : p.discount_percentage ? "ON DISCOUNT" : undefined,
                       rating: p.rating ?? 4.8, reviewCount: p.review_count ?? 32,
                     }))}
                   />

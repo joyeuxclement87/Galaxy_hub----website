@@ -85,7 +85,7 @@ export default async function BrandPage({ params }: { params: Promise<{ slug: st
                   featured: p.is_featured,
                   specifications: {},
                   availability: p.stock_status === "available" ? "In Stock" : "Out of Stock",
-                  badge: p.is_new ? "NEW" : p.discount_percentage ? "ON SALE" : undefined,
+                  badge: p.is_new ? "NEW" : p.discount_percentage ? "ON DISCOUNT" : undefined,
                   rating: p.rating ?? 4.8,
                   reviewCount: p.review_count ?? 32,
                 }} />

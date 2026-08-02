@@ -150,7 +150,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "sony-wh1000xm5",
     slug: "sony-wh1000xm5",
-    badge: "ON SALE",
+    badge: "ON DISCOUNT",
     rating: 4.7,
     reviewCount: 180,
     monthlyInstallment: 60000,
@@ -273,7 +273,7 @@ export const PRODUCTS: Product[] = [
   {
     id: "anker-powercore-24k",
     slug: "anker-powercore-24k",
-    badge: "ON SALE",
+    badge: "ON DISCOUNT",
     rating: 4.7,
     reviewCount: 231,
     monthlyInstallment: 12000,
