@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Product } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
-import { Star, ShoppingCart, ArrowRight, Check } from "lucide-react";
+import { Star, ShoppingCart, ArrowRight, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getSessionId, notifyCartChanged, useSupabaseCart } from "@/hooks/use-cart";
 import { addCartItemBySlug } from "@/actions/cart";
@@ -19,21 +19,35 @@ interface ProductCardProps {
 export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
   const [isInCart, setIsInCart] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { items, loading: cartLoading } = useSupabaseCart();
+  const { items, loading: cartLoading, remove: removeFromCart } = useSupabaseCart();
+
+  const getCartItem = () => {
+    return items.find(item => 
+      item.product?.slug === product.slug && 
+      (!storage || item.variant === storage)
+    );
+  };
 
   useEffect(() => {
     if (!cartLoading) {
-      const inCart = items.some(item => 
-        item.product?.slug === product.slug && 
-        (!storage || item.variant === storage)
-      );
-      setIsInCart(inCart);
+      setIsInCart(!!getCartItem());
     }
   }, [items, cartLoading, product.slug, storage]);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
-    if (isInCart || loading) return;
+    
+    const cartItem = getCartItem();
+    
+    if (cartItem) {
+      // Remove from cart
+      await removeFromCart(cartItem.id);
+      setIsInCart(false);
+      notifyCartChanged();
+      return;
+    }
+    
+    if (loading) return;
     setLoading(true);
     await addCartItemBySlug(getSessionId(), product.slug, storage);
     setIsInCart(true);
@@ -171,13 +185,16 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
           <Button
             variant="primary"
             onClick={handleAddToCart}
+            disabled={loading}
             className={cn(
-              "flex-1 justify-center gap-1.5 rounded-btn px-3 py-2.5 text-[11px] min-h-0",
-              isInCart && "!bg-gradient-to-b from-emerald-600 to-emerald-700"
+              "flex-1 justify-center gap-1.5 rounded-btn px-3 py-2.5 text-[11px] min-h-0 transition-all duration-200",
+              isInCart
+                ? "!bg-gradient-to-b from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
+                : "bg-ocean-deeper text-white hover:bg-ocean-dark"
             )}
           >
             {isInCart
-              ? <><Check className="h-3 w-3 shrink-0" /> Added</>
+              ? <><Trash2 className="h-3 w-3 shrink-0" /> Remove</>
               : <><ShoppingCart className="h-3 w-3 shrink-0" /> Add to Cart</>
             }
           </Button>

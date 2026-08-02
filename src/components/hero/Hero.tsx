@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, ShoppingCart, ArrowUpRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { getSessionId, notifyCartChanged, useSupabaseCart } from "@/hooks/use-cart";
@@ -39,20 +39,31 @@ export function HeroSection({ slides }: HeroSectionProps) {
   const [addingSlugs, setAddingSlugs] = useState<Record<string, boolean>>({});
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const { items: cartItems, refresh: refreshCart, loading: cartLoading } = useSupabaseCart();
+  const { items: cartItems, refresh: refreshCart, loading: cartLoading, remove: removeFromCart } = useSupabaseCart();
 
   const slide = slides[current] || slides[0];
   
-  const getSlug = (slide: HeroSlideData | undefined) => {
-    if (!slide) return "";
-    return slide.slug;
+  const getCartItemId = (slug: string) => {
+    const item = cartItems.find(item => item.product?.slug === slug);
+    return item?.id;
   };
 
-  const isInCart = !cartLoading && !!slide && cartItems.some(item => item.product?.slug === slide.slug);
-  const isAdding = slide ? !!addingSlugs[getSlug(slide)] : false;
+  const isInCart = !cartLoading && !!slide && !!getCartItemId(slide.slug);
+  const isAdding = slide ? !!addingSlugs[slide.slug] : false;
 
   const handleAddToCart = async () => {
-    if (!slide || isInCart || isAdding) return;
+    if (!slide || isAdding) return;
+    
+    const cartItemId = getCartItemId(slide.slug);
+    
+    if (cartItemId) {
+      // Remove from cart
+      await removeFromCart(cartItemId);
+      await refreshCart();
+      notifyCartChanged();
+      return;
+    }
+    
     setAddingSlugs((prev) => ({ ...prev, [slide.slug]: true }));
     await addCartItemBySlug(getSessionId(), slide.slug);
     setAddingSlugs((prev) => ({ ...prev, [slide.slug]: false }));
@@ -162,17 +173,22 @@ export function HeroSection({ slides }: HeroSectionProps) {
                   <Button
                     variant="primary"
                     onClick={handleAddToCart}
-                    disabled={isAdding || isInCart}
+                    disabled={isAdding}
                     className={cn(
                       "rounded-btn h-12 px-8 text-[11px] font-bold uppercase tracking-[0.14em] transition-all duration-300 shadow-btn hover:shadow-btn-hover hover:-translate-y-0.5 active:translate-y-0",
-                      isInCart || isAdding
-                        ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                      isInCart
+                        ? "bg-red-600 text-white hover:bg-red-700"
                         : "bg-ocean-deeper text-white hover:bg-ocean-dark",
                       isAdding && "opacity-80"
                     )}
                   >
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    {isAdding ? "Adding..." : isInCart ? "Added to Cart" : "Add to Cart"}
+                    {isAdding ? (
+                      <>Adding...</>
+                    ) : isInCart ? (
+                      "Remove from Cart"
+                    ) : (
+                      <>Add to Cart</>
+                    )}
                   </Button>
 
                   <Link
