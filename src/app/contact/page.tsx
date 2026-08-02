@@ -56,6 +56,7 @@ export default function ContactPage() {
       return;
     }
     setSubmitted(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const startNewMessage = () => {
@@ -115,7 +116,7 @@ export default function ContactPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.96 }}
                     transition={{ duration: 0.35, ease: "easeOut" }}
-                    className="py-10 text-center"
+                    className="flex min-h-[60vh] flex-col items-center justify-center py-10 text-center"
                   >
                     <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">
                       <CheckCircle2 className="h-6 w-6" />

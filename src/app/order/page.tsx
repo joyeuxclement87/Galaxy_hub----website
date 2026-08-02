@@ -189,6 +189,7 @@ function OrderContent() {
     setSubmitted(true);
     setDirectProduct(null);
     await cart.refresh();
+    window.scrollTo({ top: 0, behavior: "smooth" });
     confetti({
       particleCount: 90,
       spread: 65,
@@ -262,8 +263,9 @@ function OrderContent() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
-              className="mx-auto max-w-xl overflow-hidden rounded-card border border-ocean/[0.08] bg-white p-6 md:p-8 shadow-premium"
+              className="flex min-h-[70vh] w-full items-center justify-center"
             >
+              <div className="w-full max-w-xl overflow-hidden rounded-card border border-ocean/[0.08] bg-white p-6 md:p-8 shadow-premium">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-card bg-emerald-50 text-emerald-600 border border-emerald-100">
                 <CheckCircle2 className="h-8 w-8" />
               </div>
@@ -344,6 +346,7 @@ function OrderContent() {
                   <ArrowLeft className="h-3.5 w-3.5" />
                   Return to Shop
                 </Link>
+              </div>
               </div>
             </motion.div>
           ) : (

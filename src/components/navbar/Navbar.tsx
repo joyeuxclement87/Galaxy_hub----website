@@ -392,16 +392,16 @@ function MobileCartSheet({
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 380, damping: 40 }}
-            className="fixed bottom-0 inset-x-0 z-[81] rounded-t-[20px] bg-ivory/98 backdrop-blur-xl border-t border-ocean/[0.06] shadow-premium-lg sm:hidden"
+            className="fixed bottom-0 inset-x-0 z-[81] flex flex-col rounded-t-[20px] bg-ivory/98 backdrop-blur-xl border-t border-ocean/[0.06] shadow-premium-lg sm:hidden overflow-hidden"
             style={{ maxHeight: "70dvh" }}
           >
             {/* Handle */}
-            <div className="flex justify-center pt-3 pb-1">
+            <div className="flex justify-center pt-3 pb-1 shrink-0">
               <div className="h-1 w-10 rounded-full bg-ocean/15" />
             </div>
 
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-ocean/[0.06]">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-ocean/[0.06] shrink-0">
               <div className="flex items-center gap-2">
                 <span className="font-display text-sm font-bold text-ocean-deeper">Cart</span>
                 {cart.count > 0 && (
@@ -422,7 +422,7 @@ function MobileCartSheet({
             </div>
 
             {/* Content */}
-            <div className="overflow-y-auto" style={{ maxHeight: "calc(70dvh - 120px)" }}>
+            <div className="flex-1 min-h-0 overflow-y-auto">
               {cart.items.length === 0 ? (
                 <div className="flex flex-col items-center gap-4 px-6 py-12 text-center">
                   <div className="flex h-14 w-14 items-center justify-center rounded-card bg-ocean/[0.04]">
@@ -488,7 +488,7 @@ function MobileCartSheet({
 
             {/* Footer */}
             {cart.items.length > 0 && (
-              <div className="border-t border-ocean/[0.06] px-5 py-4 space-y-2.5">
+              <div className="border-t border-ocean/[0.06] px-5 py-4 space-y-2.5 shrink-0">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs font-semibold text-ocean/50">Subtotal</span>
                   <span className="font-display text-base font-bold text-ocean-deeper">
