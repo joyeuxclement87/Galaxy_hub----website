@@ -365,7 +365,7 @@ function OrderContent() {
                 {/* 1. Items to Order */}
                 <div className="rounded-card border border-ocean/[0.06] bg-white p-6 shadow-sm space-y-4">
                   <div className="flex items-center gap-2 border-b border-ocean/[0.06] pb-3">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-[11px] font-bold text-white">
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-xs font-bold text-white">
                       1
                     </span>
                     <h2 className="font-display text-base font-bold text-ocean-deeper">
@@ -392,7 +392,7 @@ function OrderContent() {
                       </div>
                       <Link
                         href="/products"
-                        className="inline-flex items-center gap-2 rounded-btn bg-ocean-deeper px-7 h-10 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:-translate-y-0.5"
+                        className="inline-flex items-center gap-2 rounded-btn bg-ocean-deeper px-7 h-10 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:-translate-y-0.5"
                       >
                         Browse Products
                       </Link>
@@ -458,7 +458,7 @@ function OrderContent() {
                 {/* 2. Contact Details */}
                 <div className="rounded-card border border-ocean/[0.06] bg-white p-6 shadow-sm space-y-4">
                   <div className="flex items-center gap-2 border-b border-ocean/[0.06] pb-3">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-[11px] font-bold text-white">
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-xs font-bold text-white">
                       2
                     </span>
                     <h2 className="font-display text-base font-bold text-ocean-deeper">
@@ -513,7 +513,7 @@ function OrderContent() {
                 {/* 3. Fulfillment Choice */}
                 <div className="rounded-card border border-ocean/[0.06] bg-white p-6 shadow-sm space-y-4">
                   <div className="flex items-center gap-2 border-b border-ocean/[0.06] pb-3">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-[11px] font-bold text-white">
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-xs font-bold text-white">
                       3
                     </span>
                     <h2 className="font-display text-base font-bold text-ocean-deeper">

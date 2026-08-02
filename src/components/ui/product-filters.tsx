@@ -91,7 +91,7 @@ export function ProductFilters({
         <div className="pt-2">
           <Link
             href="/products"
-            className="flex items-center justify-center gap-1.5 rounded-btn border border-ocean/15 bg-white/60 px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean transition-all duration-300 hover:border-ocean/30 hover:bg-white"
+            className="flex items-center justify-center gap-1.5 rounded-btn border border-ocean/15 bg-white/60 px-4 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-ocean transition-all duration-300 hover:border-ocean/30 hover:bg-white"
           >
             <X className="h-3.5 w-3.5" />
             Reset filters ({activeCount})
@@ -176,7 +176,7 @@ function FilterDrawerPortal({
                 <p className="font-display text-sm font-bold text-ocean-deeper">
                   Filter products
                 </p>
-                <p className="mt-0.5 text-[11px] text-ocean/45">
+                <p className="mt-0.5 text-xs text-ocean/45">
                   {activeCount > 0
                     ? `${activeCount} active filter${activeCount === 1 ? "" : "s"}`
                     : "Refine your results"}
@@ -198,7 +198,7 @@ function FilterDrawerPortal({
                 <Link
                   href={clearAllHref}
                   onClick={onClose}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-ocean/15 bg-white px-3.5 py-2 text-[11px] font-bold text-ocean transition-colors hover:border-ocean/30 hover:bg-ocean/4"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-ocean/15 bg-white px-3.5 py-2 text-xs font-bold text-ocean transition-colors hover:border-ocean/30 hover:bg-ocean/4"
                 >
                   <X className="h-3 w-3" />
                   Clear all filters
@@ -274,7 +274,7 @@ function FilterDrawerPortal({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex w-full items-center justify-center gap-2 rounded-btn bg-ocean-deeper h-12 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-200 hover:bg-ocean-dark active:scale-[0.98]"
+                className="flex w-full items-center justify-center gap-2 rounded-btn bg-ocean-deeper h-12 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-200 hover:bg-ocean-dark active:scale-[0.98]"
               >
                 Show results
                 {activeCount > 0 && (

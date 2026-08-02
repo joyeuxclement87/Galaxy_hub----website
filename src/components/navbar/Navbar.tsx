@@ -159,7 +159,7 @@ function CartDropdown({
               <Link
                 href="/products"
                 onClick={onClose}
-                className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-10 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-10 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
               >
                 Browse Products
               </Link>
@@ -240,14 +240,14 @@ function CartDropdown({
                 <Link
                   href="/cart"
                   onClick={onClose}
-                  className="flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 w-full h-10 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-white"
+                  className="flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 w-full h-10 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-white"
                 >
                   View Full Cart
                 </Link>
                 <Link
                   href="/order"
                   onClick={onClose}
-                  className="flex items-center justify-center gap-2 rounded-btn bg-ocean-deeper w-full h-11 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
+                  className="flex items-center justify-center gap-2 rounded-btn bg-ocean-deeper w-full h-11 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
                 >
                   <ShoppingCart className="h-3.5 w-3.5" />
                   Order Now
@@ -338,7 +338,7 @@ function MobileCartSheet({
                   <Link
                     href="/products"
                     onClick={onClose}
-                    className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-10 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn"
+                    className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-10 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn"
                   >
                     Browse Products
                   </Link>
@@ -401,14 +401,14 @@ function MobileCartSheet({
                 <Link
                   href="/cart"
                   onClick={onClose}
-                  className="flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 w-full h-11 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-white"
+                  className="flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 w-full h-11 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-white"
                 >
                   View Full Cart
                 </Link>
                 <Link
                   href="/order"
                   onClick={onClose}
-                  className="flex items-center justify-center gap-2 rounded-btn bg-ocean-deeper w-full h-12 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn"
+                  className="flex items-center justify-center gap-2 rounded-btn bg-ocean-deeper w-full h-12 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn"
                 >
                   <ShoppingCart className="h-3.5 w-3.5" />
                   Order Now
@@ -625,7 +625,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
               {/* Order Now — hidden on small screens */}
               <Link
                 href="/order"
-                className="ml-1 hidden items-center gap-2 rounded-xl bg-ocean-deeper px-5 h-10 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5 active:translate-y-0 sm:inline-flex"
+                className="ml-1 hidden items-center gap-2 rounded-xl bg-ocean-deeper px-5 h-10 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5 active:translate-y-0 sm:inline-flex"
               >
                 <ShoppingCart className="h-3.5 w-3.5" />
                 Order Now
@@ -720,7 +720,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                 <button
                   type="button"
                   onClick={() => { setMobileOpen(false); setCartOpen(true); }}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-ocean/15 bg-white/60 h-11 px-4 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean-deeper hover:border-ocean/30 hover:bg-white transition-all cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-ocean/15 bg-white/60 h-11 px-4 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper hover:border-ocean/30 hover:bg-white transition-all cursor-pointer"
                 >
                   <ShoppingCart className="h-3.5 w-3.5" />
                   Cart {cart.count > 0 && `(${cart.count})`}
@@ -728,7 +728,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                 <Link
                   href="/order"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 flex-1 rounded-xl bg-ocean-deeper h-11 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark"
+                  className="flex items-center justify-center gap-2 flex-1 rounded-xl bg-ocean-deeper h-11 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark"
                 >
                   <ShoppingCart className="h-3.5 w-3.5" />
                   Order Now

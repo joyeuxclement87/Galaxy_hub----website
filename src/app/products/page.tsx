@@ -160,13 +160,13 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                 )}
               </div>
               <div className="flex items-center gap-2.5 shrink-0">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white px-3.5 py-1.5 text-[11px] font-bold text-ocean-deeper">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white px-3.5 py-1.5 text-xs font-bold text-ocean-deeper">
                   {result.total.toLocaleString()} {result.total === 1 ? "product" : "products"}
                 </span>
                 {activeCount > 0 && (
                   <Link
                     href="/products"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white px-3.5 py-1.5 text-[11px] font-bold text-ocean hover:border-ocean/30 transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white px-3.5 py-1.5 text-xs font-bold text-ocean hover:border-ocean/30 transition-colors"
                   >
                     <X className="h-3 w-3" />
                     Clear all
@@ -293,7 +293,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                 {/* Active search chip */}
                 {q && (
                   <div className="mb-4 flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-ocean px-3.5 py-1.5 text-[11px] font-bold text-white shadow-btn">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-ocean px-3.5 py-1.5 text-xs font-bold text-white shadow-btn">
                       &ldquo;{q}&rdquo;
                       <Link href={buildHref({ ...params, q: "", page: 1 })} aria-label="Remove search" className="text-white/70 hover:text-white transition-colors">
                         <X className="h-3 w-3" />
@@ -313,7 +313,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                     </p>
                     <Link
                       href="/products"
-                      className="mt-6 inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-6 h-10 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover"
+                      className="mt-6 inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-6 h-10 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover"
                     >
                       Clear all filters
                     </Link>

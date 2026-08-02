@@ -15,7 +15,7 @@ export default function BrandsIndexPage() {
       <Navbar />
       <section className="mx-auto max-w-7xl px-6 pt-24 pb-20 md:px-12 lg:pb-32">
         <div className="max-w-3xl space-y-5">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[#0b5497]/10 bg-white/80 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#0b5497]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#0b5497]/10 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#0b5497]">
             <Sparkles className="h-3.5 w-3.5" />
             Shop by Brand
           </span>

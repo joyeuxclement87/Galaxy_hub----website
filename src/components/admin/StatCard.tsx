@@ -27,7 +27,7 @@ export function StatCard({ label, value, icon, trend, gradient = "from-[#0b5497]
 
       <div className="relative flex items-start justify-between gap-4">
         <div className="space-y-2 min-w-0">
-          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/35">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/35">
             {label}
           </p>
           <p className="font-clash text-3xl font-bold text-white tracking-tight">{value}</p>

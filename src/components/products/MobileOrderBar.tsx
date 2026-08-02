@@ -59,7 +59,7 @@ export function MobileOrderBar({
           <div className="flex items-center gap-3">
             {/* Product name + price + storage */}
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-semibold text-ocean-deeper/50 truncate">
+              <p className="text-xs font-semibold text-ocean-deeper/50 truncate">
                 {productName}
               </p>
               <div className="flex items-baseline gap-2 mt-0.5">
@@ -71,7 +71,7 @@ export function MobileOrderBar({
                 <button
                   type="button"
                   onClick={() => setExpanded(true)}
-                  className="mt-1 flex items-center gap-1.5 rounded-full border border-ocean/15 bg-ocean/5 px-3 py-1.5 text-[11px] font-bold text-ocean-deeper hover:bg-ocean/10 transition-colors"
+                  className="mt-1 flex items-center gap-1.5 rounded-full border border-ocean/15 bg-ocean/5 px-3 py-1.5 text-xs font-bold text-ocean-deeper hover:bg-ocean/10 transition-colors"
                 >
                   <span className="text-ocean/40">Storage:</span>
                   <span>{storage || storageOptions[0]}</span>

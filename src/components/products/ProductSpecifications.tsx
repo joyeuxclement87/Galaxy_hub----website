@@ -157,7 +157,7 @@ export function SpecificationsAccordion({ specifications }: { specifications: Sp
                   <Icon className="h-4 w-4" />
                 </span>
                 <span className="text-sm font-bold text-ocean-deeper">{group.name}</span>
-                <span className="hidden text-[11px] font-medium text-ocean/35 sm:inline">
+                <span className="hidden text-xs font-medium text-ocean/35 sm:inline">
                   {group.specs.length} {group.specs.length === 1 ? "spec" : "specs"}
                 </span>
               </span>
