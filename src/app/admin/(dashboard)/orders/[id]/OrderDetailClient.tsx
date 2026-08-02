@@ -4,7 +4,8 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, ArrowLeft, Package } from "lucide-react";
 import Link from "next/link";
-import { updateOrderStatus, ORDER_STATUSES } from "@/actions/orders";
+import { updateOrderStatus } from "@/actions/orders";
+import { ORDER_STATUSES } from "@/lib/order-statuses";
 import type { OrderWithItems } from "@/data/admin-orders";
 
 const statuses = [...ORDER_STATUSES];

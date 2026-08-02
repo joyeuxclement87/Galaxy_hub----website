@@ -3,15 +3,7 @@
 import { createAdminClient } from "@/lib/supabase-admin";
 import { sendNotification } from "@/lib/notifications";
 import { revalidatePath } from "next/cache";
-
-export const ORDER_STATUSES = [
-  "pending",
-  "confirmed",
-  "processing",
-  "shipped",
-  "delivered",
-  "cancelled",
-] as const;
+import { ORDER_STATUSES } from "@/lib/order-statuses";
 
 /**
  * Updates an order's status, records the change in
