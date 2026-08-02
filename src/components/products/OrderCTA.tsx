@@ -17,10 +17,10 @@ export function OrderCTA({ productName, productSlug }: { productName: string; pr
             <h2 id="order-cta-heading" className="mt-3 font-display text-2xl font-bold leading-tight text-ocean-deeper sm:text-3xl">
               Interested in {productName}?
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-ocean/60">
+            <p className="mt-2 text-base leading-relaxed text-ocean/60">
               Talk to Galaxy Hub about availability and ordering. We confirm everything by phone before any payment.
             </p>
-            <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700">
+            <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
               <CheckCircle2 className="h-4 w-4" />
               No online payment required.
             </p>

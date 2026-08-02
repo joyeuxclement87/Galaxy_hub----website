@@ -399,6 +399,13 @@ function MobileCartSheet({
                   </span>
                 </div>
                 <Link
+                  href="/cart"
+                  onClick={onClose}
+                  className="flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 w-full h-11 text-[11px] font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-white"
+                >
+                  View Full Cart
+                </Link>
+                <Link
                   href="/order"
                   onClick={onClose}
                   className="flex items-center justify-center gap-2 rounded-btn bg-ocean-deeper w-full h-12 text-[11px] font-bold uppercase tracking-[0.12em] text-white shadow-btn"
@@ -576,15 +583,15 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 sm:gap-1.5">
               {/* Search */}
               <button
                 type="button"
                 onClick={() => { setSearchOpen(true); onSearchFocus?.(); setCartOpen(false); }}
                 aria-label="Search"
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer"
+                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer"
               >
-                <Search className="h-[17px] w-[17px]" />
+                <Search className="h-[16px] w-[16px]" />
               </button>
 
               {/* Cart — desktop dropdown + mobile sheet trigger */}
@@ -593,9 +600,9 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                   type="button"
                   onClick={() => { setCartOpen(v => !v); setSearchOpen(false); }}
                   aria-label={cart.count > 0 ? `Cart (${cart.count} items)` : "Cart is empty"}
-                  className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer"
+                  className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer"
                 >
-                  <ShoppingCart className="h-[17px] w-[17px]" />
+                  <ShoppingCart className="h-[16px] w-[16px]" />
                   <AnimatePresence mode="popLayout">
                     {cart.count > 0 && (
                       <motion.span
@@ -629,7 +636,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                 type="button"
                 onClick={() => { setMobileOpen(true); setCartOpen(false); }}
                 aria-label="Open menu"
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer lg:hidden"
+                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer lg:hidden"
               >
                 <Menu className="h-[18px] w-[18px]" />
               </button>

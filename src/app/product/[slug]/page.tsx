@@ -99,7 +99,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
   };
 
   return (
-    <div className="min-h-screen bg-ivory pb-32 lg:pb-24">
+    <div className="min-h-screen bg-ivory pb-40 lg:pb-32">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
       <Navbar />
 
@@ -322,7 +322,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
         )}
 
         {/* 7. Final Order CTA */}
-        <div className="mt-16 md:mt-20">
+        <div className="mt-16 md:mt-20 mb-12 md:mb-16">
           <OrderCTA productName={product.name} productSlug={product.slug} />
         </div>
       </main>
