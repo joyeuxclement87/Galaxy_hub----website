@@ -8,6 +8,7 @@ import { ProductGallery } from "@/components/products/ProductGallery";
 import { ProductActions } from "@/components/products/ProductActions";
 import { OrderCTA } from "@/components/products/OrderCTA";
 import { KeySpecifications, SpecificationsAccordion, ProductHighlightsList } from "@/components/products/ProductSpecifications";
+import { MobileOrderBar } from "@/components/products/MobileOrderBar";
 import { getKeySpecs } from "@/lib/product-specs";
 import { getPublicProductBySlug } from "@/data/public-products";
 import type { Metadata } from "next";
@@ -102,9 +103,18 @@ export default async function ProductPage({ params }: ProductPageParams) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
       <Navbar />
 
-       {/* Mobile sticky bottom purchase bar removed — action buttons now show inline */}
+       {/* Mobile sticky bottom purchase bar */}
+       <MobileOrderBar
+         productName={product.name}
+         productSlug={product.slug}
+         price={product.price}
+         currency="RWF"
+         stockStatus={product.stock_status}
+         storageOptions={product.storage_options}
+         productId={product.id}
+       />
 
-       <main className="pt-24">
+       <main className="pt-24 pb-20 lg:pb-0">
 
         {/* 1. Breadcrumb */}
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12">
@@ -190,8 +200,8 @@ export default async function ProductPage({ params }: ProductPageParams) {
                 </span>
               </div>
 
-               {/* Storage + action buttons — visible on all screens */}
-               <div className="mt-5">
+               {/* Storage + action buttons — hidden on mobile (shown in sticky bar) */}
+               <div className="mt-5 hidden lg:block">
                  <ProductActions
                    productId={product.id}
                    productSlug={product.slug}
