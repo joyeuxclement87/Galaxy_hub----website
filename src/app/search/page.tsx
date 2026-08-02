@@ -42,7 +42,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
               </div>
               <button
                 type="submit"
-                className="rounded-btn bg-ocean-deeper h-11 px-6 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark active:scale-[0.98] shrink-0"
+                className="rounded-btn bg-ocean-deeper w-full h-12 px-6 text-base font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark active:scale-[0.98] shrink-0 sm:w-auto"
               >
                 Search
               </button>
@@ -75,10 +75,10 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                 We couldn&apos;t find any tech items matching &ldquo;<span className="font-semibold text-ocean-deeper">{q}</span>&rdquo;.
               </p>
               <div className="flex w-full max-w-sm flex-col gap-3 sm:flex-row">
-                <Link href="/products" className="flex h-11 flex-1 items-center justify-center rounded-btn bg-ocean-deeper px-5 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark active:scale-[0.98]">
+                <Link href="/products" className="flex h-12 flex-1 items-center justify-center rounded-btn bg-ocean-deeper px-5 text-base font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark active:scale-[0.98]">
                   Browse All Products
                 </Link>
-                <Link href="/" className="flex h-11 flex-1 items-center justify-center rounded-btn border border-ocean/15 bg-white px-5 text-sm font-bold text-ocean-deeper transition-all duration-250 hover:border-ocean/30 active:scale-[0.98]">
+                <Link href="/" className="flex h-12 flex-1 items-center justify-center rounded-btn border border-ocean/15 bg-white px-5 text-base font-bold text-ocean-deeper transition-all duration-250 hover:border-ocean/30 active:scale-[0.98]">
                   Back to Home
                 </Link>
               </div>
