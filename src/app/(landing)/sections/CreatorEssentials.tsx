@@ -10,17 +10,17 @@ export function CreatorEssentials() {
     <section
       id="creator-essentials"
       aria-labelledby="creator-heading"
-      className="bg-[#0B1F3A] px-4 py-20 sm:px-6 md:px-12 md:py-28"
+      className="bg-[#0B1F3A] px-4 py-16 sm:px-6"
     >
       <div className="mx-auto max-w-[1320px]">
-        <div className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-xl space-y-3">
             <span className="block text-caption font-bold uppercase tracking-[0.28em] text-ocean-light/60">
               CREATOR ESSENTIALS
             </span>
             <h2
               id="creator-heading"
-              className="font-clash text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-white"
+              className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-white"
             >
               For Creators Who Refuse to Compromise.
             </h2>
@@ -30,10 +30,10 @@ export function CreatorEssentials() {
           </div>
           <Link
             href="/products/creator-gear"
-            className="group inline-flex shrink-0 items-center gap-2 rounded-btn border border-white/15 px-7 h-11 py-0 text-xs font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:bg-white/10 hover:-translate-y-0.5"
+            className="group inline-flex shrink-0 items-center gap-2 rounded-btn border border-white/15 px-7 h-11 py-0 text-xs font-bold uppercase tracking-[0.12em] text-white transition-all duration-250 hover:bg-white/10 hover:-translate-y-0.5"
           >
             Shop All Creator Gear
-            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
         </div>
 
@@ -42,7 +42,7 @@ export function CreatorEssentials() {
             <Link
               key={cat.id}
               href={`/products/${cat.slug}`}
-              className={`group relative overflow-hidden rounded-2xl bg-white/5 border border-white/8 transition-all duration-300 hover:bg-white/10 hover:border-white/15 hover:-translate-y-[2px] ${
+              className={`group relative overflow-hidden rounded-card bg-white/5 border border-white/8 transition-all duration-250 hover:bg-white/10 hover:border-white/15 hover:-translate-y-[2px] ${
                 idx === 0 ? "col-span-2 md:col-span-1 lg:col-span-2 row-span-1" : ""
               }`}
             >
@@ -51,7 +51,7 @@ export function CreatorEssentials() {
                   src={cat.image}
                   alt={cat.name}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B1F3A]/80 via-transparent to-transparent" />
               </div>
@@ -63,19 +63,19 @@ export function CreatorEssentials() {
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col items-start gap-5 rounded-card border border-white/10 bg-white/5 p-6 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-btn bg-ocean/30 text-ocean-light">
-              <Camera className="h-6 w-6" />
+        <div className="mt-6 flex flex-col items-start gap-4 rounded-card border border-white/10 bg-white/5 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-btn bg-ocean/30 text-ocean-light">
+              <Camera className="h-5 w-5" />
             </div>
             <div>
-              <p className="font-clash text-base font-bold text-white">{CREATOR_BUNDLE.name}</p>
+              <p className="font-clash text-sm font-bold text-white">{CREATOR_BUNDLE.name}</p>
               <p className="text-sm text-white/70">{CREATOR_BUNDLE.description}</p>
             </div>
           </div>
           <Link
             href="/products/creator-gear"
-            className="inline-flex shrink-0 items-center gap-2 rounded-btn bg-white px-7 h-11 py-0 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper shadow-btn transition-all duration-300 hover:bg-white/90 hover:shadow-btn-hover hover:-translate-y-0.5"
+            className="inline-flex shrink-0 items-center gap-2 rounded-btn bg-white px-7 h-11 py-0 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper shadow-btn transition-all duration-250 hover:bg-white/90 hover:shadow-btn-hover hover:-translate-y-0.5"
           >
             <ShoppingBagIcon />
             From RWF {new Intl.NumberFormat("en-US").format(CREATOR_BUNDLE.startingPrice)}

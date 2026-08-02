@@ -135,8 +135,8 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
   return (
     <div className="min-h-screen bg-ivory">
       <Navbar />
-      <main className="pt-28 pb-24">
-        <div className="mx-auto max-w-330 px-4 sm:px-6 md:px-12">
+      <main className="pt-20 pb-20">
+        <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-8">
 
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-1.5 text-xs font-medium text-ocean/45">
@@ -146,27 +146,29 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
           </nav>
 
           {/* Page Header */}
-          <section className="mt-6 mb-8">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <section className="mt-5 mb-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <span className="section-label">{q ? `SEARCHING: "${q}"` : "PRODUCTS"}</span>
-                <h1 className="font-display text-[clamp(1.6rem,4vw,2.5rem)] font-bold leading-[1.1] tracking-[-0.02em] text-ocean-deeper mt-3">
+                <span className="block text-caption font-bold uppercase tracking-[0.2em] text-accent">
+                  {q ? `SEARCHING: "${q}"` : "PRODUCTS"}
+                </span>
+                <h1 className="font-display text-2xl sm:text-3xl font-bold leading-tight tracking-[-0.02em] text-ocean-deeper mt-2">
                   {q ? `Results for "${q}"` : "Find Your Next Device"}
                 </h1>
                 {!q && (
-                  <p className="mt-2 text-sm leading-relaxed text-ocean-deeper/55 max-w-xl">
+                  <p className="mt-1.5 text-sm leading-relaxed text-ocean-deeper/55 max-w-xl">
                     Genuine smartphones, laptops, accessories & audio — in Kigali, delivered across Rwanda.
                   </p>
                 )}
               </div>
               <div className="flex items-center gap-2.5 shrink-0">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white px-3.5 py-1.5 text-xs font-bold text-ocean-deeper">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white px-3 py-1 text-caption font-bold text-ocean-deeper">
                   {result.total.toLocaleString()} {result.total === 1 ? "product" : "products"}
                 </span>
                 {activeCount > 0 && (
                   <Link
                     href="/products"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white px-3.5 py-1.5 text-xs font-bold text-ocean hover:border-ocean/30 transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white px-3 py-1 text-caption font-bold text-ocean hover:border-ocean/30 transition-colors"
                   >
                     <X className="h-3 w-3" />
                     Clear all
@@ -177,8 +179,8 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
           </section>
 
           {/* Sticky toolbar: search + sort + mobile filters */}
-          <nav className="sticky top-[88px] z-40 bg-ivory/90 py-3 pb-3 backdrop-blur-xl border-b border-ocean/6">
-            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+          <nav className="sticky top-[76px] z-40 bg-ivory/90 py-2.5 pb-2.5 backdrop-blur-xl border-b border-ocean/6">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               {/* Search — preserves all current filters */}
               <form method="get" action="/products" className="flex-1 relative">
                 {/* Hidden inputs to preserve existing filter params */}
@@ -336,11 +338,11 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="mt-12 flex items-center justify-center gap-1.5">
+                  <div className="mt-8 flex items-center justify-center gap-1.5">
                     <Link
                       href={buildHref({ ...params, page: Math.max(1, page - 1) })}
                       className={cn(
-                        "rounded-btn border px-4 py-2.5 text-xs font-semibold transition-all duration-200",
+                        "rounded-btn border px-4 py-2 text-sm font-semibold transition-all duration-250",
                         page === 1
                           ? "pointer-events-none opacity-30 border-ocean/8 bg-white text-ocean"
                           : "border-ocean/8 bg-white text-ocean hover:border-ocean/30 hover:shadow-sm"
@@ -359,7 +361,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                           key={p}
                           href={buildHref({ ...params, page: p })}
                           className={cn(
-                            "rounded-btn w-9 h-9 flex items-center justify-center text-xs font-bold transition-all duration-200",
+                            "rounded-btn w-9 h-9 flex items-center justify-center text-sm font-bold transition-all duration-250",
                             p === page
                               ? "bg-ocean text-white shadow-btn"
                               : "border border-ocean/8 bg-white text-ocean-deeper/60 hover:border-ocean/25 hover:text-ocean"
@@ -373,7 +375,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                     <Link
                       href={buildHref({ ...params, page: Math.min(totalPages, page + 1) })}
                       className={cn(
-                        "rounded-btn border px-4 py-2.5 text-xs font-semibold transition-all duration-200",
+                        "rounded-btn border px-4 py-2 text-sm font-semibold transition-all duration-250",
                         page === totalPages
                           ? "pointer-events-none opacity-30 border-ocean/8 bg-white text-ocean"
                           : "border-ocean/8 bg-white text-ocean hover:border-ocean/30 hover:shadow-sm"

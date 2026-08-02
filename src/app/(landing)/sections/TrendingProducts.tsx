@@ -39,11 +39,11 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
   }
 
   return (
-    <section id="products" className="mx-auto max-w-[1320px] space-y-10 px-6 py-24 md:px-12 lg:py-28">
+    <section id="products" className="mx-auto max-w-[1320px] space-y-8 px-4 py-16 sm:px-6">
       {/* Section header */}
-      <div className="max-w-2xl space-y-4">
+      <div className="max-w-2xl space-y-3">
         <span className="section-label">FEATURED PRODUCTS</span>
-        <h2 className="font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-ocean-deeper">
+        <h2 className="font-display text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper">
           Discover Our Latest Collection
         </h2>
         <p className="text-sm leading-relaxed text-ocean-deeper/60 sm:text-base">
@@ -52,8 +52,8 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
       </div>
 
       {/* Filter bar */}
-      <div className="rounded-card border border-ocean/[0.06] bg-white/70 backdrop-blur-sm p-6 shadow-sm space-y-5">
-        <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-12">
+      <div className="rounded-card border border-ocean/[0.06] bg-white/70 backdrop-blur-sm p-5 shadow-sm space-y-4">
+        <div className="grid grid-cols-1 items-center gap-3 md:grid-cols-12">
           <div className="relative md:col-span-6">
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ocean/35" />
             <input
@@ -62,7 +62,7 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by model, brand, spec..."
-              className="w-full rounded-btn border border-ocean/[0.08] bg-ivory/60 py-3 pr-4 pl-11 text-sm transition-all duration-300 focus:border-accent focus:bg-white focus:ring-1 focus:ring-accent/30 focus:outline-none"
+              className="w-full rounded-btn border border-ocean/[0.08] bg-ivory/60 py-3 pr-4 pl-11 text-sm transition-all duration-250 focus:border-accent focus:bg-white focus:ring-1 focus:ring-accent/30 focus:outline-none"
             />
           </div>
 
@@ -70,7 +70,7 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full cursor-pointer rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-3 text-sm transition-all duration-300 focus:border-accent focus:bg-white focus:ring-1 focus:ring-accent/30 focus:outline-none"
+              className="w-full cursor-pointer rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-3 text-sm transition-all duration-250 focus:border-accent focus:bg-white focus:ring-1 focus:ring-accent/30 focus:outline-none"
             >
               <option value="All">All Categories</option>
               {categories
@@ -87,7 +87,7 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
             <select
               value={selectedBrand}
               onChange={(e) => setSelectedBrand(e.target.value)}
-              className="w-full cursor-pointer rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-3 text-sm transition-all duration-300 focus:border-accent focus:bg-white focus:ring-1 focus:ring-accent/30 focus:outline-none"
+              className="w-full cursor-pointer rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-3 text-sm transition-all duration-250 focus:border-accent focus:bg-white focus:ring-1 focus:ring-accent/30 focus:outline-none"
             >
               <option value="All">All Brands</option>
               {brandsList
@@ -102,7 +102,7 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
         </div>
 
         {(searchQuery || selectedCategory !== "All" || selectedBrand !== "All") && (
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-ocean/[0.05] pt-4 text-xs text-ocean/55">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-ocean/[0.05] pt-3 text-xs text-ocean/55">
             <p>Showing {displayedProducts.length} premium results</p>
             <button
               onClick={() => {
@@ -110,7 +110,7 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
                 setSelectedCategory("All");
                 setSelectedBrand("All");
               }}
-              className="rounded-btn px-3 py-1 text-xs font-semibold text-ocean/55 hover:text-ocean hover:bg-ocean/[0.04] transition-all duration-200"
+              className="rounded-btn px-3 py-1 text-xs font-semibold text-ocean/55 hover:text-ocean hover:bg-ocean/[0.04] transition-all duration-250"
             >
               Clear all filters
             </button>
@@ -120,14 +120,14 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
 
       {/* Product grid */}
       {displayedProducts.length > 0 ? (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {displayedProducts.map((product) => (
             <ProductCard key={product.id} product={product} onReserve={onReserve} />
           ))}
         </div>
       ) : (
-        <div className="space-y-4 rounded-card border border-dashed border-ocean/[0.08] bg-white/50 backdrop-blur-sm py-20 text-center">
-          <AlertCircle className="mx-auto h-12 w-12 text-ocean/30" />
+        <div className="space-y-3 rounded-card border border-dashed border-ocean/[0.08] bg-white/50 backdrop-blur-sm py-16 text-center">
+          <AlertCircle className="mx-auto h-10 w-10 text-ocean/30" />
           <h3 className="font-display text-lg font-bold text-ocean-deeper">No shop items matched</h3>
           <p className="mx-auto max-w-md text-sm text-ocean/55">
             We couldn&apos;t find matches for your search. Try resetting filters or search terms.

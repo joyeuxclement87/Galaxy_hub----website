@@ -50,14 +50,14 @@ export function FAQSupport() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative bg-ivory px-4 py-20 sm:px-6 md:px-12 md:py-28 overflow-hidden">
+    <section id="faq" className="relative bg-ivory px-4 py-16 sm:px-6 overflow-hidden">
       {/* Background ambient glow */}
       <div className="absolute inset-0 soft-radial-glow opacity-60 pointer-events-none" />
 
-      <div className="relative mx-auto max-w-3xl">
-        <div className="mb-12 max-w-2xl space-y-3">
+      <div className="relative mx-auto max-w-[1320px]">
+        <div className="mb-10 max-w-2xl space-y-3">
           <span className="section-label">GOOD TO KNOW</span>
-          <h2 className="font-display text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper tracking-tight">
+          <h2 className="font-display text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper tracking-tight">
             Frequently Asked Questions
           </h2>
           <p className="text-sm leading-[1.8] text-ocean-deeper/70">
@@ -72,7 +72,7 @@ export function FAQSupport() {
               <div
                 key={item.q}
                 className={cn(
-                  "transition-all duration-300 rounded-2xl border px-3 sm:px-5",
+                  "transition-all duration-250 rounded-card border px-3 sm:px-5",
                   isOpen
                     ? "bg-white shadow-sm border-ocean/15"
                     : "bg-white/40 border-ocean/8 hover:bg-white/70 hover:border-ocean/12"
@@ -89,7 +89,7 @@ export function FAQSupport() {
                   <span className="flex items-center gap-4 min-w-0">
                     <span
                       className={cn(
-                        "font-display text-sm font-bold leading-none shrink-0 transition-colors duration-300",
+                        "font-display text-sm font-bold leading-none shrink-0 transition-colors duration-250",
                         isOpen ? "text-ocean" : "text-ocean/35 group-hover:text-ocean/60"
                       )}
                     >
@@ -106,13 +106,13 @@ export function FAQSupport() {
                   </span>
                   <div
                     className={cn(
-                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-300",
+                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-250",
                       isOpen ? "bg-ocean text-white shadow-xs" : "bg-ocean/5 text-ocean/50 group-hover:bg-ocean/10 group-hover:text-ocean"
                     )}
                   >
                     <motion.span
                       animate={{ rotate: isOpen ? 45 : 0 }}
-                      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                       className="font-clash text-lg leading-none select-none"
                     >
                       +
@@ -128,10 +128,10 @@ export function FAQSupport() {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                       className="overflow-hidden"
                     >
-                      <div className="pb-5 sm:pb-6 pl-8 sm:pl-9 border-t border-ocean/[0.06] pt-4">
+                      <div className="pb-4 sm:pb-5 pl-8 sm:pl-9 border-t border-ocean/[0.06] pt-3">
                         <p className="text-sm leading-[1.85] text-ocean-deeper/80 font-medium">
                           {item.a}
                         </p>
@@ -144,7 +144,7 @@ export function FAQSupport() {
           })}
         </div>
 
-        <div className="mt-10 flex flex-col gap-5 rounded-2xl border border-ocean/10 bg-white/80 backdrop-blur-sm p-6 sm:flex-row sm:items-center sm:justify-between shadow-sm">
+        <div className="mt-8 flex flex-col gap-3 rounded-card border border-ocean/10 bg-white/80 backdrop-blur-sm p-5 sm:flex-row sm:items-center sm:justify-between shadow-sm">
           <div className="flex items-center gap-3 text-sm text-ocean-deeper/80">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-ocean/10 text-ocean">
               <Phone className="h-4 w-4" />
@@ -159,13 +159,13 @@ export function FAQSupport() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/order"
-              className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-11 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-11 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
             >
               Order Now
             </Link>
             <a
               href="tel:+250785288910"
-              className="inline-flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white px-7 h-11 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-ivory hover:shadow-sm hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white px-7 h-11 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-250 hover:border-ocean/30 hover:bg-ivory hover:shadow-sm"
             >
               <Phone className="h-4 w-4 text-ocean" />
               Call Us

@@ -48,13 +48,13 @@ export function CTA() {
                 Browse genuine smartphones, laptops, accessories, creator gear, and everyday technology with delivery available across Rwanda.
               </p>
 
-              <div className="mt-6 flex flex-wrap gap-3">
+  <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   href="/order"
                   className="group inline-flex items-center gap-2 rounded-btn bg-white px-6 h-11 py-0 text-sm font-bold uppercase tracking-[0.12em] text-ocean shadow-btn transition-all duration-250 hover:bg-white/90 hover:shadow-btn-hover"
                 >
                   Order Now
-                  <ArrowRight className="h-4 w-4 transition-transform duration-250 group-hover:translate-x-0.5" />
+                  <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   href="/products"
@@ -64,7 +64,7 @@ export function CTA() {
                 </Link>
               </div>
 
-              <ul className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <ul className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
                 {TRUST_ITEMS.map((item, index) => (
                   <li key={item} className="flex items-center gap-x-4">
                     {index > 0 && <span className="text-white/30">—</span>}

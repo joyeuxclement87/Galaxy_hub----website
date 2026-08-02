@@ -19,11 +19,11 @@ export function NewArrivals({ products, onReserve }: NewArrivalsProps) {
   if (featured.length === 0) return null;
 
   return (
-    <section id="new-arrivals" className="bg-ivory px-4 py-20 sm:px-6 md:px-12 md:py-28">
-      <div className="mx-auto max-w-[1320px] space-y-8">
+    <section id="new-arrivals" className="bg-ivory px-4 py-16 sm:px-6">
+      <div className="mx-auto max-w-[1320px] space-y-6">
         <div className="max-w-2xl">
           <span className="section-label">NEW ARRIVALS</span>
-          <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper mt-3">
+          <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper mt-3">
             Fresh Out Of The Box
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/60 max-w-xl">
@@ -40,7 +40,7 @@ export function NewArrivals({ products, onReserve }: NewArrivalsProps) {
         <div className="flex justify-center">
           <Link
             href="/products"
-            className="group inline-flex items-center gap-2 rounded-btn border border-ocean/15 bg-white px-7 h-11 text-sm font-bold text-ocean transition-all duration-300 hover:border-ocean/30 hover:text-ocean-dark"
+            className="group inline-flex items-center gap-2 rounded-btn border border-ocean/15 bg-white px-7 h-11 text-sm font-bold text-ocean transition-all duration-250 hover:border-ocean/30 hover:text-ocean-dark"
           >
             View All Products <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>

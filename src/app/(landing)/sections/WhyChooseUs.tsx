@@ -21,11 +21,11 @@ const REASONS = [
 
 export function WhyChooseUs() {
   return (
-    <section className="bg-ivory px-4 py-20 sm:px-6 md:px-12 md:py-28">
+    <section className="bg-ivory px-4 py-16 sm:px-6">
       <div className="mx-auto max-w-[1320px]">
         <div className="max-w-2xl space-y-3">
           <span className="section-label">WHY CHOOSE GALAXY HUB</span>
-          <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
+          <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper">
             Built On Trust, Not Just Transactions.
           </h2>
           <p className="text-sm leading-[1.8] text-ocean-deeper/60">
@@ -33,16 +33,16 @@ export function WhyChooseUs() {
           </p>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-ocean/10">
+        <div className="mt-8 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x lg:divide-ocean/10">
           {REASONS.map((reason, index) => (
             <div key={reason.title} className="flex flex-col lg:px-8 lg:first:pl-0 lg:last:pr-0">
               <div className="flex items-center gap-4">
-                <span className="font-clash text-4xl font-bold leading-none text-ocean sm:text-5xl">
+                <span className="font-clash text-3xl font-bold leading-none text-ocean sm:text-4xl">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <span className="h-px flex-1 bg-ocean/15" />
               </div>
-              <h3 className="mt-5 font-clash text-base font-bold text-ocean-deeper">{reason.title}</h3>
+              <h3 className="mt-4 font-clash text-base font-bold text-ocean-deeper">{reason.title}</h3>
               <p className="mt-1.5 text-sm leading-[1.7] text-ocean-deeper/60">{reason.description}</p>
             </div>
           ))}

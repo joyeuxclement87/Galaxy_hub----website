@@ -36,15 +36,15 @@ export function SortSelect({
 
   return (
     <label
-      className="inline-flex items-center gap-2.5 rounded-btn border border-ocean/12 bg-white px-4 py-2.5 shadow-sm shadow-ocean/4 cursor-pointer hover:border-ocean/25 transition-colors duration-200"
+      className="inline-flex items-center gap-2.5 rounded-btn border border-ocean/12 bg-white px-4 py-2.5 shadow-sm shadow-ocean/4 cursor-pointer hover:border-ocean/25 transition-colors duration-250"
       title="Sort products"
     >
-      <ArrowUpDown className="h-3.5 w-3.5 text-ocean/40 shrink-0" />
+      <ArrowUpDown className="h-4 w-4 text-ocean/40 shrink-0" />
       <select
         name="sort"
         value={currentSort}
         onChange={handleChange}
-        className="border-none bg-transparent text-body-sm font-semibold text-ocean-deeper cursor-pointer focus:outline-none min-w-[130px]"
+        className="border-none bg-transparent text-sm font-semibold text-ocean-deeper cursor-pointer focus:outline-none min-w-[130px]"
       >
         {SORT_OPTIONS.map((opt) => (
           <option key={opt.value} value={opt.value}>

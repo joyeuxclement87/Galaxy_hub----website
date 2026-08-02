@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, Star } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { Review } from "@/data/mock-data";
 
 const STATS = [
@@ -15,11 +16,11 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
   const hasReviews = reviews && reviews.length > 0;
 
   return (
-    <section id="reviews" className="bg-white px-4 py-20 sm:px-6 md:px-12 md:py-28">
+    <section id="reviews" className="bg-white px-4 py-16 sm:px-6">
       <div className="mx-auto max-w-[1320px]">
         <div className="max-w-2xl space-y-3">
           <span className="section-label">CUSTOMER EXPERIENCE</span>
-          <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
+          <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper">
             Loved By Tech Users In Rwanda
           </h2>
           <p className="text-sm leading-[1.8] text-ocean-deeper/60">
@@ -27,10 +28,10 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-x-12 gap-y-12 md:grid-cols-[0.9fr_1.1fr]">
+        <div className="mt-10 grid gap-x-12 gap-y-12 md:grid-cols-[0.9fr_1.1fr]">
           <div className="flex flex-col">
             <div className="flex items-end gap-4">
-              <span className="font-clash text-6xl font-bold leading-none text-ocean-deeper sm:text-7xl">4.9</span>
+              <span className="font-clash text-5xl font-bold leading-none text-ocean-deeper sm:text-6xl">4.9</span>
               <div className="pb-2">
                 <div className="flex items-center gap-0.5 text-amber-400">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -45,9 +46,9 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
 
             <div className="mt-10 flex-1">
               {STATS.map((stat, index) => (
-                <div key={stat.label} className="flex items-baseline justify-between gap-4 border-t border-ocean/10 py-4 first:border-t">
+                <div key={stat.label} className={cn("flex items-baseline justify-between gap-4 border-t border-ocean/10 py-4", index === 0 && "first:border-t-0")}>
                   <span className="text-sm text-ocean-deeper/55">{stat.label}</span>
-                  <span className="font-clash text-2xl font-bold text-ocean-deeper">{stat.value}</span>
+                  <span className="font-clash text-xl font-bold text-ocean-deeper">{stat.value}</span>
                 </div>
               ))}
             </div>
@@ -115,7 +116,7 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-4 border-t border-ocean/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-10 flex flex-col gap-4 border-t border-ocean/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-ocean-deeper/60">
             Trusted by customers ordering phones, accessories, and gadgets across Rwanda.
           </p>

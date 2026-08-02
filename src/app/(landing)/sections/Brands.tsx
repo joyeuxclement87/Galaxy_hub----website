@@ -54,11 +54,11 @@ export function Brands({ brands }: BrandsProps) {
   const track = Array.from({ length: repeats }, () => catalog).flat();
 
   return (
-    <section id="brands" className="bg-ivory py-20 md:py-28">
-      <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12">
+    <section id="brands" className="bg-ivory py-16 sm:py-20">
+      <div className="mx-auto max-w-[1320px] px-4 sm:px-6">
         <div className="max-w-2xl space-y-3">
           <span className="section-label">BRANDS WE CARRY</span>
-          <h2 className="font-clash text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight text-ocean-deeper">
+          <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper">
             Trusted Technology Brands
           </h2>
           <p className="text-sm leading-[1.8] text-ocean-deeper/60">
@@ -66,9 +66,9 @@ export function Brands({ brands }: BrandsProps) {
           </p>
         </div>
 
-        <div className="relative mt-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+        <div className="relative mt-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
           <div
-            className="flex w-max animate-marquee-left gap-4 hover:[animation-play-state:paused]"
+            className="flex w-max animate-marquee-left gap-3 hover:[animation-play-state:paused]"
             style={{ animationDuration: `${track.length * 2.5}s` }}
           >
             {track.map((brand, index) => (
