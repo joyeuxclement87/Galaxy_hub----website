@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase-server";
+import { sendNotification } from "@/lib/notifications";
 
 export async function submitOrder(formData: {
   customer_name: string;
@@ -64,6 +65,26 @@ export async function submitOrder(formData: {
   if (itemsError) return { error: itemsError.message };
 
   await supabase.from("cart_items").delete().eq("cart_id", cart.id);
+
+  // Best-effort staff notification — never interrupts checkout.
+  await sendNotification({
+    topic: "order",
+    data: {
+      order: {
+        id: order.id,
+        order_number: order.order_number,
+        total_amount: totalAmount,
+      },
+      customer: {
+        name: formData.customer_name,
+        phone: formData.phone,
+        email: formData.email,
+        address: formData.address,
+        notes: formData.notes,
+      },
+      items: orderItems,
+    },
+  });
 
   return { success: true, order };
 }

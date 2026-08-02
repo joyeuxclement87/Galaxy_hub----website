@@ -17,6 +17,7 @@ import {
 import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
 import { Button } from "@/components/ui/button";
+import { submitContactMessage } from "@/actions/contact";
 
 const initialForm = {
   name: "",
@@ -44,14 +45,17 @@ export default function ContactPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      setSubmitted(true);
-    }, 900);
+    const result = await submitContactMessage(formData);
+    setSubmitting(false);
+    if (result?.error) {
+      setErrors({ form: result.error });
+      return;
+    }
+    setSubmitted(true);
   };
 
   const startNewMessage = () => {
@@ -263,6 +267,12 @@ export default function ContactPage() {
                         </>
                       )}
                     </Button>
+
+                    {errors.form && (
+                      <p className="mt-3 text-center text-xs font-semibold text-red-500 sm:text-left">
+                        {errors.form}
+                      </p>
+                    )}
                   </motion.form>
                 )}
               </AnimatePresence>

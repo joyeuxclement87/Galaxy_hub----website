@@ -112,6 +112,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
           stockStatus={product.stock_status}
           storageOptions={product.storage_options}
           productId={product.id}
+          productImage={product.main_image_url || undefined}
         />
 
         <main className="pt-20 lg:pt-24">
@@ -205,6 +206,10 @@ export default async function ProductPage({ params }: ProductPageParams) {
                   <ProductActions
                     productId={product.id}
                     productSlug={product.slug}
+                    productName={product.name}
+                    productPrice={product.price}
+                    productCurrency="RWF"
+                    productImage={product.main_image_url || undefined}
                     storageOptions={product.storage_options}
                   />
                 </div>

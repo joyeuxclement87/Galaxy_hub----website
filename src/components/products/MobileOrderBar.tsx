@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ShoppingCart } from "lucide-react";
+import { ArrowRight, MessageSquareText, ShoppingCart } from "lucide-react";
 import { StorageSelector } from "@/components/products/StorageSelector";
 import { AddToCartButton } from "@/components/products/AddToCartButton";
+import { QuoteRequestModal } from "@/components/ui/quote-request-modal";
 import { cn } from "@/lib/utils";
 
 /**
@@ -19,6 +20,7 @@ export function MobileOrderBar({
   currency,
   stockStatus,
   storageOptions,
+  productImage,
 }: {
   productName: string;
   productSlug: string;
@@ -27,9 +29,11 @@ export function MobileOrderBar({
   currency: string;
   stockStatus: string;
   storageOptions: string[];
+  productImage?: string;
 }) {
   const [storage, setStorage] = useState(storageOptions[0] || "");
   const [expanded, setExpanded] = useState(false);
+  const [quoteOpen, setQuoteOpen] = useState(false);
   const isAvailable = stockStatus === "available";
   const formattedPrice = new Intl.NumberFormat("en-US").format(price);
 
@@ -77,6 +81,16 @@ export function MobileOrderBar({
 
           {/* CTAs — consistent button design */}
           <div className="flex items-center gap-2 shrink-0">
+            {/* Quote request — icon only, opens staff quote flow */}
+            <button
+              type="button"
+              onClick={() => setQuoteOpen(true)}
+              aria-label="Request a quote"
+              className="h-10 w-10 min-w-[40px] rounded-btn border border-ocean/15 bg-ocean/[0.04] text-ocean-deeper transition-all duration-200 hover:border-ocean/35 hover:bg-ocean/[0.08] flex items-center justify-center"
+            >
+              <MessageSquareText className="h-4 w-4" />
+            </button>
+
             {/* Add to cart — icon only, uses design system secondary style */}
             <AddToCartButton
               productId={productId}
@@ -103,6 +117,20 @@ export function MobileOrderBar({
           </div>
         </div>
       </div>
+
+      <QuoteRequestModal
+        open={quoteOpen}
+        product={{
+          id: productId,
+          slug: productSlug,
+          title: productName,
+          price,
+          currency,
+          image: productImage,
+        }}
+        variant={storage || undefined}
+        onClose={() => setQuoteOpen(false)}
+      />
     </div>
   );
 }
