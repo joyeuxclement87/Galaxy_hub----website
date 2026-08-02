@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import { AppProvider } from "@/context/AppContext";
+import { CartProvider } from "@/context/CartContext";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -73,7 +74,9 @@ export default function RootLayout({
       className={`${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-ivory text-ocean overflow-x-clip">
-        <AppProvider>{children}</AppProvider>
+        <AppProvider>
+          <CartProvider>{children}</CartProvider>
+        </AppProvider>
       </body>
     </html>
   );
