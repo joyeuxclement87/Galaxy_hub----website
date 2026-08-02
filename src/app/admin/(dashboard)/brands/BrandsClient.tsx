@@ -1,11 +1,20 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Building2, Trash2 } from "lucide-react";
-import { deleteBrand } from "@/actions/brands";
+import { deleteBrand, deleteBrands } from "@/actions/brands";
+import { useBulkSelection } from "@/hooks/use-bulk-selection";
+import { BulkDeleteBar } from "@/components/admin/BulkDeleteBar";
 
 export function BrandsTable({ brands }: { brands: { id: string; name: string; slug: string; description: string | null; logo_url: string | null; is_active: boolean; product_count: number; created_at: string }[] }) {
+  const router = useRouter();
+  const { selected, toggle, toggleAll, clear, allSelected, count } = useBulkSelection(
+    useMemo(() => brands.map((b) => b.id), [brands]),
+  );
+
   if (brands.length === 0) return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/8 bg-white/[0.02] px-6 py-16 text-center">
       <Building2 className="mb-4 h-12 w-12 text-white/20" />
@@ -15,11 +24,32 @@ export function BrandsTable({ brands }: { brands: { id: string; name: string; sl
   );
 
   return (
-    <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
+    <div className="space-y-3">
+      <BulkDeleteBar
+        count={count}
+        label={count === 1 ? "brand" : "brands"}
+        onDelete={async () => {
+          const result = await deleteBrands([...selected]);
+          if (!result?.error) router.refresh();
+          return result;
+        }}
+        onClear={clear}
+      />
+      <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/5 text-left">
+              <th className="px-5 py-3.5 w-10">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={toggleAll}
+                  disabled={brands.length === 0}
+                  aria-label="Select all brands"
+                  className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                />
+              </th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Brand</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Slug</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Description</th>
@@ -32,6 +62,15 @@ export function BrandsTable({ brands }: { brands: { id: string; name: string; sl
           <tbody className="divide-y divide-white/5">
             {brands.map((b) => (
               <tr key={b.id} className="group transition-colors hover:bg-white/[0.03]">
+                <td className="px-5 py-3.5">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(b.id)}
+                    onChange={() => toggle(b.id)}
+                    aria-label={`Select ${b.name}`}
+                    className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                  />
+                </td>
                 <td className="px-5 py-3.5">
                   <div className="flex items-center gap-3">
                     <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xl bg-white/8 border border-white/10 transition-transform group-hover:scale-105">
@@ -62,6 +101,7 @@ export function BrandsTable({ brands }: { brands: { id: string; name: string; sl
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );

@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ShoppingBag, Eye, Trash2, Loader2 } from "lucide-react";
-import { deleteOrder } from "@/actions/orders";
+import { deleteOrder, deleteOrders } from "@/actions/orders";
+import { useBulkSelection } from "@/hooks/use-bulk-selection";
+import { BulkDeleteBar } from "@/components/admin/BulkDeleteBar";
 
 const statusStyles: Record<string, string> = {
   pending: "bg-amber-500/10 text-amber-300 ring-amber-500/20",
@@ -27,6 +29,9 @@ const statusDots: Record<string, string> = {
 export function OrdersTable({ orders }: { orders: { id: string; order_number: string; customer_name: string; email: string | null; total_amount: number; status: string; created_at: string }[] }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const { selected, toggle, toggleAll, clear, allSelected, count } = useBulkSelection(
+    useMemo(() => orders.map((o) => o.id), [orders]),
+  );
 
   const handleDelete = (order: { id: string; order_number: string }) => {
     const number = order.order_number || order.id.slice(0, 8);
@@ -47,11 +52,32 @@ export function OrdersTable({ orders }: { orders: { id: string; order_number: st
   );
 
   return (
-    <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
+    <div className="space-y-3">
+      <BulkDeleteBar
+        count={count}
+        label={count === 1 ? "order" : "orders"}
+        onDelete={async () => {
+          const result = await deleteOrders([...selected]);
+          if (!result?.error) router.refresh();
+          return result;
+        }}
+        onClear={clear}
+      />
+      <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/5 text-left">
+              <th className="px-5 py-3.5 w-10">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={toggleAll}
+                  disabled={orders.length === 0}
+                  aria-label="Select all orders"
+                  className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                />
+              </th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Order</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Customer</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Email</th>
@@ -64,6 +90,15 @@ export function OrdersTable({ orders }: { orders: { id: string; order_number: st
           <tbody className="divide-y divide-white/5">
             {orders.map((o) => (
               <tr key={o.id} className="group transition-colors hover:bg-white/[0.03]">
+                <td className="px-5 py-3.5">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(o.id)}
+                    onChange={() => toggle(o.id)}
+                    aria-label={`Select order ${o.order_number || o.id.slice(0, 8)}`}
+                    className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                  />
+                </td>
                 <td className="px-5 py-3.5">
                   <span className="font-mono text-xs font-bold text-ocean">#{o.order_number || o.id.slice(0, 8)}</span>
                 </td>
@@ -99,6 +134,7 @@ export function OrdersTable({ orders }: { orders: { id: string; order_number: st
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );

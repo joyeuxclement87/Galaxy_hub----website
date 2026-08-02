@@ -63,6 +63,15 @@ export async function deletePromotion(id: string) {
   redirect("/admin/promotions");
 }
 
+export async function deletePromotions(ids: string[]) {
+  const supabase = await createAdminClient();
+  const { error } = await supabase.from("promotions").delete().in("id", ids);
+  if (error) return { error: error.message };
+  revalidatePath("/");
+  revalidatePath("/admin/promotions");
+  return { success: true };
+}
+
 export async function uploadPromotionImage(formData: FormData) {
   const supabase = await createAdminClient();
   const file = formData.get("file") as File;

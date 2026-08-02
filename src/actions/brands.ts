@@ -57,6 +57,24 @@ export async function deleteBrand(id: string) {
   redirect("/admin/brands");
 }
 
+export async function deleteBrands(ids: string[]) {
+  const supabase = await createAdminClient();
+  const { data: inUse } = await supabase.from("products")
+    .select("brand_id")
+    .in("brand_id", ids);
+  if (inUse && inUse.length > 0) {
+    const used = new Set(inUse.map((p) => p.brand_id).filter(Boolean));
+    return {
+      error: `${used.size} of the selected brands still have products. Move or remove products before deleting.`,
+    };
+  }
+  const { error } = await supabase.from("brands").delete().in("id", ids);
+  if (error) return { error: error.message };
+  revalidatePath("/");
+  revalidatePath("/admin/brands");
+  return { success: true };
+}
+
 export async function uploadBrandLogo(formData: FormData) {
   const supabase = await createAdminClient();
   const file = formData.get("file") as File;

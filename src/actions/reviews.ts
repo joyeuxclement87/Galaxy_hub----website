@@ -73,6 +73,15 @@ export async function deleteReview(id: string) {
   redirect("/admin/reviews");
 }
 
+export async function deleteReviews(ids: string[]) {
+  const supabase = await createAdminClient();
+  const { error } = await supabase.from("reviews").delete().in("id", ids);
+  if (error) return { error: error.message };
+  revalidatePath("/");
+  revalidatePath("/admin/reviews");
+  return { success: true };
+}
+
 export async function toggleReviewActive(id: string, isActive: boolean) {
   const supabase = await createAdminClient();
   const { error } = await supabase.from("reviews").update({

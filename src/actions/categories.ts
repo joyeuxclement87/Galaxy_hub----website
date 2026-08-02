@@ -78,6 +78,32 @@ export async function deleteCategory(id: string) {
   redirect("/admin/categories");
 }
 
+export async function deleteCategories(ids: string[]) {
+  const supabase = createAdminClient();
+
+  const { data: inUse } = await supabase
+    .from("products")
+    .select("category_id")
+    .in("category_id", ids);
+
+  if (inUse && inUse.length > 0) {
+    const used = new Set(inUse.map((p) => p.category_id).filter(Boolean));
+    return {
+      error: `${used.size} of the selected categories still contain products. Move or remove products before deleting.`,
+    };
+  }
+
+  const { error } = await supabase.from("categories").delete().in("id", ids);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/categories");
+  return { success: true };
+}
+
 export async function uploadCategoryImage(formData: FormData) {
   const supabase = createAdminClient();
   const file = formData.get("file") as File;

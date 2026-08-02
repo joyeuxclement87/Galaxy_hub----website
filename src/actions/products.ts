@@ -156,6 +156,20 @@ export async function deleteProduct(id: string) {
   redirect("/admin/products");
 }
 
+export async function deleteProducts(ids: string[]) {
+  const supabase = createAdminClient();
+
+  const { error } = await supabase.from("products").delete().in("id", ids);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/products");
+  return { success: true };
+}
+
 export async function uploadImage(formData: FormData) {
   const supabase = createAdminClient();
   const file = formData.get("file") as File;

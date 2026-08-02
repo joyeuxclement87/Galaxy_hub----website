@@ -5,7 +5,9 @@ import { useCallback, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Search, Plus, Tags, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
-import { deleteCategory } from "@/actions/categories";
+import { deleteCategory, deleteCategories } from "@/actions/categories";
+import { useBulkSelection } from "@/hooks/use-bulk-selection";
+import { BulkDeleteBar } from "@/components/admin/BulkDeleteBar";
 
 export function CategoriesFilters() {
   const router = useRouter();
@@ -99,6 +101,9 @@ export function CategoriesTable({
 }) {
   const router = useRouter();
   const totalPages = Math.ceil(total / pageSize);
+  const { selected, toggle, toggleAll, clear, allSelected, count } = useBulkSelection(
+    useMemo(() => categories.map((c) => c.id), [categories]),
+  );
 
   const goToPage = (p: number) => {
     const params = new URLSearchParams(window.location.search);
@@ -117,11 +122,32 @@ export function CategoriesTable({
   }
 
   return (
-    <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
+    <div className="space-y-3">
+      <BulkDeleteBar
+        count={count}
+        label={count === 1 ? "category" : "categories"}
+        onDelete={async () => {
+          const result = await deleteCategories([...selected]);
+          if (!result?.error) router.refresh();
+          return result;
+        }}
+        onClear={clear}
+      />
+      <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/5 text-left">
+              <th className="px-5 py-3.5 w-10">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={toggleAll}
+                  disabled={categories.length === 0}
+                  aria-label="Select all categories on this page"
+                  className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                />
+              </th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Category</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Slug</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Description</th>
@@ -134,6 +160,15 @@ export function CategoriesTable({
           <tbody className="divide-y divide-white/5">
             {categories.map((cat) => (
               <tr key={cat.id} className="group transition-colors hover:bg-white/[0.03]">
+                <td className="px-5 py-3.5">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(cat.id)}
+                    onChange={() => toggle(cat.id)}
+                    aria-label={`Select ${cat.name}`}
+                    className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                  />
+                </td>
                 <td className="px-5 py-3.5">
                   <div className="flex items-center gap-3">
                     <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xl bg-white/8 border border-white/10 transition-transform group-hover:scale-105">
@@ -226,6 +261,7 @@ export function CategoriesTable({
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

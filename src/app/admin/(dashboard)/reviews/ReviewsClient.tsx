@@ -1,9 +1,13 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Star, Trash2 } from "lucide-react";
-import { deleteReview, toggleReviewActive, toggleReviewFeatured } from "@/actions/reviews";
+import { deleteReview, deleteReviews, toggleReviewActive, toggleReviewFeatured } from "@/actions/reviews";
+import { useBulkSelection } from "@/hooks/use-bulk-selection";
+import { BulkDeleteBar } from "@/components/admin/BulkDeleteBar";
 import type { AdminReview } from "@/data/admin-reviews";
 
 function StarRating({ rating }: { rating: number }) {
@@ -32,6 +36,11 @@ function Avatar({ review }: { review: AdminReview }) {
 }
 
 export function ReviewsTable({ reviews }: { reviews: AdminReview[] }) {
+  const router = useRouter();
+  const { selected, toggle, toggleAll, clear, allSelected, count } = useBulkSelection(
+    useMemo(() => reviews.map((r) => r.id), [reviews]),
+  );
+
   if (reviews.length === 0) return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/8 bg-white/[0.02] px-6 py-16 text-center">
       <Star className="mb-4 h-12 w-12 text-white/20" />
@@ -41,11 +50,32 @@ export function ReviewsTable({ reviews }: { reviews: AdminReview[] }) {
   );
 
   return (
-    <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
+    <div className="space-y-3">
+      <BulkDeleteBar
+        count={count}
+        label={count === 1 ? "review" : "reviews"}
+        onDelete={async () => {
+          const result = await deleteReviews([...selected]);
+          if (!result?.error) router.refresh();
+          return result;
+        }}
+        onClear={clear}
+      />
+      <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/5 text-left">
+              <th className="px-5 py-3.5 w-10">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={toggleAll}
+                  disabled={reviews.length === 0}
+                  aria-label="Select all reviews"
+                  className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                />
+              </th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Customer</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Rating</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Review</th>
@@ -58,6 +88,15 @@ export function ReviewsTable({ reviews }: { reviews: AdminReview[] }) {
           <tbody className="divide-y divide-white/5">
             {reviews.map((r) => (
               <tr key={r.id} className="group transition-colors hover:bg-white/[0.03]">
+                <td className="px-5 py-3.5">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(r.id)}
+                    onChange={() => toggle(r.id)}
+                    aria-label={`Select review by ${r.author}`}
+                    className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                  />
+                </td>
                 <td className="px-5 py-3.5">
                   <div className="flex items-center gap-3">
                     <Avatar review={r} />
@@ -130,6 +169,7 @@ export function ReviewsTable({ reviews }: { reviews: AdminReview[] }) {
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );

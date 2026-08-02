@@ -72,3 +72,13 @@ export async function deleteOrder(id: string) {
   revalidatePath("/admin/orders");
   return { success: true, order_number: existing.order_number };
 }
+
+export async function deleteOrders(ids: string[]) {
+  const supabase = await createAdminClient();
+
+  const { error } = await supabase.from("orders").delete().in("id", ids);
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/orders");
+  return { success: true };
+}

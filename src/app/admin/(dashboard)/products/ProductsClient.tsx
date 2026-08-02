@@ -5,7 +5,9 @@ import { useCallback, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Search, Plus, Package, ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
-import { deleteProduct } from "@/actions/products";
+import { deleteProduct, deleteProducts } from "@/actions/products";
+import { useBulkSelection } from "@/hooks/use-bulk-selection";
+import { BulkDeleteBar } from "@/components/admin/BulkDeleteBar";
 
 interface FilterOption {
   id: string;
@@ -168,6 +170,9 @@ export function ProductTable({
 }) {
   const router = useRouter();
   const totalPages = Math.ceil(total / pageSize);
+  const { selected, toggle, toggleAll, clear, allSelected, count } = useBulkSelection(
+    useMemo(() => products.map((p) => p.id), [products]),
+  );
 
   const stockLabel: Record<string, { label: string; color: string }> = {
     in_stock: { label: "In Stock", color: "bg-emerald-500/10 text-emerald-300" },
@@ -197,11 +202,32 @@ export function ProductTable({
   }
 
   return (
-    <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
+    <div className="space-y-3">
+      <BulkDeleteBar
+        count={count}
+        label={count === 1 ? "product" : "products"}
+        onDelete={async () => {
+          const result = await deleteProducts([...selected]);
+          if (!result?.error) router.refresh();
+          return result;
+        }}
+        onClear={clear}
+      />
+      <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/5 text-left">
+              <th className="px-5 py-3.5 w-10">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={toggleAll}
+                  disabled={products.length === 0}
+                  aria-label="Select all products on this page"
+                  className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                />
+              </th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Product</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Brand</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Category</th>
@@ -217,6 +243,15 @@ export function ProductTable({
           <tbody className="divide-y divide-white/5">
             {products.map((product) => (
               <tr key={product.id} className="group transition-colors hover:bg-white/[0.03]">
+                <td className="px-5 py-3.5">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(product.id)}
+                    onChange={() => toggle(product.id)}
+                    aria-label={`Select ${product.name}`}
+                    className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                  />
+                </td>
                 <td className="px-5 py-3.5">
                   <div className="flex items-center gap-3">
                     <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xl bg-white/8 border border-white/10 transition-transform group-hover:scale-105">
@@ -326,6 +361,7 @@ export function ProductTable({
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -1,11 +1,20 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Megaphone, Trash2 } from "lucide-react";
-import { deletePromotion } from "@/actions/promotions";
+import { deletePromotion, deletePromotions } from "@/actions/promotions";
+import { useBulkSelection } from "@/hooks/use-bulk-selection";
+import { BulkDeleteBar } from "@/components/admin/BulkDeleteBar";
 
 export function PromotionsTable({ promotions }: { promotions: { id: string; title: string; description: string | null; image_url: string | null; discount_percentage: number | null; starts_at: string | null; ends_at: string | null; is_active: boolean; created_at: string }[] }) {
+  const router = useRouter();
+  const { selected, toggle, toggleAll, clear, allSelected, count } = useBulkSelection(
+    useMemo(() => promotions.map((p) => p.id), [promotions]),
+  );
+
   if (promotions.length === 0) return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/8 bg-white/[0.02] px-6 py-16 text-center">
       <Megaphone className="mb-4 h-12 w-12 text-white/20" />
@@ -17,11 +26,32 @@ export function PromotionsTable({ promotions }: { promotions: { id: string; titl
   const now = new Date();
 
   return (
-    <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
+    <div className="space-y-3">
+      <BulkDeleteBar
+        count={count}
+        label={count === 1 ? "promotion" : "promotions"}
+        onDelete={async () => {
+          const result = await deletePromotions([...selected]);
+          if (!result?.error) router.refresh();
+          return result;
+        }}
+        onClear={clear}
+      />
+      <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/5 text-left">
+              <th className="px-5 py-3.5 w-10">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={toggleAll}
+                  disabled={promotions.length === 0}
+                  aria-label="Select all promotions"
+                  className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                />
+              </th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Title</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Discount</th>
               <th className="px-5 py-3.5 text-caption font-bold uppercase tracking-[0.12em] text-white/30">Period</th>
@@ -35,6 +65,15 @@ export function PromotionsTable({ promotions }: { promotions: { id: string; titl
               const active = p.is_active && (!p.starts_at || new Date(p.starts_at) <= now) && (!p.ends_at || new Date(p.ends_at) >= now);
               return (
                 <tr key={p.id} className="group transition-colors hover:bg-white/[0.03]">
+                  <td className="px-5 py-3.5">
+                    <input
+                      type="checkbox"
+                      checked={selected.has(p.id)}
+                      onChange={() => toggle(p.id)}
+                      aria-label={`Select ${p.title}`}
+                      className="h-4 w-4 cursor-pointer rounded accent-ocean"
+                    />
+                  </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="relative h-9 w-16 shrink-0 overflow-hidden rounded-xl bg-white/8 border border-white/10 transition-transform group-hover:scale-105">
@@ -78,6 +117,7 @@ export function PromotionsTable({ promotions }: { promotions: { id: string; titl
             })}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );
