@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import Fuse from "fuse.js";
 import { AlertCircle, Search } from "lucide-react";
 import { ProductCard } from "@/components/products/ProductCard";
 import { PRODUCTS, Product } from "@/data/mock-data";
@@ -16,17 +15,6 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
   const [selectedBrand, setSelectedBrand] = useState("All");
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const fuse = new Fuse(PRODUCTS, {
-    keys: [
-      { name: "title", weight: 0.5 },
-      { name: "brand", weight: 0.25 },
-      { name: "category", weight: 0.15 },
-      { name: "tagline", weight: 0.1 },
-    ],
-    threshold: 0.25,
-    ignoreLocation: true,
-  });
-
   const categories = ["All", ...Array.from(new Set(PRODUCTS.map((p) => p.category)))];
   const brandsList = ["All", ...Array.from(new Set(PRODUCTS.map((p) => p.brand)))];
 
@@ -34,25 +22,26 @@ export function TrendingProducts({ onReserve }: TrendingProductsProps) {
 
   if (searchQuery.trim() !== "") {
     const rawTerm = searchQuery.trim().toLowerCase();
-    const fuseResults = fuse.search(searchQuery).map((result) => result.item);
-    
-    // Sort exact & prefix matches first regardless of capitalization
-    displayedProducts = fuseResults.sort((a, b) => {
+    displayedProducts = PRODUCTS.filter((p) => {
+      const title = p.title.toLowerCase();
+      const brand = p.brand.toLowerCase();
+      const category = p.category.toLowerCase();
+      const tagline = (p.tagline || "").toLowerCase();
+      return (
+        title.includes(rawTerm) ||
+        brand.includes(rawTerm) ||
+        category.includes(rawTerm) ||
+        tagline.includes(rawTerm)
+      );
+    });
+
+    displayedProducts.sort((a, b) => {
       const aTitle = a.title.toLowerCase();
       const bTitle = b.title.toLowerCase();
-      const aBrand = a.brand.toLowerCase();
-      const bBrand = b.brand.toLowerCase();
-
-      const aExact = aTitle === rawTerm || aBrand === rawTerm;
-      const bExact = bTitle === rawTerm || bBrand === rawTerm;
+      const aExact = aTitle === rawTerm || aTitle.startsWith(rawTerm);
+      const bExact = bTitle === rawTerm || bTitle.startsWith(rawTerm);
       if (aExact && !bExact) return -1;
       if (!aExact && bExact) return 1;
-
-      const aStarts = aTitle.startsWith(rawTerm) || aBrand.startsWith(rawTerm);
-      const bStarts = bTitle.startsWith(rawTerm) || bBrand.startsWith(rawTerm);
-      if (aStarts && !bStarts) return -1;
-      if (!aStarts && bStarts) return 1;
-
       return 0;
     });
   }

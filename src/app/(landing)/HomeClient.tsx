@@ -233,13 +233,32 @@ export default function HomeClient({ data }: HomeClientProps) {
     return () => window.removeEventListener("hashchange", handleHash);
   }, [setSelectedCategory, setSelectedBrand, setShowDealsOnly]);
 
-  const fuse = new Fuse(products, {
-    keys: ["title", "tagline", "description", "category", "brand"],
-    threshold: 0.3,
-  });
-
   let displayedProducts = products;
-  if (searchQuery.trim())     displayedProducts = fuse.search(searchQuery).map((r) => r.item);
+  if (searchQuery.trim()) {
+    const rawTerm = searchQuery.trim().toLowerCase();
+    displayedProducts = products.filter((p) => {
+      const title = p.title.toLowerCase();
+      const brand = p.brand.toLowerCase();
+      const category = p.category.toLowerCase();
+      const tagline = (p.tagline || "").toLowerCase();
+      return (
+        title.includes(rawTerm) ||
+        brand.includes(rawTerm) ||
+        category.includes(rawTerm) ||
+        tagline.includes(rawTerm)
+      );
+    });
+
+    displayedProducts.sort((a, b) => {
+      const aTitle = a.title.toLowerCase();
+      const bTitle = b.title.toLowerCase();
+      const aExact = aTitle === rawTerm || aTitle.startsWith(rawTerm);
+      const bExact = bTitle === rawTerm || bTitle.startsWith(rawTerm);
+      if (aExact && !bExact) return -1;
+      if (!aExact && bExact) return 1;
+      return 0;
+    });
+  }
   if (showDealsOnly)          displayedProducts = displayedProducts.filter((p) => p.originalPrice !== undefined || p.availability === "Limited Stock");
   if (selectedCategory === "Wishlist") displayedProducts = displayedProducts.filter((p) => wishlist.includes(p.id));
   else if (selectedCategory !== "All") displayedProducts = displayedProducts.filter((p) => p.category === selectedCategory);
