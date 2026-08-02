@@ -136,7 +136,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
     <div className="min-h-screen bg-ivory">
       <Navbar />
       <main className="pt-20 pb-20">
-        <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-8">
+        <div className="mx-auto max-w-[1320px] px-4 sm:px-6">
 
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-1.5 text-xs font-medium text-ocean/45">
@@ -305,7 +305,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                 )}
 
                 {result.products.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-ocean/12 bg-white/60 py-24 text-center px-6">
+                  <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-ocean/12 bg-white/60 py-16 text-center px-6">
                     <div className="flex h-14 w-14 items-center justify-center rounded-full bg-ocean/5">
                       <Search className="h-6 w-6 text-ocean/25" />
                     </div>
