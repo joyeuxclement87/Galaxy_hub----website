@@ -9,7 +9,6 @@ import {
   ArrowLeft,
   CheckCircle2,
   MapPin,
-  MessageCircle,
   Phone,
   ShieldCheck,
   ShoppingBag,
@@ -18,6 +17,7 @@ import {
   Truck,
   User,
 } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
 import { Button } from "@/components/ui/button";
@@ -328,9 +328,9 @@ function OrderContent() {
                 >
                   <Button
                     variant="primary"
-                    className="w-full rounded-btn h-11 text-sm font-bold uppercase tracking-wider gap-2 justify-center"
+                    className="w-full rounded-btn h-11 text-sm font-bold uppercase tracking-wider gap-2 justify-center !bg-[#25D366] hover:!bg-[#1EBE5D] !shadow-[0_10px_24px_rgba(37,211,102,0.35)] hover:!shadow-[0_14px_28px_rgba(37,211,102,0.45)]"
                   >
-                    <MessageCircle className="h-4 w-4" />
+                    <WhatsAppIcon className="h-4 w-4" />
                     WhatsApp Us
                   </Button>
                 </a>
