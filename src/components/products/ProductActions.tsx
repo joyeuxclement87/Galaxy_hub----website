@@ -26,7 +26,7 @@ export function ProductActions({
   const [storage, setStorage] = useState(defaultStorage || storageOptions[0] || "");
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <StorageSelector options={storageOptions} value={storage} onChange={setStorage} />
 
       <div className="flex flex-col gap-3 sm:flex-row w-full">
