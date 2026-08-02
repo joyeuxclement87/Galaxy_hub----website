@@ -1,8 +1,6 @@
 import { Suspense } from "react";
 import { getProducts, getCategories, getBrands } from "@/data/products";
 import { ProductsClient, ProductTable } from "./ProductsClient";
-import { StatCardSkeleton } from "@/components/admin/Skeleton";
-import { Package } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 

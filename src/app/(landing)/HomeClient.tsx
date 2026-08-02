@@ -9,7 +9,6 @@ import { ProductCard }        from "@/components/products/ProductCard";
 import { ReservationModal }   from "@/components/ui/reservation-modal";
 import {
   Product,
-  Product as MockProduct,
   DEAL_OFFERS,
 } from "@/data/mock-data";
 import { useApp }             from "@/context/AppContext";
@@ -196,7 +195,7 @@ export default function HomeClient({ data }: HomeClientProps) {
     selectedCategory, setSelectedCategory,
     selectedBrand, setSelectedBrand,
     showDealsOnly, setShowDealsOnly,
-    wishlist, registerProducts,
+    registerProducts,
   } = useApp();
 
   const products = data.featuredProducts;
@@ -240,8 +239,6 @@ export default function HomeClient({ data }: HomeClientProps) {
     window.addEventListener("hashchange", handleHash);
     return () => window.removeEventListener("hashchange", handleHash);
   }, [setSelectedCategory, setSelectedBrand, setShowDealsOnly]);
-
-  const scrollToProducts = () => document.getElementById("products")?.scrollIntoView({ behavior: "smooth" });
 
   const heroSlidesRaw: HeroSlideData[] = data.heroSlides.length > 0
     ? data.heroSlides

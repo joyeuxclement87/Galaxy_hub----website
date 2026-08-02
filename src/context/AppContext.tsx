@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { PRODUCTS, Product } from "@/data/mock-data";
+import { PRODUCTS } from "@/data/mock-data";
 
 export interface CartProductMeta {
   id: string;

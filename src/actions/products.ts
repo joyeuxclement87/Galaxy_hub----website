@@ -201,11 +201,7 @@ export async function uploadImage(formData: FormData) {
     if (createError) return { error: createError.message };
   }
 
-  const { data: existing } = await supabase.storage.from("product-images").list("products", {
-    limit: 1,
-  });
-
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from("product-images")
     .upload(filePath, file, {
       cacheControl: "3600",

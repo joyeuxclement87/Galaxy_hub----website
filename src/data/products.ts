@@ -3,10 +3,6 @@ import { createClient } from "@/lib/supabase-server";
 import type { Database } from "@/types/database";
 
 type ProductRow = Database["public"]["Tables"]["products"]["Row"];
-type ProductInsert = Database["public"]["Tables"]["products"]["Insert"];
-type ProductUpdate = Database["public"]["Tables"]["products"]["Update"];
-type BrandRow = Database["public"]["Tables"]["brands"]["Row"];
-type CategoryRow = Database["public"]["Tables"]["categories"]["Row"];
 
 export interface ProductListItem extends ProductRow {
   category: { name: string } | null;

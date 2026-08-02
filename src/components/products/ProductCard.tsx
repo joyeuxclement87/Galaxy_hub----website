@@ -16,7 +16,7 @@ interface ProductCardProps {
   storage?: string;
 }
 
-export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
+export function ProductCard({ product, storage }: ProductCardProps) {
   const [isInCart, setIsInCart] = useState(false);
   const [loading, setLoading] = useState(false);
   const { items, loading: cartLoading, remove: removeFromCart } = useSupabaseCart();
@@ -81,7 +81,6 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
     ? { label: "Coming soon", cls: "bg-amber-50 text-amber-700 border border-amber-100/60" }
     : null;
 
-  const href = product.externalUrl ?? `/product/${product.slug}`;
   const linkProps = product.externalUrl
     ? { href: product.externalUrl, target: "_blank", rel: "noopener noreferrer" }
     : { href: `/product/${product.slug}` };

@@ -35,7 +35,7 @@ const contentVariants = {
 export function HeroSection({ slides }: HeroSectionProps) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isPaused] = useState(false);
   const [addingSlugs, setAddingSlugs] = useState<Record<string, boolean>>({});
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 

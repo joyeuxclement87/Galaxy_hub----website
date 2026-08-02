@@ -18,7 +18,6 @@ import {
   ArrowRight,
   CreditCard,
   TrendingUp,
-  Star,
   Zap,
   Activity,
 } from "lucide-react";
@@ -96,7 +95,7 @@ export default async function AdminDashboardPage() {
               { label: "Status", value: "All Systems Operational" },
               { label: "Region", value: "Kigali, Rwanda" },
               { label: "Platform", value: "Galaxy Hub v1.0" },
-            ].map((item, i) => (
+            ].map((item) => (
               <div key={item.label} className="bg-[#0a1628] px-4 py-3 sm:px-5">
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/25">{item.label}</p>
                 <p className="mt-0.5 text-xs font-semibold text-white/70 truncate">{item.value}</p>
@@ -348,7 +347,7 @@ async function RecentOrders() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {recentOrders.map((order, i) => {
+              {recentOrders.map((order) => {
                 const cfg = statusConfig(order.status);
                 return (
                   <tr key={order.id} className="group transition-colors hover:bg-white/[0.03]">
