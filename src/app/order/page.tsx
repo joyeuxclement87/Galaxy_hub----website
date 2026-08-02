@@ -175,6 +175,20 @@ function OrderContent() {
       address: fulfillment === "delivery" ? `${formData.district ?? ""}${formData.address ? `, ${formData.address}` : ""}` : undefined,
       notes: formData.notes || undefined,
       session_id: getSessionId(),
+      directProduct: directProduct
+        ? {
+            productId: directProduct.id,
+            variant: storageFor({
+              key: `product:${directProduct.id}`,
+              title: directProduct.title,
+              price: directProduct.price,
+              currency: directProduct.currency,
+              image: directProduct.image,
+              storages: directProduct.storage_options,
+              selectedVariant: null,
+            }),
+          }
+        : null,
     });
 
     setSubmitting(false);

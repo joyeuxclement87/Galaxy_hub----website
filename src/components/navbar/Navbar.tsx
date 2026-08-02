@@ -574,17 +574,21 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
 
     const trimmed = searchInputValue.trim();
     if (!trimmed) {
-      setSearchResults([]);
-      setHasSearched(false);
-      setIsSearching(false);
-      return;
+      const clearTimeoutId = window.setTimeout(() => {
+        setSearchResults([]);
+        setHasSearched(false);
+        setIsSearching(false);
+      }, 0);
+
+      return () => window.clearTimeout(clearTimeoutId);
     }
 
     const requestId = ++searchRequestRef.current;
-    setHasSearched(true);
-    setIsSearching(true);
 
     const timeout = window.setTimeout(async () => {
+      setHasSearched(true);
+      setIsSearching(true);
+
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}`);
         const data = await res.json();

@@ -10,6 +10,11 @@ export async function submitOrder(formData: {
   address?: string;
   notes?: string;
   session_id: string;
+  directProduct?: {
+    productId: string;
+    variant?: string | null;
+    quantity?: number;
+  } | null;
 }) {
   const supabase = createClient();
 
@@ -19,17 +24,39 @@ export async function submitOrder(formData: {
     .eq("session_id", formData.session_id)
     .maybeSingle();
 
-  if (!cart) return { error: "Cart not found" };
+  const { data: items } = cart
+    ? await supabase
+        .from("cart_items")
+        .select(`quantity, variant, product:product_id(id, name, price)`)
+        .eq("cart_id", cart.id)
+    : { data: null };
 
-  const { data: items } = await supabase
-    .from("cart_items")
-    .select(`quantity, variant, product:product_id(id, name, price)`)
-    .eq("cart_id", cart.id);
+  const cartLines = items ?? [];
 
-  if (!items || items.length === 0) return { error: "Cart is empty" };
+  let directLine: { product_id: string; product_name: string; price: number; quantity: number; variant: string | null } | null = null;
+
+  if (formData.directProduct) {
+    const { data: product } = await supabase
+      .from("products")
+      .select("id, name, price")
+      .eq("id", formData.directProduct.productId)
+      .maybeSingle();
+
+    if (product) {
+      directLine = {
+        product_id: product.id,
+        product_name: product.name,
+        price: Number(product.price),
+        quantity: formData.directProduct.quantity ?? 1,
+        variant: formData.directProduct.variant || null,
+      };
+    }
+  }
+
+  if (cartLines.length === 0 && !directLine) return { error: "Cart is empty" };
 
   let totalAmount = 0;
-  const orderItems = items.map((item: any) => {
+  const orderItems = cartLines.map((item: any) => {
     const price = Number(item.product.price);
     const qty = item.quantity;
     totalAmount += price * qty;
@@ -41,6 +68,11 @@ export async function submitOrder(formData: {
       variant: item.variant || null,
     };
   });
+
+  if (directLine) {
+    totalAmount += directLine.price * directLine.quantity;
+    orderItems.push(directLine);
+  }
 
   const { data: orderNumber, error: numberError } = await supabase.rpc("next_order_number");
   if (numberError || !orderNumber) {
@@ -70,7 +102,9 @@ export async function submitOrder(formData: {
 
   if (itemsError) return { error: itemsError.message };
 
-  await supabase.from("cart_items").delete().eq("cart_id", cart.id);
+  if (cart) {
+    await supabase.from("cart_items").delete().eq("cart_id", cart.id);
+  }
 
   // Best-effort staff notification — never interrupts checkout.
   await sendNotification({
