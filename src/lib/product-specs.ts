@@ -76,6 +76,10 @@ const KEY_SPEC_DEFINITIONS: Record<CategoryType, KeySpecDefinition[]> = {
   default: [D, P, R, S, C, B, N, OS],
 };
 
+/** Laptop specs that must always appear in Key Specifications, even when
+ *  the stored data doesn't include them (shown as "N/A"). */
+const FORCED_LAPTOP_SPEC_LABELS = ["Processor", "RAM", "Storage", "Operating System"];
+
 function findSpecValues(specifications: ProductSpecifications, labelMatches: string[]): { value: string; group: string }[] {
   const found: { value: string; group: string }[] = [];
   const seen = new Set<string>();
@@ -99,18 +103,28 @@ export function getKeySpecs(
   specifications: ProductSpecifications,
   categorySlug?: string | null
 ): KeySpecEntry[] {
-  if (specifications.length === 0) return [];
+  if (specifications.length === 0) {
+    // Computers must always show the core specs, even without stored data
+    if (categoryType(categorySlug) === "laptops") {
+      return KEY_SPEC_DEFINITIONS.laptops
+        .filter((d) => FORCED_LAPTOP_SPEC_LABELS.includes(d.label))
+        .map((d) => ({ label: d.label, value: "N/A", group: "" }));
+    }
+    return [];
+  }
 
-  const defs = KEY_SPEC_DEFINITIONS[categoryType(categorySlug)];
+  const type = categoryType(categorySlug);
+  const defs = KEY_SPEC_DEFINITIONS[type];
   const entries: KeySpecEntry[] = [];
 
   for (const def of defs) {
     const matches = findSpecValues(specifications, def.combine || def.labelMatches);
-    if (matches.length === 0) continue;
+    const forced = type === "laptops" && FORCED_LAPTOP_SPEC_LABELS.includes(def.label);
+    if (matches.length === 0 && !forced) continue;
     entries.push({
       label: def.label,
-      value: matches.map((m) => m.value).join(" · "),
-      group: matches[0].group,
+      value: matches.length > 0 ? matches.map((m) => m.value).join(" · ") : "N/A",
+      group: matches.length > 0 ? matches[0].group : "",
     });
   }
 

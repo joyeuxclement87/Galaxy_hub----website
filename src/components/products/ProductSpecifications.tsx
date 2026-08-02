@@ -19,6 +19,8 @@ import {
   Tv,
   Gamepad2,
   Video,
+  HardDrive,
+  MemoryStick,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -51,6 +53,18 @@ function iconForGroup(name: string): LucideIcon {
   return GROUP_ICONS[name.toLowerCase()] ?? ListChecks;
 }
 
+const SPEC_LABEL_ICONS: Record<string, LucideIcon> = {
+  processor: Cpu,
+  ram: MemoryStick,
+  storage: HardDrive,
+  "operating system": Settings,
+  "internal memory": HardDrive,
+};
+
+function iconForSpec(label: string, group: string): LucideIcon {
+  return SPEC_LABEL_ICONS[label.toLowerCase()] ?? iconForGroup(group);
+}
+
 /**
  * Compact grid of the most important specs, shown near the top of the
  * product page. Category-aware and never renders empty entries.
@@ -68,7 +82,7 @@ export function KeySpecifications({
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {keySpecs.map((spec) => {
-        const Icon = iconForGroup(spec.group);
+        const Icon = iconForSpec(spec.label, spec.group);
         return (
           <div
             key={spec.label}
