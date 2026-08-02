@@ -63,11 +63,12 @@ export async function getPublicProducts(params: {
   sort?: string;
   stock_status?: string;
   is_featured?: boolean;
+  is_new?: boolean;
   page?: number;
   pageSize?: number;
 }): Promise<ProductsListResponse> {
   const supabase = createClient();
-  const { search, category_slug, brand_slug, sort, stock_status, is_featured, page = 1, pageSize = 16 } = params;
+  const { search, category_slug, brand_slug, sort, stock_status, is_featured, is_new, page = 1, pageSize = 16 } = params;
 
   let query = supabase
     .from("products")
@@ -119,6 +120,11 @@ export async function getPublicProducts(params: {
   if (is_featured !== undefined) {
     query = query.eq("is_featured", is_featured);
     countQuery = countQuery.eq("is_featured", is_featured);
+  }
+
+  if (is_new !== undefined) {
+    query = query.eq("is_new", is_new);
+    countQuery = countQuery.eq("is_new", is_new);
   }
 
   // New products (NEW pill) always rank first, then the chosen sort

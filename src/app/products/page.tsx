@@ -2,11 +2,10 @@ import Link from "next/link";
 import { ChevronRight, Search, X, SlidersHorizontal } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
-import ProductsGrid from "@/components/ui/products-grid";
 import { SortSelect } from "@/components/ui/SortSelect";
 import { ProductFilters, MobileFilters } from "@/components/ui/product-filters";
+import { ProductsGridBrowser } from "@/components/products/ProductsGridBrowser";
 import { getPublicProducts } from "@/data/public-products";
-import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -39,25 +38,24 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
   const sort = params.sort || "newest";
   const stock_status = params.stock || "";
   const featured = params.featured || "";
+  const isNew = params.new || "";
   const page = parseInt(params.page || "1", 10) || 1;
 
   const result = await getPublicProducts({
     search: q, category_slug, brand_slug, sort,
     stock_status: stock_status || undefined,
     is_featured: featured === "true" ? true : undefined,
-    page, pageSize: 16,
+    is_new: isNew === "true" ? true : undefined,
+    page, pageSize: 24,
   });
-
-  const totalPages = Math.max(1, Math.ceil(result.total / 16));
-  const start = (page - 1) * 16;
-  const pageSize = 16;
 
   const activeCount =
     (q ? 1 : 0) +
     (category_slug ? 1 : 0) +
     (brand_slug ? 1 : 0) +
     (stock_status ? 1 : 0) +
-    (featured ? 1 : 0);
+    (featured ? 1 : 0) +
+    (isNew ? 1 : 0);
 
   const filterGroups = [
     {
@@ -113,25 +111,17 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
         { label: "Featured Only", href: buildHref({ ...params, featured: "true", page: 1 }), active: featured === "true" },
       ],
     },
+    {
+      id: "new",
+      title: "New Arrivals",
+      options: [
+        { label: "All Products", href: buildHref({ ...params, new: "", page: 1 }), active: !isNew },
+        { label: "New Only", href: buildHref({ ...params, new: "true", page: 1 }), active: isNew === "true" },
+      ],
+    },
   ];
 
-  // Smart pagination: first, ellipsis, window around current, ellipsis, last
-  function getPaginationPages(current: number, total: number): (number | "...")[] {
-    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-    const pages: (number | "...")[] = [];
-    const window = 1; // pages around current
-    const left = Math.max(2, current - window);
-    const right = Math.min(total - 1, current + window);
-    pages.push(1);
-    if (left > 2) pages.push("...");
-    for (let i = left; i <= right; i++) pages.push(i);
-    if (right < total - 1) pages.push("...");
-    pages.push(total);
-    return pages;
-  }
-
-  const paginationPages = getPaginationPages(page, totalPages);
-
+  // Smart pagination pages used for the sticky header only (client grid computes its own)
   return (
     <div className="min-h-screen bg-ivory">
       <Navbar />
@@ -188,6 +178,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                 {brand_slug && <input type="hidden" name="brand" value={brand_slug} />}
                 {stock_status && <input type="hidden" name="stock" value={stock_status} />}
                 {featured && <input type="hidden" name="featured" value={featured} />}
+                {isNew && <input type="hidden" name="new" value={isNew} />}
                 {sort && sort !== "newest" && <input type="hidden" name="sort" value={sort} />}
 
                 <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ocean/25 pointer-events-none" />
@@ -245,6 +236,12 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                     <X className="h-2.5 w-2.5" />
                   </Link>
                 )}
+                {isNew && (
+                  <Link href={buildHref({ ...params, new: "", page: 1 })} className="inline-flex items-center gap-1 rounded-full bg-ocean px-2.5 py-1 text-xs font-bold uppercase tracking-[0.08em] text-white">
+                    New Arrivals
+                    <X className="h-2.5 w-2.5" />
+                  </Link>
+                )}
               </div>
             )}
           </nav>
@@ -271,27 +268,6 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
               </aside>
 
               <div className="flex-1 min-w-0">
-                {/* Results count + page info */}
-                <div className="mb-5 flex items-center justify-between">
-                  <div className="text-xs text-ocean/50">
-                    {result.total > 0 ? (
-                      <>
-                        Showing{" "}
-                        <span className="font-bold text-ocean-deeper">{start + 1}–{Math.min(start + pageSize, result.total)}</span>
-                        {" "}of{" "}
-                        <span className="font-bold text-ocean-deeper">{result.total.toLocaleString()}</span>
-                      </>
-                    ) : (
-                      <span>No results</span>
-                    )}
-                  </div>
-                  {result.total >= 6 && (
-                    <div className="hidden sm:block text-xs text-ocean/40">
-                      Page {page} of {totalPages}
-                    </div>
-                  )}
-                </div>
-
                 {/* Active search chip */}
                 {q && (
                   <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -304,95 +280,14 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                   </div>
                 )}
 
-                {result.products.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-ocean/12 bg-white/60 py-16 text-center px-6">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-ocean/5">
-                      <Search className="h-6 w-6 text-ocean/25" />
-                    </div>
-                    <h3 className="font-display text-lg font-bold text-ocean-deeper mt-5">No products found</h3>
-                    <p className="mt-2 text-sm text-ocean/50 max-w-xs">
-                      Try a different search term or clear your filters to browse all products.
-                    </p>
-                    <Link
-                      href="/products"
-                       className="mt-4 inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-6 h-11 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover"
-                    >
-                      Clear all filters
-                    </Link>
-                  </div>
-                ) : (
-                  <ProductsGrid
-                    products={result.products.map((p) => ({
-                      id: p.id, slug: p.slug, title: p.name,
-                      tagline: p.short_description || "", description: p.description || "",
-                      price: p.price, originalPrice: p.old_price || undefined, currency: "RWF",
-                      category: p.category_name || "", brand: p.brand_name || "",
-                      image: p.main_image_url || "", featured: p.is_featured,
-                      specifications: {},
-                      availability: p.stock_status === "available" ? "In Stock" : p.stock_status === "coming_soon" ? "Limited Stock" : "Out of Stock",
-                      badge: p.is_new ? "NEW" : p.discount_percentage ? "ON DISCOUNT" : undefined,
-                      rating: p.rating ?? 4.8, reviewCount: p.review_count ?? 32,
-                    }))}
-                  />
-                )}
-
-                {/* Pagination — shown once products span 2+ rows (≥6 products) */}
-                {result.total >= 6 && (
-                  <div className="mt-8 flex items-center justify-center gap-1.5">
-                    {totalPages === 1 ? (
-                      <span className="rounded-btn border border-ocean/8 bg-white px-4 py-2 text-sm font-semibold text-ocean-deeper/60">
-                        Page 1 of 1
-                      </span>
-                    ) : (
-                      <>
-                    <Link
-                      href={buildHref({ ...params, page: Math.max(1, page - 1) })}
-                      className={cn(
-                        "rounded-btn border px-4 py-2 text-sm font-semibold transition-all duration-250",
-                        page === 1
-                          ? "pointer-events-none opacity-30 border-ocean/8 bg-white text-ocean"
-                          : "border-ocean/8 bg-white text-ocean hover:border-ocean/30 hover:shadow-sm"
-                      )}
-                    >
-                      ← Prev
-                    </Link>
-
-                    {paginationPages.map((p, i) =>
-                      p === "..." ? (
-                        <span key={`ellipsis-${i}`} className="px-2 text-ocean/25 text-sm select-none">
-                          …
-                        </span>
-                      ) : (
-                        <Link
-                          key={p}
-                          href={buildHref({ ...params, page: p })}
-                          className={cn(
-                            "rounded-btn w-9 h-9 flex items-center justify-center text-sm font-bold transition-all duration-250",
-                            p === page
-                              ? "bg-ocean text-white shadow-btn"
-                              : "border border-ocean/8 bg-white text-ocean-deeper/60 hover:border-ocean/25 hover:text-ocean"
-                          )}
-                        >
-                          {p}
-                        </Link>
-                      )
-                    )}
-
-                    <Link
-                      href={buildHref({ ...params, page: Math.min(totalPages, page + 1) })}
-                      className={cn(
-                        "rounded-btn border px-4 py-2 text-sm font-semibold transition-all duration-250",
-                        page === totalPages
-                          ? "pointer-events-none opacity-30 border-ocean/8 bg-white text-ocean"
-                          : "border-ocean/8 bg-white text-ocean hover:border-ocean/30 hover:shadow-sm"
-                      )}
-                    >
-                      Next →
-                    </Link>
-                    </>
-                    )}
-                  </div>
-                )}
+                {/* Responsive grid + pagination (12/18/24 per page by viewport) */}
+                <ProductsGridBrowser
+                  key={JSON.stringify(params)}
+                  initialProducts={result.products}
+                  initialTotal={result.total}
+                  params={params}
+                  page={page}
+                />
               </div>
             </div>
           </div>

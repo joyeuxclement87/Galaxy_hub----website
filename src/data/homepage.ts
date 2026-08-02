@@ -159,13 +159,12 @@ export interface HomepageData {
   promotions: DealOffer[];
   newArrivals: Product[];
   reviews: Review[];
-  allProducts: Product[];
 }
 
 export async function getHomepageData(): Promise<HomepageData> {
   const supabase = createClient();
 
-  const [heroResult, featuredResult, categoriesResult, brandsResult, promotionsResult, newArrivalsResult, reviewsResult, allResult] =
+  const [heroResult, featuredResult, categoriesResult, brandsResult, promotionsResult, newArrivalsResult, reviewsResult] =
     await Promise.allSettled([
       fetchHeroSection(supabase),
       fetchFeaturedProducts(supabase),
@@ -174,7 +173,6 @@ export async function getHomepageData(): Promise<HomepageData> {
       fetchPromotions(supabase),
       fetchNewArrivals(supabase),
       fetchReviews(supabase),
-      fetchAllProducts(supabase),
     ]);
 
   const empty: HomepageData = {
@@ -186,7 +184,6 @@ export async function getHomepageData(): Promise<HomepageData> {
     promotions: [],
     newArrivals: [],
     reviews: [],
-    allProducts: [],
   };
 
   return {
@@ -198,7 +195,6 @@ export async function getHomepageData(): Promise<HomepageData> {
     promotions: promotionsResult.status === "fulfilled" ? promotionsResult.value : (() => { console.error("promotions fetch failed", promotionsResult.reason); return empty.promotions; })(),
     newArrivals: newArrivalsResult.status === "fulfilled" ? newArrivalsResult.value : (() => { console.error("new arrivals fetch failed", newArrivalsResult.reason); return empty.newArrivals; })(),
     reviews: reviewsResult.status === "fulfilled" ? reviewsResult.value : (() => { console.error("reviews fetch failed", reviewsResult.reason); return empty.reviews; })(),
-    allProducts: allResult.status === "fulfilled" ? allResult.value : (() => { console.error("all products fetch failed", allResult.reason); return empty.allProducts; })(),
   };
 }
 
@@ -337,24 +333,9 @@ async function fetchNewArrivals(supabase: ReturnType<typeof createClient>): Prom
     .eq("is_active", true)
     .eq("is_new", true)
     .order("created_at", { ascending: false })
-    .limit(8);
+    .limit(6);
 
   if (error || !data) return [];
   return (data as unknown as ProductWithJoins[]).map(toProduct);
 }
 
-async function fetchAllProducts(supabase: ReturnType<typeof createClient>): Promise<Product[]> {
-  const { data, error } = await supabase
-    .from("products")
-    .select(`
-      id, name, slug, short_description, description, price, old_price,
-      discount_percentage, main_image_url, is_featured, is_new, stock_status, rating, review_count, created_at,
-      category:category_id(name),
-      brand:brand_id(name, slug, logo_url)
-    `)
-    .eq("is_active", true)
-    .order("created_at", { ascending: false });
-
-  if (error || !data) return [];
-  return (data as unknown as ProductWithJoins[]).map(toProduct);
-}

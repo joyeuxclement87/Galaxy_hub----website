@@ -17,7 +17,7 @@ interface NewArrivalsProps {
  * is flagged yet.
  */
 export function NewArrivals({ products, onReserve }: NewArrivalsProps) {
-  const featured = products.slice(0, 8);
+  const featured = products.slice(0, 6);
   if (featured.length === 0) return null;
 
   return (
@@ -41,10 +41,10 @@ export function NewArrivals({ products, onReserve }: NewArrivalsProps) {
 
         <div className="flex justify-center">
           <Link
-            href="/products"
+            href="/products?new=true"
             className={cn(btnBase, btnVariants.secondary, "gap-2 px-6")}
           >
-            View All Products <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+            View All New Arrivals <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
         </div>
       </div>

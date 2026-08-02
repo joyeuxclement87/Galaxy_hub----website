@@ -199,7 +199,7 @@ export default function HomeClient({ data }: HomeClientProps) {
     wishlist, registerProducts,
   } = useApp();
 
-  const products = data.allProducts;
+  const products = data.featuredProducts;
 
   useEffect(() => {
     if (products && products.length > 0) {
@@ -264,7 +264,7 @@ export default function HomeClient({ data }: HomeClientProps) {
   const displayDeals = data.promotions.length > 0 ? data.promotions : DEAL_OFFERS;
   const DEAL_PRODUCT_HREF = "/product/iphone-17-pro";
 
-  const newArrivals = data.newArrivals.length > 0 ? data.newArrivals : products.slice(0, 8);
+  const newArrivals = data.newArrivals.length > 0 ? data.newArrivals : products.slice(0, 6);
 
   return (
     <div className="flex-1 pt-24">
