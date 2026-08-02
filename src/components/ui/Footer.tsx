@@ -43,8 +43,8 @@ function SocialIcon({ href, label, children }: { href: string; label: string; ch
 export function Footer() {
   return (
     <footer className="bg-[#0a1f3a] text-white border-t border-white/[0.06]">
-      <div className="mx-auto max-w-[1320px] px-6 py-12 sm:px-10">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-12 lg:gap-10">
+      <div className="mx-auto max-w-[1320px] px-4 py-10 sm:px-6 sm:py-12">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           
           {/* Brand Col */}
           <div className="lg:col-span-5 space-y-4">
@@ -59,7 +59,7 @@ export function Footer() {
               Rwanda&apos;s premier tech retailer. Genuine smartphones, laptops, audio gear, creator accessories, with express delivery.
             </p>
             {/* Social icons */}
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-2 pt-1">
               <SocialIcon href="https://instagram.com/galaxyhub" label="Instagram">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                   <rect x="2.5" y="2.5" width="19" height="19" rx="5" /><path d="M16.5 7.5h.01" /><circle cx="12" cy="12" r="4.5" />
@@ -88,7 +88,7 @@ export function Footer() {
             <span className="text-caption font-bold uppercase tracking-[0.18em] text-white/40 block">
               Quick Links
             </span>
-            <ul className="space-y-2 text-xs text-white/50">
+            <ul className="space-y-1.5 text-xs text-white/50">
               {[
                 { label: "Browse Products",    href: "/products" },
                 { label: "Deals & Promotions", href: "/deals" },
@@ -109,7 +109,7 @@ export function Footer() {
             <span className="text-caption font-bold uppercase tracking-[0.18em] text-white/40 block">
               Store Information
             </span>
-            <div className="space-y-2.5 text-xs text-white/50">
+            <div className="space-y-2 text-xs text-white/50">
               <div className="flex items-start gap-2">
                 <MapPin className="h-3.5 w-3.5 shrink-0 text-accent mt-0.5" />
                 <span>KN 70 St, Kigali, Rwanda</span>
@@ -131,7 +131,7 @@ export function Footer() {
         </div>
 
         {/* Footer Bottom */}
-        <div className="mt-10 pt-6 border-t border-white/[0.06] flex flex-col gap-3 text-caption text-white/30 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 pt-5 border-t border-white/[0.06] flex flex-col gap-2 text-caption text-white/30 sm:flex-row sm:items-center sm:justify-between">
           <span>© 2026 Galaxy Hub Rwanda. All rights reserved.</span>
           <div className="flex items-center gap-3">
             <span>Genuine Tech Guaranteed</span>

@@ -24,7 +24,7 @@ export function StorageSelector({
   return (
     <div>
       <p className={cn("flex items-center gap-1.5 text-caption font-bold uppercase tracking-wider text-ocean/50", compact ? "mb-1.5" : "mb-2")}>
-        <HardDrive className="h-3.5 w-3.5" />
+        <HardDrive className="h-4 w-4" />
         Storage
       </p>
       <div className="flex flex-wrap gap-2">
@@ -37,13 +37,13 @@ export function StorageSelector({
               onClick={() => onChange(option)}
               aria-pressed={selected}
               className={cn(
-                "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-btn border px-3.5 text-xs font-bold transition-all duration-200",
+                "inline-flex h-10 cursor-pointer items-center gap-1.5 rounded-btn border px-4 text-sm font-bold transition-all duration-250",
                 selected
                   ? "border-ocean bg-ocean text-white shadow-sm"
                   : "border-ocean/[0.15] bg-white text-ocean-deeper hover:border-ocean/40 hover:bg-ocean/[0.04]"
               )}
             >
-              {selected && <Check className="h-3.5 w-3.5" />}
+              {selected && <Check className="h-4 w-4" />}
               {option}
             </button>
           );

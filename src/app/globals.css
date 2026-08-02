@@ -20,8 +20,8 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.08);
   --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.1);
-  --shadow-premium: 0 20px 60px rgba(11, 84, 151, 0.08);
-  --shadow-premium-lg: 0 32px 80px rgba(11, 84, 151, 0.12);
+  --shadow-premium: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-premium-lg: 0 18px 40px rgba(15, 23, 42, 0.12);
   --shadow-btn: 0 2px 8px rgba(11, 84, 151, 0.12);
   --shadow-btn-hover: 0 6px 20px rgba(11, 84, 151, 0.16);
 }
@@ -97,8 +97,8 @@ body {
 
 .rounded-card   { border-radius: 24px;  }
 .rounded-btn    { border-radius: 14px; }
-.rounded-img    { border-radius: 28px;  }
-.rounded-input  { border-radius: 18px;  }
+.rounded-img    { border-radius: 22px; }
+.rounded-input  { border-radius: 14px; }
 .rounded-badge  { border-radius: 999px; }
 
 .shadow-btn      { box-shadow: 0 2px 8px rgba(11, 84, 151, 0.12); }
@@ -157,13 +157,37 @@ body {
   .btn-text-sm { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; }   /* 12px */
   .btn-text-base { font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.05em; } /* 13px */
 
-  /*! Standardized typography utilities */
-  .text-label { font-size: 0.625rem; /* 10px */ font-weight: 700; letter-spacing: 0.05em; }
+  /* Standardized typography utilities */
+  .text-label { font-size: 0.75rem; /* 12px */ font-weight: 700; letter-spacing: 0.12em; }
   .text-caption { font-size: 0.75rem; /* 12px */ font-weight: 600; }
   .text-button-xs { font-size: 0.6875rem; /* 11px */ font-weight: 700; letter-spacing: 0.05em; }
   .text-button-sm { font-size: 0.75rem; /* 12px */ font-weight: 700; letter-spacing: 0.05em; }
-  .text-body { font-size: 0.9375rem; /* 15px */ line-height: 1.6; }
-  .text-body-sm { font-size: 0.8125rem; /* 13px */ line-height: 1.6; }
+  .text-body { font-size: 1rem; /* 16px */ line-height: 1.6; }
+  .text-body-sm { font-size: 0.875rem; /* 14px */ line-height: 1.6; }
+
+  /* Responsive price text */
+  .text-price-mobile { font-size: 1.75rem; line-height: 1.1; }
+  .text-price-tablet { font-size: 2.25rem; line-height: 1.1; }
+  .text-price-desktop { font-size: 2.75rem; line-height: 1.1; }
+
+  /* Responsive product titles */
+  .text-title-mobile { font-size: 1.375rem; line-height: 1.25; } /* 22px */
+  .text-title-tablet { font-size: 1.625rem; line-height: 1.25; }  /* 26px */
+  .text-title-desktop { font-size: 2rem; line-height: 1.25; }     /* 32px */
+
+  /* Section headings */
+  .text-section-mobile { font-size: 1.75rem; line-height: 1.2; }   /* 28px */
+  .text-section-tablet { font-size: 2.25rem; line-height: 1.2; }  /* 36px */
+  .text-section-desktop { font-size: 3rem; line-height: 1.1; }     /* 48px */
+
+  /* Hero titles */
+  .text-hero-mobile { font-size: 2.25rem; line-height: 1.1; }      /* 36px */
+  .text-hero-tablet { font-size: 3rem; line-height: 1.1; }         /* 48px */
+  .text-hero-desktop { font-size: 4rem; line-height: 1.05; }       /* 64px */
+
+  /* Animation durations */
+  .transition-fast { transition-duration: 180ms; }
+  .transition-base { transition-duration: 250ms; }
 
   img { display: block; }
 

@@ -99,176 +99,176 @@ export default async function ProductPage({ params }: ProductPageParams) {
   };
 
   return (
-     <div className="min-h-screen bg-ivory pb-32 lg:pb-16">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
-      <Navbar />
+      <div className="min-h-screen bg-ivory pb-24 lg:pb-0">
+       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
+       <Navbar />
 
-       {/* Mobile sticky bottom purchase bar */}
-       <MobileOrderBar
-         productName={product.name}
-         productSlug={product.slug}
-         price={product.price}
-         currency="RWF"
-         stockStatus={product.stock_status}
-         storageOptions={product.storage_options}
-         productId={product.id}
-       />
+        {/* Mobile sticky bottom purchase bar */}
+        <MobileOrderBar
+          productName={product.name}
+          productSlug={product.slug}
+          price={product.price}
+          currency="RWF"
+          stockStatus={product.stock_status}
+          storageOptions={product.storage_options}
+          productId={product.id}
+        />
 
-       <main className="pt-24 pb-20 lg:pb-0">
+        <main className="pt-20 lg:pt-24">
 
-        {/* 1. Breadcrumb */}
-        <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs font-medium text-ocean/40 overflow-x-auto no-scrollbar py-1">
-            <Link href="/products" className="transition-colors hover:text-ocean shrink-0">Products</Link>
-            {product.category_slug && (
-              <>
-                <ChevronRight className="h-3 w-3 shrink-0 text-ocean/25" aria-hidden="true" />
-                <Link href={`/products?category=${product.category_slug}`} className="capitalize transition-colors hover:text-ocean shrink-0">
-                  {product.category_name}
-                </Link>
-              </>
-            )}
-            {product.brand_slug && (
-              <>
-                <ChevronRight className="h-3 w-3 shrink-0 text-ocean/25" aria-hidden="true" />
-                <Link href={`/products?brand=${product.brand_slug}`} className="transition-colors hover:text-ocean shrink-0">
-                  {product.brand_name}
-                </Link>
-              </>
-            )}
-            <ChevronRight className="h-3 w-3 shrink-0 text-ocean/25" aria-hidden="true" />
-            <span className="text-ocean-deeper font-semibold truncate max-w-[160px] sm:max-w-xs">{product.name}</span>
-          </nav>
-        </div>
+         {/* 1. Breadcrumb */}
+         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-8">
+           <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs font-medium text-ocean/40 overflow-x-auto no-scrollbar py-1">
+             <Link href="/products" className="transition-colors hover:text-ocean shrink-0">Products</Link>
+             {product.category_slug && (
+               <>
+                 <ChevronRight className="h-3 w-3 shrink-0 text-ocean/25" aria-hidden="true" />
+                 <Link href={`/products?category=${product.category_slug}`} className="capitalize transition-colors hover:text-ocean shrink-0">
+                   {product.category_name}
+                 </Link>
+               </>
+             )}
+             {product.brand_slug && (
+               <>
+                 <ChevronRight className="h-3 w-3 shrink-0 text-ocean/25" aria-hidden="true" />
+                 <Link href={`/products?brand=${product.brand_slug}`} className="transition-colors hover:text-ocean shrink-0">
+                   {product.brand_name}
+                 </Link>
+               </>
+             )}
+             <ChevronRight className="h-3 w-3 shrink-0 text-ocean/25" aria-hidden="true" />
+             <span className="text-ocean-deeper font-semibold truncate max-w-[140px] sm:max-w-xs">{product.name}</span>
+           </nav>
+         </div>
 
-        {/* 2. Product Header: Gallery + Info */}
-        <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12 mt-5 lg:mt-8">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-14">
+         {/* 2. Product Header: Gallery + Info */}
+         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-8 pt-4 lg:pt-6">
+           <div className="grid grid-cols-1 gap-6 md:gap-8 lg:gap-14 lg:grid-cols-2">
 
-            {/* Gallery */}
-            <ProductGallery images={gallery} name={product.name} />
+             {/* Gallery */}
+             <ProductGallery images={gallery} name={product.name} />
 
-            {/* Info panel */}
-            <div className="flex flex-col">
+             {/* Info panel */}
+             <div className="flex flex-col">
 
-              {/* Brand */}
-              {product.brand_slug && product.brand_name ? (
-                <Link
-                  href={`/products?brand=${product.brand_slug}`}
-                  className="text-caption font-bold uppercase tracking-[0.24em] text-accent transition-colors hover:text-ocean"
-                >
-                  {product.brand_name}
-                </Link>
-              ) : product.brand_name && (
-                <span className="text-caption font-bold uppercase tracking-[0.24em] text-accent">{product.brand_name}</span>
-              )}
+               {/* Brand */}
+               {product.brand_slug && product.brand_name ? (
+                 <Link
+                   href={`/products?brand=${product.brand_slug}`}
+                   className="text-caption font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-ocean"
+                 >
+                   {product.brand_name}
+                 </Link>
+               ) : product.brand_name && (
+                 <span className="text-caption font-bold uppercase tracking-[0.12em] text-accent">{product.brand_name}</span>
+               )}
 
-              {/* Product name */}
-              <h1 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-[1.1] tracking-tight text-ocean-deeper">
-                {product.name}
-              </h1>
+               {/* Product name - responsive sizing */}
+               <h1 className="mt-2 font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-[1.1] tracking-tight text-ocean-deeper">
+                 {product.name}
+               </h1>
 
-              {/* Short description */}
-              {product.short_description && (
-                <p className="mt-3 text-sm leading-relaxed text-ocean/55 max-w-lg">
-                  {product.short_description}
-                </p>
-              )}
+               {/* Short description */}
+               {product.short_description && (
+                 <p className="mt-2.5 text-sm leading-relaxed text-ocean/55 max-w-lg">
+                   {product.short_description}
+                 </p>
+               )}
 
-              {/* Price block */}
-              <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="font-display text-3xl font-bold text-ocean-deeper">
-                  RWF {formatPrice(product.price)}
-                </span>
-                {product.old_price && discount > 0 && (
-                  <>
-                    <span className="text-base text-ocean/30 line-through">
-                      RWF {formatPrice(product.old_price)}
-                    </span>
-                    <span className="rounded-full border border-red-100 bg-red-50 px-2.5 py-0.5 text-caption font-bold text-red-600">
-                      Save {discount}%
-                    </span>
-                  </>
-                )}
-              </div>
-
-              {/* Stock status */}
-              <div className="mt-3">
-                <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${stock.chip}`}>
-                  <span className={`h-1.5 w-1.5 rounded-full ${stock.dot}`} aria-hidden="true" />
-                  {stock.label}
-                </span>
-              </div>
-
-               {/* Storage + action buttons — hidden on mobile (shown in sticky bar) */}
-               <div className="mt-5 hidden lg:block">
-                 <ProductActions
-                   productId={product.id}
-                   productSlug={product.slug}
-                   storageOptions={product.storage_options}
-                 />
+               {/* Price block */}
+               <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                 <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-ocean-deeper leading-none">
+                   RWF {formatPrice(product.price)}
+                 </span>
+                 {product.old_price && discount > 0 && (
+                   <>
+                     <span className="text-sm text-ocean/30 line-through">
+                       RWF {formatPrice(product.old_price)}
+                     </span>
+                     <span className="rounded-full border border-red-100 bg-red-50 px-2.5 py-0.5 text-caption font-bold text-red-600">
+                       Save {discount}%
+                     </span>
+                   </>
+                 )}
                </div>
 
-              {/* Trust badges — redesigned grid layout (3 columns, no horizontal scroll) */}
-              <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
-                {[
-                  { icon: Truck,       text: "Delivery",    sub: "All Rwanda" },
-                  { icon: ShieldCheck, text: "Genuine",     sub: "100% Authentic" },
-                  { icon: RefreshCw,   text: "Warranty",    sub: "Manufacturer" },
-                ].map((item) => (
-                  <div
-                    key={item.text}
-                    className="flex flex-col items-center text-center p-2.5 sm:p-3 rounded-xl border border-ocean/[0.06] bg-white shadow-[0_2px_8px_rgba(11,84,151,0.02)]"
-                  >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-ocean/[0.06] text-ocean mb-2">
-                      <item.icon className="h-4 w-4" />
-                    </div>
-                    <span className="text-caption font-bold text-ocean-deeper leading-tight block">
-                      {item.text}
-                    </span>
-                    <span className="text-xs text-ocean/40 mt-0.5 block truncate max-w-full">
-                      {item.sub}
-                    </span>
-                  </div>
-                ))}
-              </div>
+               {/* Stock status */}
+               <div className="mt-2.5">
+                 <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-caption font-semibold ${stock.chip}`}>
+                   <span className={`h-1.5 w-1.5 rounded-full ${stock.dot}`} aria-hidden="true" />
+                   {stock.label}
+                 </span>
+               </div>
 
-              {/* Full description */}
-              {product.description && product.description !== product.short_description && (
-                <div className="mt-6 border-t border-ocean/[0.06] pt-5">
-                  <h2 className="text-caption font-bold uppercase tracking-[0.16em] text-ocean-deeper/40">About this product</h2>
-                  <p className="mt-2 text-sm leading-relaxed text-ocean/55">{product.description}</p>
+                {/* Storage + action buttons — hidden on mobile (shown in sticky bar) */}
+                <div className="mt-4 hidden lg:block">
+                  <ProductActions
+                    productId={product.id}
+                    productSlug={product.slug}
+                    storageOptions={product.storage_options}
+                  />
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
 
-        {/* 3. Key Specifications */}
-        {keySpecs.length > 0 && (
-          <section aria-labelledby="key-specs-heading" className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12 mt-14 md:mt-16">
-            <h2 id="key-specs-heading" className="mb-4 font-display text-xl font-bold text-ocean-deeper">
-              Key Specifications
-            </h2>
-            <KeySpecifications specifications={product.specifications} categorySlug={product.category_slug} />
-          </section>
-        )}
+               {/* Trust badges */}
+               <div className="mt-5 grid grid-cols-3 gap-2 sm:gap-3">
+                 {[
+                   { icon: Truck,       text: "Delivery",    sub: "All Rwanda" },
+                   { icon: ShieldCheck, text: "Genuine",     sub: "100% Authentic" },
+                   { icon: RefreshCw,   text: "Warranty",    sub: "Manufacturer" },
+                 ].map((item) => (
+                   <div
+                     key={item.text}
+                     className="flex flex-col items-center text-center p-2 rounded-xl border border-ocean/[0.06] bg-white shadow-[0_2px_8px_rgba(11,84,151,0.02)]"
+                   >
+                     <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-ocean/[0.06] text-ocean mb-1.5">
+                       <item.icon className="h-4 w-4" />
+                     </div>
+                     <span className="text-caption font-bold text-ocean-deeper leading-tight block">
+                       {item.text}
+                     </span>
+                     <span className="text-xs text-ocean/40 mt-0.5 block truncate max-w-full">
+                       {item.sub}
+                     </span>
+                   </div>
+                 ))}
+               </div>
 
-        {/* 4. Product Highlights */}
-        {product.highlights.length > 0 && (
-          <section aria-labelledby="highlights-heading" className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12 mt-14 md:mt-16">
-            <h2 id="highlights-heading" className="mb-4 font-display text-xl font-bold text-ocean-deeper">
-              Why you&apos;ll like it
-            </h2>
-            <ProductHighlightsList highlights={product.highlights} />
-          </section>
-        )}
+               {/* Full description */}
+               {product.description && product.description !== product.short_description && (
+                 <div className="mt-5 border-t border-ocean/[0.06] pt-4">
+                   <h2 className="text-caption font-bold uppercase tracking-[0.16em] text-ocean-deeper/40">About this product</h2>
+                   <p className="mt-2 text-sm leading-relaxed text-ocean/55">{product.description}</p>
+                 </div>
+               )}
+             </div>
+           </div>
+         </div>
 
-        {/* 5. Full Specifications */}
-        {product.specifications.length > 0 && (
-          <section aria-labelledby="full-specs-heading" className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12 mt-14 md:mt-16">
-            <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">
-              <h2 id="full-specs-heading" className="font-display text-xl font-bold text-ocean-deeper">
+         {/* 3. Key Specifications */}
+         {keySpecs.length > 0 && (
+           <section aria-labelledby="key-specs-heading" className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-8 mt-10 md:mt-12">
+             <h2 id="key-specs-heading" className="mb-3 font-display text-lg font-bold text-ocean-deeper">
+               Key Specifications
+             </h2>
+             <KeySpecifications specifications={product.specifications} categorySlug={product.category_slug} />
+           </section>
+         )}
+
+         {/* 4. Product Highlights */}
+         {product.highlights.length > 0 && (
+           <section aria-labelledby="highlights-heading" className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-8 mt-10 md:mt-12">
+             <h2 id="highlights-heading" className="mb-3 font-display text-lg font-bold text-ocean-deeper">
+               Why you&apos;ll like it
+             </h2>
+             <ProductHighlightsList highlights={product.highlights} />
+           </section>
+         )}
+
+         {/* 5. Full Specifications */}
+         {product.specifications.length > 0 && (
+           <section aria-labelledby="full-specs-heading" className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-8 mt-10 md:mt-12">
+            <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
+              <h2 id="full-specs-heading" className="font-display text-lg font-bold text-ocean-deeper">
                 Full Specifications
               </h2>
               <span className="text-xs font-medium text-ocean/35">
@@ -281,9 +281,9 @@ export default async function ProductPage({ params }: ProductPageParams) {
 
         {/* 6. Related Products */}
         {relatedProducts.length > 0 && (
-          <section aria-labelledby="related-heading" className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-12 mt-14 md:mt-16">
-            <div className="mb-5 flex flex-wrap items-baseline justify-between gap-3">
-              <h2 id="related-heading" className="font-display text-xl font-bold text-ocean-deeper">
+          <section aria-labelledby="related-heading" className="mx-auto max-w-[1320px] px-4 sm:px-6 md:px-8 mt-10 md:mt-12">
+            <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">
+              <h2 id="related-heading" className="font-display text-lg font-bold text-ocean-deeper">
                 You may also like
               </h2>
               {product.category_slug && (
@@ -292,7 +292,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
                 </Link>
               )}
             </div>
-            <div className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-4">
               {relatedProducts.map((p) => (
                 <ProductCard
                   key={p.id}
@@ -322,7 +322,7 @@ export default async function ProductPage({ params }: ProductPageParams) {
         )}
 
         {/* 7. Final Order CTA */}
-        <div className="mt-16 md:mt-20 mb-12 md:mb-16">
+        <div className="mt-12 md:mt-16 mb-8 md:mb-12">
           <OrderCTA productName={product.name} productSlug={product.slug} />
         </div>
       </main>

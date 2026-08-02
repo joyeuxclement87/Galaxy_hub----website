@@ -159,7 +159,7 @@ function CartDropdown({
               <Link
                 href="/products"
                 onClick={onClose}
-                className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-10 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-6 h-11 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover"
               >
                 Browse Products
               </Link>
@@ -204,10 +204,10 @@ function CartDropdown({
                         />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-body-sm font-semibold text-ocean-deeper">
+                        <p className="truncate text-sm font-semibold text-ocean-deeper">
                           {item.product!.name}
                           {item.variant && (
-                            <span className="ml-1.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-1.5 py-0.5 text-xs font-bold text-ocean align-middle">
+                            <span className="ml-1.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-1.5 py-0.5 text-caption font-bold text-ocean align-middle">
                               {item.variant}
                             </span>
                           )}
@@ -219,7 +219,7 @@ function CartDropdown({
                       <button
                         type="button"
                         onClick={() => cart.remove(item.id)}
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-btn text-ocean/25 opacity-0 transition-all duration-200 hover:bg-red-50 hover:text-red-400 group-hover/item:opacity-100 cursor-pointer"
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-btn text-ocean/25 opacity-0 transition-all duration-200 hover:bg-red-50 hover:text-red-400 group-hover/item:opacity-100 cursor-pointer"
                         aria-label={`Remove ${item.product!.name} from cart`}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -240,16 +240,16 @@ function CartDropdown({
                 <Link
                   href="/cart"
                   onClick={onClose}
-                  className="flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 w-full h-10 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-white"
+                  className="flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 w-full h-11 text-sm font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-250 hover:border-ocean/30 hover:bg-white"
                 >
                   View Full Cart
                 </Link>
                 <Link
                   href="/order"
                   onClick={onClose}
-                  className="flex items-center justify-center gap-2 rounded-btn bg-ocean-deeper w-full h-11 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5"
+                  className="flex items-center justify-center gap-2 rounded-btn bg-ocean-deeper w-full h-11 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover"
                 >
-                  <ShoppingCart className="h-3.5 w-3.5" />
+                  <ShoppingCart className="h-4 w-4" />
                   Order Now
                 </Link>
               </div>
@@ -314,22 +314,23 @@ function MobileCartSheet({
                   </span>
                 )}
               </div>
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Close cart"
-                className="flex h-8 w-8 items-center justify-center rounded-btn border border-ocean/10 text-ocean/40 hover:text-ocean transition-colors cursor-pointer"
-              >
-                <X className="h-4 w-4" />
-              </button>
+           {/* Close button */}
+           <button
+             type="button"
+             onClick={onClose}
+             aria-label="Close search"
+             className="flex h-10 w-10 items-center justify-center rounded-btn border border-ocean/10 text-ocean/50 hover:text-ocean transition-all hover:bg-ocean/[0.04] cursor-pointer"
+           >
+             <X className="h-5 w-5" />
+           </button>
             </div>
 
             {/* Content */}
             <div className="overflow-y-auto" style={{ maxHeight: "calc(70dvh - 120px)" }}>
               {cart.items.length === 0 ? (
                 <div className="flex flex-col items-center gap-4 px-6 py-12 text-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-card bg-ocean/[0.04]">
-                    <ShoppingCart className="h-7 w-7 text-ocean/20" />
+                  <div className="flex h-14 w-14 items-center justify-center rounded-card bg-ocean/[0.04]">
+                    <ShoppingCart className="h-6 w-6 text-ocean/20" />
                   </div>
                   <div>
                     <p className="font-display text-sm font-bold text-ocean-deeper">Your cart is empty</p>
@@ -338,7 +339,7 @@ function MobileCartSheet({
                   <Link
                     href="/products"
                     onClick={onClose}
-                    className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-7 h-10 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn"
+                    className="inline-flex items-center justify-center rounded-btn bg-ocean-deeper px-6 h-11 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover"
                   >
                     Browse Products
                   </Link>
@@ -354,9 +355,9 @@ function MobileCartSheet({
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 12, scale: 0.9 }}
                         transition={{ duration: 0.2 }}
-                        className="flex items-center gap-3 rounded-btn px-2.5 py-3"
+                        className="flex items-center gap-3 rounded-btn px-2 py-3"
                       >
-                        <div className="h-14 w-14 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 border border-ocean/[0.04] flex items-center justify-center p-1.5">
+                        <div className="h-12 w-12 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 border border-ocean/[0.04] flex items-center justify-center p-1.5">
                           <img
                             src={item.product!.main_image_url || ""}
                             alt={item.product!.name}
@@ -370,7 +371,7 @@ function MobileCartSheet({
                           {item.variant && (
                             <p className="text-xs text-ocean/45 mt-0.5">{item.variant}</p>
                           )}
-                          <p className="text-xs font-bold text-ocean mt-1">
+                          <p className="text-caption font-bold text-ocean mt-1">
                             {item.quantity} × RWF {Number(item.product!.price).toLocaleString()}
                           </p>
                         </div>
@@ -401,16 +402,16 @@ function MobileCartSheet({
                 <Link
                   href="/cart"
                   onClick={onClose}
-                  className="flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 w-full h-11 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-300 hover:border-ocean/30 hover:bg-white"
+                  className="flex items-center justify-center gap-2 rounded-btn border border-ocean/15 bg-white/60 w-full h-11 text-sm font-bold uppercase tracking-[0.12em] text-ocean-deeper transition-all duration-250 hover:border-ocean/30 hover:bg-white"
                 >
                   View Full Cart
                 </Link>
                 <Link
                   href="/order"
                   onClick={onClose}
-                  className="flex items-center justify-center gap-2 rounded-btn bg-ocean-deeper w-full h-12 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn"
+                  className="flex items-center justify-center gap-2 rounded-btn bg-ocean-deeper w-full h-11 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover"
                 >
-                  <ShoppingCart className="h-3.5 w-3.5" />
+                  <ShoppingCart className="h-4 w-4" />
                   Order Now
                 </Link>
                 {cart.count > 0 && (
@@ -560,8 +561,8 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
               : "bg-ivory/70 backdrop-blur-xl border border-ocean/[0.05] shadow-[0_4px_20px_rgba(11,84,151,0.06)]"
           )}
         >
-          <div className="flex h-[68px] items-center justify-between gap-4 px-4 sm:px-6">
-            <Wordmark />
+           <div className="flex h-14 items-center justify-between gap-4 px-4 sm:px-6">
+             <Wordmark />
 
             {/* Desktop nav */}
             <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main navigation">
@@ -571,7 +572,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                   href={getHref(link.id)}
                   onClick={(e) => handleNavClick(e, link.id)}
                   className={cn(
-                    "relative px-3.5 py-2 text-body-sm font-display font-bold tracking-tight transition-all duration-200 rounded-xl",
+                    "relative px-3.5 py-2 text-sm font-display font-bold tracking-tight transition-all duration-250 rounded-xl",
                     isActive(link.id)
                       ? "text-ocean bg-ocean/[0.08]"
                       : "text-ocean-deeper/65 hover:text-ocean hover:bg-ocean/[0.05]"
@@ -583,26 +584,26 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center gap-1 sm:gap-1.5">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               {/* Search */}
               <button
                 type="button"
                 onClick={() => { setSearchOpen(true); onSearchFocus?.(); setCartOpen(false); }}
                 aria-label="Search"
-                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer"
               >
-                <Search className="h-[16px] w-[16px]" />
+                <Search className="h-4 w-4" />
               </button>
 
-              {/* Cart — desktop dropdown + mobile sheet trigger */}
+              {/* Cart */}
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => { setCartOpen(v => !v); setSearchOpen(false); }}
                   aria-label={cart.count > 0 ? `Cart (${cart.count} items)` : "Cart is empty"}
-                  className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer"
+                  className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer"
                 >
-                  <ShoppingCart className="h-[16px] w-[16px]" />
+                  <ShoppingCart className="h-4 w-4" />
                   <AnimatePresence mode="popLayout">
                     {cart.count > 0 && (
                       <motion.span
@@ -611,23 +612,22 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.4, opacity: 0 }}
                         transition={{ type: "spring", stiffness: 600, damping: 14 }}
-                        className="absolute -right-0.5 -top-0.5 inline-flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-ocean px-1 text-xs font-bold text-white shadow-sm"
+                        className="absolute -right-0.5 -top-0.5 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ocean px-1 text-xs font-bold text-white shadow-sm"
                       >
                         {cart.count}
                       </motion.span>
                     )}
                   </AnimatePresence>
                 </button>
-                {/* Desktop-only dropdown */}
                 <CartDropdown open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} />
               </div>
 
-              {/* Order Now — hidden on small screens */}
+              {/* Order Now — hidden on mobile */}
               <Link
                 href="/order"
-                className="ml-1 hidden items-center gap-2 rounded-xl bg-ocean-deeper px-5 h-10 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5 active:translate-y-0 sm:inline-flex"
+                className="ml-1 hidden h-10 items-center gap-2 rounded-btn bg-ocean-deeper px-5 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover sm:inline-flex"
               >
-                <ShoppingCart className="h-3.5 w-3.5" />
+                <ShoppingCart className="h-4 w-4" />
                 Order Now
               </Link>
 
@@ -636,9 +636,9 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                 type="button"
                 onClick={() => { setMobileOpen(true); setCartOpen(false); }}
                 aria-label="Open menu"
-                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer lg:hidden"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer lg:hidden"
               >
-                <Menu className="h-[18px] w-[18px]" />
+                <Menu className="h-5 w-5" />
               </button>
             </div>
           </div>
@@ -667,17 +667,17 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
               transition={{ duration: 0.25, ease: "easeOut" }}
               className="fixed inset-x-3 top-3 z-[61] overflow-hidden rounded-2xl border border-ocean/[0.06] bg-ivory/95 backdrop-blur-xl shadow-premium-lg lg:hidden"
             >
-              <div className="flex items-center justify-between border-b border-ocean/[0.06] px-5 py-4">
-                <Wordmark />
-                <button
-                  type="button"
-                  onClick={() => setMobileOpen(false)}
-                  aria-label="Close menu"
-                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-ocean/10 text-ocean/40 hover:text-ocean transition-colors cursor-pointer"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
+               <div className="flex items-center justify-between border-b border-ocean/[0.06] px-4 py-3">
+                 <Wordmark />
+                 <button
+                   type="button"
+                   onClick={() => setMobileOpen(false)}
+                   aria-label="Close menu"
+                   className="flex h-9 w-9 items-center justify-center rounded-xl border border-ocean/10 text-ocean/40 hover:text-ocean transition-colors cursor-pointer"
+                 >
+                   <X className="h-4 w-4" />
+                 </button>
+               </div>
               <nav className="flex flex-col gap-0.5 px-3 py-3" aria-label="Mobile navigation">
                 {NAV_LINKS.map((link) => (
                   <Link
@@ -685,7 +685,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                     href={getHref(link.id)}
                     onClick={(e) => handleNavClick(e, link.id)}
                     className={cn(
-                      "flex items-center gap-2 rounded-xl px-4 py-3.5 text-body font-display font-bold text-ocean-deeper/75 transition-all duration-200 hover:bg-ocean/[0.04] hover:text-ocean",
+                      "flex items-center gap-2 rounded-btn px-4 py-3 text-body font-display font-bold text-ocean-deeper/75 transition-all duration-250 hover:bg-ocean/[0.04] hover:text-ocean",
                       isActive(link.id) && "text-ocean bg-ocean/[0.08]"
                     )}
                   >
@@ -720,17 +720,17 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                 <button
                   type="button"
                   onClick={() => { setMobileOpen(false); setCartOpen(true); }}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-ocean/15 bg-white/60 h-11 px-4 text-xs font-bold uppercase tracking-[0.12em] text-ocean-deeper hover:border-ocean/30 hover:bg-white transition-all cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 rounded-btn border border-ocean/15 bg-white/60 h-11 px-5 text-sm font-bold uppercase tracking-[0.12em] text-ocean-deeper hover:border-ocean/30 hover:bg-white transition-all cursor-pointer"
                 >
-                  <ShoppingCart className="h-3.5 w-3.5" />
+                  <ShoppingCart className="h-4 w-4" />
                   Cart {cart.count > 0 && `(${cart.count})`}
                 </button>
                 <Link
                   href="/order"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 flex-1 rounded-xl bg-ocean-deeper h-11 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark"
+                  className="flex items-center justify-center gap-2 flex-1 rounded-btn bg-ocean-deeper h-11 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark"
                 >
-                  <ShoppingCart className="h-3.5 w-3.5" />
+                  <ShoppingCart className="h-4 w-4" />
                   Order Now
                 </Link>
               </div>

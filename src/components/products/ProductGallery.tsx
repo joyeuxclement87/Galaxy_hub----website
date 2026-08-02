@@ -26,14 +26,14 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
   return (
     <>
       <div className="space-y-3">
-        {/* Main image */}
+        {/* Main image - reduced padding for mobile */}
         <div
-          className="group relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-card bg-[#f8f9fa] p-8 lg:p-12 cursor-zoom-in"
+          className="group relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-card bg-[#f8f9fa] pt-4 pb-3 lg:pt-8 lg:pb-6 cursor-zoom-in"
           onClick={() => setLightboxOpen(true)}
         >
           {/* Subtle radial glow */}
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <div className="h-[80%] w-[80%] rounded-full bg-[radial-gradient(ellipse,rgba(11,84,151,0.05)_0%,transparent_70%)]" />
+            <div className="h-[70%] w-[70%] rounded-full bg-[radial-gradient(ellipse,rgba(11,84,151,0.05)_0%,transparent_70%)]" />
           </div>
 
           <Image
@@ -47,7 +47,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
           />
 
           {/* Zoom hint */}
-          <div className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white/80 px-3 py-1.5 text-caption font-semibold text-ocean/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm">
+          <div className="absolute bottom-2 right-2 z-20 flex items-center gap-1.5 rounded-full border border-ocean/10 bg-white/80 px-2.5 py-1 text-caption font-semibold text-ocean/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm">
             <ZoomIn className="h-3 w-3" />
             Tap to zoom
           </div>
@@ -55,7 +55,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
 
         {/* Thumbnail row */}
         {items.length > 1 && (
-          <div className="grid grid-cols-4 gap-2 sm:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5">
             {items.map((img, i) => (
               <button
                 key={img}
@@ -64,7 +64,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
                 aria-label={`View image ${i + 1} of ${items.length}`}
                 aria-pressed={i === index}
                 className={cn(
-                  "relative aspect-square cursor-pointer overflow-hidden rounded-btn border bg-[#f8f9fa] p-2 transition-all duration-200",
+                  "relative aspect-square cursor-pointer overflow-hidden rounded-btn border bg-[#f8f9fa] p-1.5 transition-all duration-250",
                   i === index
                     ? "border-ocean ring-1 ring-ocean/25 shadow-sm"
                     : "border-ocean/6 hover:border-ocean/20 hover:shadow-sm"

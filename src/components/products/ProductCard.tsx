@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Product } from "@/data/mock-data";
 import { Button } from "@/components/ui/button";
-import { Star, ShoppingCart, ArrowRight, Trash2 } from "lucide-react";
+import { Star, ShoppingCart, Heart, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getSessionId, notifyCartChanged, useSupabaseCart } from "@/hooks/use-cart";
 import { addCartItemBySlug } from "@/actions/cart";
@@ -40,7 +40,6 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
     const cartItem = getCartItem();
     
     if (cartItem) {
-      // Remove from cart
       await removeFromCart(cartItem.id);
       setIsInCart(false);
       notifyCartChanged();
@@ -83,71 +82,79 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-32px" }}
-      transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
-      className="group relative flex flex-col overflow-hidden rounded-card bg-white border border-ocean/[0.06] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-premium hover:border-ocean/[0.12]"
+      transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+      className="group relative flex flex-col overflow-hidden rounded-card bg-white border border-ocean/[0.06] shadow-premium transition-all duration-250 hover:shadow-premium-lg hover:border-ocean/[0.12]"
     >
       {/* Image area */}
-      <div className="relative aspect-square w-full overflow-hidden bg-[#f8f9fa] flex items-center justify-center p-5">
-          {product.badge && (
-            <span className={cn(
-              "absolute left-3 top-3 z-10 rounded-full px-2.5 py-1 text-xs font-bold uppercase tracking-widest",
-              badgeClass
-            )}>
+      <div className="relative aspect-square w-full overflow-hidden bg-[#f8f9fa] p-3">
+        {product.badge && (
+          <span className={cn(
+            "absolute left-2 top-2 z-10 rounded-badge px-2.5 py-1 text-caption font-bold uppercase tracking-widest",
+            badgeClass
+          )}>
             {product.badge}
           </span>
         )}
         {availabilityChip && !product.badge && (
           <span className={cn(
-            "absolute left-3 top-3 z-10 rounded-full px-2.5 py-1 text-xs font-bold",
+            "absolute left-2 top-2 z-10 rounded-badge px-2.5 py-1 text-caption font-bold",
             availabilityChip.cls
           )}>
             {availabilityChip.label}
           </span>
         )}
 
-        <Link {...linkProps} className="absolute inset-0 flex items-center justify-center p-7">
+        {/* Wishlist heart icon */}
+        <button
+          type="button"
+          aria-label="Add to wishlist"
+          className="absolute right-2 top-2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm text-ocean/40 opacity-0 transition-all duration-200 hover:bg-white hover:text-ocean group-hover:opacity-100"
+        >
+          <Heart className="h-4 w-4" />
+        </button>
+
+        <Link {...linkProps} className="absolute inset-0 flex items-center justify-center p-2">
           <img
             src={product.image}
             alt={product.title}
             loading="lazy"
-            className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.06] mix-blend-multiply"
+            className="h-full w-full object-contain transition-transform duration-300 ease-out group-hover:scale-[1.05] mix-blend-multiply"
           />
         </Link>
       </div>
 
       {/* Content area */}
-      <div className="flex flex-1 flex-col px-4 pt-3.5 pb-4">
-
-        {/* Brand + Rating row */}
-        <div className="flex items-center justify-between gap-2 mb-2">
-          {product.brand ? (
-            <span className="text-xs font-bold uppercase tracking-[0.16em] text-ocean/50 truncate">
-              {product.brand}
-            </span>
-          ) : <span />}
-          <div className="flex items-center gap-1 shrink-0">
-            <div className="flex gap-[2px] text-amber-400">
-              {[...Array(4)].map((_, i) => (
-                <Star key={i} className="h-2.5 w-2.5 fill-current" />
-              ))}
-              <Star className="h-2.5 w-2.5 fill-current opacity-30" />
-            </div>
-            <span className="text-xs font-semibold text-ocean-deeper/70 tabular-nums">
-              {product.rating ?? "4.8"}
-            </span>
-          </div>
-        </div>
+      <div className="flex flex-1 flex-col px-3.5 pt-3 pb-4">
+        {/* Brand */}
+        {product.brand && (
+          <span className="text-caption font-bold uppercase tracking-[0.12em] text-ocean/50 truncate">
+            {product.brand}
+          </span>
+        )}
 
         {/* Title */}
-        <Link {...linkProps}>
-          <h3 className="font-display text-[14px] font-bold leading-snug text-ocean-deeper line-clamp-2 hover:text-ocean transition-colors duration-200 group-hover:text-ocean">
+        <Link {...linkProps} className="mt-1.5 block">
+          <h3 className="font-display text-title-mobile font-bold leading-snug text-ocean-deeper line-clamp-2 hover:text-ocean transition-colors duration-200 group-hover:text-ocean sm:text-title-tablet lg:text-title-desktop">
             {product.title}
           </h3>
         </Link>
 
-        {/* Tagline / specs */}
+        {/* Rating - below title */}
+        <div className="mt-2 flex items-center gap-1.5 shrink-0">
+          <div className="flex gap-[2px] text-amber-400">
+            {[...Array(4)].map((_, i) => (
+              <Star key={i} className="h-3 w-3 fill-current" />
+            ))}
+            <Star className="h-3 w-3 fill-current opacity-30" />
+          </div>
+          <span className="text-caption font-semibold text-ocean-deeper/70 tabular-nums">
+            {product.rating ?? "4.8"}
+          </span>
+        </div>
+
+        {/* Tagline / specs - 2 line clamp */}
         {(product.specsSummary || product.tagline) && (
-          <p className="mt-1 text-xs text-ocean/40 line-clamp-1 leading-relaxed">
+          <p className="mt-1.5 text-caption text-ocean/40 line-clamp-2 leading-relaxed">
             {product.specsSummary ?? product.tagline}
           </p>
         )}
@@ -156,17 +163,17 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
         <div className="flex-1" />
 
         {/* Price block */}
-        <div className="mt-3 pt-3 border-t border-ocean/[0.05]">
+        <div className="mt-3">
           {product.priceOnRequest ? (
-            <span className="font-display text-sm font-bold text-ocean">Contact for Price</span>
+            <span className="font-display text-body font-bold text-ocean">Contact for Price</span>
           ) : (
             <div>
               <div className="flex items-end gap-2">
-                <span className="font-display text-body font-bold text-ocean-deeper leading-none">
+                <span className="font-display text-price-mobile font-bold text-ocean-deeper leading-none sm:text-price-tablet lg:text-price-desktop">
                   {product.currency} {formattedPrice}
                 </span>
                 {product.originalPrice && (
-                  <span className="text-xs text-ocean/30 line-through mb-0.5">
+                  <span className="text-caption text-ocean/30 line-through mb-0.5">
                     {new Intl.NumberFormat("en-US").format(product.originalPrice)}
                   </span>
                 )}
@@ -180,29 +187,22 @@ export function ProductCard({ product, onReserve, storage }: ProductCardProps) {
           )}
         </div>
 
-        {/* CTA row */}
-        <div className="mt-3 flex items-center gap-2">
+        {/* CTA - single primary action */}
+        <div className="mt-3">
           <Button
             variant="primary"
             onClick={handleAddToCart}
             disabled={loading}
             className={cn(
-              "flex-1 justify-center gap-1.5 rounded-btn px-3 py-2.5 text-xs min-h-0",
+              "w-full justify-center gap-2 rounded-btn px-4 py-3 text-sm font-semibold",
               isInCart && "!bg-gradient-to-b from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
             )}
           >
             {isInCart
-              ? <><Trash2 className="h-3 w-3 shrink-0" /> Remove</>
-              : <><ShoppingCart className="h-3 w-3 shrink-0" /> Add to Cart</>
+              ? <><Trash2 className="h-4 w-4 shrink-0" /> Remove from Cart</>
+              : <><ShoppingCart className="h-4 w-4 shrink-0" /> Add to Cart</>
             }
           </Button>
-          <Link
-            {...linkProps}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-btn border border-ocean/10 bg-white text-ocean/50 transition-all duration-200 hover:border-ocean/30 hover:text-ocean hover:shadow-sm"
-            aria-label="View product details"
-          >
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
         </div>
       </div>
     </motion.div>

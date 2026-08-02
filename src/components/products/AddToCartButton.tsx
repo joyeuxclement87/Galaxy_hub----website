@@ -46,18 +46,18 @@ export function AddToCartButton({
       onClick={handleClick}
       disabled={pending}
       className={cn(
-        "group inline-flex items-center justify-center font-sans font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean/50 disabled:pointer-events-none disabled:opacity-50 cursor-pointer select-none",
+        "group inline-flex items-center justify-center font-sans font-semibold transition-all duration-250 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean/50 disabled:pointer-events-none disabled:opacity-50 cursor-pointer select-none",
         variant === "primary" &&
-          "bg-ocean-deeper text-white rounded-xl h-12 px-7 text-xs font-bold uppercase tracking-[0.12em] shadow-btn hover:bg-ocean-dark hover:shadow-btn-hover hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]",
+          "bg-ocean-deeper text-white rounded-btn h-12 px-6 text-sm font-bold uppercase tracking-[0.12em] shadow-btn hover:bg-ocean-dark hover:shadow-btn-hover active:scale-[0.98]",
         variant === "secondary" &&
-          "rounded-xl h-12 px-7 text-xs font-bold uppercase tracking-[0.12em] border border-ocean/15 bg-white/60 backdrop-blur-sm text-ocean-deeper hover:border-ocean/30 hover:bg-white hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]",
+          "rounded-btn h-12 px-6 text-sm font-bold uppercase tracking-[0.12em] border border-ocean/20 bg-white text-ocean-deeper hover:border-ocean/30 hover:bg-ocean/[0.03] active:scale-[0.98]",
         className
       )}
     >
       {pending ? (
-        <Loader2 className="h-4 w-4 animate-spin mr-1.5" />
+        <Loader2 className="h-4 w-4 animate-spin mr-2" />
       ) : (
-        <ShoppingCart className="h-4 w-4 mr-1.5" />
+        <ShoppingCart className="h-4 w-4 mr-2" />
       )}
       {showText && (pending ? "Adding..." : "Add to Cart")}
     </button>

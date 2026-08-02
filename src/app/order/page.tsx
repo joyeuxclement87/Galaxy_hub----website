@@ -217,11 +217,11 @@ function OrderContent() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-ivory text-ocean-deeper font-sans pt-24">
+    <div className="min-h-screen flex flex-col bg-ivory text-ocean-deeper font-sans pt-20">
       <Navbar />
 
       {/* Header Banner */}
-      <section className="relative bg-ivory overflow-hidden border-b border-ocean/[0.06] px-6 py-10 md:px-12">
+      <section className="relative bg-ivory overflow-hidden border-b border-ocean/[0.06] px-4 py-8 md:px-8">
         <div className="hero-grid-texture absolute inset-0 opacity-40 pointer-events-none" />
         <div className="relative mx-auto max-w-[1320px]">
           <Link
@@ -252,26 +252,24 @@ function OrderContent() {
           </div>
         </div>
       </section>
-
       {/* Main Order Content */}
-      <main className="flex-1 mx-auto max-w-[1320px] w-full px-6 py-12 md:px-12">
+      <main className="flex-1 mx-auto max-w-[1320px] w-full px-4 py-8 md:px-8 sm:py-12">
         <AnimatePresence mode="wait">
           {submitted ? (
-            /* Order Success Receipt */
             <motion.div
               key="success"
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
-              className="mx-auto max-w-xl overflow-hidden rounded-card border border-ocean/[0.08] bg-white p-8 md:p-10 shadow-premium"
+              className="mx-auto max-w-xl overflow-hidden rounded-card border border-ocean/[0.08] bg-white p-6 md:p-8 shadow-premium"
             >
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-card bg-emerald-50 text-emerald-600 border border-emerald-100">
-                <CheckCircle2 className="h-9 w-9" />
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-card bg-emerald-50 text-emerald-600 border border-emerald-100">
+                <CheckCircle2 className="h-8 w-8" />
               </div>
 
               <div className="text-center space-y-2">
-                <h2 className="font-display text-2xl font-bold text-ocean-deeper">
+                <h2 className="font-display text-xl sm:text-2xl font-bold text-ocean-deeper">
                   Order Request Submitted!
                 </h2>
                 <p className="text-sm text-ocean/60 leading-relaxed">
@@ -280,7 +278,7 @@ function OrderContent() {
               </div>
 
               {/* Order Receipt Details */}
-              <div className="mt-6 rounded-card border border-ocean/[0.06] bg-ivory/60 p-5 space-y-3 text-xs">
+              <div className="mt-5 rounded-card border border-ocean/[0.06] bg-ivory/60 p-4 space-y-3 text-xs">
                 <div className="flex items-center justify-between pb-2 border-b border-ocean/[0.06]">
                   <span className="font-semibold text-ocean/50">Order Reference</span>
                   <span className="font-display font-bold text-ocean">{orderRef}</span>
@@ -314,11 +312,11 @@ function OrderContent() {
               </div>
 
               {/* Actions */}
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <div className="mt-6 grid gap-2.5 sm:grid-cols-2">
                 <Button
                   variant="secondary"
                   onClick={startNewOrder}
-                  className="w-full rounded-btn h-11 text-xs font-bold uppercase tracking-wider"
+                  className="w-full rounded-btn h-11 text-sm font-bold uppercase tracking-wider"
                 >
                   Place Another Order
                 </Button>
@@ -330,7 +328,7 @@ function OrderContent() {
                 >
                   <Button
                     variant="primary"
-                    className="w-full rounded-btn h-11 text-xs font-bold uppercase tracking-wider gap-2 justify-center"
+                    className="w-full rounded-btn h-11 text-sm font-bold uppercase tracking-wider gap-2 justify-center"
                   >
                     <MessageCircle className="h-4 w-4" />
                     WhatsApp Us
@@ -338,7 +336,7 @@ function OrderContent() {
                 </a>
               </div>
 
-              <div className="mt-6 text-center">
+              <div className="mt-5 text-center">
                 <Link
                   href="/"
                   className="inline-flex items-center gap-1.5 text-xs font-semibold text-ocean/60 hover:text-ocean transition-colors"
@@ -349,7 +347,6 @@ function OrderContent() {
               </div>
             </motion.div>
           ) : (
-            /* Order Form */
             <motion.form
               key="form"
               initial={{ opacity: 0 }}
@@ -357,15 +354,15 @@ function OrderContent() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               onSubmit={handleSubmit}
-              className="grid grid-cols-1 gap-8 lg:grid-cols-12"
+              className="grid grid-cols-1 gap-6 lg:grid-cols-12"
             >
-              {/* Left Column: Essential Info (8 cols) */}
-              <div className="lg:col-span-7 space-y-6">
+              {/* Left Column: Essential Info */}
+              <div className="lg:col-span-7 space-y-5">
 
                 {/* 1. Items to Order */}
-                <div className="rounded-card border border-ocean/[0.06] bg-white p-6 shadow-sm space-y-4">
+                <div className="rounded-card border border-ocean/[0.06] bg-white p-4 shadow-sm space-y-3">
                   <div className="flex items-center gap-2 border-b border-ocean/[0.06] pb-3">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-xs font-bold text-white">
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-caption font-bold text-white">
                       1
                     </span>
                     <h2 className="font-display text-base font-bold text-ocean-deeper">
@@ -380,9 +377,9 @@ function OrderContent() {
 
                   {/* Empty cart state */}
                   {!hasItems ? (
-                    <div className="flex flex-col items-center gap-5 py-8 text-center">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-card bg-ocean/[0.04] border border-ocean/[0.06]">
-                        <ShoppingBag className="h-7 w-7 text-ocean/20" />
+                    <div className="flex flex-col items-center gap-4 py-8 text-center">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-card bg-ocean/[0.04] border border-ocean/[0.06]">
+                        <ShoppingBag className="h-6 w-6 text-ocean/20" />
                       </div>
                       <div>
                         <p className="font-display text-sm font-bold text-ocean-deeper">Your cart is empty</p>
@@ -392,7 +389,7 @@ function OrderContent() {
                       </div>
                       <Link
                         href="/products"
-                        className="inline-flex items-center gap-2 rounded-btn bg-ocean-deeper px-7 h-10 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-300 hover:bg-ocean-dark hover:-translate-y-0.5"
+                        className="inline-flex items-center gap-2 rounded-btn bg-ocean-deeper px-6 h-11 text-sm font-bold uppercase tracking-[0.12em] text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark"
                       >
                         Browse Products
                       </Link>
@@ -409,29 +406,29 @@ function OrderContent() {
                         return (
                           <div
                             key={item.key}
-                            className="rounded-btn border border-ocean/[0.06] bg-ivory/40 p-3.5"
+                            className="rounded-btn border border-ocean/[0.06] bg-ivory/40 p-3"
                           >
                             <div className="flex items-center gap-4">
-                              <div className="h-14 w-14 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 flex items-center justify-center p-1 border border-ocean/[0.04]">
+                              <div className="h-12 w-12 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 flex items-center justify-center p-1 border border-ocean/[0.04]">
                                 <img src={item.image} alt={item.title} className="h-full w-full object-contain mix-blend-multiply" />
                               </div>
                               <div className="min-w-0 flex-1">
                                 {isDirect && (
-                                  <span className="mb-0.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-ocean">
+                                  <span className="mb-0.5 inline-flex items-center rounded-full bg-ocean/[0.08] px-2 py-0.5 text-caption font-bold uppercase tracking-wider text-ocean">
                                     Selected for you
                                   </span>
                                 )}
                                 <p className="truncate font-display text-sm font-bold text-ocean-deeper">
                                   {item.title}
                                 </p>
-                                <p className="text-xs font-semibold text-ocean/50">
+                                <p className="text-caption font-semibold text-ocean/50">
                                   {item.currency || "RWF"} {formatPrice(item.price)}
                                 </p>
                               </div>
                               <button
                                 type="button"
                                 onClick={() => (isDirect ? setDirectProduct(null) : item.lineId && cart.remove(item.lineId))}
-                                className="p-2 text-ocean/30 hover:text-red-500 transition-colors rounded-btn"
+                                className="p-1.5 text-ocean/30 hover:text-red-500 transition-colors rounded-btn"
                                 aria-label={`Remove ${item.title}`}
                               >
                                 <Trash2 className="h-4 w-4" />
@@ -456,9 +453,9 @@ function OrderContent() {
                 </div>
 
                 {/* 2. Contact Details */}
-                <div className="rounded-card border border-ocean/[0.06] bg-white p-6 shadow-sm space-y-4">
+                <div className="rounded-card border border-ocean/[0.06] bg-white p-5 shadow-sm space-y-3">
                   <div className="flex items-center gap-2 border-b border-ocean/[0.06] pb-3">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-xs font-bold text-white">
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-caption font-bold text-white">
                       2
                     </span>
                     <h2 className="font-display text-base font-bold text-ocean-deeper">
@@ -471,13 +468,13 @@ function OrderContent() {
                       <label className="mb-1.5 flex items-center gap-1.5 text-caption font-bold uppercase tracking-wider text-ocean/50">
                         <User className="h-3.5 w-3.5" /> Full Name *
                       </label>
-                      <input
-                        type="text"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="Enter your name"
-                        className="w-full rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-2.5 text-base sm:text-sm text-ocean-deeper transition-all focus:border-accent focus:bg-white focus:outline-none"
-                      />
+                   <input
+                         type="text"
+                         value={formData.name}
+                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                         placeholder="Enter your name"
+                         className="w-full rounded-btn border border-ocean/[0.08] bg-ivory/60 px-4 py-2.5 text-sm text-ocean-deeper transition-all focus:border-accent focus:bg-white focus:outline-none"
+                       />
                       {errors.name && <p className="mt-1 text-xs font-medium text-red-500">{errors.name}</p>}
                     </div>
 
@@ -511,9 +508,9 @@ function OrderContent() {
                 </div>
 
                 {/* 3. Fulfillment Choice */}
-                <div className="rounded-card border border-ocean/[0.06] bg-white p-6 shadow-sm space-y-4">
+                <div className="rounded-card border border-ocean/[0.06] bg-white p-5 shadow-sm space-y-3">
                   <div className="flex items-center gap-2 border-b border-ocean/[0.06] pb-3">
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-xs font-bold text-white">
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-btn bg-ocean text-caption font-bold text-white">
                       3
                     </span>
                     <h2 className="font-display text-base font-bold text-ocean-deeper">
@@ -522,14 +519,14 @@ function OrderContent() {
                   </div>
 
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    <button
-                      type="button"
-                      onClick={() => setFulfillment("pickup")}
-                      className={cn(
-                        "rounded-btn border p-4 text-left transition-all duration-300 cursor-pointer",
-                        fulfillment === "pickup"
-                          ? "border-ocean bg-ocean/[0.05] shadow-sm"
-                          : "border-ocean/[0.08] bg-ivory/40 hover:border-ocean/20"
+                     <button
+                       type="button"
+                       onClick={() => setFulfillment("pickup")}
+                       className={cn(
+                         "rounded-btn border p-4 text-left transition-all duration-250 cursor-pointer",
+                         fulfillment === "pickup"
+                           ? "border-ocean bg-ocean/[0.05] shadow-sm"
+                           : "border-ocean/[0.08] bg-ivory/40 hover:border-ocean/20"
                       )}
                     >
                       <div className="flex items-center justify-between">
@@ -630,15 +627,15 @@ function OrderContent() {
                 </div>
               </div>
 
-              {/* Right Column: Order Summary Card (5 cols sticky) */}
+              {/* Right Column: Order Summary Card */}
               <div className="lg:col-span-5">
-                <div className="sticky top-24 rounded-card border border-ocean/[0.06] bg-white p-6 shadow-premium space-y-5">
+                <div className="sticky top-24 rounded-card border border-ocean/[0.06] bg-white p-5 shadow-premium space-y-4">
                   <h3 className="font-display text-base font-bold text-ocean-deeper border-b border-ocean/[0.06] pb-3">
                     Order Summary
                   </h3>
 
                   {!hasItems ? (
-                    <div className="py-4 text-center space-y-2">
+                    <div className="py-3 text-center space-y-2">
                       <p className="text-sm font-semibold text-ocean/50">No items selected</p>
                       <p className="text-xs text-ocean/40 leading-relaxed">
                         Add products to your cart from the shop first.
@@ -647,7 +644,7 @@ function OrderContent() {
                   ) : (
                     <>
                       {/* Item breakdown */}
-                      <div className="space-y-2.5 text-xs text-ocean/65">
+                      <div className="space-y-2 text-xs text-ocean/65">
                         <div className="flex justify-between">
                           <span>Items ({cartItems.length})</span>
                           <span className="font-semibold text-ocean-deeper">RWF {formatPrice(itemsSubtotal)}</span>
@@ -661,9 +658,9 @@ function OrderContent() {
                       </div>
 
                       {/* Total */}
-                      <div className="border-t border-ocean/[0.06] pt-4 flex items-center justify-between">
+                      <div className="border-t border-ocean/[0.06] pt-3 flex items-center justify-between">
                         <span className="font-display text-base font-bold text-ocean-deeper">Total Estimated</span>
-                        <span className="font-display text-xl font-bold text-ocean-deeper">
+                        <span className="font-display text-lg font-bold text-ocean-deeper">
                           RWF {formatPrice(total)}
                         </span>
                       </div>
@@ -687,7 +684,7 @@ function OrderContent() {
                     type="submit"
                     variant="primary"
                     disabled={!hasItems || submitting}
-                    className="w-full rounded-btn h-12 text-xs font-bold uppercase tracking-[0.12em] gap-2 justify-center shadow-btn hover:shadow-btn-hover disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-btn disabled:hover:translate-y-0"
+                    className="w-full rounded-btn h-12 text-sm font-bold uppercase tracking-[0.12em] gap-2 justify-center shadow-btn hover:shadow-btn-hover disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {submitting ? (
                       <>
