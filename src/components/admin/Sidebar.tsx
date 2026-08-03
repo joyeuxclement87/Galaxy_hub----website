@@ -17,6 +17,7 @@ import {
   Menu,
   Zap,
   Star,
+  MessageSquare,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -25,6 +26,7 @@ const NAV_GROUPS = [
     label: "Overview",
     items: [
       { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+      { label: "Messages", href: "/admin/messages", icon: MessageSquare },
     ],
   },
   {
@@ -157,7 +159,7 @@ export function Sidebar() {
       {/* Mobile toggle */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed left-4 top-3 z-50 inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white p-2 text-gray-600 shadow-sm lg:hidden"
+        className="fixed left-4 top-3 z-45 inline-flex items-center justify-center rounded-xl border border-white/8 bg-white/5 p-2 text-white/70 hover:bg-white/10 shadow-sm lg:hidden cursor-pointer transition-colors"
         aria-label="Open sidebar"
       >
         <Menu className="h-5 w-5" />

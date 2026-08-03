@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { getDashboardData } from "@/data/admin";
+import { getDashboardData, type RecentMessage } from "@/data/admin";
 import { StatCard } from "@/components/admin/StatCard";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { StatCardSkeleton } from "@/components/admin/Skeleton";
@@ -20,10 +20,17 @@ import {
   TrendingUp,
   Zap,
   Activity,
+  Mail,
+  MessageSquare,
+  Inbox,
 } from "lucide-react";
 import { createAuthClient } from "@/lib/supabase-server-auth";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+
+const formatRWF = (amount: number) =>
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "RWF", maximumFractionDigits: 0 }).format(amount);
 
 export default async function AdminDashboardPage() {
   const supabase = await createAuthClient();
@@ -39,11 +46,11 @@ export default async function AdminDashboardPage() {
   const dateStr = now.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 
   return (
-    <div className="space-y-7 pb-10">
+    <div className="space-y-8 pb-10">
 
       {/* ── Welcome Banner ──────────────────────────────────── */}
       <div className="relative overflow-hidden rounded-3xl bg-[#0a1628] p-[1px] shadow-2xl shadow-[#0b5497]/20">
-        <div className="relative overflow-hidden rounded-[calc(1.5rem-1px)] bg-gradient-to-br from-[#0d1f3c] via-[#0a1628] to-[#0b2a50] px-7 py-7 md:px-9 md:py-8">
+        <div className="relative overflow-hidden rounded-[calc(1.5rem-1px)] bg-gradient-to-br from-[#0d1f3c] via-[#0a1628] to-[#0b2a50] px-7 py-8 md:px-9 md:py-9">
           {/* Glow orbs */}
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#0f70c9]/20 blur-3xl" />
@@ -60,27 +67,27 @@ export default async function AdminDashboardPage() {
           </div>
 
           <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-3">
+            <div className="space-y-3.5">
               <div className="flex items-center gap-2.5">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/8 px-3 py-1 text-caption font-bold uppercase tracking-[0.18em] text-white/50 ring-1 ring-white/10">
-                  <Zap className="h-3 w-3 fill-white/30 text-white/30" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-white/80 ring-1 ring-white/15">
+                  <Zap className="h-3.5 w-3.5 fill-white/40 text-white/40" />
                   Store Overview
                 </span>
-                <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-caption font-bold uppercase tracking-[0.18em] text-emerald-400 ring-1 ring-emerald-500/20">
-                  <Activity className="h-3 w-3" />
+                <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-emerald-300 ring-1 ring-emerald-500/20">
+                  <Activity className="h-3.5 w-3.5" />
                   Live
                 </span>
               </div>
-              <h1 className="font-clash text-2xl font-bold text-white md:text-3xl tracking-tight">
+              <h1 className="font-clash text-3xl font-bold text-white md:text-4xl tracking-tight">
                 {greeting}, {displayName}
               </h1>
-              <p className="text-sm text-white/45 max-w-lg leading-relaxed">{dayName}, {dateStr} — here&apos;s your store snapshot.</p>
+              <p className="text-base text-white/70 max-w-lg leading-relaxed">{dayName}, {dateStr} — here&apos;s your store snapshot.</p>
             </div>
 
             <div className="flex items-center gap-4">
               <Link
                 href="/admin/products/new"
-                className="group inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-[#0b5497] shadow-lg shadow-black/20 transition-all duration-200 hover:bg-ocean-light hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                className="group inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#0b5497] shadow-lg shadow-black/20 transition-all duration-200 hover:bg-ocean-light hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
               >
                 <Plus className="h-4 w-4 transition-transform group-hover:rotate-90 duration-200" />
                 Add Product
@@ -89,116 +96,65 @@ export default async function AdminDashboardPage() {
           </div>
 
           {/* Stats strip */}
-          <div className="relative mt-6 grid grid-cols-2 gap-px rounded-xl bg-white/5 overflow-hidden sm:grid-cols-4">
+          <div className="relative mt-6 grid grid-cols-2 gap-px rounded-xl bg-white/8 overflow-hidden sm:grid-cols-4">
             {[
               { label: "Date", value: dateStr },
               { label: "Status", value: "All Systems Operational" },
               { label: "Region", value: "Kigali, Rwanda" },
               { label: "Platform", value: "Galaxy Hub v1.0" },
             ].map((item) => (
-              <div key={item.label} className="bg-[#0a1628] px-4 py-3 sm:px-5">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/25">{item.label}</p>
-                <p className="mt-0.5 text-xs font-semibold text-white/70 truncate">{item.value}</p>
+              <div key={item.label} className="bg-[#0a1628] px-4 py-3.5 sm:px-5">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/50">{item.label}</p>
+                <p className="mt-1 text-sm font-semibold text-white/90 truncate">{item.value}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* ── Stat Cards ──────────────────────────────────────── */}
+      {/* ── Content (fetched once) ──────────────────────────── */}
       <Suspense
         fallback={
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <StatCardSkeleton key={i} />
-            ))}
+          <div className="space-y-8">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <StatCardSkeleton key={i} />
+              ))}
+            </div>
+            <div className="h-32 animate-pulse rounded-2xl bg-white/5" />
+            <div className="h-72 animate-pulse rounded-2xl bg-white/5" />
           </div>
         }
       >
-        <StatsCards />
+        <DashboardContent />
       </Suspense>
+    </div>
+  );
+}
 
-      {/* ── Quick Actions ────────────────────────────────────── */}
-      <QuickActions />
+async function DashboardContent() {
+  const data = await getDashboardData();
 
-      {/* ── Tables ──────────────────────────────────────────── */}
+  return (
+    <div className="space-y-8">
+      <StatsCards stats={data.stats} />
+      <QuickActions unreadMessages={data.stats.unreadMessages} />
+      <RecentMessages messages={data.recentMessages} />
       <div className="grid gap-6 lg:grid-cols-2">
-        <Suspense
-          fallback={
-            <div className="rounded-2xl border border-gray-100 bg-white shadow-sm">
-              <div className="border-b border-gray-100 px-5 py-4">
-                <div className="h-5 w-32 animate-pulse rounded-lg bg-gray-100" />
-              </div>
-              <div className="divide-y divide-gray-50">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="flex items-center gap-4 px-5 py-3">
-                    <div className="h-4 w-4 animate-pulse rounded bg-gray-100" />
-                    <div className="h-4 w-24 animate-pulse rounded bg-gray-100" />
-                    <div className="h-4 w-16 animate-pulse rounded bg-gray-100" />
-                    <div className="h-4 w-20 animate-pulse rounded bg-gray-100" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          }
-        >
-          <RecentOrders />
-        </Suspense>
-
-        <Suspense
-          fallback={
-            <div className="rounded-2xl border border-gray-100 bg-white shadow-sm">
-              <div className="border-b border-gray-100 px-5 py-4">
-                <div className="h-5 w-36 animate-pulse rounded-lg bg-gray-100" />
-              </div>
-              <div className="divide-y divide-gray-50">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="flex items-center gap-4 px-5 py-3">
-                    <div className="h-9 w-9 animate-pulse rounded-xl bg-gray-100" />
-                    <div className="h-4 w-32 animate-pulse rounded bg-gray-100" />
-                    <div className="h-4 w-16 animate-pulse rounded bg-gray-100" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          }
-        >
-          <RecentProducts />
-        </Suspense>
+        <RecentOrders orders={data.recentOrders} />
+        <RecentProducts products={data.recentProducts} />
       </div>
     </div>
   );
 }
 
-async function StatsCards() {
-  const { stats } = await getDashboardData();
-
+function StatsCards({ stats }: { stats: { totalProducts: number; totalCategories: number; totalBrands: number; activePromotions: number; pendingOrders: number; totalOrders: number; unreadMessages: number } }) {
   const cards = [
     {
-      label: "Total Products",
-      value: stats.totalProducts,
-      icon: <Package className="h-5 w-5" />,
-      gradient: "from-[#0b5497] to-[#0f70c9]",
-      trend: { value: "+12% this month", positive: true },
-    },
-    {
-      label: "Total Categories",
-      value: stats.totalCategories,
-      icon: <Tags className="h-5 w-5" />,
-      gradient: "from-violet-500 to-purple-600",
-    },
-    {
-      label: "Total Brands",
-      value: stats.totalBrands,
-      icon: <Building2 className="h-5 w-5" />,
-      gradient: "from-emerald-500 to-teal-600",
-      trend: { value: "+3 new", positive: true },
-    },
-    {
-      label: "Active Promotions",
-      value: stats.activePromotions,
-      icon: <Percent className="h-5 w-5" />,
-      gradient: "from-orange-500 to-amber-500",
+      label: "Total Orders",
+      value: stats.totalOrders,
+      icon: <ShoppingCart className="h-5 w-5" />,
+      gradient: "from-cyan-500 to-sky-600",
     },
     {
       label: "Pending Orders",
@@ -208,11 +164,30 @@ async function StatsCards() {
       trend: { value: stats.pendingOrders > 0 ? "Needs attention" : "All clear", positive: stats.pendingOrders === 0 },
     },
     {
-      label: "Total Orders",
-      value: stats.totalOrders,
-      icon: <ShoppingCart className="h-5 w-5" />,
-      gradient: "from-cyan-500 to-sky-600",
-      trend: { value: "+8% this month", positive: true },
+      label: "Total Products",
+      value: stats.totalProducts,
+      icon: <Package className="h-5 w-5" />,
+      gradient: "from-[#0b5497] to-[#0f70c9]",
+      trend: { value: `${stats.totalCategories} categories · ${stats.totalBrands} brands`, positive: true },
+    },
+    {
+      label: "New Messages",
+      value: stats.unreadMessages,
+      icon: <Mail className="h-5 w-5" />,
+      gradient: "from-violet-500 to-purple-600",
+      trend: { value: stats.unreadMessages > 0 ? "Awaiting reply" : "Inbox clear", positive: stats.unreadMessages === 0 },
+    },
+    {
+      label: "Active Promotions",
+      value: stats.activePromotions,
+      icon: <Percent className="h-5 w-5" />,
+      gradient: "from-orange-500 to-amber-500",
+    },
+    {
+      label: "Total Brands",
+      value: stats.totalBrands,
+      icon: <Building2 className="h-5 w-5" />,
+      gradient: "from-emerald-500 to-teal-600",
     },
   ];
 
@@ -225,7 +200,7 @@ async function StatsCards() {
   );
 }
 
-function QuickActions() {
+function QuickActions({ unreadMessages }: { unreadMessages: number }) {
   const actions = [
     {
       label: "Add Product",
@@ -255,16 +230,45 @@ function QuickActions() {
       href: "/admin/orders",
       gradient: "from-orange-500 to-amber-500",
     },
+    {
+      label: "View Messages",
+      description: unreadMessages > 0 ? `${unreadMessages} unread` : "Inbox is clear",
+      icon: Mail,
+      href: "/admin/messages",
+      gradient: "from-purple-500 to-fuchsia-600",
+      badge: unreadMessages > 0 ? unreadMessages : undefined,
+    },
+    {
+      label: "Manage Products",
+      description: "Edit catalog listings",
+      icon: Package,
+      href: "/admin/products",
+      gradient: "from-cyan-500 to-sky-600",
+    },
+    {
+      label: "Manage Brands",
+      description: "Update brand catalog",
+      icon: Building2,
+      href: "/admin/brands",
+      gradient: "from-teal-500 to-emerald-600",
+    },
+    {
+      label: "Manage Categories",
+      description: "Organize categories",
+      icon: Tags,
+      href: "/admin/categories",
+      gradient: "from-rose-500 to-red-600",
+    },
   ];
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <h2 className="font-clash text-lg font-bold text-white">Quick Actions</h2>
-          <span className="rounded-full bg-white/8 px-2 py-0.5 text-caption font-bold uppercase tracking-wider text-white/30">4 shortcuts</span>
+        <div className="flex items-center gap-2.5">
+          <h2 className="font-clash text-xl font-bold text-white">Quick Actions</h2>
+          <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-white/50">{actions.length} shortcuts</span>
         </div>
-        <TrendingUp className="h-4 w-4 text-white/20" />
+        <TrendingUp className="h-5 w-5 text-white/30" />
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {actions.map((action) => (
@@ -275,14 +279,20 @@ function QuickActions() {
           >
             <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-5`} />
             <div className="relative flex items-start justify-between gap-3">
-              <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${action.gradient} text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`}>
+              <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${action.gradient} text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`}>
                 <action.icon className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-clash text-sm font-bold text-white">{action.label}</p>
-                <p className="mt-0.5 text-xs text-white/40">{action.description}</p>
+                <p className="font-clash text-base font-bold text-white">{action.label}</p>
+                <p className="mt-0.5 text-sm text-white/55">{action.description}</p>
               </div>
-              <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/20 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-white/50" />
+              {action.badge !== undefined && action.badge > 0 ? (
+                <span className="inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-red-500 px-2 text-xs font-bold text-white">
+                  {action.badge}
+                </span>
+              ) : (
+                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/30 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-white/60" />
+              )}
             </div>
           </Link>
         ))}
@@ -291,9 +301,105 @@ function QuickActions() {
   );
 }
 
-async function RecentOrders() {
-  const { recentOrders } = await getDashboardData();
+const messageStatusConfig = (status: string) => {
+  switch (status) {
+    case "new": return { bg: "bg-blue-500/10", text: "text-blue-300", ring: "ring-blue-500/20" };
+    case "read":
+    case "contacted": return { bg: "bg-amber-500/10", text: "text-amber-300", ring: "ring-amber-500/20" };
+    case "responded":
+    case "closed": return { bg: "bg-emerald-500/10", text: "text-emerald-300", ring: "ring-emerald-500/20" };
+    case "archived": return { bg: "bg-white/5", text: "text-white/40", ring: "ring-white/10" };
+    default: return { bg: "bg-white/5", text: "text-white/50", ring: "ring-white/10" };
+  }
+};
 
+function RecentMessages({ messages }: { messages: RecentMessage[] }) {
+  return (
+    <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
+      <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
+        <div className="flex items-center gap-2.5">
+          <h2 className="font-clash text-lg font-bold text-white">Recent Messages</h2>
+          <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-bold text-white/60">{messages.length}</span>
+        </div>
+        <Link
+          href="/admin/messages"
+          className="group flex items-center gap-1.5 text-sm font-semibold text-ocean hover:text-ocean-light transition-colors"
+        >
+          View All <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+        </Link>
+      </div>
+
+      {messages.length === 0 ? (
+        <EmptyState
+          icon={<Inbox className="h-10 w-10" />}
+          title="No messages yet"
+          description="Contact form submissions and product enquiries will appear here."
+          className="border-none rounded-none"
+        />
+      ) : (
+        <div className="divide-y divide-white/5">
+          {messages.map((msg) => {
+            const cfg = messageStatusConfig(msg.status);
+            const isUnread = msg.status === "new";
+            const title = msg.type === "contact" ? msg.subject || "Contact Form" : `Quote: ${msg.product_name || "Product"}`;
+            const snippet = msg.type === "contact" ? msg.message || "" : msg.notes || "";
+            return (
+              <Link
+                key={`${msg.type}-${msg.id}`}
+                href="/admin/messages"
+                className={cn(
+                  "group flex items-start gap-4 px-5 py-4 transition-colors hover:bg-white/[0.03]",
+                  isUnread && "bg-blue-500/[0.04]"
+                )}
+              >
+                <div className={cn(
+                  "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors",
+                  msg.type === "contact"
+                    ? "border-violet-500/20 bg-violet-500/10 text-violet-300 group-hover:bg-violet-500/20"
+                    : "border-cyan-500/20 bg-cyan-500/10 text-cyan-300 group-hover:bg-cyan-500/20"
+                )}>
+                  {msg.type === "contact" ? <Mail className="h-5 w-5" /> : <MessageSquare className="h-5 w-5" />}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className={cn("text-base font-bold truncate", isUnread ? "text-white" : "text-white/85")}>
+                        {msg.name}
+                      </span>
+                      <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-white/60 shrink-0">
+                        {msg.type === "contact" ? "Contact" : "Enquiry"}
+                      </span>
+                      {isUnread && (
+                        <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-blue-400 animate-pulse" />
+                      )}
+                    </div>
+                    <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ring-1 shrink-0", cfg.bg, cfg.text, cfg.ring)}>
+                      {msg.status}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm font-semibold text-white/75 line-clamp-1">{title}</p>
+                  {snippet && (
+                    <p className="mt-0.5 text-sm text-white/55 line-clamp-1">{snippet}</p>
+                  )}
+                  <p className="mt-1 text-xs text-white/40">
+                    {new Date(msg.created_at).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+async function RecentOrders({ orders }: { orders: { id: string; order_number: string; customer_name: string; status: string; total_amount: number; created_at: string }[] }) {
   const statusConfig = (status: string) => {
     switch (status.toLowerCase()) {
       case "pending":
@@ -315,19 +421,19 @@ async function RecentOrders() {
   return (
     <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
       <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
-        <div className="flex items-center gap-2">
-          <h2 className="font-clash text-base font-bold text-white">Recent Orders</h2>
-          <span className="rounded-full bg-white/8 px-2 py-0.5 text-caption font-bold text-white/40">{recentOrders.length}</span>
+        <div className="flex items-center gap-2.5">
+          <h2 className="font-clash text-lg font-bold text-white">Recent Orders</h2>
+          <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-bold text-white/60">{orders.length}</span>
         </div>
         <Link
           href="/admin/orders"
-          className="group flex items-center gap-1 text-xs font-semibold text-ocean hover:text-ocean-light transition-colors"
+          className="group flex items-center gap-1.5 text-sm font-semibold text-ocean hover:text-ocean-light transition-colors"
         >
-          View All <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+          View All <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
         </Link>
       </div>
 
-      {recentOrders.length === 0 ? (
+      {orders.length === 0 ? (
         <EmptyState
           icon={<ShoppingCart className="h-10 w-10" />}
           title="No orders yet"
@@ -339,23 +445,23 @@ async function RecentOrders() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/5">
-                <th className="px-5 py-3 text-left text-caption font-bold uppercase tracking-[0.12em] text-white/30">Order</th>
-                <th className="px-5 py-3 text-left text-caption font-bold uppercase tracking-[0.12em] text-white/30">Customer</th>
-                <th className="px-5 py-3 text-left text-caption font-bold uppercase tracking-[0.12em] text-white/30">Status</th>
-                <th className="px-5 py-3 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Total</th>
-                <th className="px-5 py-3 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Date</th>
+                <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-white/50">Order</th>
+                <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-white/50">Customer</th>
+                <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-white/50">Status</th>
+                <th className="px-5 py-3 text-right text-xs font-bold uppercase tracking-[0.12em] text-white/50">Total</th>
+                <th className="px-5 py-3 text-right text-xs font-bold uppercase tracking-[0.12em] text-white/50">Date</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {recentOrders.map((order) => {
+              {orders.map((order) => {
                 const cfg = statusConfig(order.status);
                 return (
                   <tr key={order.id} className="group transition-colors hover:bg-white/[0.03]">
                     <td className="px-5 py-3.5">
-                      <span className="font-mono text-xs font-bold text-ocean">#{order.order_number}</span>
+                      <span className="font-mono text-sm font-bold text-ocean">#{order.order_number}</span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-sm font-medium text-white/80">{order.customer_name}</span>
+                      <span className="text-sm font-semibold text-white/90">{order.customer_name}</span>
                     </td>
                     <td className="px-5 py-3.5">
                       <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold capitalize ring-1 ${cfg.bg} ${cfg.text} ${cfg.ring}`}>
@@ -364,11 +470,10 @@ async function RecentOrders() {
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-right">
-                      <span className="text-sm font-bold text-white">{Number(order.total_amount).toLocaleString()}</span>
-                      <span className="ml-1 text-caption font-medium text-white/30">RWF</span>
+                      <span className="text-sm font-bold text-white">{formatRWF(Number(order.total_amount))}</span>
                     </td>
                     <td className="px-5 py-3.5 text-right">
-                      <span className="text-xs text-white/30 whitespace-nowrap">
+                      <span className="text-sm text-white/55 whitespace-nowrap">
                         {new Date(order.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                       </span>
                     </td>
@@ -383,25 +488,23 @@ async function RecentOrders() {
   );
 }
 
-async function RecentProducts() {
-  const { recentProducts } = await getDashboardData();
-
+async function RecentProducts({ products }: { products: { id: string; name: string; main_image_url: string | null; category_name: string | null; price: number; created_at: string }[] }) {
   return (
     <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
       <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
-        <div className="flex items-center gap-2">
-          <h2 className="font-clash text-base font-bold text-white">Recent Products</h2>
-          <span className="rounded-full bg-white/8 px-2 py-0.5 text-caption font-bold text-white/40">{recentProducts.length}</span>
+        <div className="flex items-center gap-2.5">
+          <h2 className="font-clash text-lg font-bold text-white">Recent Products</h2>
+          <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-bold text-white/60">{products.length}</span>
         </div>
         <Link
           href="/admin/products"
-          className="group flex items-center gap-1 text-xs font-semibold text-ocean hover:text-ocean-light transition-colors"
+          className="group flex items-center gap-1.5 text-sm font-semibold text-ocean hover:text-ocean-light transition-colors"
         >
-          View All <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+          View All <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
         </Link>
       </div>
 
-      {recentProducts.length === 0 ? (
+      {products.length === 0 ? (
         <EmptyState
           icon={<Package className="h-10 w-10" />}
           title="No products yet"
@@ -413,47 +516,46 @@ async function RecentProducts() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/5">
-                <th className="px-5 py-3 text-left text-caption font-bold uppercase tracking-[0.12em] text-white/30">Product</th>
-                <th className="px-5 py-3 text-left text-caption font-bold uppercase tracking-[0.12em] text-white/30">Category</th>
-                <th className="px-5 py-3 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Price</th>
-                <th className="px-5 py-3 text-right text-caption font-bold uppercase tracking-[0.12em] text-white/30">Added</th>
+                <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-white/50">Product</th>
+                <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-white/50">Category</th>
+                <th className="px-5 py-3 text-right text-xs font-bold uppercase tracking-[0.12em] text-white/50">Price</th>
+                <th className="px-5 py-3 text-right text-xs font-bold uppercase tracking-[0.12em] text-white/50">Added</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {recentProducts.map((product) => (
+              {products.map((product) => (
                 <tr key={product.id} className="group transition-colors hover:bg-white/[0.03]">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xl bg-white/8 border border-white/10 transition-transform group-hover:scale-105">
+                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-white/8 border border-white/10 transition-transform group-hover:scale-105">
                         {product.main_image_url ? (
                           <Image
                             src={product.main_image_url}
                             alt={product.name}
                             fill
                             className="object-cover"
-                            sizes="36px"
+                            sizes="40px"
                             unoptimized
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center text-white/20">
+                          <div className="flex h-full w-full items-center justify-center text-white/25">
                             <Package className="h-4 w-4" />
                           </div>
                         )}
                       </div>
-                      <span className="text-sm font-semibold text-white leading-tight">{product.name}</span>
+                      <span className="text-sm font-semibold text-white/90 leading-tight">{product.name}</span>
                     </div>
                   </td>
                   <td className="px-5 py-3.5">
-                    <span className="inline-flex rounded-lg bg-white/8 px-2.5 py-1 text-xs font-medium text-white/50 group-hover:bg-white/12 transition-colors">
+                    <span className="inline-flex rounded-lg bg-white/10 px-2.5 py-1 text-sm font-medium text-white/70 group-hover:bg-white/15 transition-colors">
                       {product.category_name ?? "—"}
                     </span>
                   </td>
                   <td className="px-5 py-3.5 text-right">
-                    <span className="text-sm font-bold text-white">{Number(product.price).toLocaleString()}</span>
-                    <span className="ml-1 text-caption font-medium text-white/30">RWF</span>
+                    <span className="text-sm font-bold text-white">{formatRWF(Number(product.price))}</span>
                   </td>
                   <td className="px-5 py-3.5 text-right">
-                    <span className="text-xs text-white/30 whitespace-nowrap">
+                    <span className="text-sm text-white/55 whitespace-nowrap">
                       {new Date(product.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
                     </span>
                   </td>

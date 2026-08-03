@@ -27,25 +27,25 @@ export function StatCard({ label, value, icon, trend, gradient = "from-[#0b5497]
 
       <div className="relative flex items-start justify-between gap-4">
         <div className="space-y-2 min-w-0">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/35">
+          <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/60">
             {label}
           </p>
-          <p className="font-clash text-3xl font-bold text-white tracking-tight">{value}</p>
+          <p className="font-clash text-4xl font-bold text-white tracking-tight">{value}</p>
           {trend && (
             <div
               className={cn(
-                "flex items-center gap-1 text-xs font-semibold",
+                "flex items-center gap-1.5 text-sm font-semibold",
                 trend.positive ? "text-emerald-400" : "text-red-400"
               )}
             >
               <span className={cn(
-                "flex h-4 w-4 items-center justify-center rounded",
+                "flex h-5 w-5 items-center justify-center rounded",
                 trend.positive ? "bg-emerald-500/15 text-emerald-400" : "bg-red-500/15 text-red-400"
               )}>
                 {trend.positive ? (
-                  <TrendingUp className="h-3 w-3" />
+                  <TrendingUp className="h-3.5 w-3.5" />
                 ) : (
-                  <TrendingDown className="h-3 w-3" />
+                  <TrendingDown className="h-3.5 w-3.5" />
                 )}
               </span>
               {trend.value}

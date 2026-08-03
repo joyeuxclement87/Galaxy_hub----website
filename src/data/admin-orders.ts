@@ -22,6 +22,23 @@ export async function getOrders() {
   return data as OrderListItem[];
 }
 
+export async function getOrdersWithItems() {
+  const supabase = createClient();
+  const [ordersRes, itemsRes] = await Promise.all([
+    supabase.from("orders").select("*").order("created_at", { ascending: false }),
+    supabase.from("order_items").select("*").order("created_at"),
+  ]);
+
+  const orders = ordersRes.data || [];
+  const itemsByOrder: Record<string, OrderItemRow[]> = {};
+  (itemsRes.data || []).forEach((item) => {
+    if (!item.order_id) return;
+    (itemsByOrder[item.order_id] ||= []).push(item);
+  });
+
+  return { orders: orders as OrderListItem[], itemsByOrder };
+}
+
 export async function getOrderById(id: string) {
   const supabase = createClient();
   const { data: order, error } = await supabase
