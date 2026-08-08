@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 const FAQ_ITEMS = [
   {
     q: "Do I need to pay online to place an order?",
-    a: "No. Galaxy Hub does not process online payments. You submit an order request, our team confirms availability and pricing by phone, and you pay in person — either in-store or on delivery.",
+    a: "No. Galaxy Hub does not process online payments. You submit an order request, our team confirms availability and pricing by phone, and you pay in person — either in-store or before delivery.",
   },
   {
     q: "Can I inspect the device before paying?",

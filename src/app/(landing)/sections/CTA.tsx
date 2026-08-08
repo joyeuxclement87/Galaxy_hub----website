@@ -15,7 +15,7 @@ const TRUST_ITEMS = [
 ];
 
 const CTA_BACKGROUND_IMAGE =
-  "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&q=80&w=1600";
+  "/ct.jpeg"; 
 
 export function CTA() {
   return (
