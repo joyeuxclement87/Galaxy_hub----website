@@ -1,12 +1,16 @@
 "use client";
 
-import { useCallback } from "react";
-import { Plus, Trash2, ChevronUp, ChevronDown } from "lucide-react";
+import { useCallback, useMemo } from "react";
+import { Plus, Trash2, ChevronUp, ChevronDown, Sparkles } from "lucide-react";
 import type { ProductSpecifications, SpecGroup } from "@/types/specifications";
+import { getSpecificationTemplate } from "@/lib/category-spec-templates";
 
 interface SpecificationsEditorProps {
   value: ProductSpecifications;
   onChange: (value: ProductSpecifications) => void;
+  /** Optional category so the editor can suggest the right groups. */
+  categoryName?: string | null;
+  categorySlug?: string | null;
 }
 
 /**
@@ -15,7 +19,35 @@ interface SpecificationsEditorProps {
  * typed in by hand — there is no JSON and no fixed schema, just group
  * names and label/value rows.
  */
-export function SpecificationsEditor({ value, onChange }: SpecificationsEditorProps) {
+export function SpecificationsEditor({ value, onChange, categoryName, categorySlug }: SpecificationsEditorProps) {
+  const template = useMemo(
+    () => getSpecificationTemplate(categoryName, categorySlug),
+    [categoryName, categorySlug]
+  );
+
+  const existingGroupNames = useMemo(() => new Set(value.map((g) => g.name.trim().toLowerCase())), [value]);
+
+  const addTemplateGroup = useCallback(
+    (groupName: string, fields: string[]) => {
+      onChange([
+        ...value,
+        {
+          name: groupName,
+          specs: fields.map((label) => ({ label, value: "" })),
+        },
+      ]);
+    },
+    [value, onChange]
+  );
+
+  const addAllTemplateGroups = useCallback(() => {
+    if (!template) return;
+    const missing = template.groups.filter((g) => !existingGroupNames.has(g.name.toLowerCase()));
+    onChange([
+      ...value,
+      ...missing.map((g) => ({ name: g.name, specs: g.fields.map((label) => ({ label, value: "" })) })),
+    ]);
+  }, [template, existingGroupNames, value, onChange]);
   const updateGroup = useCallback(
     (index: number, next: SpecGroup) => {
       const groups = [...value];
@@ -49,9 +81,53 @@ export function SpecificationsEditor({ value, onChange }: SpecificationsEditorPr
 
   return (
     <div className="space-y-4">
+      {template && (
+        <div className="rounded-xl border border-ocean/20 bg-ocean/[0.05] p-4">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-ocean-light" />
+            <p className="text-sm font-bold text-white">
+              Suggested groups for {template.displayName}
+            </p>
+          </div>
+          <p className="mt-1 text-xs text-white/40">
+            Click a group to add it with its usual fields — you only fill in the details that exist.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {template.groups.map((group) => {
+              const alreadyAdded = existingGroupNames.has(group.name.toLowerCase());
+              return (
+                <button
+                  key={group.name}
+                  type="button"
+                  onClick={() => addTemplateGroup(group.name, group.fields)}
+                  disabled={alreadyAdded}
+                  className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                    alreadyAdded
+                      ? "border-white/5 bg-white/[0.02] text-white/25"
+                      : "border-ocean/25 bg-ocean/10 text-ocean-light hover:bg-ocean/20 cursor-pointer"
+                  }`}
+                >
+                  {group.name}
+                  {alreadyAdded && " ✓"}
+                </button>
+              );
+            })}
+          </div>
+          {value.length === 0 && (
+            <button
+              type="button"
+              onClick={addAllTemplateGroups}
+              className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-ocean-dark cursor-pointer"
+            >
+              <Plus className="h-3.5 w-3.5" /> Add all suggested groups
+            </button>
+          )}
+        </div>
+      )}
+
       {value.length === 0 && (
         <p className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-6 text-center text-xs text-white/30">
-          No specifications yet. Import from a phone search above, or add a group manually.
+          No specifications yet. Import from a phone search above, copy from an existing product, or add a group manually.
         </p>
       )}
 

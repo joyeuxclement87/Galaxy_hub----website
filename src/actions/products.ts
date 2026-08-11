@@ -3,8 +3,16 @@
 import { createAdminClient } from "@/lib/supabase-admin";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import type { ProductSpecifications, ProductHighlights } from "@/types/specifications";
+import { SPECIFICATION_SOURCES } from "@/types/specifications";
+import type { ProductSpecifications, ProductHighlights, SpecificationSource } from "@/types/specifications";
 import type { Json } from "@/types/database";
+
+/** Coerce a client-supplied source string into one of the allowed values. */
+function sanitizeSpecificationSource(value: unknown): SpecificationSource {
+  return typeof value === "string" && (SPECIFICATION_SOURCES as string[]).includes(value)
+    ? (value as SpecificationSource)
+    : "manual";
+}
 
 export interface ProductFormData {
   name: string;
@@ -30,6 +38,11 @@ export interface ProductFormData {
   highlights?: ProductHighlights;
   /** Selectable storage sizes offered for this listing, e.g. ["256GB", "512GB"]. */
   storage_options?: string[];
+  /**
+   * Admin-only metadata: how the specifications were obtained
+   * (manual | mobileapi | other_api | copied). Never rendered publicly.
+   */
+  specification_source?: SpecificationSource | string;
 }
 
 export async function createProduct(data: ProductFormData) {
@@ -55,6 +68,7 @@ export async function createProduct(data: ProductFormData) {
     specifications: (data.specifications ?? []) as unknown as Json,
     highlights: (data.highlights ?? []) as unknown as Json,
     storage_options: (data.storage_options ?? []) as unknown as Json,
+    specification_source: sanitizeSpecificationSource(data.specification_source),
   }).select("id").single();
 
   if (error) {
@@ -102,6 +116,7 @@ export async function updateProduct(id: string, data: ProductFormData) {
       specifications: (data.specifications ?? []) as unknown as Json,
       highlights: (data.highlights ?? []) as unknown as Json,
       storage_options: (data.storage_options ?? []) as unknown as Json,
+      specification_source: sanitizeSpecificationSource(data.specification_source),
     })
     .eq("id", id);
 

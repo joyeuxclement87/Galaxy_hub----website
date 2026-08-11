@@ -24,6 +24,24 @@ export interface SpecGroup {
 export type ProductSpecifications = SpecGroup[];
 
 /**
+ * Where a product's specifications came from. Stored on
+ * `products.specification_source` as admin-only metadata — never shown
+ * to customers. The public product page reads `products.specifications`
+ * only, regardless of source.
+ */
+export type SpecificationSource = "manual" | "mobileapi" | "other_api" | "copied";
+
+export const SPECIFICATION_SOURCES: SpecificationSource[] = ["manual", "mobileapi", "other_api", "copied"];
+
+/** Coerce an unknown DB value into a valid SpecificationSource. */
+export function toSpecificationSource(value: unknown): SpecificationSource {
+  if (typeof value === "string" && SPECIFICATION_SOURCES.includes(value as SpecificationSource)) {
+    return value as SpecificationSource;
+  }
+  return "manual";
+}
+
+/**
  * Product highlights are short marketing bullet points, always controlled
  * manually by the admin (never sourced automatically from an import).
  */

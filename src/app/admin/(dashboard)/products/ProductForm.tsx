@@ -5,11 +5,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, Loader2, X, ImageIcon } from "lucide-react";
+import { Upload, Loader2, X, ImageIcon, Smartphone, PenLine, ClipboardCopy } from "lucide-react";
 import { uploadImage, createProduct, updateProduct } from "@/actions/products";
 import type { ProductFormData } from "@/actions/products";
 import type { ProductListItem } from "@/data/products";
 import { MobileApiImportPanel } from "./MobileApiImportPanel";
+import { CopySpecificationsPanel } from "./CopySpecificationsPanel";
 import { SpecificationsEditor } from "./SpecificationsEditor";
 import { HighlightsEditor } from "./HighlightsEditor";
 import { StorageOptionsEditor, DEVICE_STORAGE_OPTIONS, SMARTWATCH_STORAGE_OPTIONS, LAPTOP_RAM_OPTIONS } from "./StorageOptionsEditor";
@@ -17,9 +18,19 @@ import {
   toProductSpecifications,
   toProductHighlights,
   toStorageOptions,
+  toSpecificationSource,
   type ProductSpecifications,
   type ProductHighlights,
+  type SpecificationSource,
 } from "@/types/specifications";
+
+type SpecSourceMode = "api" | "manual" | "copy";
+
+const SOURCE_MODE_OPTIONS: { mode: SpecSourceMode; label: string; description: string; icon: typeof Smartphone }[] = [
+  { mode: "api", label: "Import from API", description: "Fill automatically from a device search", icon: Smartphone },
+  { mode: "manual", label: "Add manually", description: "Type everything by hand", icon: PenLine },
+  { mode: "copy", label: "Copy existing", description: "Reuse specs from a product you already have", icon: ClipboardCopy },
+];
 
 const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
@@ -72,6 +83,10 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   const [storageOptions, setStorageOptions] = useState<string[]>(() =>
     toStorageOptions(product?.storage_options)
   );
+  const [specSource, setSpecSource] = useState<SpecificationSource>(() =>
+    toSpecificationSource(product?.specification_source)
+  );
+  const [specSourceMode, setSpecSourceMode] = useState<SpecSourceMode>("manual");
 
   const {
     register,
@@ -193,6 +208,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         specifications: cleanedSpecifications,
         highlights: cleanedHighlights,
         storage_options: cleanedStorageOptions,
+        specification_source: specSource,
       };
 
       startTransition(async () => {
@@ -204,7 +220,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         }
       });
     },
-    [product, specifications, highlights, storageOptions]
+    [product, specifications, highlights, storageOptions, specSource]
   );
 
   return (
@@ -459,16 +475,63 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         <div>
           <h2 className="text-sm font-bold text-white">Technical Specifications</h2>
           <p className="mt-1 text-xs text-white/40">
-            Optional. Import from MobileAPI.dev (smartphones, tablets, smartwatches, laptops...) or add specifications
-            manually — either way, you can edit everything before saving.
+            Specs can come from a device search, be typed by hand, or be copied from a product you
+            already have — whichever you pick, everything lands in the same editor below and saves
+            to the same place.
           </p>
         </div>
 
-        <MobileApiImportPanel
-          onImport={(imported) => setSpecifications((current) => [...current, ...imported])}
-        />
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+          {SOURCE_MODE_OPTIONS.map(({ mode, label, description, icon: Icon }) => {
+            const active = specSourceMode === mode;
+            return (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setSpecSourceMode(mode)}
+                aria-pressed={active}
+                className={`flex items-start gap-3 rounded-xl border p-3 text-left transition-colors ${
+                  active
+                    ? "border-ocean/40 bg-ocean/10"
+                    : "border-white/8 bg-white/[0.03] hover:bg-white/[0.06] cursor-pointer"
+                }`}
+              >
+                <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${active ? "text-ocean-light" : "text-white/30"}`} />
+                <span>
+                  <span className={`block text-sm font-semibold ${active ? "text-ocean-light" : "text-white/70"}`}>
+                    {label}
+                  </span>
+                  <span className="block text-xs text-white/35">{description}</span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
-        <SpecificationsEditor value={specifications} onChange={setSpecifications} />
+        {specSourceMode === "api" && (
+          <MobileApiImportPanel
+            onImport={(imported) => {
+              setSpecifications((current) => [...current, ...imported]);
+              setSpecSource("mobileapi");
+            }}
+          />
+        )}
+
+        {specSourceMode === "copy" && (
+          <CopySpecificationsPanel
+            onImport={(copied) => {
+              setSpecifications((current) => [...current, ...copied]);
+              setSpecSource("copied");
+            }}
+          />
+        )}
+
+        <SpecificationsEditor
+          value={specifications}
+          onChange={setSpecifications}
+          categoryName={selectedCategory?.name ?? null}
+          categorySlug={selectedCategory?.slug ?? null}
+        />
       </div>
 
       <div className="space-y-4 border-t border-white/5 pt-8">
