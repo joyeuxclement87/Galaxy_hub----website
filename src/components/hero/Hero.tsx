@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { getSessionId, notifyCartChanged, useSupabaseCart } from "@/hooks/use-cart";
 import { addCartItemBySlug } from "@/actions/cart";
+import type { ProductStatus } from "@/lib/product-status";
 
 export interface HeroSlideData {
   id: string;
@@ -20,6 +21,7 @@ export interface HeroSlideData {
   currency: string;
   image: string;
   slug: string;
+  status?: ProductStatus | null;
 }
 
 interface HeroSectionProps {
@@ -131,10 +133,10 @@ export function HeroSection({ slides }: HeroSectionProps) {
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 className="space-y-7"
               >
-                {/* Category label */}
+                {/* Eyebrow label — one fixed word */}
                  <div className="flex items-center gap-3">
                    <span className="text-caption font-bold uppercase tracking-[0.18em] text-accent">
-                     {slide.badge || "FEATURED TECH"}
+                     Featured
                    </span>
                    {discount > 0 && (
                      <span className="text-xs font-bold text-red-500 uppercase tracking-wider">
@@ -208,6 +210,15 @@ export function HeroSection({ slides }: HeroSectionProps) {
           {/* ── Right: Product Image ── */}
           <div className="lg:col-span-7 relative flex items-center justify-center">
              <div className="relative z-10 w-full max-w-[480px] lg:max-w-[520px] aspect-[16/11] overflow-hidden rounded-card bg-ivory-dark/40">
+              {/* Status pill — same marks as product cards */}
+              {slide.status && (
+                <span className={cn(
+                  "absolute left-4 top-4 z-10 inline-flex items-center rounded-[9px] border px-[9px] py-1 text-[11px] font-semibold tracking-[0.05em]",
+                  slide.status.className
+                )}>
+                  {slide.status.label.toUpperCase()}
+                </span>
+              )}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={slide.id + "-img"}

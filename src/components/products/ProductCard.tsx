@@ -7,6 +7,7 @@ import { Star, Plus, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getSessionId, notifyCartChanged, useSupabaseCart } from "@/hooks/use-cart";
 import { addCartItemBySlug } from "@/actions/cart";
+import { getProductStatus } from "@/lib/product-status";
 import Link from "next/link";
 
 interface ProductCardProps {
@@ -14,18 +15,6 @@ interface ProductCardProps {
   onReserve?: (product: Product) => void;
   storage?: string;
 }
-
-/* Compact luxury status labels — subtle tints, never dominating the image */
-const statusCls = {
-  new: "bg-ocean/[0.09] text-ocean border-ocean/[0.15]",
-  instock: "bg-emerald-500/[0.09] text-emerald-700 border-emerald-600/[0.15]",
-  out: "bg-neutral-200/80 text-neutral-600 border-neutral-400/25",
-  soon: "bg-violet-500/[0.09] text-violet-700 border-violet-500/[0.16]",
-  discount: "bg-orange-500/[0.09] text-orange-700 border-orange-500/[0.18]",
-  other: "bg-ocean/[0.06] text-ocean-deeper/80 border-ocean/[0.12]",
-};
-
-const capFirst = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 
 export function ProductCard({ product, storage }: ProductCardProps) {
   const [isInCart, setIsInCart] = useState(false);
@@ -70,31 +59,8 @@ export function ProductCard({ product, storage }: ProductCardProps) {
     ? new Intl.NumberFormat("en-US").format(product.monthlyInstallment)
     : null;
 
-  /* ── Status priority: OUT OF STOCK > COMING SOON > badge > NEW > IN STOCK ── */
-  const badgeLower = product.badge?.toLowerCase() ?? "";
-  const isNewBadge = badgeLower.includes("new");
-  const isDiscountBadge =
-    badgeLower.includes("sale") || badgeLower.includes("off") || badgeLower.includes("discount");
-
-  let statusLabel: string | null = null;
-  let statusClass = "";
-
-  if (product.availability === "Out of Stock") {
-    statusLabel = "Out of Stock";
-    statusClass = statusCls.out;
-  } else if (product.availability === "Limited Stock") {
-    statusLabel = "Coming Soon";
-    statusClass = statusCls.soon;
-  } else if (product.badge && !isNewBadge) {
-    statusLabel = isDiscountBadge ? "On Discount" : capFirst(product.badge.toLowerCase());
-    statusClass = isDiscountBadge ? statusCls.discount : statusCls.other;
-  } else if (isNewBadge) {
-    statusLabel = "New";
-    statusClass = statusCls.new;
-  } else if (product.availability === "In Stock") {
-    statusLabel = "In Stock";
-    statusClass = statusCls.instock;
-  }
+  /* ── Status — shared with hero and everywhere else ── */
+  const status = getProductStatus(product);
 
   const linkProps = product.externalUrl
     ? { href: product.externalUrl, target: "_blank", rel: "noopener noreferrer" }
@@ -110,12 +76,12 @@ export function ProductCard({ product, storage }: ProductCardProps) {
     >
       {/* Image area — status label only */}
       <div className="relative aspect-square w-full overflow-hidden bg-[#f6f7f8] p-3">
-        {statusLabel && (
+        {status && (
           <span className={cn(
             "absolute left-2.5 top-2.5 z-10 inline-flex items-center rounded-[9px] border px-[9px] py-1 text-[11px] font-semibold tracking-[0.05em]",
-            statusClass
+            status.className
           )}>
-            {statusLabel.toUpperCase()}
+            {status.label.toUpperCase()}
           </span>
         )}
 

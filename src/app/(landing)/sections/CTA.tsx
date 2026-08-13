@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { btnBase, btnVariants } from "@/components/ui/button";
@@ -20,7 +21,25 @@ export function CTA() {
       className="relative px-4 py-16 sm:px-6 md:px-8 md:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-[1280px]">
-        <div className="relative isolate overflow-hidden rounded-[24px] border border-ocean/[0.08] cta-editorial-bg px-6 py-14 sm:px-12 md:px-16 md:py-20 lg:py-24 shadow-card-premium">
+        <div className="relative isolate overflow-hidden rounded-[24px] border border-ocean/[0.08] px-6 py-14 sm:px-12 md:px-16 md:py-20 lg:py-24 shadow-card-premium">
+          {/* Background Image */}
+          <div className="absolute inset-0 -z-20">
+            <Image
+              src="https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&q=80&w=1200"
+              alt="Premium Tech Devices"
+              fill
+              sizes="(max-width: 1280px) 100vw, 1280px"
+              className="object-cover object-right select-none"
+              priority
+            />
+          </div>
+
+          {/* Left-to-right gradient overlay */}
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-ocean-deeper via-ocean-deeper/90 to-ocean-deeper/20 md:via-ocean-deeper/80 md:to-transparent" />
+          
+          {/* Extra ambient glow on the left */}
+          <div className="absolute inset-y-0 left-0 w-1/2 -z-10 bg-gradient-to-r from-accent/10 to-transparent" />
+
           <div className="relative z-10 max-w-3xl">
             {/* Eyebrow label */}
             <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-ivory/60">

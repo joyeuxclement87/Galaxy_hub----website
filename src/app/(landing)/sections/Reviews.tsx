@@ -1,131 +1,82 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { ArrowRight, Star } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Star } from "lucide-react";
+import { motion } from "framer-motion";
 import type { Review } from "@/data/mock-data";
 
-const STATS = [
-  { value: "4.9/5", label: "Average Rating" },
-  { value: "500+",  label: "Happy Customers" },
-  { value: "10+",   label: "Brands Stocked" },
-];
-
 export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
-  const hasReviews = reviews && reviews.length > 0;
+  const reviewsList = reviews.slice(0, 4);
+
+  if (reviewsList.length === 0) return null;
 
   return (
-    <section id="reviews" className="bg-white px-4 py-16 sm:px-6">
+    <section id="reviews" className="bg-white px-4 py-20 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-[1320px]">
-        <div className="max-w-2xl space-y-3">
-          <span className="section-label">CUSTOMER EXPERIENCE</span>
-          <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper">
-            Loved By Tech Users In Rwanda
-          </h2>
-          <p className="text-sm leading-[1.8] text-ocean-deeper/60">
-            Real experiences from customers who purchased smartphones, accessories, and technology products from Galaxy Hub.
-          </p>
+        {/* Header — heading left, rating right */}
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-xl space-y-3">
+            <span className="section-label">CUSTOMER EXPERIENCE</span>
+            <h2 className="font-clash text-3xl sm:text-4xl font-bold leading-tight text-ocean-deeper">
+              Loved By Tech Users<br className="hidden sm:block" /> In Rwanda
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-3 border-l-2 border-ocean/15 pl-5">
+            <span className="font-display text-4xl font-bold leading-none text-ocean-deeper">4.9</span>
+            <div>
+              <div className="flex items-center gap-0.5 text-amber-400">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="h-3.5 w-3.5 fill-current" />
+                ))}
+              </div>
+              <p className="mt-1 text-xs text-ocean-deeper/55">Trusted across Rwanda</p>
+            </div>
+          </div>
         </div>
 
-        <div className="mt-10 grid gap-x-12 gap-y-12 md:grid-cols-[0.9fr_1.1fr]">
-          <div className="flex flex-col">
-            <div className="flex items-end gap-4">
-              <span className="font-clash text-4xl font-bold leading-none text-ocean-deeper sm:text-5xl">4.9</span>
-              <div className="pb-2">
-                <div className="flex items-center gap-0.5 text-amber-400">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-current" />
+        {/* Reviews — one strong editorial voice each */}
+        <div className="mt-12 grid gap-x-12 gap-y-14 md:grid-cols-2">
+          {reviewsList.map((review, index) => (
+            <motion.figure
+              key={review.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-48px" }}
+              transition={{ duration: 0.35, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-col"
+            >
+              <span aria-hidden="true" className="font-display text-6xl leading-none text-ocean/10 select-none">
+                &ldquo;
+              </span>
+              <blockquote className="mt-1 font-display text-xl sm:text-2xl font-semibold leading-[1.4] tracking-[-0.01em] text-ocean-deeper">
+                {review.content}
+              </blockquote>
+              <figcaption className="mt-7 flex items-center gap-3 border-t border-ocean/10 pt-5">
+                {review.avatar ? (
+                  <img
+                    src={review.avatar}
+                    alt={review.author}
+                    loading="lazy"
+                    className="h-10 w-10 rounded-full object-cover shrink-0"
+                  />
+                ) : (
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ocean/10 font-clash text-sm font-bold text-ocean">
+                    {review.author.charAt(0).toUpperCase()}
+                  </span>
+                )}
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold text-ocean-deeper">{review.author}</p>
+                  <p className="text-xs text-ocean-deeper/55">{review.location ?? review.role}</p>
+                </div>
+                <div className="ml-auto flex items-center gap-0.5 text-amber-400">
+                  {Array.from({ length: review.rating }).map((_, i) => (
+                    <Star key={i} className="h-3.5 w-3.5 fill-current" />
                   ))}
                 </div>
-                <p className="mt-1.5 text-xs text-ocean-deeper/55">
-                  Based on customer reviews across Rwanda
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-10 flex-1">
-              {STATS.map((stat, index) => (
-                <div key={stat.label} className={cn("flex items-baseline justify-between gap-4 border-t border-ocean/10 py-4", index === 0 && "first:border-t-0")}>
-                  <span className="text-sm text-ocean-deeper/55">{stat.label}</span>
-                  <span className="font-clash text-xl font-bold text-ocean-deeper">{stat.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid gap-x-10 gap-y-10 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
-            {hasReviews ? (
-              reviews!.slice(0, 4).map((review) => (
-                <article key={review.id} className="flex flex-col border-t border-ocean/10 pt-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      {review.avatar ? (
-                        <img
-                          src={review.avatar}
-                          alt={review.author}
-                          loading="lazy"
-                          className="h-9 w-9 rounded-full object-cover shrink-0"
-                        />
-                      ) : (
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ocean/10 font-clash text-sm font-bold text-ocean">
-                          {review.author.charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                      <div>
-                        <h3 className="text-sm font-bold text-ocean-deeper">{review.author}</h3>
-                        <p className="text-xs text-ocean-deeper/55">{review.location ?? review.role}</p>
-                      </div>
-                    </div>
-                    {review.verified && (
-                      <span className="inline-flex shrink-0 items-center gap-1.5 text-caption font-bold uppercase tracking-[0.14em] text-ocean">
-                        <span className="h-1.5 w-1.5 rounded-full bg-ocean" />
-                        Verified
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="mt-3 flex items-center gap-0.5 text-amber-400">
-                    {Array.from({ length: review.rating }).map((_, i) => (
-                      <Star key={i} className="h-3.5 w-3.5 fill-current" />
-                    ))}
-                  </div>
-
-                  <p className="mt-3 flex-1 text-sm leading-[1.75] text-ocean-deeper/60">
-                    &ldquo;{review.content}&rdquo;
-                  </p>
-
-                  {review.purchasedProduct && (
-                    <p className="mt-3 text-caption font-bold uppercase tracking-[0.14em] text-ocean/60">
-                      Purchased: {review.purchasedProduct}
-                    </p>
-                  )}
-                </article>
-              ))
-            ) : (
-              <div className="flex flex-col items-center justify-center py-12 text-center border-t border-ocean/10 pt-5">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-ocean/5 mb-3">
-                  <Star className="h-6 w-6 text-ocean/20" />
-                </div>
-                <p className="text-sm font-semibold text-ocean/50">No reviews yet</p>
-                <p className="mt-2 text-xs text-ocean/35 leading-relaxed max-w-xs">
-                  Be the first to share your experience with Galaxy Hub.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-10 flex flex-col gap-4 border-t border-ocean/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-ocean-deeper/60">
-            Trusted by customers ordering phones, accessories, and gadgets across Rwanda.
-          </p>
-          <Link
-            href="/order"
-            className="text-action shrink-0"
-          >
-            Order Now <ArrowRight className="ta-arrow" />
-          </Link>
+              </figcaption>
+            </motion.figure>
+          ))}
         </div>
       </div>
     </section>

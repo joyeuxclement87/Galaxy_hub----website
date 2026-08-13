@@ -12,6 +12,7 @@ import { useApp }             from "@/context/AppContext";
 import { useSearch }          from "@/hooks/useSearch";
 import { getSessionId, notifyCartChanged } from "@/hooks/use-cart";
 import { addCartItemBySlug }  from "@/actions/cart";
+import { getProductStatus }   from "@/lib/product-status";
 import { HeroSection, HeroSlideData } from "@/components/hero/Hero";
 import { FeaturedCategories } from "@/app/(landing)/sections/FeaturedCategories";
 import { NewArrivals }         from "@/app/(landing)/sections/NewArrivals";
@@ -112,11 +113,15 @@ export default function HomeClient({ data }: HomeClientProps) {
   }, [setSelectedCategory, setSelectedBrand, setShowDealsOnly]);
 
   const heroSlidesRaw: HeroSlideData[] = data.heroSlides.length > 0
-    ? data.heroSlides
+    ? data.heroSlides.map((s) => {
+        const prod = s.slug ? products.find((p) => p.slug === s.slug) : undefined;
+        return { ...s, status: prod ? getProductStatus(prod) : null };
+      })
     : products.slice(0, 5).map((p) => ({
         id: p.id, badge: p.badge || "NEW ARRIVAL", title: p.title,
         description: p.description, price: p.price, originalPrice: p.originalPrice,
         currency: p.currency, image: p.image, slug: p.slug,
+        status: getProductStatus(p),
       }));
 
   const heroSlides: HeroSlideData[] = heroSlidesRaw.length > 0
@@ -127,6 +132,7 @@ export default function HomeClient({ data }: HomeClientProps) {
         description: "Premium smartphones, laptops, and accessories at the best prices in Rwanda.",
         price: 0, currency: "RWF",
         image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=1200", slug: "products",
+        status: null,
       }];
 
   const newArrivals = data.newArrivals.length > 0 ? data.newArrivals : products.slice(0, 6);
