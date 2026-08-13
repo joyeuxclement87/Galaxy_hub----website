@@ -122,9 +122,9 @@ export function Reviews({ reviews = [] }: { reviews?: Review[] }) {
           </p>
           <Link
             href="/order"
-            className="group inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-ocean hover:text-ocean-dark transition-colors"
+            className="text-action shrink-0"
           >
-            Order Now <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+            Order Now <ArrowRight className="ta-arrow" />
           </Link>
         </div>
       </div>

@@ -20,7 +20,7 @@ function isImageLogo(logo: string) {
 function BrandLogoCard({ brand, index }: { brand: BrandCatalogItem; index: number }) {
   const hasImage = isImageLogo(brand.logo);
   return (
-    <div className="flex shrink-0 items-center gap-3 rounded-card border border-ocean/8 bg-white px-5 py-4 select-none">
+    <div className="flex shrink-0 items-center gap-3 rounded-[14px] bg-white px-5 py-4 select-none">
       <div
         className={`flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-btn text-sm font-bold ${
           hasImage ? "bg-ivory" : LOGO_COLORS[index % LOGO_COLORS.length]
@@ -54,7 +54,7 @@ export function Brands({ brands }: BrandsProps) {
   const track = Array.from({ length: repeats }, () => catalog).flat();
 
   return (
-    <section id="brands" className="bg-ivory py-14 sm:py-16">
+    <section id="brands" className="rise-soft bg-ivory pt-14 pb-16 sm:pt-16 sm:pb-20">
       <div className="mx-auto max-w-[1320px] px-4 sm:px-6">
         <div className="max-w-2xl space-y-3">
           <span className="section-label">BRANDS WE CARRY</span>

@@ -50,10 +50,7 @@ export function FAQSupport() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative bg-ivory px-4 py-16 sm:px-6 overflow-hidden">
-      {/* Background ambient glow */}
-      <div className="absolute inset-0 soft-radial-glow opacity-60 pointer-events-none" />
-
+    <section id="faq" className="relative bg-ivory px-4 pt-16 pb-24 sm:px-6 sm:pb-28 lg:pb-36">
       <div className="relative mx-auto max-w-[1320px]">
         <div className="mb-10 max-w-2xl space-y-3">
           <span className="section-label">GOOD TO KNOW</span>
@@ -144,17 +141,12 @@ export function FAQSupport() {
           })}
         </div>
 
-        <div className="mt-8 flex flex-col gap-3 rounded-card border border-ocean/10 bg-white/80 backdrop-blur-sm p-5 sm:flex-row sm:items-center sm:justify-between shadow-sm">
-          <div className="flex items-center gap-3 text-sm text-ocean-deeper/80">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-btn bg-ocean/10 text-ocean">
-              <Phone className="h-4 w-4" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-ocean-deeper/45 uppercase tracking-wider">Still have questions?</p>
-              <a href="tel:+250785288910" className="text-sm font-bold text-ocean hover:text-ocean-dark transition-colors">
-                +250 785 288 910
-              </a>
-            </div>
+        <div className="mt-8 flex flex-col gap-5 border-t border-ocean/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-sm text-ocean-deeper/80">
+            <p className="text-xs font-bold uppercase tracking-wider text-ocean-deeper/45">Still have questions?</p>
+            <a href="tel:+250785288910" className="mt-1 block text-[15px] font-bold text-ocean hover:text-ocean-dark transition-colors">
+              +250 785 288 910
+            </a>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link

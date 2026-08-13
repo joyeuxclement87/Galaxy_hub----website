@@ -19,7 +19,7 @@ export function NewArrivals({ products, onReserve }: NewArrivalsProps) {
   if (featured.length === 0) return null;
 
   return (
-    <section id="new-arrivals" className="bg-ocean-light/40 px-4 py-16 sm:px-6 sm:py-20">
+    <section id="new-arrivals" className="rise-soft bg-ocean-light/40 px-4 pt-14 pb-20 sm:px-6 sm:pt-16 sm:pb-24">
       <div className="mx-auto max-w-[1320px]">
         <div className="max-w-2xl space-y-3">
           <span className="section-label">NEW ARRIVALS</span>
@@ -40,10 +40,10 @@ export function NewArrivals({ products, onReserve }: NewArrivalsProps) {
         <div className="mt-10 flex justify-center">
           <Link
             href="/products?new=true"
-            className="group inline-flex items-center gap-1.5 text-sm font-bold text-ocean transition-colors duration-200 hover:text-ocean-dark"
+            className="text-action"
           >
             View All New Arrivals
-            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+            <ArrowRight className="ta-arrow" />
           </Link>
         </div>
       </div>

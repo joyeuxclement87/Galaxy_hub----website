@@ -240,10 +240,10 @@ export default function HomeClient({ data }: HomeClientProps) {
               </div>
               <Link
                 href="/products"
-                className="group inline-flex shrink-0 items-center gap-1.5 text-sm font-bold text-ocean transition-colors duration-200 hover:text-ocean-dark"
+                className="text-action"
               >
                 View All Products
-                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                <ArrowRight className="ta-arrow" />
               </Link>
             </div>
 
@@ -257,9 +257,9 @@ export default function HomeClient({ data }: HomeClientProps) {
               <div className="mt-10 flex justify-center md:hidden">
                 <Link
                   href="/products"
-                  className="group inline-flex items-center gap-1.5 rounded-[13px] border border-ocean/15 bg-white px-6 h-11 text-sm font-bold text-ocean transition-all duration-200 hover:border-ocean/30 hover:text-ocean-dark"
+                  className="text-action min-h-[44px] px-2"
                 >
-                  View All Products <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                  View All Products <ArrowRight className="ta-arrow" />
                 </Link>
               </div>
             </>

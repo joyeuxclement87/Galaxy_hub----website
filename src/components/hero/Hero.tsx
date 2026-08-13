@@ -115,7 +115,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
       {/* Grid texture — very subtle */}
       <div className="absolute inset-0 hero-grid-texture opacity-40 pointer-events-none" />
 
-      <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10 pt-6 pb-6 lg:pt-14 lg:pb-8">
+      <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10 pt-6 pb-24 sm:pb-28 lg:pt-14 lg:pb-36">
         <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-10 min-h-[380px] lg:min-h-[560px]">
 
           {/* ── Left: Content ── */}
@@ -133,73 +133,73 @@ export function HeroSection({ slides }: HeroSectionProps) {
               >
                 {/* Category label */}
                  <div className="flex items-center gap-3">
-                <span className="text-caption font-bold uppercase tracking-[0.16em] text-accent">
-                      {slide.badge || "FEATURED TECH"}
-                    </span>
-                    {discount > 0 && (
-                      <span className="text-xs font-bold text-red-500 uppercase tracking-wider">
-                        Save {discount}%
-                      </span>
-                    )}
+                   <span className="text-caption font-bold uppercase tracking-[0.18em] text-accent">
+                     {slide.badge || "FEATURED TECH"}
+                   </span>
+                   {discount > 0 && (
+                     <span className="text-xs font-bold text-red-500 uppercase tracking-wider">
+                       Save {discount}%
+                     </span>
+                   )}
                  </div>
 
                  {/* Title */}
-                  <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold leading-[1.05] tracking-tight text-ocean-deeper">
-                    {slide.title}
-                  </h1>
+                 <h1 className="font-display text-2xl sm:text-3xl lg:text-[2.65rem] font-bold leading-[1.08] tracking-tight text-ocean-deeper">
+                   {slide.title}
+                 </h1>
 
-                  {/* Description */}
-                  <p className="max-w-[480px] text-sm leading-relaxed text-ocean-deeper/65">
-                    {slide.description}
-                  </p>
+                 {/* Description */}
+                 <p className="max-w-[480px] text-sm leading-relaxed text-ocean-deeper/65">
+                   {slide.description}
+                 </p>
 
-                  {/* Price block */}
-                  <div className="space-y-1 pt-1">
-                    <span className="block text-xs font-bold uppercase tracking-[0.16em] text-ocean/45">
-                      Starting from
-                    </span>
-                    <div className="flex items-baseline gap-3">
-                      <span className="font-display text-xl sm:text-2xl lg:text-4xl font-bold leading-none text-ocean-deeper">
-                        {slide.currency} {slide.price.toLocaleString()}
-                      </span>
-                      {slide.originalPrice && slide.originalPrice > slide.price && (
-                        <span className="text-sm text-ocean-deeper/30 line-through font-medium">
-                          {slide.currency} {slide.originalPrice.toLocaleString()}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                 {/* Price block */}
+                 <div className="space-y-1 pt-1">
+                   <span className="block text-caption font-bold uppercase tracking-[0.16em] text-ocean/45">
+                     Starting from
+                   </span>
+                   <div className="flex items-baseline gap-3">
+                     <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold leading-none text-ocean-deeper">
+                       {slide.currency} {slide.price.toLocaleString()}
+                     </span>
+                     {slide.originalPrice && slide.originalPrice > slide.price && (
+                       <span className="text-sm text-ocean-deeper/30 line-through font-medium">
+                         {slide.currency} {slide.originalPrice.toLocaleString()}
+                       </span>
+                     )}
+                   </div>
+                 </div>
 
                  {/* Action buttons */}
                  <div className="flex flex-wrap items-center gap-3 pt-1">
                    <Button
-                      variant="primary"
-                      onClick={handleAddToCart}
-                      disabled={isAdding}
-                      className={cn(
-                        "w-full sm:w-auto rounded-btn h-11 min-h-[44px] px-6 text-sm font-bold transition-all duration-250 shadow-btn hover:bg-ocean-dark hover:shadow-btn-hover active:scale-[0.98]",
-                        isInCart
-                          ? "bg-red-600 text-white hover:bg-red-700"
-                          : "bg-ocean-deeper text-white hover:bg-ocean-dark",
-                        isAdding && "opacity-80"
-                      )}
-                    >
-                      {isAdding ? (
-                        <>Adding...</>
-                      ) : isInCart ? (
-                        "Remove from Cart"
-                      ) : (
-                        <>Add to Cart</>
-                      )}
-                    </Button>
+                     variant="primary"
+                     onClick={handleAddToCart}
+                     disabled={isAdding}
+                     className={cn(
+                       "w-full sm:w-auto rounded-[13px] h-[48px] px-6 text-[15px] font-semibold transition-all duration-[200ms] shadow-btn hover:-translate-y-[1px] hover:shadow-btn-glow active:scale-[0.98]",
+                       isInCart
+                         ? "bg-red-600 text-white hover:bg-red-700"
+                         : "bg-ocean-deeper text-white hover:bg-ocean-dark",
+                       isAdding && "opacity-80"
+                     )}
+                   >
+                     {isAdding ? (
+                       <>Adding...</>
+                     ) : isInCart ? (
+                       "Remove from Cart"
+                     ) : (
+                       <>Add to Cart</>
+                     )}
+                   </Button>
 
-                    <Link
-                      href={`/product/${slide.slug}`}
-                      className="group inline-flex items-center justify-center gap-2 rounded-btn h-11 min-h-[44px] px-5 border border-ocean/20 bg-white/70 text-ocean-deeper text-sm font-bold transition-all duration-250 hover:border-ocean/35 hover:bg-white hover:shadow-sm"
-                    >
-                      View Details
-                      <ArrowUpRight className="h-4 w-4 opacity-50 group-hover:opacity-100 transition-opacity" />
-                    </Link>
+                   <Link
+                     href={`/product/${slide.slug}`}
+                     className="group inline-flex items-center justify-center gap-2 rounded-[13px] h-[48px] px-6 border border-ocean/20 bg-white/70 text-ocean-deeper text-[15px] font-semibold transition-all duration-[200ms] hover:border-ocean/35 hover:bg-white hover:-translate-y-[1px]"
+                   >
+                     View Details
+                     <ArrowUpRight className="h-4 w-4 opacity-60 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+                   </Link>
                  </div>
               </motion.div>
             </AnimatePresence>
@@ -207,12 +207,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
 
           {/* ── Right: Product Image ── */}
           <div className="lg:col-span-7 relative flex items-center justify-center">
-             {/* Radial glow behind the image */}
-             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-               <div className="w-[380px] h-[250px] rounded-[100px] bg-[radial-gradient(ellipse,_rgba(11,84,151,0.06)_0%,_transparent_68%)] lg:w-[540px] lg:h-[400px]" />
-             </div>
-
-             <div className="relative z-10 w-full max-w-[480px] lg:max-w-[520px] aspect-[16/11] overflow-hidden rounded-card bg-gradient-to-br from-white to-ivory-dark/40">
+             <div className="relative z-10 w-full max-w-[480px] lg:max-w-[520px] aspect-[16/11] overflow-hidden rounded-card bg-ivory-dark/40">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={slide.id + "-img"}
@@ -228,7 +223,7 @@ export function HeroSection({ slides }: HeroSectionProps) {
                     fill
                     priority
                     sizes="(min-width: 1024px) 580px, 90vw"
-                    className="object-cover drop-shadow-[0_28px_56px_rgba(0,0,0,0.08)]"
+                    className="object-cover"
                   />
                 </motion.div>
               </AnimatePresence>
@@ -236,8 +231,8 @@ export function HeroSection({ slides }: HeroSectionProps) {
           </div>
         </div>
 
-        {/* ── Bottom bar: nav controls only ── */}
-        <div className="relative mt-4 pt-3 border-t border-ocean/[0.06] flex items-center justify-between">
+        {/* ── Bottom bar: nav controls only — z-10 keeps it above rising sections ── */}
+        <div className="relative z-10 mt-4 pt-3 border-t border-ocean/[0.06] flex items-center justify-between">
           {/* Dot indicators */}
           <div className="flex items-center gap-2">
             {slides.map((s, index) => (

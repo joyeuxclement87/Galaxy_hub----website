@@ -43,7 +43,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
   const display = sortByPriority(source);
 
   return (
-    <section id="categories" className="bg-white px-4 py-12 md:px-8 md:py-20">
+    <section id="categories" className="rise-curve bg-white px-4 pt-10 pb-16 md:px-8 md:pt-16 md:pb-24">
       <div className="mx-auto max-w-[1320px]">
         <span className="section-label">CATEGORIES</span>
         <h2 className="mt-3 font-display text-xl sm:text-2xl md:text-[clamp(1.75rem,3.25vw,2.25rem)] font-bold leading-tight tracking-[-0.02em] text-ocean-deeper max-w-xl">
@@ -100,9 +100,9 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
         <div className="mt-8 flex justify-center">
           <Link
             href="/products"
-            className="group inline-flex items-center gap-1.5 text-sm font-bold text-ocean transition-colors duration-200 hover:text-ocean-dark"
+            className="text-action"
           >
-            All Categories <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+            All Categories <ArrowRight className="ta-arrow" />
           </Link>
         </div>
       </div>

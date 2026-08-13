@@ -40,5 +40,5 @@ npm run lint     # eslint (no test or typecheck commands exist)
 - Unsplash images config in `next.config.ts` under `remotePatterns`
 - **Utility scripts** at root that mutate source files: `update_mock.js`, `update_page.js`, `update_trending.js`
 - Custom theme colors in `globals.css` via `@theme`: `ivory` (#faf9f6), `ocean` (#0b5497), `ocean-dark`, `ocean-light`, `accent`
-- Font stack: **Manrope** (`next/font/google`, body via `--font-sans`) + **Oakes Grotesk** (self-hosted woff2 in `public/fonts/`, display/headings via `--font-display`). All font config is in `globals.css` `@theme` block.
+- Font stack: **Manrope** (`next/font/google`, body via `--font-sans`) + **Plus Jakarta Sans** (`next/font/google`, display/headings via `--font-display`/`--font-clash`). Both loaded in `src/app/layout.tsx`; font vars live in the `globals.css` `@theme` block.
 - No tests, no CI/CD, no test framework

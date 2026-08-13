@@ -21,7 +21,7 @@ const REASONS = [
 
 export function WhyChooseUs() {
   return (
-    <section className="bg-ivory-dark/60 px-4 py-16 sm:px-6 sm:py-20">
+    <section className="relative rise-soft bg-ivory-dark/60 px-4 pt-14 pb-16 sm:px-6 sm:pt-16 sm:pb-20">
       <div className="mx-auto max-w-[1320px]">
         <div className="max-w-2xl space-y-3">
           <span className="section-label">WHY CHOOSE GALAXY HUB</span>

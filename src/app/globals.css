@@ -2,8 +2,8 @@
 
 @theme {
   --font-sans: var(--font-manrope), "Manrope", sans-serif;
-  --font-display: "Oakes Grotesk", sans-serif;
-  --font-clash: "Oakes Grotesk", sans-serif;
+  --font-display: var(--font-plus-jakarta), "Plus Jakarta Sans", sans-serif;
+  --font-clash: var(--font-plus-jakarta), "Plus Jakarta Sans", sans-serif;
   --font-space: var(--font-manrope), "Manrope", sans-serif;
 
   --color-ivory: #faf9f6;
@@ -29,35 +29,6 @@
   --shadow-btn-glow: 0 8px 24px rgba(11, 84, 151, 0.18);
   --shadow-nav-scrolled: 0 4px 20px rgba(11, 84, 151, 0.08), 0 1px 0 rgba(11, 84, 151, 0.06);
   --shadow-card-premium: 0 4px 20px rgba(11, 84, 151, 0.06), 0 1px 3px rgba(11, 84, 151, 0.04);
-}
-
-@font-face {
-  font-family: "Oakes Grotesk";
-  src: url("/fonts/oakes-grotesk-bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Oakes Grotesk";
-  src: url("/fonts/oakes-grotesk-semibold.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Oakes Grotesk";
-  src: url("/fonts/oakes-grotesk-medium.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Oakes Grotesk";
-  src: url("/fonts/oakes-grotesk-regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
 }
 
 :root {
@@ -198,14 +169,88 @@ body {
 
   img { display: block; }
 
-.soft-radial-glow {
-  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(11,84,151,0.06) 0%, transparent 70%);
-}
-
 .divider-subtle {
   border: none;
   height: 1px;
   background: linear-gradient(to right, transparent, rgba(11,84,151,0.08), transparent);
+}
+
+/* Section text-action link — the single reusable pattern for section CTAs */
+.text-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--color-ocean);
+  transition: color 180ms ease;
+}
+.text-action:hover { color: var(--color-ocean-dark); }
+.text-action .ta-arrow {
+  height: 18px;
+  width: 18px;
+  transition: transform 180ms ease;
+}
+.text-action:hover .ta-arrow { transform: translateX(4px); }
+@media (min-width: 640px) {
+  .text-action { font-size: 1rem; }
+}
+
+/* ─── Section Rise / Overlap System ────────────────────────────────────────
+   The NEXT section's surface rises into the PREVIOUS one through an
+   absolutely-positioned ::before painted with the section's own background
+   (`background: inherit` — or `--dome-surface` for custom surfaces such as
+   the CTA gradient). Variants by strength: curve → soft → angle → dramatic.
+
+   Static (never animated), pointer-events: none, and sized to sit inside
+   the previous section's bottom padding so no content, button, or product
+   card is ever covered. Sections that use the system carry `position:
+   relative`. Builder note: the companion padding adjustments live on the
+   sections themselves (see PAGE_SECTION_PADDINGS). */
+
+.rise-curve,
+.rise-soft,
+.rise-angle,
+.rise-dramatic {
+  position: relative;
+}
+
+.rise-curve::before,
+.rise-soft::before,
+.rise-angle::before,
+.rise-dramatic::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--dome, 0px);
+  transform: translateY(-100%);
+  background: var(--dome-surface, inherit);
+  pointer-events: none;
+}
+
+/* Strong editorial arch — the centre rises above the sides (hero → first section) */
+.rise-curve::before    { --dome: 56px; border-radius: 50% 50% 0 0 / 300px 300px 0 0; }
+/* Quiet shallow dome */
+.rise-soft::before     { --dome: 30px; border-radius: 50% 50% 0 0 / 210px 210px 0 0; }
+/* Slanted boundary — higher on the left, lower on the right (editorial) */
+.rise-angle::before    { --dome: 36px; clip-path: polygon(0 0, 100% 42%, 100% 100%, 0 100%); }
+/* Deepest arch — destination surfaces (into the CTA) */
+.rise-dramatic::before { --dome: 60px; border-radius: 50% 50% 0 0 / 340px 340px 0 0; }
+
+@media (min-width: 640px) {
+  .rise-curve::before    { --dome: 74px; }
+  .rise-soft::before     { --dome: 40px; }
+  .rise-angle::before    { --dome: 46px; }
+  .rise-dramatic::before { --dome: 80px; }
+}
+@media (min-width: 1024px) {
+  .rise-curve::before    { --dome: 94px; }
+  .rise-soft::before     { --dome: 50px; }
+  .rise-angle::before    { --dome: 56px; }
+  .rise-dramatic::before { --dome: 104px; }
 }
 
 @keyframes loading-bar {
@@ -246,15 +291,6 @@ body {
     radial-gradient(ellipse 80% 65% at 18% 42%, rgba(15, 112, 201, 0.16) 0%, transparent 60%),
     radial-gradient(ellipse 50% 45% at 85% 15%, rgba(11, 84, 151, 0.28) 0%, transparent 55%),
     linear-gradient(160deg, #0a1f3a 0%, #083e70 100%);
-}
-
-/* Slow animated glow for CTA */
-@keyframes glow-pulse {
-  0%, 100% { opacity: 0.65; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.03); }
-}
-.animate-glow-pulse {
-  animation: glow-pulse 9s ease-in-out infinite;
 }
 
 /* Input refined focus state */

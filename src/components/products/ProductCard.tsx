@@ -186,17 +186,17 @@ export function ProductCard({ product, storage }: ProductCardProps) {
           )}
         </div>
 
-        {/* Action — centered, medium width, color shifts when added */}
-        <div className="mt-3.5 flex justify-center">
+        {/* Action — compact, subtle; solid emerald when added */}
+        <div className="mt-3.5">
           <button
             type="button"
             onClick={handleAddToCart}
             disabled={loading}
             className={cn(
-              "inline-flex h-11 w-full sm:max-w-[240px] cursor-pointer items-center justify-center gap-1.5 rounded-[10px] text-[14px] font-semibold transition-all duration-[200ms] touch-manipulation select-none",
+              "inline-flex h-11 cursor-pointer items-center gap-1.5 rounded-[10px] px-4 text-[14px] font-semibold transition-all duration-[200ms] touch-manipulation select-none",
               isInCart
-                ? "border border-emerald-700 bg-emerald-600 text-white hover:bg-emerald-700 hover:border-emerald-800"
-                : "border border-ocean bg-ocean text-white hover:bg-ocean-dark hover:border-ocean-dark hover:shadow-[0_8px_20px_rgba(11,84,151,0.25)]",
+                ? "border border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700 hover:border-emerald-700"
+                : "border border-ocean/[0.14] bg-transparent text-ocean-deeper hover:border-ocean hover:bg-ocean hover:text-white",
               loading && "opacity-60"
             )}
           >
@@ -209,7 +209,7 @@ export function ProductCard({ product, storage }: ProductCardProps) {
               </>
             ) : (
               <>
-                <Plus className="h-[18px] w-[18px] shrink-0" />
+                <Plus className="h-[17px] w-[17px] shrink-0" />
                 Add
               </>
             )}

@@ -294,7 +294,7 @@ export function Promotions({ promotions }: PromotionsProps) {
   return (
     <section
       id="deals"
-      className="relative scroll-mt-24 overflow-hidden border-y border-ocean/[0.06] bg-[#edf3fa] px-4 py-16 sm:px-6 sm:py-24"
+      className="relative rise-angle scroll-mt-24 bg-[#edf3fa] px-4 pt-14 pb-20 sm:px-6 sm:pt-16 sm:pb-24"
     >
       {/* Subtle radial brand glows */}
       <div

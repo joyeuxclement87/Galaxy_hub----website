@@ -113,7 +113,7 @@ export default function ContactPage() {
             <div className="lg:col-span-5 space-y-5">
 
               {/* Store Info Card */}
-              <div className="rounded-[22px] border border-ocean/[0.07] bg-white/80 p-7 shadow-card-premium space-y-5">
+              <div className="rounded-[22px] border border-ocean/[0.07] bg-white p-7 shadow-card-premium space-y-5">
                 <h2 className="font-display text-[15px] font-bold text-ocean-deeper flex items-center gap-2">
                   <Store className="h-4 w-4 text-accent shrink-0" />
                   Store Location
@@ -195,7 +195,7 @@ export default function ContactPage() {
 
             {/* ── RIGHT: Contact Form ── */}
             <div className="lg:col-span-7 lg:order-2">
-              <div className="rounded-[24px] border border-ocean/[0.07] bg-white/80 p-8 shadow-card-premium md:p-10">
+              <div className="rounded-[24px] border border-ocean/[0.07] bg-white p-8 shadow-card-premium md:p-10">
                 <AnimatePresence mode="wait">
                   {submitted ? (
                     <motion.div
