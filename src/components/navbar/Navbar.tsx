@@ -45,7 +45,7 @@ function Wordmark() {
       <img
         src="/g-hub%20logo.png"
         alt="Galaxy Hub"
-        className="block h-9 w-auto select-none object-contain sm:h-10"
+        className="block h-8 w-auto select-none object-contain sm:h-9"
       />
     </Link>
   );
@@ -713,15 +713,17 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
       <div className="fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 sm:px-5 sm:pt-4 pointer-events-none">
         <header
           className={cn(
-            "w-full pointer-events-auto transition-all duration-300 rounded-2xl",
-            "max-w-[1400px]",
-            scrolled
-              ? "bg-ivory/90 backdrop-blur-2xl border border-ocean/[0.10] shadow-[0_8px_32px_rgba(11,84,151,0.10)]"
-              : "bg-ivory/70 backdrop-blur-xl border border-ocean/[0.05] shadow-[0_4px_20px_rgba(11,84,151,0.06)]"
+            "w-full pointer-events-auto transition-all duration-[250ms] rounded-2xl max-w-[1400px]",
+            scrolled ? "nav-scrolled-surface" : "nav-top-surface"
           )}
         >
-           <div className="flex h-14 items-center justify-between gap-4 px-4 sm:px-6">
-             <Wordmark />
+          <div
+            className={cn(
+              "flex items-center justify-between gap-4 px-4 sm:px-6 transition-all duration-[250ms]",
+              scrolled ? "h-[58px]" : "h-[68px]"
+            )}
+          >
+            <Wordmark />
 
             {/* Desktop nav */}
             <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Main navigation">
@@ -731,7 +733,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                   href={getHref(link.id)}
                   onClick={(e) => handleNavClick(e, link.id)}
                   className={cn(
-                    "relative px-3.5 py-2 text-sm font-display font-bold tracking-tight transition-all duration-250 rounded-xl",
+                    "relative px-3.5 py-1.5 text-[13.5px] font-display font-bold tracking-tight transition-all duration-[160ms] rounded-full",
                     isActive(link.id)
                       ? "text-ocean bg-ocean/[0.08]"
                       : "text-ocean-deeper/65 hover:text-ocean hover:bg-ocean/[0.05]"
@@ -743,15 +745,15 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center gap-0.5 sm:gap-2">
+            <div className="flex items-center gap-0.5 sm:gap-1.5">
               {/* Search */}
               <button
                 type="button"
                 onClick={() => { setSearchInputValue(searchQuery); setSearchOpen(true); onSearchFocus?.(); setCartOpen(false); }}
                 aria-label="Search"
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-ocean-deeper/55 transition-all duration-[160ms] hover:border-ocean/[0.10] hover:bg-ocean/[0.06] hover:text-ocean cursor-pointer"
               >
-                <Search className="h-4 w-4" />
+                <Search className="h-[17px] w-[17px]" />
               </button>
 
               {/* Cart */}
@@ -760,9 +762,9 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                   type="button"
                   onClick={() => { setCartOpen(v => !v); setSearchOpen(false); }}
                   aria-label={cart.count > 0 ? `Cart (${cart.count} items)` : "Cart is empty"}
-                  className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer"
+                  className="relative flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-ocean-deeper/55 transition-all duration-[160ms] hover:border-ocean/[0.10] hover:bg-ocean/[0.06] hover:text-ocean cursor-pointer"
                 >
-                  <ShoppingCart className="h-4 w-4" />
+                  <ShoppingCart className="h-[17px] w-[17px]" />
                   <AnimatePresence mode="popLayout">
                     {cart.count > 0 && (
                       <motion.span
@@ -771,7 +773,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.4, opacity: 0 }}
                         transition={{ type: "spring", stiffness: 600, damping: 14 }}
-                        className="absolute -right-0.5 -top-0.5 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ocean px-1 text-xs font-bold text-white shadow-sm"
+                        className="absolute -right-0.5 -top-0.5 inline-flex h-4.5 min-w-[18px] items-center justify-center rounded-full bg-ocean px-1 text-[10px] font-bold text-white shadow-sm"
                       >
                         {cart.count}
                       </motion.span>
@@ -781,23 +783,23 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
                 <CartDropdown open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} />
               </div>
 
-               {/* Order Now — hidden on mobile */}
-               <Link
-                 href="/order"
-                 className="ml-1 hidden h-10 items-center gap-2 rounded-btn bg-ocean-deeper px-5 text-sm font-bold text-white shadow-btn transition-all duration-250 hover:bg-ocean-dark hover:shadow-btn-hover sm:inline-flex"
-               >
-                 <ShoppingCart className="h-4 w-4" />
-                 Order Now
-               </Link>
+              {/* Order Now — hidden on mobile */}
+              <Link
+                href="/order"
+                className="ml-1.5 hidden h-[38px] items-center gap-1.5 rounded-[13px] bg-gradient-to-b from-ocean to-ocean-dark px-5 text-[13.5px] font-bold text-white shadow-btn transition-all duration-[200ms] hover:-translate-y-[1px] hover:brightness-[1.06] hover:shadow-[0_10px_24px_rgba(11,84,151,0.22)] sm:inline-flex"
+              >
+                <ShoppingCart className="h-3.5 w-3.5" />
+                Order Now
+              </Link>
 
               {/* Mobile hamburger */}
               <button
                 type="button"
                 onClick={() => { setMobileOpen(true); setCartOpen(false); }}
                 aria-label="Open menu"
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-transparent text-ocean-deeper/60 transition-all hover:border-ocean/[0.08] hover:bg-white/60 hover:text-ocean cursor-pointer lg:hidden"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-ocean-deeper/55 transition-all duration-[160ms] hover:border-ocean/[0.10] hover:bg-ocean/[0.06] hover:text-ocean cursor-pointer lg:hidden"
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-[18px] w-[18px]" />
               </button>
             </div>
           </div>

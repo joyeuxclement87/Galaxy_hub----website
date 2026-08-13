@@ -54,7 +54,7 @@ export function Brands({ brands }: BrandsProps) {
   const track = Array.from({ length: repeats }, () => catalog).flat();
 
   return (
-    <section id="brands" className="bg-ivory py-16 sm:py-20">
+    <section id="brands" className="bg-ivory py-14 sm:py-16">
       <div className="mx-auto max-w-[1320px] px-4 sm:px-6">
         <div className="max-w-2xl space-y-3">
           <span className="section-label">BRANDS WE CARRY</span>

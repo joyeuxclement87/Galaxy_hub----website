@@ -764,8 +764,11 @@ export interface DealOffer {
   description: string;
   badge: string;
   badgeType: "accent" | "red"; // styling for tag
+  statusLabel: string;   // compact campaign status shown on the card pill
+  benefitText: string;   // the headline benefit, e.g. "15% OFF"
   discountText: string;
   ctaText: string;
+  ctaLink?: string;      // destination for the card CTA (button_link)
   image: string;
   size: "large" | "medium" | "small";
   category: string; // for filtering
@@ -791,6 +794,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     description: "Upgrade to the latest iPhones and get selected accessories at up to 20% off.",
     badge: "SAVE UP TO 20%",
     badgeType: "red",
+    statusLabel: "SPECIAL OFFER",
+    benefitText: "Up to 20% OFF",
     discountText: "Save 20%",
     ctaText: "Shop Collection",
     image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=600",
@@ -805,6 +810,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     description: "Protect your devices. Buy 2 case accessories, get 1 completely free.",
     badge: "LIMITED OFFER",
     badgeType: "accent",
+    statusLabel: "LIMITED OFFER",
+    benefitText: "Buy 2 Get 1 Free",
     discountText: "Buy 2 Get 1 Free",
     ctaText: "Explore Cases",
     image: "https://images.unsplash.com/photo-1601593346740-925612772716?auto=format&fit=crop&q=80&w=500",
@@ -819,6 +826,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     description: "Professional ring light + carbon fiber tripod + premium phone clip bundle package.",
     badge: "BEST SELLER",
     badgeType: "accent",
+    statusLabel: "BEST SELLER",
+    benefitText: "Bundle Discount",
     discountText: "Bundle Discount",
     ctaText: "View Bundle",
     image: "https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&q=80&w=500",
@@ -833,6 +842,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     description: "Special academic discounts on sleek notebooks, laptops, and carrying sleeves.",
     badge: "STUDENTS",
     badgeType: "accent",
+    statusLabel: "STUDENT DEAL",
+    benefitText: "Save 15%",
     discountText: "Save 15%",
     ctaText: "View Laptops",
     image: "https://images.unsplash.com/photo-1517336714739-489689fd1ca8?auto=format&fit=crop&q=80&w=400",
@@ -847,6 +858,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     description: "Crisp acoustic output. Exclusive offers on earbuds, headsets, and portable speakers.",
     badge: "HOT OFFER",
     badgeType: "red",
+    statusLabel: "HOT OFFER",
+    benefitText: "From 45,000 RWF",
     discountText: "From 45,000 RWF",
     ctaText: "Discover Audio",
     image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=400",
@@ -861,6 +874,8 @@ export const DEAL_OFFERS: DealOffer[] = [
     description: "Premium gaming mice, customizable keyboards, and high-fidelity headsets.",
     badge: "NEW ARRIVAL",
     badgeType: "accent",
+    statusLabel: "NEW ARRIVAL",
+    benefitText: "Up to 10% Off",
     discountText: "Up to 10% Off",
     ctaText: "Gear Up",
     image: "https://images.unsplash.com/photo-1600861195091-690c92f1d2cc?auto=format&fit=crop&q=80&w=400",

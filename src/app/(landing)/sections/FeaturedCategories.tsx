@@ -1,10 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/data/mock-data";
-import { btnBase, btnVariants } from "@/components/ui/button";
 
 const FALLBACK_CATEGORIES: { name: string; description: string; image: string; href: string; productCount: number }[] = [
   { name: "Smartphones", description: "Latest flagship phones and everyday devices", image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=800", href: "/products?category=smartphones", productCount: 124 },
@@ -44,7 +43,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
   const display = sortByPriority(source);
 
   return (
-    <section id="categories" className="bg-ivory px-4 py-12 md:px-8 md:py-16">
+    <section id="categories" className="bg-white px-4 py-12 md:px-8 md:py-20">
       <div className="mx-auto max-w-[1320px]">
         <span className="section-label">CATEGORIES</span>
         <h2 className="mt-3 font-display text-xl sm:text-2xl md:text-[clamp(1.75rem,3.25vw,2.25rem)] font-bold leading-tight tracking-[-0.02em] text-ocean-deeper max-w-xl">
@@ -59,7 +58,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
                 key={cat.name}
                 href={cat.href}
                 className={cn(
-                  "group relative overflow-hidden rounded-card bg-ocean-deeper shadow-sm transition-all duration-250 hover:shadow-lg",
+                  "group relative overflow-hidden rounded-[24px] bg-ocean-deeper transition-all duration-[220ms] hover:shadow-[0_14px_32px_rgba(10,31,58,0.16)]",
                   isFeatured
                     ? "col-span-2 aspect-[16/10] sm:aspect-[16/9] md:aspect-auto md:col-span-2 md:row-span-2"
                     : "aspect-square md:aspect-auto"
@@ -71,9 +70,9 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
                   fill
                   loading="lazy"
                   sizes="(min-width: 1024px) 30vw, (min-width: 768px) 40vw, 50vw"
-                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                  className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent transition-opacity duration-250 group-hover:from-black/90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent transition-opacity duration-[220ms] group-hover:from-black/90" />
 
                 <div className="absolute inset-0 flex flex-col justify-end p-3 sm:p-4 md:p-5">
                   <h3
@@ -89,7 +88,7 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
                       {cat.productCount}+ Products
                     </p>
                   )}
-                  <div className="mt-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white opacity-0 -translate-y-1 transition-all duration-250 group-hover:opacity-100 group-hover:translate-y-0">
+                  <div className="mt-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white opacity-0 -translate-y-1 transition-all duration-[220ms] group-hover:opacity-100 group-hover:translate-y-0">
                     Shop Now <ArrowUpRight className="h-3.5 w-3.5" />
                   </div>
                 </div>
@@ -101,9 +100,9 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
         <div className="mt-8 flex justify-center">
           <Link
             href="/products"
-            className={cn(btnBase, btnVariants.secondary, "gap-2 px-6")}
+            className="group inline-flex items-center gap-1.5 text-sm font-bold text-ocean transition-colors duration-200 hover:text-ocean-dark"
           >
-            All Categories <ArrowUpRight className="h-4 w-4 transition-transform duration-250 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            All Categories <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
         </div>
       </div>

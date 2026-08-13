@@ -118,14 +118,18 @@ function toBrandCatalogItem(b: BrandRow, index: number): BrandCatalogItem {
 
 function toDealOffer(p: PromotionRow, index: number): DealOffer {
   const sizes: DealOffer["size"][] = ["large", "medium", "small"];
+  const hasDiscount = Boolean(p.discount_percentage);
   return {
     slug: p.id,
     title: p.title,
     description: p.description || "",
-    badge: p.discount_percentage ? `UP TO ${p.discount_percentage}% OFF` : "LIMITED OFFER",
+    badge: hasDiscount ? `UP TO ${p.discount_percentage}% OFF` : "LIMITED OFFER",
     badgeType: index === 0 ? "red" : "accent",
-    discountText: p.discount_percentage ? `Save ${p.discount_percentage}%` : "Special Offer",
-    ctaText: p.button_text || "Shop Now",
+    statusLabel: hasDiscount ? "SPECIAL OFFER" : "LIMITED OFFER",
+    benefitText: hasDiscount ? `${p.discount_percentage}% OFF` : "SPECIAL OFFER",
+    discountText: hasDiscount ? `Save ${p.discount_percentage}%` : "Special Offer",
+    ctaText: p.button_text || "Shop Offer",
+    ctaLink: p.button_link || undefined,
     image: p.image_url || FALLBACK_PROMO_IMG,
     size: sizes[index] || "small",
     category: "All",
@@ -315,7 +319,8 @@ async function fetchPromotions(supabase: ReturnType<typeof createClient>): Promi
     .eq("is_active", true)
     .lte("starts_at", now)
     .gte("ends_at", now)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(4);
 
   if (error || !data) return [];
   return data.map((p, i) => toDealOffer(p, i));
