@@ -485,3 +485,75 @@ export async function searchProducts(query: string) {
     brand_name: row.brand?.name || null,
   }));
 }
+
+/* ─── Trade-In helpers ─────────────────────────────────────────────────── */
+
+export interface TradeInEligibleProduct {
+  id: string;
+  name: string;
+  brand_name: string | null;
+  price: number;
+  stock_status: string;
+  storage_options: string[];
+}
+
+/**
+ * Products the customer may pick as their "device wanted" in the
+ * trade-in flow: active, in stock (available/limited) and not an
+ * accessory (accessory category slugs are excluded).
+ */
+export async function getTradeInEligibleProducts(): Promise<TradeInEligibleProduct[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select(
+      `id, name, price, stock_status, storage_options, category:category_id(slug), brand:brand_id(name)`
+    )
+    .eq("is_active", true)
+    .in("stock_status", ["available", "limited"])
+    .order("name");
+
+  if (error) return [];
+
+  return (data || [])
+    .filter((row) => {
+      const slug = (row.category as { slug?: string | null } | null)?.slug;
+      return !slug || !slug.includes("accessor");
+    })
+    .map((row) => ({
+      id: row.id,
+      name: row.name,
+      brand_name: (row.brand as { name?: string | null } | null)?.name || null,
+      price: Number(row.price),
+      stock_status: row.stock_status,
+      storage_options: toStorageOptions(row.storage_options),
+    }));
+}
+
+/**
+ * Fetches a single product for trade-in submission validation.
+ * The server re-derives the wanted-product snapshot from this row so
+ * the client can never spoof the stored name.
+ */
+export async function getTradeInWantedProduct(id: string) {
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("products")
+    .select(
+      `id, name, stock_status, is_active, storage_options, category:category_id(slug), brand:brand_id(name)`
+    )
+    .eq("id", id)
+    .maybeSingle();
+
+  if (!data) return null;
+
+  return {
+    id: data.id,
+    name: data.name,
+    brand_name: (data.brand as { name?: string | null } | null)?.name || null,
+    stock_status: data.stock_status,
+    is_active: data.is_active,
+    category_slug: (data.category as { slug?: string | null } | null)?.slug ?? null,
+    storage_options: toStorageOptions(data.storage_options),
+  };
+}

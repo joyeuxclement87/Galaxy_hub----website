@@ -28,8 +28,8 @@ export default async function TradeInDetailPage({
           {tradeIn.trade_in_id}
         </h1>
         <p className="mt-1 text-sm text-white/40">
-          {tradeIn.device_brand} {tradeIn.device_model}
-          {tradeIn.storage ? ` · ${tradeIn.storage}` : ""}
+          {tradeIn.wanted_product_name}
+          {tradeIn.wanted_product_storage ? ` · ${tradeIn.wanted_product_storage}` : ""}
         </p>
       </div>
       <TradeInDetailClient tradeIn={tradeIn} />

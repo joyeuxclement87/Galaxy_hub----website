@@ -1,15 +1,32 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
+import { getTradeInEligibleProducts } from "@/data/public-products";
 import { TradeInClient } from "./TradeInClient";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Trade In — Galaxy Hub Rwanda",
   description:
-    "Trade in your old smartphone, laptop or tablet and put the value toward your next device. Submit your device for review at Galaxy Hub Rwanda.",
+    "Trade in your old phone, laptop or tablet toward a new Galaxy Hub device. Tell us what you want and what you're trading in — we'll send you a trade-in value.",
 };
 
-export default function TradeInPage() {
+export default async function TradeInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) {
+  const sp = await searchParams;
+
+  const products = await getTradeInEligibleProducts();
+
+  // Optional ?product=ID preselect — only when the product is currently
+  // eligible. Otherwise the customer picks from the list themselves.
+  const requestedId = sp.product?.trim() || null;
+  const preselectedId =
+    requestedId && products.some((p) => p.id === requestedId) ? requestedId : null;
+
   return (
     <div className="min-h-screen bg-ivory">
       <Navbar />
@@ -23,12 +40,13 @@ export default function TradeInPage() {
               Turn your old device into your next upgrade.
             </h1>
             <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-ocean-deeper/60">
-              Tell us about your current phone, laptop or tablet and our team will review it
-              and send you a trade-in value — ready to put toward anything at Galaxy Hub.
+              Tell us what you&apos;re upgrading to and the device you&apos;re trading in.
+              Our team will review it and send you a trade-in value to put toward your
+              next purchase at Galaxy Hub.
             </p>
           </header>
 
-          <TradeInClient />
+          <TradeInClient products={products} preselectedId={preselectedId} />
         </div>
       </main>
       <Footer />

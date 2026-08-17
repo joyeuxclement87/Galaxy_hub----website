@@ -406,9 +406,7 @@ export type Database = {
           created_at: string
           customer_name: string
           customer_notes: string | null
-          device_brand: string
           device_condition: string
-          device_model: string
           email: string | null
           estimated_value: number | null
           faults: string | null
@@ -419,10 +417,15 @@ export type Database = {
           photos: string[]
           screen_condition: string
           status: string
-          storage: string | null
           telegram_sent: boolean
+          trade_device_brand: string
+          trade_device_model: string
+          trade_device_storage: string | null
           trade_in_id: string
           updated_at: string
+          wanted_product_id: string | null
+          wanted_product_name: string
+          wanted_product_storage: string | null
         }
         Insert: {
           accessories?: string[]
@@ -431,9 +434,7 @@ export type Database = {
           created_at?: string
           customer_name: string
           customer_notes?: string | null
-          device_brand: string
           device_condition: string
-          device_model: string
           email?: string | null
           estimated_value?: number | null
           faults?: string | null
@@ -444,10 +445,15 @@ export type Database = {
           photos?: string[]
           screen_condition: string
           status?: string
-          storage?: string | null
           telegram_sent?: boolean
+          trade_device_brand: string
+          trade_device_model: string
+          trade_device_storage?: string | null
           trade_in_id: string
           updated_at?: string
+          wanted_product_id?: string | null
+          wanted_product_name?: string
+          wanted_product_storage?: string | null
         }
         Update: {
           accessories?: string[]
@@ -456,9 +462,7 @@ export type Database = {
           created_at?: string
           customer_name?: string
           customer_notes?: string | null
-          device_brand?: string
           device_condition?: string
-          device_model?: string
           email?: string | null
           estimated_value?: number | null
           faults?: string | null
@@ -469,10 +473,15 @@ export type Database = {
           photos?: string[]
           screen_condition?: string
           status?: string
-          storage?: string | null
           telegram_sent?: boolean
+          trade_device_brand?: string
+          trade_device_model?: string
+          trade_device_storage?: string | null
           trade_in_id?: string
           updated_at?: string
+          wanted_product_id?: string | null
+          wanted_product_name?: string
+          wanted_product_storage?: string | null
         }
         Relationships: []
       }

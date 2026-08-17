@@ -47,9 +47,11 @@ type TelegramNotificationData = {
     customer_name: string;
     phone: string;
     email?: string;
-    device_brand: string;
-    device_model: string;
-    storage?: string;
+    wanted_product_name: string;
+    wanted_product_storage?: string;
+    trade_device_brand: string;
+    trade_device_model: string;
+    trade_device_storage?: string;
     device_condition: string;
     screen_condition: string;
     battery_condition: string;
@@ -207,33 +209,54 @@ function buildQuoteMessage(data: TelegramNotificationData): string {
 
 function buildTradeInMessage(data: TelegramNotificationData): string {
   const t: Partial<NonNullable<TelegramNotificationData["tradeIn"]>> = data.tradeIn ?? {
-    trade_in_id: "", customer_name: "", phone: "", device_brand: "", device_model: "",
-    device_condition: "", screen_condition: "", battery_condition: "", functional_status: "",
+    trade_in_id: "", customer_name: "", phone: "", wanted_product_name: "",
+    trade_device_brand: "", trade_device_model: "", device_condition: "",
+    screen_condition: "", battery_condition: "", functional_status: "",
     accessories: [], status: "", photos_count: 0,
   };
 
-  const lines: string[] = ["📱 *NEW TRADE-IN REQUEST*", ""];
+  const bar = "━━━━━━━━━━━━━━━━━━";
+  const wanted = [t.wanted_product_name, t.wanted_product_storage].filter(Boolean).join(" · ");
+  const trading = [t.trade_device_brand, t.trade_device_model, t.trade_device_storage]
+    .filter(Boolean)
+    .join(" · ");
+
+  const lines: string[] = [];
+  lines.push(bar);
+  lines.push("📱 *NEW TRADE-IN REQUEST*");
+  lines.push(bar);
+  lines.push("");
   lines.push(`*ID:* ${escapeMarkdownV2(t.trade_in_id)}`);
   lines.push("");
-  lines.push(`*Customer:* ${escapeMarkdownV2(t.customer_name)}`);
-  lines.push(`*Phone:* ${escapeMarkdownV2(t.phone)}`);
-  if (t.email) lines.push(`*Email:* ${escapeMarkdownV2(t.email)}`);
-  lines.push("", "*Device:*");
-  lines.push(`• ${escapeMarkdownV2(t.device_brand)} ${escapeMarkdownV2(t.device_model)}`);
-  if (t.storage) lines.push(`• ${escapeMarkdownV2(t.storage)}`);
-  lines.push("", `*Condition:* ${escapeMarkdownV2(t.device_condition)}`);
-  lines.push(`*Screen:* ${escapeMarkdownV2(t.screen_condition)}`);
-  lines.push(`*Battery:* ${escapeMarkdownV2(t.battery_condition)}`);
-  lines.push(`*Functional:* ${escapeMarkdownV2(t.functional_status)}`);
+  lines.push("*CUSTOMER*");
+  lines.push(`${escapeMarkdownV2(t.customer_name)}`);
+  lines.push(`${escapeMarkdownV2(t.phone)}`);
+  if (t.email) lines.push(`${escapeMarkdownV2(t.email)}`);
+  lines.push("");
+  lines.push("*WANTS*");
+  lines.push(`➡️ ${escapeMarkdownV2(wanted || "—")}`);
+  lines.push("");
+  lines.push("*TRADING IN*");
+  lines.push(`⬅️ ${escapeMarkdownV2(trading || "—")}`);
+  lines.push("");
+  lines.push("*CONDITION*");
+  lines.push(`${escapeMarkdownV2(t.device_condition)}`);
+  lines.push("");
+  lines.push("*SCREEN*");
+  lines.push(`${escapeMarkdownV2(t.screen_condition)}`);
+  lines.push("");
+  lines.push("*BATTERY*");
+  lines.push(`${escapeMarkdownV2(t.battery_condition)}`);
+  lines.push("");
+  lines.push("*FUNCTION*");
+  lines.push(`${escapeMarkdownV2(t.functional_status)}`);
+  lines.push("");
+  lines.push(`*ACCESSORIES:* ${escapeMarkdownV2((t.accessories ?? []).length > 0 ? (t.accessories ?? []).join(", ") : "None")}`);
+  lines.push(`*FAULTS:* ${escapeMarkdownV2(t.faults || "None")}`);
+  if (t.notes) lines.push("", `*NOTES:* ${escapeMarkdownV2(t.notes)}`);
+  lines.push("", `*STATUS:* ${escapeMarkdownV2(t.status)}`);
   lines.push(
-    "",
-    `*Accessories:* ${escapeMarkdownV2((t.accessories ?? []).length > 0 ? (t.accessories ?? []).join(", ") : "None")}`,
-  );
-  lines.push(`*Faults:* ${escapeMarkdownV2(t.faults || "None")}`);
-  if (t.notes) lines.push("", `*Notes:* ${escapeMarkdownV2(t.notes)}`);
-  lines.push("", `*Status:* ${escapeMarkdownV2(t.status)}`);
-  lines.push(
-    `*Photos:* ${(t.photos_count ?? 0) > 0 ? `${t.photos_count ?? 0} uploaded` : "Not provided"}`,
+    `*PHOTOS:* ${(t.photos_count ?? 0) > 0 ? `${t.photos_count ?? 0} uploaded` : "Not provided"}`,
   );
 
   if (t.id && process.env.NEXT_PUBLIC_SITE_URL) {

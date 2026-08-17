@@ -1,0 +1,1 @@
+alter table public.trade_ins add column wanted_product_id uuid references public.products(id) on delete set null;

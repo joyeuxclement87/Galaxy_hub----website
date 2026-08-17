@@ -16,12 +16,10 @@ import {
   Save,
   Loader2,
   Smartphone,
-  Battery,
-  MonitorSmartphone,
-  Cpu,
   PackageOpen,
   StickyNote,
   AlertTriangle,
+  ArrowDown,
 } from "lucide-react";
 import { updateTradeIn, resendTradeInTelegram, deleteTradeIn } from "@/actions/trade-ins";
 import { TRADE_IN_STATUSES, conditionLabel, formatTradeInValue } from "@/lib/trade-in";
@@ -249,72 +247,83 @@ export function TradeInDetailClient({ tradeIn }: { tradeIn: TradeIn }) {
             </div>
           </div>
 
-          <div className="border-t border-white/5 pt-4">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-white/30 block mb-3">
-              Device
-            </span>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center gap-2.5 text-sm">
-                <Smartphone className="h-4 w-4 text-white/30 shrink-0" />
+          <div className="border-t border-white/5 pt-4 space-y-4">
+            {/* Device wanted */}
+            <div className="rounded-xl border border-[#0f70c9]/20 bg-[#0f70c9]/[0.06] p-4">
+              <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#69b1e8]">
+                <ArrowDown className="h-3 w-3" /> Device Wanted
+              </p>
+              <p className="mt-2 font-clash text-base font-bold text-white">
+                {tradeIn.wanted_product_name || "—"}
+                {tradeIn.wanted_product_storage && (
+                  <span className="text-white/40 font-medium"> · {tradeIn.wanted_product_storage}</span>
+                )}
+              </p>
+              {tradeIn.wanted_product_id && (
+                <p className="mt-1.5 text-xs text-white/45">
+                  Product ID:{" "}
+                  <a
+                    href={`/admin/products/${tradeIn.wanted_product_id}/edit`}
+                    className="font-mono text-[#69b1e8] hover:underline"
+                  >
+                    {tradeIn.wanted_product_id}
+                  </a>
+                </p>
+              )}
+            </div>
+
+            {/* Device being traded in */}
+            <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
+              <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-white/30">
+                <Smartphone className="h-3 w-3" /> Device to Trade In
+              </p>
+              <p className="mt-2 text-sm font-bold text-white">
+                {tradeIn.trade_device_brand} {tradeIn.trade_device_model}
+                {tradeIn.trade_device_storage && (
+                  <span className="text-white/40 font-medium"> · {tradeIn.trade_device_storage}</span>
+                )}
+              </p>
+              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/30 leading-none">Model</p>
-                  <p className="text-white/80 font-medium mt-0.5">
-                    {tradeIn.device_brand} {tradeIn.device_model}
-                    {tradeIn.storage && <span className="text-white/40"> · {tradeIn.storage}</span>}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm">
-                <MonitorSmartphone className="h-4 w-4 text-white/30 shrink-0" />
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/30 leading-none">Device Condition</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/30 leading-none">Condition</p>
                   <p className="text-white/80 font-medium mt-0.5">{conditionLabel(tradeIn.device_condition)}</p>
                 </div>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm">
-                <MonitorSmartphone className="h-4 w-4 text-white/30 shrink-0" />
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-white/30 leading-none">Screen</p>
                   <p className="text-white/80 font-medium mt-0.5">{conditionLabel(tradeIn.screen_condition)}</p>
                 </div>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm">
-                <Battery className="h-4 w-4 text-white/30 shrink-0" />
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-white/30 leading-none">Battery</p>
                   <p className="text-white/80 font-medium mt-0.5">{conditionLabel(tradeIn.battery_condition)}</p>
                 </div>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm">
-                <Cpu className="h-4 w-4 text-white/30 shrink-0" />
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-white/30 leading-none">Functional</p>
                   <p className="text-white/80 font-medium mt-0.5">{conditionLabel(tradeIn.functional_status)}</p>
                 </div>
               </div>
-            </div>
 
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white/[0.02] rounded-xl border border-white/5 p-3">
-                <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-white/30">
-                  <PackageOpen className="h-3 w-3" /> Accessories
-                </p>
-                <p className="mt-1.5 text-sm text-white/80">
-                  {tradeIn.accessories.length > 0 ? tradeIn.accessories.join(", ") : "None"}
-                </p>
-              </div>
-              {tradeIn.faults && (
-                <div className="bg-white/[0.02] rounded-xl border border-white/5 p-3">
+              <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3">
                   <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-white/30">
-                    <AlertTriangle className="h-3 w-3" /> Faults
+                    <PackageOpen className="h-3 w-3" /> Accessories
                   </p>
-                  <p className="mt-1.5 text-sm text-white/80 leading-relaxed whitespace-pre-wrap">{tradeIn.faults}</p>
+                  <p className="mt-1.5 text-sm text-white/80">
+                    {tradeIn.accessories.length > 0 ? tradeIn.accessories.join(", ") : "None"}
+                  </p>
                 </div>
-              )}
+                {tradeIn.faults && (
+                  <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3">
+                    <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-white/30">
+                      <AlertTriangle className="h-3 w-3" /> Faults
+                    </p>
+                    <p className="mt-1.5 text-sm text-white/80 leading-relaxed whitespace-pre-wrap">{tradeIn.faults}</p>
+                  </div>
+                )}
+              </div>
             </div>
 
             {tradeIn.customer_notes && (
-              <div className="bg-white/[0.02] rounded-xl border border-white/5 p-3">
+              <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3">
                 <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-white/30">
                   <StickyNote className="h-3 w-3" /> Customer Notes
                 </p>

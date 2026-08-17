@@ -92,10 +92,19 @@ export function TradeInsClient({ tradeIns }: { tradeIns: TradeIn[] }) {
                 </div>
 
                 <p className="mt-2.5 text-xs font-semibold text-white/70 line-clamp-1">
-                  {t.device_brand} {t.device_model}
-                  {t.storage && <span className="text-white/40 font-medium"> · {t.storage}</span>}
+                  <span className="text-[#0f70c9]">→</span> {t.wanted_product_name}
+                  {t.wanted_product_storage && (
+                    <span className="text-white/40 font-medium"> · {t.wanted_product_storage}</span>
+                  )}
                 </p>
-                <p className="text-xs text-white/45 line-clamp-1">
+                <p className="mt-1 text-xs text-white/45 line-clamp-1">
+                  <span className="text-white/30">←</span> {t.trade_device_brand}{" "}
+                  {t.trade_device_model}
+                  {t.trade_device_storage && (
+                    <span className="text-white/30"> · {t.trade_device_storage}</span>
+                  )}
+                </p>
+                <p className="mt-1 text-xs text-white/45 line-clamp-1">
                   {t.customer_name}
                   {t.phone && <span className="text-white/30"> · {t.phone}</span>}
                 </p>

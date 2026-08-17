@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronRight, Truck, ShieldCheck, RefreshCw } from "lucide-react";
+import { ChevronRight, ArrowRight, Truck, ShieldCheck, RefreshCw } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
 import { ProductCard } from "@/components/products/ProductCard";
@@ -215,11 +215,15 @@ export default async function ProductPage({ params }: ProductPageParams) {
                   />
                   {!product.category_slug?.includes("accessor") && (
                     <Link
-                      href="/trade-in"
-                      className="mt-3 inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-ocean transition-colors hover:text-ocean-dark"
+                      href={`/trade-in?product=${product.id}`}
+                      className="group mt-4 flex flex-col gap-1 rounded-btn border border-ocean/[0.10] bg-ocean-subtle p-4 transition-all duration-200 hover:border-ocean/25 hover:bg-ocean-light/50"
                     >
-                      Have an old device? Trade it in{" "}
-                      <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                      <span className="text-sm font-bold text-ocean-deeper">
+                        Have a phone to trade in?
+                      </span>
+                      <span className="text-action mt-1.5">
+                        Trade in toward this device <ArrowRight className="ta-arrow" />
+                      </span>
                     </Link>
                   )}
                 </div>

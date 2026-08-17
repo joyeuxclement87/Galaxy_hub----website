@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase-server";
 import { createAdminClient } from "@/lib/supabase-admin";
 import { revalidatePath } from "next/cache";
 import { sendTelegramNotification } from "@/lib/telegram/telegram";
+import { getTradeInWantedProduct } from "@/data/public-products";
 import {
   TRADE_IN_STATUSES,
   DEVICE_CONDITIONS,
@@ -31,7 +32,7 @@ const ALLOWED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const ALLOWED_PHOTO_EXTS = ["jpg", "jpeg", "png", "webp"];
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 
-async function getBucket(supabase: Awaited<ReturnType<typeof createClient>>) {
+async function getBucket(supabase: ReturnType<typeof createAdminClient>) {
   const { data: bucket } = await supabase.storage.getBucket("trade-in-photos");
   if (!bucket) {
     const { error: createError } = await supabase.storage.createBucket("trade-in-photos", {
@@ -51,9 +52,11 @@ function buildTradeInTelegramData(record: {
   customer_name: string;
   phone: string;
   email: string | null;
-  device_brand: string;
-  device_model: string;
-  storage: string | null;
+  wanted_product_name: string;
+  wanted_product_storage: string | null;
+  trade_device_brand: string;
+  trade_device_model: string;
+  trade_device_storage: string | null;
   device_condition: string;
   screen_condition: string;
   battery_condition: string;
@@ -71,9 +74,11 @@ function buildTradeInTelegramData(record: {
       customer_name: record.customer_name,
       phone: record.phone,
       email: record.email ?? undefined,
-      device_brand: record.device_brand,
-      device_model: record.device_model,
-      storage: record.storage ?? undefined,
+      wanted_product_name: record.wanted_product_name,
+      wanted_product_storage: record.wanted_product_storage ?? undefined,
+      trade_device_brand: record.trade_device_brand,
+      trade_device_model: record.trade_device_model,
+      trade_device_storage: record.trade_device_storage ?? undefined,
       device_condition: conditionLabel(record.device_condition),
       screen_condition: conditionLabel(record.screen_condition),
       battery_condition: conditionLabel(record.battery_condition),
@@ -99,9 +104,11 @@ export async function submitTradeIn(formData: FormData) {
   const customer_name = cleanInput(formData.get("customer_name"), 120);
   const phone = cleanInput(formData.get("phone"), 30);
   const email = cleanInput(formData.get("email"), 160).toLowerCase();
-  const device_brand = cleanInput(formData.get("device_brand"), 80);
-  const device_model = cleanInput(formData.get("device_model"), 120);
-  const storage = cleanInput(formData.get("storage"), 40);
+  const wanted_product_id = cleanInput(formData.get("wanted_product_id"), 64);
+  const wanted_product_storage = cleanInput(formData.get("wanted_product_storage"), 40);
+  const trade_device_brand = cleanInput(formData.get("trade_device_brand"), 80);
+  const trade_device_model = cleanInput(formData.get("trade_device_model"), 120);
+  const trade_device_storage = cleanInput(formData.get("trade_device_storage"), 40);
   const device_condition = cleanInput(formData.get("device_condition"), 40);
   const screen_condition = cleanInput(formData.get("screen_condition"), 40);
   const battery_condition = cleanInput(formData.get("battery_condition"), 40);
@@ -117,8 +124,38 @@ export async function submitTradeIn(formData: FormData) {
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return { error: "Please enter a valid email address." };
   }
-  if (!device_brand) return { error: "Please select your device brand." };
-  if (!device_model) return { error: "Please enter your device model." };
+  if (!trade_device_brand) return { error: "Please select your device brand." };
+  if (!trade_device_model) return { error: "Please enter your device model." };
+
+  // The wanted product must be a real, currently available Galaxy Hub
+  // product — never silently submitted when unavailable.
+  if (!wanted_product_id) return { error: "Please select the device you'd like to upgrade to." };
+  const wanted = await getTradeInWantedProduct(wanted_product_id);
+  if (!wanted || !wanted.is_active) {
+    return {
+      code: "product_unavailable" as const,
+      error: "This product is currently unavailable. Please choose another device.",
+    };
+  }
+  if (!["available", "limited"].includes(wanted.stock_status)) {
+    return {
+      code: "product_unavailable" as const,
+      error: "This product is currently unavailable. Please choose another device.",
+    };
+  }
+  if (wanted.category_slug?.includes("accessor")) {
+    return {
+      code: "product_unavailable" as const,
+      error: "This product is not eligible for trade-in. Please choose another device.",
+    };
+  }
+  // Validate the chosen storage variant against the product's own options.
+  const wantedStorage: string | null = wanted_product_storage || null;
+  if (wanted.storage_options.length > 0) {
+    if (!wantedStorage || !wanted.storage_options.includes(wantedStorage)) {
+      return { error: "Please choose a valid storage option for the device you want." };
+    }
+  }
 
   // Controlled condition values — never trust the client.
   if (!isAllowedValue(device_condition, DEVICE_CONDITIONS)) {
@@ -175,9 +212,12 @@ export async function submitTradeIn(formData: FormData) {
   }
 
   // Upload photos first so we never create a partial record.
+  // Storage operations use the service-role client — anon cannot create
+  // buckets or upload under default storage RLS.
   const uploadedUrls: string[] = [];
   if (photos.length > 0) {
-    const bucketReady = await getBucket(supabase);
+    const adminSupabase = createAdminClient();
+    const bucketReady = await getBucket(adminSupabase);
     if (!bucketReady) {
       return { error: "Photo storage is unavailable. Please try again shortly." };
     }
@@ -185,14 +225,14 @@ export async function submitTradeIn(formData: FormData) {
       const file = photos[i];
       const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
       const filePath = `trade-ins/${tradeInId}/${i + 1}.${ext}`;
-      const { error: uploadError } = await supabase.storage
+      const { error: uploadError } = await adminSupabase.storage
         .from("trade-in-photos")
         .upload(filePath, file, { cacheControl: "3600", upsert: false });
       if (uploadError) {
         console.error("[trade-ins] Photo upload failed:", uploadError);
         return { error: `Could not upload photo ${i + 1}. Please try again.` };
       }
-      const { data: urlData } = supabase.storage.from("trade-in-photos").getPublicUrl(filePath);
+      const { data: urlData } = adminSupabase.storage.from("trade-in-photos").getPublicUrl(filePath);
       uploadedUrls.push(urlData.publicUrl);
     }
   }
@@ -201,12 +241,15 @@ export async function submitTradeIn(formData: FormData) {
     .from("trade_ins")
     .insert({
       trade_in_id: tradeInId,
+      wanted_product_id: wanted.id,
+      wanted_product_name: wanted.name,
+      wanted_product_storage: wantedStorage,
+      trade_device_brand,
+      trade_device_model,
+      trade_device_storage: trade_device_storage || null,
       customer_name,
       phone,
       email: email || null,
-      device_brand,
-      device_model,
-      storage: storage || null,
       device_condition,
       screen_condition,
       battery_condition,
@@ -217,14 +260,14 @@ export async function submitTradeIn(formData: FormData) {
       photos: uploadedUrls,
       status: "pending",
     })
-    .select("id, trade_in_id, customer_name, phone, email, device_brand, device_model, storage, device_condition, screen_condition, battery_condition, functional_status, accessories, faults, customer_notes, status, photos")
+    .select("id, trade_in_id, customer_name, phone, email, wanted_product_id, wanted_product_name, wanted_product_storage, trade_device_brand, trade_device_model, trade_device_storage, device_condition, screen_condition, battery_condition, functional_status, accessories, faults, customer_notes, status, photos")
     .single();
 
   if (insertError || !record) {
     console.error("[trade-ins] Failed to save trade-in:", insertError);
-    // Best-effort cleanup of orphaned uploads.
+    // Best-effort cleanup of orphaned uploads (service-role storage).
     if (uploadedUrls.length > 0) {
-      await supabase.storage
+      await createAdminClient().storage
         .from("trade-in-photos")
         .remove(uploadedUrls.map((u) => u.split("/trade-in-photos/")[1]).filter(Boolean));
     }
