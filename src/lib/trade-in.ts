@@ -65,6 +65,36 @@ export const STORAGE_OPTIONS = [
 
 export const MAX_TRADE_IN_PHOTOS = 4;
 
+export const TRADE_IN_OFFER_STATUSES = [
+  "ready",
+  "sent",
+  "accepted",
+  "rejected",
+] as const;
+
+export type TradeInOfferStatus = (typeof TRADE_IN_OFFER_STATUSES)[number];
+
+/** Activity events that can be recorded on a trade-in record. */
+export const TRADE_IN_ACTIVITY_TYPES = [
+  "trade_in_submitted",
+  "review_started",
+  "inspection_completed",
+  "estimate_added",
+  "final_value_added",
+  "offer_sent",
+  "offer_accepted",
+  "offer_rejected",
+  "status_changed",
+  "telegram_sent",
+  "telegram_failed",
+  "note_added",
+  "order_linked",
+  "completed",
+  "cancelled",
+] as const;
+
+export type TradeInActivityType = (typeof TRADE_IN_ACTIVITY_TYPES)[number];
+
 const VALUE_TO_LABEL: Record<string, string> = {};
 for (const list of [DEVICE_CONDITIONS, SCREEN_CONDITIONS, BATTERY_CONDITIONS, FUNCTIONAL_STATUSES]) {
   for (const option of list) {

@@ -403,6 +403,7 @@ export type Database = {
           accessories: string[]
           admin_notes: string | null
           battery_condition: string
+          completed_at: string | null
           created_at: string
           customer_name: string
           customer_notes: string | null
@@ -413,16 +414,26 @@ export type Database = {
           final_value: number | null
           functional_status: string
           id: string
+          linked_order_id: string | null
+          offer_accepted_at: string | null
+          offer_rejected_at: string | null
+          offer_sent_at: string | null
+          offer_status: string | null
           phone: string
           photos: string[]
           screen_condition: string
           status: string
+          telegram_error: string | null
           telegram_sent: boolean
+          telegram_sent_at: string | null
           trade_device_brand: string
           trade_device_model: string
           trade_device_storage: string | null
           trade_in_id: string
           updated_at: string
+          valued_at: string | null
+          valued_by: string | null
+          valuation_notes: string | null
           wanted_product_id: string | null
           wanted_product_name: string
           wanted_product_storage: string | null
@@ -431,6 +442,7 @@ export type Database = {
           accessories?: string[]
           admin_notes?: string | null
           battery_condition: string
+          completed_at?: string | null
           created_at?: string
           customer_name: string
           customer_notes?: string | null
@@ -441,16 +453,26 @@ export type Database = {
           final_value?: number | null
           functional_status: string
           id?: string
+          linked_order_id?: string | null
+          offer_accepted_at?: string | null
+          offer_rejected_at?: string | null
+          offer_sent_at?: string | null
+          offer_status?: string | null
           phone: string
           photos?: string[]
           screen_condition: string
           status?: string
+          telegram_error?: string | null
           telegram_sent?: boolean
+          telegram_sent_at?: string | null
           trade_device_brand: string
           trade_device_model: string
           trade_device_storage?: string | null
           trade_in_id: string
           updated_at?: string
+          valued_at?: string | null
+          valued_by?: string | null
+          valuation_notes?: string | null
           wanted_product_id?: string | null
           wanted_product_name?: string
           wanted_product_storage?: string | null
@@ -459,6 +481,7 @@ export type Database = {
           accessories?: string[]
           admin_notes?: string | null
           battery_condition?: string
+          completed_at?: string | null
           created_at?: string
           customer_name?: string
           customer_notes?: string | null
@@ -469,16 +492,26 @@ export type Database = {
           final_value?: number | null
           functional_status?: string
           id?: string
+          linked_order_id?: string | null
+          offer_accepted_at?: string | null
+          offer_rejected_at?: string | null
+          offer_sent_at?: string | null
+          offer_status?: string | null
           phone?: string
           photos?: string[]
           screen_condition?: string
           status?: string
+          telegram_error?: string | null
           telegram_sent?: boolean
+          telegram_sent_at?: string | null
           trade_device_brand?: string
           trade_device_model?: string
           trade_device_storage?: string | null
           trade_in_id?: string
           updated_at?: string
+          valued_at?: string | null
+          valued_by?: string | null
+          valuation_notes?: string | null
           wanted_product_id?: string | null
           wanted_product_name?: string
           wanted_product_storage?: string | null
@@ -706,6 +739,132 @@ export type Database = {
           role?: string | null
           sort_order?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      trade_in_activity: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          event_type: string
+          id: string
+          trade_in_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description: string
+          event_type: string
+          id?: string
+          trade_in_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          event_type?: string
+          id?: string
+          trade_in_id?: string
+        }
+        Relationships: []
+      }
+      trade_in_inspections: {
+        Row: {
+          additional_faults: string | null
+          battery_health: string | null
+          body_condition: string | null
+          functional_status: string | null
+          id: string
+          imei_verified: boolean
+          inspected_at: string
+          inspected_by: string | null
+          inspected_condition: string | null
+          inspection_notes: string | null
+          screen_condition: string | null
+          trade_in_id: string
+        }
+        Insert: {
+          additional_faults?: string | null
+          battery_health?: string | null
+          body_condition?: string | null
+          functional_status?: string | null
+          id?: string
+          imei_verified?: boolean
+          inspected_at?: string
+          inspected_by?: string | null
+          inspected_condition?: string | null
+          inspection_notes?: string | null
+          screen_condition?: string | null
+          trade_in_id: string
+        }
+        Update: {
+          additional_faults?: string | null
+          battery_health?: string | null
+          body_condition?: string | null
+          functional_status?: string | null
+          id?: string
+          imei_verified?: boolean
+          inspected_at?: string
+          inspected_by?: string | null
+          inspected_condition?: string | null
+          inspection_notes?: string | null
+          screen_condition?: string | null
+          trade_in_id?: string
+        }
+        Relationships: []
+      }
+      trade_in_notes: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          note: string
+          trade_in_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note: string
+          trade_in_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string
+          trade_in_id?: string
+        }
+        Relationships: []
+      }
+      trade_in_valuations: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          estimated_value: number | null
+          final_value: number | null
+          id: string
+          notes: string | null
+          trade_in_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          estimated_value?: number | null
+          final_value?: number | null
+          id?: string
+          notes?: string | null
+          trade_in_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          estimated_value?: number | null
+          final_value?: number | null
+          id?: string
+          notes?: string | null
+          trade_in_id?: string
         }
         Relationships: []
       }

@@ -2,11 +2,13 @@
 
 import { createClient } from "@/lib/supabase-server";
 import { createAdminClient } from "@/lib/supabase-admin";
+import { createAuthClient } from "@/lib/supabase-server-auth";
 import { revalidatePath } from "next/cache";
 import { sendTelegramNotification } from "@/lib/telegram/telegram";
 import { getTradeInWantedProduct } from "@/data/public-products";
 import {
   TRADE_IN_STATUSES,
+  TRADE_IN_ACTIVITY_TYPES,
   DEVICE_CONDITIONS,
   SCREEN_CONDITIONS,
   BATTERY_CONDITIONS,
@@ -14,7 +16,9 @@ import {
   ACCESSORY_OPTIONS,
   MAX_TRADE_IN_PHOTOS,
   conditionLabel,
+  tradeInStatusLabel,
 } from "@/lib/trade-in";
+import type { Database } from "@/types/database";
 
 /* ─── Helpers ─────────────────────────────────────────────────────────────── */
 
@@ -91,6 +95,71 @@ function buildTradeInTelegramData(record: {
     },
   };
 }
+
+/* ─── Admin helpers ───────────────────────────────────────────────────────── */
+
+type AdminSupabase = ReturnType<typeof createAdminClient>;
+
+/** Every admin mutation on trade-ins must come from a signed-in admin. */
+async function requireAdmin(): Promise<{ admin?: string; error?: string }> {
+  const supabase = await createAuthClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Unauthorized" };
+  return { admin: user.email ?? "admin" };
+}
+
+/**
+ * Records an activity event. Best-effort on purpose: audit logging must
+ * never fail the operation that triggered it.
+ */
+async function logActivity(
+  supabase: AdminSupabase,
+  tradeInId: string,
+  eventType: string,
+  description: string,
+  createdBy?: string,
+) {
+  if (!TRADE_IN_ACTIVITY_TYPES.includes(eventType as (typeof TRADE_IN_ACTIVITY_TYPES)[number])) {
+    console.error(`[trade-ins] Unknown activity event type: ${eventType}`);
+    return;
+  }
+  const { error } = await supabase.from("trade_in_activity").insert({
+    trade_in_id: tradeInId,
+    event_type: eventType,
+    description,
+    created_by: createdBy ?? null,
+  });
+  if (error) {
+    console.error("[trade-ins] Failed to record activity:", error);
+  }
+}
+
+export type TradeInWorkspace = {
+  tradeIn: Database["public"]["Tables"]["trade_ins"]["Row"];
+  product: {
+    id: string;
+    name: string;
+    slug: string;
+    price: number;
+    old_price: number | null;
+    main_image_url: string | null;
+    is_active: boolean;
+    stock_status: string;
+  } | null;
+  inspection: Database["public"]["Tables"]["trade_in_inspections"]["Row"] | null;
+  notes: Database["public"]["Tables"]["trade_in_notes"]["Row"][];
+  activity: Database["public"]["Tables"]["trade_in_activity"]["Row"][];
+  valuations: Database["public"]["Tables"]["trade_in_valuations"]["Row"][];
+  linkedOrder: {
+    id: string;
+    order_number: string;
+    total_amount: number;
+    status: string;
+    created_at: string;
+  } | null;
+};
 
 /* ─── Public submission ───────────────────────────────────────────────────── */
 
@@ -281,10 +350,28 @@ export async function submitTradeIn(formData: FormData) {
 
   // Best-effort staff notification — never fails the submission.
   const telegramOk = await sendTelegramNotification("trade-in", buildTradeInTelegramData(record));
+  const now = new Date().toISOString();
   await adminSupabase
     .from("trade_ins")
-    .update({ telegram_sent: telegramOk })
+    .update({
+      telegram_sent: telegramOk,
+      telegram_sent_at: telegramOk ? now : null,
+      telegram_error: telegramOk ? null : "Initial notification failed",
+    })
     .eq("id", record.id);
+
+  // Audit trail for the submission itself.
+  await logActivity(
+    adminSupabase,
+    record.id,
+    "trade_in_submitted",
+    `Trade-in request ${tradeInId} submitted by ${customer_name}`,
+  );
+  if (telegramOk) {
+    await logActivity(adminSupabase, record.id, "telegram_sent", "Staff notification sent to Telegram");
+  } else {
+    await logActivity(adminSupabase, record.id, "telegram_failed", "Staff notification could not be sent");
+  }
 
   return { success: true, trade_in_id: tradeInId };
 }
@@ -320,6 +407,430 @@ export async function getTradeInById(id: string) {
   return data;
 }
 
+/**
+ * Fetches everything the detail workspace needs in parallel: the trade-in
+ * row, its wanted product, inspection, notes, activity, valuation history
+ * and linked order. No catalog-wide or order-wide queries.
+ */
+export async function getTradeInWorkspace(id: string): Promise<TradeInWorkspace | null> {
+  const supabase = await createAdminClient();
+
+  const [tradeInRes, inspectionRes, notesRes, activityRes, valuationsRes] = await Promise.all([
+    supabase.from("trade_ins").select("*").eq("id", id).maybeSingle(),
+    supabase.from("trade_in_inspections").select("*").eq("trade_in_id", id).maybeSingle(),
+    supabase.from("trade_in_notes").select("*").eq("trade_in_id", id).order("created_at", { ascending: false }),
+    supabase
+      .from("trade_in_activity")
+      .select("*")
+      .eq("trade_in_id", id)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("trade_in_valuations")
+      .select("*")
+      .eq("trade_in_id", id)
+      .order("created_at", { ascending: false }),
+  ]);
+
+  if (tradeInRes.error || !tradeInRes.data) {
+    console.error("Error fetching trade-in workspace:", tradeInRes.error);
+    return null;
+  }
+
+  // The wanted product is keyed by wanted_product_id (not the trade-in id).
+  let product = null;
+  if (tradeInRes.data.wanted_product_id) {
+    const res = await supabase
+      .from("products")
+      .select("id, name, slug, price, old_price, main_image_url, is_active, stock_status")
+      .eq("id", tradeInRes.data.wanted_product_id)
+      .maybeSingle();
+    if (!res.error && res.data) product = res.data;
+  }
+
+  let linkedOrder = null;
+  if (tradeInRes.data.linked_order_id) {
+    const res = await supabase
+      .from("orders")
+      .select("id, order_number, total_amount, status, created_at")
+      .eq("id", tradeInRes.data.linked_order_id)
+      .maybeSingle();
+    if (!res.error && res.data) linkedOrder = res.data;
+  }
+
+  return {
+    tradeIn: tradeInRes.data,
+    product,
+    inspection: inspectionRes.error ? null : (inspectionRes.data ?? null),
+    notes: notesRes.error ? [] : (notesRes.data ?? []),
+    activity: activityRes.error ? [] : (activityRes.data ?? []),
+    valuations: valuationsRes.error ? [] : (valuationsRes.data ?? []),
+    linkedOrder,
+  };
+}
+
+/** Starts review: pending → under_review with an audit event. */
+export async function startTradeInReview(id: string) {
+  const { admin, error: authError } = await requireAdmin();
+  if (authError) return { error: authError };
+
+  const supabase = await createAdminClient();
+  const { data: existing } = await supabase.from("trade_ins").select("id, status").eq("id", id).maybeSingle();
+  if (!existing) return { error: "Trade-in not found" };
+  if (existing.status !== "pending" && existing.status !== "under_review") {
+    return { error: "Only pending trade-ins can be put under review." };
+  }
+
+  const { error } = await supabase
+    .from("trade_ins")
+    .update({ status: "under_review", updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) return { error: error.message };
+
+  await logActivity(supabase, id, "review_started", "Review started", admin);
+  revalidatePath("/admin/trade-ins");
+  return { success: true };
+}
+
+/**
+ * Saves the staff inspection. Never touches customer-reported fields —
+ * inspection data lives in trade_in_inspections (one row per trade-in).
+ */
+export async function saveTradeInInspection(
+  id: string,
+  input: {
+    inspected_condition: string | null;
+    battery_health: string | null;
+    screen_condition: string | null;
+    body_condition: string | null;
+    functional_status: string | null;
+    imei_verified: boolean;
+    additional_faults: string | null;
+    inspection_notes: string | null;
+  },
+) {
+  const { admin, error: authError } = await requireAdmin();
+  if (authError) return { error: authError };
+
+  const supabase = await createAdminClient();
+  const { data: existing } = await supabase.from("trade_ins").select("id").eq("id", id).maybeSingle();
+  if (!existing) return { error: "Trade-in not found" };
+
+  const allowed = (value: string | null, options: readonly { value: string }[]) =>
+    value === null || options.some((o) => o.value === value);
+
+  if (!allowed(input.inspected_condition, DEVICE_CONDITIONS)) return { error: "Invalid verified condition." };
+  if (!allowed(input.screen_condition, SCREEN_CONDITIONS)) return { error: "Invalid screen condition." };
+  if (!allowed(input.body_condition, DEVICE_CONDITIONS)) return { error: "Invalid body condition." };
+  if (!allowed(input.functional_status, FUNCTIONAL_STATUSES)) return { error: "Invalid functional status." };
+
+  const payload = {
+    trade_in_id: id,
+    inspected_condition: input.inspected_condition,
+    battery_health: input.battery_health?.trim().slice(0, 80) || null,
+    screen_condition: input.screen_condition,
+    body_condition: input.body_condition,
+    functional_status: input.functional_status,
+    imei_verified: !!input.imei_verified,
+    additional_faults: input.additional_faults?.trim().slice(0, 1000) || null,
+    inspection_notes: input.inspection_notes?.trim().slice(0, 2000) || null,
+    inspected_by: admin,
+    inspected_at: new Date().toISOString(),
+  };
+
+  const { error } = await supabase.from("trade_in_inspections").upsert(payload, { onConflict: "trade_in_id" });
+  if (error) return { error: error.message };
+
+  await supabase
+    .from("trade_ins")
+    .update({ updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  await logActivity(supabase, id, "inspection_completed", "Staff inspection saved", admin);
+  revalidatePath("/admin/trade-ins");
+  return { success: true };
+}
+
+/** Adds an internal note. Each save creates a new record — never overwrites. */
+export async function addTradeInNote(id: string, note: string) {
+  const { admin, error: authError } = await requireAdmin();
+  if (authError) return { error: authError };
+
+  const clean = note.trim().slice(0, 2000);
+  if (!clean) return { error: "Note cannot be empty." };
+
+  const supabase = await createAdminClient();
+  const { data: existing } = await supabase.from("trade_ins").select("id").eq("id", id).maybeSingle();
+  if (!existing) return { error: "Trade-in not found" };
+
+  const { error } = await supabase.from("trade_in_notes").insert({
+    trade_in_id: id,
+    note: clean,
+    created_by: admin,
+  });
+  if (error) return { error: error.message };
+
+  await supabase
+    .from("trade_ins")
+    .update({ updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  await logActivity(supabase, id, "note_added", "Internal note added", admin);
+  revalidatePath("/admin/trade-ins");
+  return { success: true };
+}
+
+/**
+ * Saves the current valuation onto the trade_ins record and appends a
+ * history entry (trade_in_valuations) so earlier values are never lost.
+ */
+export async function saveTradeInValuation(
+  id: string,
+  input: {
+    estimated_value: number | null;
+    final_value: number | null;
+    valuation_notes: string | null;
+  },
+) {
+  const { admin, error: authError } = await requireAdmin();
+  if (authError) return { error: authError };
+
+  const validate = (value: number | null) =>
+    value !== null && (!Number.isFinite(value) || value < 0);
+  if (validate(input.estimated_value)) return { error: "Estimated value must be a positive number." };
+  if (validate(input.final_value)) return { error: "Final value must be a positive number." };
+
+  const supabase = await createAdminClient();
+  const { data: existing } = await supabase.from("trade_ins").select("id, estimated_value, final_value").eq("id", id).maybeSingle();
+  if (!existing) return { error: "Trade-in not found" };
+
+  const { error: updateError } = await supabase
+    .from("trade_ins")
+    .update({
+      estimated_value: input.estimated_value,
+      final_value: input.final_value,
+      valuation_notes: input.valuation_notes?.trim().slice(0, 2000) || null,
+      valued_by: admin,
+      valued_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+  if (updateError) return { error: updateError.message };
+
+  // History snapshot — keeps an audit trail across valuation changes.
+  const { error: historyError } = await supabase.from("trade_in_valuations").insert({
+    trade_in_id: id,
+    estimated_value: input.estimated_value,
+    final_value: input.final_value,
+    notes: input.valuation_notes?.trim().slice(0, 2000) || null,
+    created_by: admin,
+  });
+  if (historyError) console.error("[trade-ins] Failed to record valuation history:", historyError);
+
+  if (input.estimated_value !== null) {
+    await logActivity(supabase, id, "estimate_added", `Estimated value set to ${input.estimated_value.toLocaleString("en-US")} RWF`, admin);
+  }
+  if (input.final_value !== null) {
+    await logActivity(supabase, id, "final_value_added", `Final trade-in value set to ${input.final_value.toLocaleString("en-US")} RWF`, admin);
+  }
+
+  revalidatePath("/admin/trade-ins");
+  return { success: true };
+}
+
+/**
+ * Sends the official offer to the customer (via the existing Telegram
+ * channel). Requires a saved final value. Never fails the record: delivery
+ * state is stored and retryable.
+ */
+export async function sendTradeInOffer(id: string) {
+  const { admin, error: authError } = await requireAdmin();
+  if (authError) return { error: authError };
+
+  const supabase = await createAdminClient();
+  const { data: record } = await supabase.from("trade_ins").select("*").eq("id", id).maybeSingle();
+  if (!record) return { error: "Trade-in not found" };
+
+  if (record.final_value === null) {
+    return { error: "Save a final trade-in value before sending the offer." };
+  }
+
+  const telegramOk = await sendTelegramNotification(
+    "trade-in-offer",
+    {
+      tradeInOffer: {
+        trade_in_id: record.trade_in_id,
+        wanted_product_name: record.wanted_product_name,
+        wanted_product_storage: record.wanted_product_storage ?? undefined,
+        trade_device_brand: record.trade_device_brand,
+        trade_device_model: record.trade_device_model,
+        trade_device_storage: record.trade_device_storage ?? undefined,
+        final_value: record.final_value,
+      },
+    },
+  );
+
+  const now = new Date().toISOString();
+  const { error: updateError } = await supabase
+    .from("trade_ins")
+    .update({
+      offer_status: "sent",
+      status: "offer_sent",
+      offer_sent_at: now,
+      telegram_sent: telegramOk,
+      telegram_sent_at: telegramOk ? now : null,
+      telegram_error: telegramOk ? null : "Offer message failed to send",
+      updated_at: now,
+    })
+    .eq("id", id);
+  if (updateError) return { error: updateError.message };
+
+  await logActivity(supabase, id, "offer_sent", `Offer of ${record.final_value.toLocaleString("en-US")} RWF sent to customer`, admin);
+  if (telegramOk) {
+    await logActivity(supabase, id, "telegram_sent", "Offer delivered via Telegram");
+  } else {
+    await logActivity(supabase, id, "telegram_failed", "Offer could not be delivered via Telegram");
+  }
+
+  revalidatePath("/admin/trade-ins");
+  return telegramOk ? { success: true } : { error: "Telegram could not be reached. Try again shortly." };
+}
+
+/** Records customer acceptance of the offer. */
+export async function markTradeInAccepted(id: string) {
+  const { admin, error: authError } = await requireAdmin();
+  if (authError) return { error: authError };
+
+  const supabase = await createAdminClient();
+  const { data: record } = await supabase.from("trade_ins").select("id, offer_status, status").eq("id", id).maybeSingle();
+  if (!record) return { error: "Trade-in not found" };
+  if (!["sent", "accepted"].includes(record.offer_status ?? "")) {
+    return { error: "Send the offer before recording acceptance." };
+  }
+
+  const now = new Date().toISOString();
+  const { error } = await supabase
+    .from("trade_ins")
+    .update({ offer_status: "accepted", status: "accepted", offer_accepted_at: now, updated_at: now })
+    .eq("id", id);
+  if (error) return { error: error.message };
+
+  await logActivity(supabase, id, "offer_accepted", "Customer accepted the trade-in offer", admin);
+  revalidatePath("/admin/trade-ins");
+  return { success: true };
+}
+
+/** Records customer rejection of the offer. */
+export async function markTradeInRejected(id: string) {
+  const { admin, error: authError } = await requireAdmin();
+  if (authError) return { error: authError };
+
+  const supabase = await createAdminClient();
+  const { data: record } = await supabase.from("trade_ins").select("id, offer_status, status").eq("id", id).maybeSingle();
+  if (!record) return { error: "Trade-in not found" };
+  if (record.offer_status !== "sent") {
+    return { error: "Only sent offers can be rejected by the customer." };
+  }
+
+  const now = new Date().toISOString();
+  const { error } = await supabase
+    .from("trade_ins")
+    .update({ offer_status: "rejected", status: "rejected", offer_rejected_at: now, updated_at: now })
+    .eq("id", id);
+  if (error) return { error: error.message };
+
+  await logActivity(supabase, id, "offer_rejected", "Customer rejected the trade-in offer", admin);
+  revalidatePath("/admin/trade-ins");
+  return { success: true };
+}
+
+/** Marks the trade-in completed. Requires the customer to have accepted. */
+export async function completeTradeIn(id: string) {
+  const { admin, error: authError } = await requireAdmin();
+  if (authError) return { error: authError };
+
+  const supabase = await createAdminClient();
+  const { data: record } = await supabase.from("trade_ins").select("id, status").eq("id", id).maybeSingle();
+  if (!record) return { error: "Trade-in not found" };
+  if (record.status !== "accepted") {
+    return { error: "Only accepted trade-ins can be completed." };
+  }
+
+  const now = new Date().toISOString();
+  const { error } = await supabase
+    .from("trade_ins")
+    .update({ status: "completed", completed_at: now, updated_at: now })
+    .eq("id", id);
+  if (error) return { error: error.message };
+
+  await logActivity(supabase, id, "completed", "Trade-in completed", admin);
+  revalidatePath("/admin/trade-ins");
+  return { success: true };
+}
+
+/** Cancels the trade-in. Prefer this over deletion. */
+export async function cancelTradeIn(id: string) {
+  const { admin, error: authError } = await requireAdmin();
+  if (authError) return { error: authError };
+
+  const supabase = await createAdminClient();
+  const { data: record } = await supabase.from("trade_ins").select("id, status").eq("id", id).maybeSingle();
+  if (!record) return { error: "Trade-in not found" };
+  if (["completed", "cancelled"].includes(record.status)) {
+    return { error: "This trade-in is already finished." };
+  }
+
+  const now = new Date().toISOString();
+  const { error } = await supabase
+    .from("trade_ins")
+    .update({ status: "cancelled", updated_at: now })
+    .eq("id", id);
+  if (error) return { error: error.message };
+
+  await logActivity(supabase, id, "cancelled", "Trade-in cancelled", admin);
+  revalidatePath("/admin/trade-ins");
+  return { success: true };
+}
+
+/**
+ * Links an existing order to the trade-in. The order must exist; no order
+ * is created or modified here.
+ */
+export async function linkTradeInOrder(id: string, orderId: string) {
+  const { admin, error: authError } = await requireAdmin();
+  if (authError) return { error: authError };
+
+  if (!orderId || orderId.trim().length < 8) return { error: "Select a valid order." };
+
+  const supabase = await createAdminClient();
+  const [tradeInRes, orderRes] = await Promise.all([
+    supabase.from("trade_ins").select("id").eq("id", id).maybeSingle(),
+    (async () => {
+      // Accept either the structured order number (GH-2026-000001) or the
+      // raw order uuid. The number is the human-facing identifier.
+      const byNumber = await supabase
+        .from("orders")
+        .select("id, order_number")
+        .eq("order_number", orderId.trim())
+        .maybeSingle();
+      if (byNumber.data) return byNumber;
+      return supabase.from("orders").select("id, order_number").eq("id", orderId).maybeSingle();
+    })(),
+  ]);
+
+  if (!tradeInRes.data) return { error: "Trade-in not found" };
+  if (!orderRes.data) return { error: "Order not found" };
+
+  const { error } = await supabase
+    .from("trade_ins")
+    .update({ linked_order_id: orderId, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) return { error: error.message };
+
+  await logActivity(supabase, id, "order_linked", `Linked to order ${orderRes.data.order_number}`, admin);
+  revalidatePath("/admin/trade-ins");
+  return { success: true };
+}
+
 export async function updateTradeIn(
   id: string,
   input: {
@@ -329,6 +840,9 @@ export async function updateTradeIn(
     admin_notes?: string | null;
   },
 ) {
+  const { admin, error: authError } = await requireAdmin();
+  if (authError) return { error: authError };
+
   const supabase = await createAdminClient();
 
   const updates: {
@@ -369,6 +883,16 @@ export async function updateTradeIn(
   const { error } = await supabase.from("trade_ins").update(updates).eq("id", id);
   if (error) return { error: error.message };
 
+  if (input.status !== undefined) {
+    await logActivity(
+      supabase,
+      id,
+      "status_changed",
+      `Status changed to ${tradeInStatusLabel(input.status)}`,
+      admin,
+    );
+  }
+
   revalidatePath("/admin/trade-ins");
   return { success: true };
 }
@@ -386,13 +910,25 @@ export async function resendTradeInTelegram(id: string) {
   if (error || !record) return { error: "Trade-in not found" };
 
   const telegramOk = await sendTelegramNotification("trade-in", buildTradeInTelegramData(record));
+  const now = new Date().toISOString();
 
   const { error: updateError } = await supabase
     .from("trade_ins")
-    .update({ telegram_sent: telegramOk, updated_at: new Date().toISOString() })
+    .update({
+      telegram_sent: telegramOk,
+      telegram_sent_at: telegramOk ? now : null,
+      telegram_error: telegramOk ? null : "Telegram unreachable on retry",
+      updated_at: now,
+    })
     .eq("id", id);
 
   if (updateError) return { error: updateError.message };
+
+  if (telegramOk) {
+    await logActivity(supabase, id, "telegram_sent", "Staff notification retried and delivered");
+  } else {
+    await logActivity(supabase, id, "telegram_failed", "Staff notification retry failed");
+  }
 
   revalidatePath("/admin/trade-ins");
   return telegramOk ? { success: true } : { error: "Telegram could not be reached. Try again shortly." };

@@ -62,6 +62,15 @@ type TelegramNotificationData = {
     status: string;
     photos_count: number;
   };
+  tradeInOffer?: {
+    trade_in_id: string;
+    wanted_product_name: string;
+    wanted_product_storage?: string;
+    trade_device_brand: string;
+    trade_device_model: string;
+    trade_device_storage?: string;
+    final_value: number;
+  };
 };
 
 /**
@@ -276,11 +285,55 @@ function buildTradeInMessage(data: TelegramNotificationData): string {
 }
 
 /**
+ * Customer-facing offer message. Contains ONLY customer-appropriate
+ * information: no internal notes, no staff names, no database ids.
+ */
+function buildTradeInOfferMessage(data: TelegramNotificationData): string {
+  const o: Partial<NonNullable<TelegramNotificationData["tradeInOffer"]>> =
+    data.tradeInOffer ?? {
+      trade_in_id: "",
+      wanted_product_name: "",
+      trade_device_brand: "",
+      trade_device_model: "",
+      final_value: 0,
+    };
+
+  const bar = "━━━━━━━━━━━━━━━━━━";
+  const wanted = [o.wanted_product_name, o.wanted_product_storage].filter(Boolean).join(" · ");
+  const trading = [o.trade_device_brand, o.trade_device_model, o.trade_device_storage]
+    .filter(Boolean)
+    .join(" · ");
+
+  const lines: string[] = [];
+  lines.push(bar);
+  lines.push("GALAXY HUB TRADE\\-IN");
+  lines.push(bar);
+  lines.push("");
+  lines.push(`Trade\\-In ID:`);
+  lines.push(escapeMarkdownV2(o.trade_in_id));
+  lines.push("");
+  lines.push("You're looking to upgrade to:");
+  lines.push(escapeMarkdownV2(wanted || "—"));
+  lines.push("");
+  lines.push("Your trade\\-in device:");
+  lines.push(escapeMarkdownV2(trading || "—"));
+  lines.push("");
+  lines.push("Trade\\-in value:");
+  lines.push(escapeMarkdownV2(`RWF ${Number(o.final_value ?? 0).toLocaleString("en-US")}`));
+  lines.push("");
+  lines.push("Please confirm if you would like to proceed\\.");
+  lines.push("");
+  lines.push(bar);
+
+  return lines.join("\n");
+}
+
+/**
  * Topic-aware dispatcher used by the notification service. Never throws:
  * callers always get a boolean so checkout / form flows can continue.
  */
 export async function sendTelegramNotification(
-  topic: "order" | "order-status" | "contact" | "quote" | "trade-in",
+  topic: "order" | "order-status" | "contact" | "quote" | "trade-in" | "trade-in-offer",
   data: TelegramNotificationData,
 ): Promise<boolean> {
   let text: string;
@@ -300,6 +353,9 @@ export async function sendTelegramNotification(
       break;
     case "trade-in":
       text = buildTradeInMessage(data);
+      break;
+    case "trade-in-offer":
+      text = buildTradeInOfferMessage(data);
       break;
     default:
       console.error(`[telegram] Unknown notification topic: ${topic}`);

@@ -1,10 +1,36 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { getTradeInById } from "@/actions/trade-ins";
+import { getTradeInWorkspace } from "@/actions/trade-ins";
 import { TradeInDetailClient } from "./TradeInDetailClient";
 
 export const dynamic = "force-dynamic";
+
+function WorkspaceSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="h-28 animate-pulse rounded-2xl border border-white/5 bg-white/5" />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="h-44 animate-pulse rounded-2xl border border-white/5 bg-white/5" />
+          ))}
+        </div>
+        <div className="space-y-6">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="h-36 animate-pulse rounded-2xl border border-white/5 bg-white/5" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+async function WorkspaceContent({ id }: { id: string }) {
+  const workspace = await getTradeInWorkspace(id);
+  if (!workspace) notFound();
+
+  return <TradeInDetailClient key={workspace.tradeIn.updated_at} workspace={workspace} />;
+}
 
 export default async function TradeInDetailPage({
   params,
@@ -12,29 +38,13 @@ export default async function TradeInDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const tradeIn = await getTradeInById(id);
-
-  if (!tradeIn) notFound();
 
   return (
     <div className="space-y-6">
-      <div>
-        <Link
-          href="/admin/trade-ins"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/40 transition-colors hover:text-white/80"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Back to Trade-Ins
-        </Link>
-        <h1 className="mt-2 font-clash text-2xl font-bold text-white tracking-tight">
-          {tradeIn.trade_in_id}
-        </h1>
-        <p className="mt-1 text-sm text-white/40">
-          {tradeIn.wanted_product_name}
-          {tradeIn.wanted_product_storage ? ` · ${tradeIn.wanted_product_storage}` : ""}
-        </p>
-      </div>
-      <TradeInDetailClient key={tradeIn.updated_at} tradeIn={tradeIn} />
+      <h1 className="font-clash text-2xl font-bold text-white tracking-tight">Trade-In Detail</h1>
+      <Suspense fallback={<WorkspaceSkeleton />}>
+        <WorkspaceContent id={id} />
+      </Suspense>
     </div>
   );
 }
