@@ -239,7 +239,10 @@ export async function submitTradeIn(formData: FormData) {
     }
   }
 
-  const { data: record, error: insertError } = await supabase
+  // Insert through the service-role client: the insert needs the returned
+  // row (for the Telegram message), and anon has no SELECT policy on
+  // trade_ins — `insert().select()` would fail PostgREST's re-select.
+  const { data: record, error: insertError } = await adminSupabase
     .from("trade_ins")
     .insert({
       trade_in_id: tradeInId,
