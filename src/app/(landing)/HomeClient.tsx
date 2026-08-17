@@ -292,10 +292,11 @@ export default function HomeClient({ data }: HomeClientProps) {
         </section>
       )}
 
+      <TradeIn />
+
       <WhyChooseUs />
       <Reviews reviews={data.reviews} />
       <FAQSupport />
-      <TradeIn />
       <CTA />
       <Footer />
 

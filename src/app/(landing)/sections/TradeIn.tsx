@@ -107,7 +107,7 @@ export function TradeIn() {
           <Reveal y={16} delay={MOTION.stagger * 2} className="relative min-h-[280px] lg:min-h-full">
             <div className="absolute inset-0">
               <Image
-                src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=1200"
+                src="/trade in.jpeg"
                 alt="A hand holding a smartphone"
                 fill
                 sizes="(max-width: 1024px) 100vw, 640px"
