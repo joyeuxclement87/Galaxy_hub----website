@@ -41,6 +41,25 @@ type TelegramNotificationData = {
     email?: string;
     notes?: string;
   };
+  tradeIn?: {
+    trade_in_id: string;
+    id?: string;
+    customer_name: string;
+    phone: string;
+    email?: string;
+    device_brand: string;
+    device_model: string;
+    storage?: string;
+    device_condition: string;
+    screen_condition: string;
+    battery_condition: string;
+    functional_status: string;
+    accessories: string[];
+    faults?: string;
+    notes?: string;
+    status: string;
+    photos_count: number;
+  };
 };
 
 /**
@@ -186,12 +205,50 @@ function buildQuoteMessage(data: TelegramNotificationData): string {
   return lines.join("\n");
 }
 
+function buildTradeInMessage(data: TelegramNotificationData): string {
+  const t: Partial<NonNullable<TelegramNotificationData["tradeIn"]>> = data.tradeIn ?? {
+    trade_in_id: "", customer_name: "", phone: "", device_brand: "", device_model: "",
+    device_condition: "", screen_condition: "", battery_condition: "", functional_status: "",
+    accessories: [], status: "", photos_count: 0,
+  };
+
+  const lines: string[] = ["📱 *NEW TRADE-IN REQUEST*", ""];
+  lines.push(`*ID:* ${escapeMarkdownV2(t.trade_in_id)}`);
+  lines.push("");
+  lines.push(`*Customer:* ${escapeMarkdownV2(t.customer_name)}`);
+  lines.push(`*Phone:* ${escapeMarkdownV2(t.phone)}`);
+  if (t.email) lines.push(`*Email:* ${escapeMarkdownV2(t.email)}`);
+  lines.push("", "*Device:*");
+  lines.push(`• ${escapeMarkdownV2(t.device_brand)} ${escapeMarkdownV2(t.device_model)}`);
+  if (t.storage) lines.push(`• ${escapeMarkdownV2(t.storage)}`);
+  lines.push("", `*Condition:* ${escapeMarkdownV2(t.device_condition)}`);
+  lines.push(`*Screen:* ${escapeMarkdownV2(t.screen_condition)}`);
+  lines.push(`*Battery:* ${escapeMarkdownV2(t.battery_condition)}`);
+  lines.push(`*Functional:* ${escapeMarkdownV2(t.functional_status)}`);
+  lines.push(
+    "",
+    `*Accessories:* ${escapeMarkdownV2((t.accessories ?? []).length > 0 ? (t.accessories ?? []).join(", ") : "None")}`,
+  );
+  lines.push(`*Faults:* ${escapeMarkdownV2(t.faults || "None")}`);
+  if (t.notes) lines.push("", `*Notes:* ${escapeMarkdownV2(t.notes)}`);
+  lines.push("", `*Status:* ${escapeMarkdownV2(t.status)}`);
+  lines.push(
+    `*Photos:* ${(t.photos_count ?? 0) > 0 ? `${t.photos_count ?? 0} uploaded` : "Not provided"}`,
+  );
+
+  if (t.id && process.env.NEXT_PUBLIC_SITE_URL) {
+    lines.push("", `🔗 [Review in admin](${process.env.NEXT_PUBLIC_SITE_URL}/admin/trade-ins/${t.id})`);
+  }
+
+  return lines.join("\n");
+}
+
 /**
  * Topic-aware dispatcher used by the notification service. Never throws:
  * callers always get a boolean so checkout / form flows can continue.
  */
 export async function sendTelegramNotification(
-  topic: "order" | "order-status" | "contact" | "quote",
+  topic: "order" | "order-status" | "contact" | "quote" | "trade-in",
   data: TelegramNotificationData,
 ): Promise<boolean> {
   let text: string;
@@ -208,6 +265,9 @@ export async function sendTelegramNotification(
       break;
     case "quote":
       text = buildQuoteMessage(data);
+      break;
+    case "trade-in":
+      text = buildTradeInMessage(data);
       break;
     default:
       console.error(`[telegram] Unknown notification topic: ${topic}`);

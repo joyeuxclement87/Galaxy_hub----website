@@ -4,7 +4,7 @@ export type NotificationChannel = "telegram" | "email" | "whatsapp" | "sms";
 
 export type NotificationPayload = {
   channel?: NotificationChannel;
-  topic: "order" | "order-status" | "contact" | "quote";
+  topic: "order" | "order-status" | "contact" | "quote" | "trade-in";
   data: Record<string, unknown>;
 };
 

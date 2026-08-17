@@ -45,6 +45,7 @@ function SocialIcon({ href, label, children }: { href: string; label: string; ch
 const SHOP_LINKS = [
   { label: "Browse Products",    href: "/products" },
   { label: "Deals & Promotions", href: "/#deals" },
+  { label: "Trade In",         href: "/trade-in" },
   { label: "Order & Delivery",   href: "/order" },
   { label: "Contact Us",         href: "/contact" },
 ];

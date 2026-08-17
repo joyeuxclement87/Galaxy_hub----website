@@ -18,6 +18,7 @@ import {
   Zap,
   Star,
   MessageSquare,
+  RefreshCw,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -49,6 +50,7 @@ const NAV_GROUPS = [
     label: "Sales",
     items: [
       { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
+      { label: "Trade-Ins", href: "/admin/trade-ins", icon: RefreshCw },
     ],
   },
   {

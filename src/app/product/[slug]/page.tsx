@@ -213,6 +213,15 @@ export default async function ProductPage({ params }: ProductPageParams) {
                     productImage={product.main_image_url || undefined}
                     storageOptions={product.storage_options}
                   />
+                  {!product.category_slug?.includes("accessor") && (
+                    <Link
+                      href="/trade-in"
+                      className="mt-3 inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-ocean transition-colors hover:text-ocean-dark"
+                    >
+                      Have an old device? Trade it in{" "}
+                      <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+                    </Link>
+                  )}
                 </div>
 
                {/* Trust badges */}

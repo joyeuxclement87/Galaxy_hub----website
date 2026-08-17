@@ -38,6 +38,7 @@ const NAV_LINKS = [
   { label: "Categories", id: "categories" },
   { label: "Brands", id: "brands" },
   { label: "Promotions", id: "deals" },
+  { label: "Trade In", id: "trade-in" },
   { label: "Contact Us", id: "contact" },
 ];
 
@@ -640,6 +641,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
     setMobileOpen(false);
     if (id === "home") return;
     if (id === "products") return;
+    if (id === "trade-in") return;
     if (id === "contact") return;
     if (pathname !== "/") return;
     e.preventDefault();
@@ -657,6 +659,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
   const getHref = (id: string) => {
     if (id === "home") return "/";
     if (id === "products") return "/products";
+    if (id === "trade-in") return "/trade-in";
     if (id === "contact") return "/contact";
     if (pathname === "/") return `#${id}`;
     return `/#${id}`;

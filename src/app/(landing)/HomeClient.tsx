@@ -24,6 +24,7 @@ import { Brands }             from "@/app/(landing)/sections/Brands";
 import { WhyChooseUs }        from "@/app/(landing)/sections/WhyChooseUs";
 import { Reviews }            from "@/app/(landing)/sections/Reviews";
 import { FAQSupport }         from "@/app/(landing)/sections/FAQSupport";
+import { TradeIn }            from "@/app/(landing)/sections/TradeIn";
 import CTA                    from "@/app/(landing)/sections/CTA";
 
 import Footer                 from "@/components/ui/Footer";
@@ -294,6 +295,7 @@ export default function HomeClient({ data }: HomeClientProps) {
       <WhyChooseUs />
       <Reviews reviews={data.reviews} />
       <FAQSupport />
+      <TradeIn />
       <CTA />
       <Footer />
 

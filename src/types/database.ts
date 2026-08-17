@@ -398,6 +398,84 @@ export type Database = {
           },
         ]
       }
+      trade_ins: {
+        Row: {
+          accessories: string[]
+          admin_notes: string | null
+          battery_condition: string
+          created_at: string
+          customer_name: string
+          customer_notes: string | null
+          device_brand: string
+          device_condition: string
+          device_model: string
+          email: string | null
+          estimated_value: number | null
+          faults: string | null
+          final_value: number | null
+          functional_status: string
+          id: string
+          phone: string
+          photos: string[]
+          screen_condition: string
+          status: string
+          storage: string | null
+          telegram_sent: boolean
+          trade_in_id: string
+          updated_at: string
+        }
+        Insert: {
+          accessories?: string[]
+          admin_notes?: string | null
+          battery_condition: string
+          created_at?: string
+          customer_name: string
+          customer_notes?: string | null
+          device_brand: string
+          device_condition: string
+          device_model: string
+          email?: string | null
+          estimated_value?: number | null
+          faults?: string | null
+          final_value?: number | null
+          functional_status: string
+          id?: string
+          phone: string
+          photos?: string[]
+          screen_condition: string
+          status?: string
+          storage?: string | null
+          telegram_sent?: boolean
+          trade_in_id: string
+          updated_at?: string
+        }
+        Update: {
+          accessories?: string[]
+          admin_notes?: string | null
+          battery_condition?: string
+          created_at?: string
+          customer_name?: string
+          customer_notes?: string | null
+          device_brand?: string
+          device_condition?: string
+          device_model?: string
+          email?: string | null
+          estimated_value?: number | null
+          faults?: string | null
+          final_value?: number | null
+          functional_status?: string
+          id?: string
+          phone?: string
+          photos?: string[]
+          screen_condition?: string
+          status?: string
+          storage?: string | null
+          telegram_sent?: boolean
+          trade_in_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       product_images: {
         Row: {
           created_at: string
@@ -627,7 +705,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      next_order_number: { Args: never; Returns: string }
+      next_order_number: { Args: never; Returns: string },
+      next_trade_in_number: { Args: never; Returns: string }
     }
     Enums: {
       [_ in never]: never
