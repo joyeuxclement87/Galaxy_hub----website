@@ -2,7 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import { Reveal } from "@/components/ui/Reveal";
 
 const localBusinessSchema = {
   "@context": "https://schema.org",
@@ -60,14 +62,18 @@ export function Footer() {
       <div className="mx-auto max-w-[1320px] px-5 pt-12 pb-0 sm:px-8 sm:pt-14">
 
         {/* Main grid: 4 columns desktop, 2 tablet, stacked mobile */}
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[2.2fr_1fr_1fr_1.5fr] lg:gap-12">
+        <Reveal y={14}>
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[2.2fr_1fr_1fr_1.5fr] lg:gap-12">
 
           {/* ── Brand Column ── */}
           <div className="sm:col-span-2 lg:col-span-1 space-y-4">
             <Link href="/" className="inline-flex items-center transition-opacity duration-200 hover:opacity-75">
-              <img
+              <Image
                 src="/g-hub logo ii.png"
                 alt="Galaxy Hub"
+                width={184}
+                height={40}
+                loading="lazy"
                 className="h-10 w-auto object-contain select-none"
               />
             </Link>
@@ -171,6 +177,7 @@ export function Footer() {
             </div>
           </address>
         </div>
+        </Reveal>
 
         {/* ── Footer Bottom Bar ── */}
         <div className="mt-10 flex flex-col items-center gap-3 border-t border-white/[0.06] py-5 text-[12px] text-white/40 sm:flex-row sm:justify-between">

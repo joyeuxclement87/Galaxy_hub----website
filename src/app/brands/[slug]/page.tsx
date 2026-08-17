@@ -4,6 +4,7 @@ import { ArrowRight, BadgeCheck, PackageCheck, Sparkles } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
 import { ProductCard } from "@/components/products/ProductCard";
+import { gridStaggerDelay } from "@/lib/motion";
 import { getPublicBrandBySlug } from "@/data/public-products";
 import type { Metadata } from "next";
 
@@ -69,8 +70,8 @@ export default async function BrandPage({ params }: { params: Promise<{ slug: st
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-              {products.map((p) => (
-                <ProductCard key={p.id} product={{
+              {products.map((p, index) => (
+                <ProductCard key={p.id} delay={gridStaggerDelay(index)} product={{
                   id: p.id,
                   slug: p.slug,
                   title: p.name,

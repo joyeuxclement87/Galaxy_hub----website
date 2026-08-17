@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ShoppingBag, Trash2, Minus, Plus, ArrowLeft, PackageOpen } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
@@ -67,9 +68,9 @@ export default function CartPage() {
                 const discount = p.old_price ? Math.round((1 - Number(p.price) / Number(p.old_price)) * 100) : 0;
                 return (
                   <div key={item.id} className="flex flex-col sm:flex-row gap-3 sm:gap-4 rounded-2xl border border-ocean/8 bg-white p-3 sm:p-4 shadow-sm transition-all hover:shadow-md">
-                    <Link href={`/product/${p.slug}`} className="h-20 w-20 sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-xl bg-ivory-dark/40 flex-shrink-0">
+                    <Link href={`/product/${p.slug}`} className="relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-xl bg-ivory-dark/40 flex-shrink-0">
                       {p.main_image_url ? (
-                        <img src={p.main_image_url} alt={p.name} className="h-full w-full object-contain p-2" />
+                        <Image src={p.main_image_url} alt={p.name} fill sizes="96px" className="object-contain p-2" />
                       ) : (
                         <div className="flex h-full items-center justify-center text-ocean/15"><ShoppingBag className="h-7 w-7 sm:h-8 sm:w-8" /></div>
                       )}

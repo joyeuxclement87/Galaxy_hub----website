@@ -1,8 +1,12 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { BLUR_PLACEHOLDER } from "@/lib/image";
+import { Reveal } from "@/components/ui/Reveal";
+import { MOTION, gridStaggerDelay } from "@/lib/motion";
 import type { DealOffer } from "@/data/mock-data";
 
 const MAX_PROMOTIONS = 4;
@@ -81,10 +85,7 @@ function CountdownChip({
 
   return (
     <span className="pointer-events-none absolute bottom-3 left-3 inline-flex items-center gap-2 rounded-[11px] border border-white/60 bg-white/85 px-3 py-1.5 shadow-[0_4px_14px_rgba(11,84,151,0.10)] backdrop-blur-md">
-      <span className="relative flex h-1.5 w-1.5 shrink-0">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
-        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
-      </span>
+      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
       <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-ocean-deeper/45">{label}</span>
       <span className="font-display text-[13px] font-bold tabular-nums tracking-[-0.01em] text-ocean-deeper">
         {text}
@@ -146,21 +147,22 @@ const ctaCls =
 /* Standard card — image top, content below (used for 2 / 4, and supporting slots in 3) */
 function PromoCard({
   deal,
-  index,
   onExpired,
 }: {
   deal: DealOffer;
-  index: number;
   onExpired: () => void;
 }) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-[20px] bg-white shadow-[0_2px_14px_rgba(11,84,151,0.05)] transition-shadow duration-300 hover:shadow-[0_10px_28px_rgba(11,84,151,0.10)]">
       <div className="relative aspect-[16/10] overflow-hidden bg-ivory-dark/40">
-        <img
+        <Image
           src={deal.image}
           alt={deal.title}
-          loading={index === 0 ? "eager" : "lazy"}
-          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          fill
+          sizes="(min-width: 1024px) 40vw, (min-width: 640px) 50vw, 100vw"
+          placeholder="blur"
+          blurDataURL={BLUR_PLACEHOLDER}
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
         />
         <CountdownChip start={deal.startsAt} end={deal.endsAt} onExpired={onExpired} />
       </div>
@@ -216,10 +218,14 @@ function PromoFeature({ deal, onExpired }: { deal: DealOffer; onExpired: () => v
         </div>
       </div>
       <div className="relative min-h-[260px] overflow-hidden lg:min-h-full">
-        <img
+        <Image
           src={deal.image}
           alt={deal.title}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+          fill
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          placeholder="blur"
+          blurDataURL={BLUR_PLACEHOLDER}
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
         />
         <div
           aria-hidden="true"
@@ -311,14 +317,20 @@ export function Promotions({ promotions }: PromotionsProps) {
       <div className="relative mx-auto max-w-[1320px]">
         {/* Heading */}
         <div className="max-w-3xl">
-          <span className="section-label">PROMOTIONS</span>
-          <h2 className="mt-3 font-display text-3xl font-bold leading-[1.05] tracking-[-0.02em] text-ocean-deeper sm:text-4xl lg:text-[2.75rem]">
-            Limited-Time Tech Offers
-          </h2>
-          <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/55 max-w-xl">
-            Genuine smartphones, laptops and accessories — for a limited time at prices worth
-            upgrading for.
-          </p>
+          <Reveal y={8}>
+            <span className="section-label">PROMOTIONS</span>
+          </Reveal>
+          <Reveal y={14} delay={MOTION.stagger}>
+            <h2 className="mt-3 font-display text-3xl font-bold leading-[1.05] tracking-[-0.02em] text-ocean-deeper sm:text-4xl lg:text-[2.75rem]">
+              Limited-Time Tech Offers
+            </h2>
+          </Reveal>
+          <Reveal y={12} delay={MOTION.stagger * 2}>
+            <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/55 max-w-xl">
+              Genuine smartphones, laptops and accessories — for a limited time at prices worth
+              upgrading for.
+            </p>
+          </Reveal>
         </div>
 
         {/* Content */}
@@ -341,33 +353,45 @@ export function Promotions({ promotions }: PromotionsProps) {
             </Link>
           </div>
         ) : count === 1 ? (
-          <div className="mt-10">
-            <PromoFeature
-              deal={activePromotions[0]}
-              onExpired={() => handleExpire(activePromotions[0].slug)}
-            />
-          </div>
+          <Reveal y={20}>
+            <div className="mt-10">
+              <PromoFeature
+                deal={activePromotions[0]}
+                onExpired={() => handleExpire(activePromotions[0].slug)}
+              />
+            </div>
+          </Reveal>
         ) : count === 2 ? (
           <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {activePromotions.map((deal, i) => (
-              <PromoCard key={deal.slug} deal={deal} index={i} onExpired={() => handleExpire(deal.slug)} />
+            {activePromotions.map((deal, index) => (
+              <Reveal key={deal.slug} y={20} delay={gridStaggerDelay(index)}>
+                <PromoCard deal={deal} onExpired={() => handleExpire(deal.slug)} />
+              </Reveal>
             ))}
           </div>
         ) : count === 3 ? (
           <div className="mt-10 grid gap-5 lg:grid-cols-[1.6fr_1fr]">
-            <PromoFeature
-              deal={activePromotions[0]}
-              onExpired={() => handleExpire(activePromotions[0].slug)}
-            />
+            <Reveal y={20}>
+              <PromoFeature
+                deal={activePromotions[0]}
+                onExpired={() => handleExpire(activePromotions[0].slug)}
+              />
+            </Reveal>
             <div className="flex flex-col gap-5">
-              <PromoCard deal={activePromotions[1]} index={1} onExpired={() => handleExpire(activePromotions[1].slug)} />
-              <PromoCard deal={activePromotions[2]} index={2} onExpired={() => handleExpire(activePromotions[2].slug)} />
+              <Reveal y={20} delay={gridStaggerDelay(1)}>
+                <PromoCard deal={activePromotions[1]} onExpired={() => handleExpire(activePromotions[1].slug)} />
+              </Reveal>
+              <Reveal y={20} delay={gridStaggerDelay(2)}>
+                <PromoCard deal={activePromotions[2]} onExpired={() => handleExpire(activePromotions[2].slug)} />
+              </Reveal>
             </div>
           </div>
         ) : (
           <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {activePromotions.map((deal, i) => (
-              <PromoCard key={deal.slug} deal={deal} index={i} onExpired={() => handleExpire(deal.slug)} />
+            {activePromotions.map((deal, index) => (
+              <Reveal key={deal.slug} y={20} delay={gridStaggerDelay(index)}>
+                <PromoCard deal={deal} onExpired={() => handleExpire(deal.slug)} />
+              </Reveal>
             ))}
           </div>
         )}

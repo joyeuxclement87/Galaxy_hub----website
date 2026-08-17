@@ -3,6 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BLUR_PLACEHOLDER } from "@/lib/image";
+import { Reveal } from "@/components/ui/Reveal";
+import { MOTION } from "@/lib/motion";
 import type { Category } from "@/data/mock-data";
 
 const FALLBACK_CATEGORIES: { name: string; description: string; image: string; href: string; productCount: number }[] = [
@@ -45,12 +48,17 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
   return (
     <section id="categories" className="rise-curve bg-white px-4 pt-10 pb-16 md:px-8 md:pt-16 md:pb-24">
       <div className="mx-auto max-w-[1320px]">
-        <span className="section-label">CATEGORIES</span>
-        <h2 className="mt-3 font-display text-xl sm:text-2xl md:text-[clamp(1.75rem,3.25vw,2.25rem)] font-bold leading-tight tracking-[-0.02em] text-ocean-deeper max-w-xl">
-          Explore Our Collections
-        </h2>
+        <Reveal y={8}>
+          <span className="section-label">CATEGORIES</span>
+        </Reveal>
+        <Reveal y={14} delay={MOTION.stagger}>
+          <h2 className="mt-3 font-display text-xl sm:text-2xl md:text-[clamp(1.75rem,3.25vw,2.25rem)] font-bold leading-tight tracking-[-0.02em] text-ocean-deeper max-w-xl">
+            Explore Our Collections
+          </h2>
+        </Reveal>
 
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:auto-rows-[140px] lg:auto-rows-[165px]">
+        <Reveal y={20} delay={MOTION.stagger * 2}>
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:auto-rows-[140px] lg:auto-rows-[165px]">
           {display.map((cat, index) => {
             const isFeatured = index === 0;
             return (
@@ -70,6 +78,8 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
                   fill
                   loading="lazy"
                   sizes="(min-width: 1024px) 30vw, (min-width: 768px) 40vw, 50vw"
+                  placeholder="blur"
+                  blurDataURL={BLUR_PLACEHOLDER}
                   className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent transition-opacity duration-[220ms] group-hover:from-black/90" />
@@ -96,15 +106,18 @@ export function FeaturedCategories({ categories }: { categories?: Category[] }) 
             );
           })}
         </div>
+        </Reveal>
 
-        <div className="mt-8 flex justify-center">
-          <Link
-            href="/products"
-            className="text-action"
-          >
-            All Categories <ArrowRight className="ta-arrow" />
-          </Link>
-        </div>
+        <Reveal y={10} delay={MOTION.stagger * 3}>
+          <div className="mt-8 flex justify-center">
+            <Link
+              href="/products"
+              className="text-action"
+            >
+              All Categories <ArrowRight className="ta-arrow" />
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

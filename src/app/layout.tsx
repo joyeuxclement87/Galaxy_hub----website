@@ -3,6 +3,7 @@ import { Manrope, Plus_Jakarta_Sans } from "next/font/google";
 import { AppProvider } from "@/context/AppContext";
 import { CartProvider } from "@/context/CartContext";
 import { WhatsAppFloatingButton } from "@/components/ui/WhatsAppFloatingButton";
+import { MotionProvider } from "@/components/ui/MotionProvider";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -83,7 +84,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-ivory text-ocean overflow-x-clip">
         <AppProvider>
-          <CartProvider>{children}</CartProvider>
+          <CartProvider>
+            <MotionProvider>{children}</MotionProvider>
+          </CartProvider>
         </AppProvider>
         <WhatsAppFloatingButton />
       </body>

@@ -5,20 +5,26 @@ import { motion } from "framer-motion";
 import { Product } from "@/data/mock-data";
 import { Star, Plus, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { BLUR_PLACEHOLDER } from "@/lib/image";
 import { getSessionId, notifyCartChanged, useSupabaseCart } from "@/hooks/use-cart";
 import { addCartItemBySlug } from "@/actions/cart";
 import { getProductStatus } from "@/lib/product-status";
+import { EASE, MOTION, REVEAL_VIEWPORT } from "@/lib/motion";
 import Link from "next/link";
 
 interface ProductCardProps {
   product: Product;
   onReserve?: (product: Product) => void;
   storage?: string;
+  /** Stagger delay for grouped grid entrances (see gridStaggerDelay) */
+  delay?: number;
 }
 
-export function ProductCard({ product, storage }: ProductCardProps) {
+export function ProductCard({ product, storage, delay = 0 }: ProductCardProps) {
   const [isInCart, setIsInCart] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const { items, loading: cartLoading, remove: removeFromCart } = useSupabaseCart();
 
   const getCartItem = () => {
@@ -70,9 +76,9 @@ export function ProductCard({ product, storage }: ProductCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-32px" }}
-      transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-      className="group relative flex flex-col overflow-hidden rounded-[22px] bg-white border border-ocean/[0.05] shadow-[0_1px_2px_rgba(11,84,151,0.04),0_4px_12px_rgba(11,84,151,0.04)] transition-all duration-[220ms] hover:border-ocean/[0.12] hover:shadow-[0_10px_28px_rgba(11,84,151,0.10)]"
+      viewport={REVEAL_VIEWPORT}
+      transition={{ duration: MOTION.reveal, delay, ease: EASE }}
+      className="group relative flex flex-col overflow-hidden rounded-[22px] bg-white border border-ocean/[0.05] shadow-[0_1px_2px_rgba(11,84,151,0.04),0_4px_12px_rgba(11,84,151,0.04)] transition-shadow duration-[250ms] hover:border-ocean/[0.12] hover:shadow-[0_8px_24px_rgba(11,84,151,0.08)]"
     >
       {/* Image area — status label only */}
       <div className="relative aspect-square w-full overflow-hidden bg-[#f6f7f8] p-3">
@@ -86,11 +92,19 @@ export function ProductCard({ product, storage }: ProductCardProps) {
         )}
 
         <Link {...linkProps} className="absolute inset-0 z-0 flex items-center justify-center p-2">
-          <img
+          <Image
             src={product.image}
             alt={product.title}
-            loading="lazy"
-            className="h-full w-full object-contain transition-transform duration-300 ease-out group-hover:scale-[1.03] mix-blend-multiply"
+            fill
+            sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
+            onLoad={() => setImageLoaded(true)}
+            className={cn(
+              "h-full w-full object-contain mix-blend-multiply group-hover:scale-[1.02]",
+              imageLoaded ? "opacity-100" : "opacity-0"
+            )}
+            style={{ transition: "opacity 400ms ease, transform 300ms ease" }}
           />
         </Link>
       </div>

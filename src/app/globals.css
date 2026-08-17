@@ -29,6 +29,12 @@
   --shadow-btn-glow: 0 8px 24px rgba(11, 84, 151, 0.18);
   --shadow-nav-scrolled: 0 4px 20px rgba(11, 84, 151, 0.08), 0 1px 0 rgba(11, 84, 151, 0.06);
   --shadow-card-premium: 0 4px 20px rgba(11, 84, 151, 0.06), 0 1px 3px rgba(11, 84, 151, 0.04);
+
+  /* ─── Motion timing tokens (mirror src/lib/motion.ts) ─── */
+  --motion-fast: 180ms;
+  --motion-normal: 300ms;
+  --motion-slow: 600ms;
+  --motion-stagger: 70ms;
 }
 
 :root {
@@ -315,4 +321,21 @@ body {
 .input-refined.input-error {
   border-color: rgba(239, 68, 68, 0.5);
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+}
+
+/* ─── Reduced Motion ────────────────────────────────────────────────────────
+   Respect prefers-reduced-motion: collapse CSS animations/transitions to
+   near-instant. Transform-based JS animations are handled by framer-motion's
+   MotionConfig reducedMotion="user" (keeps only opacity where needed). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto !important;
+  }
 }

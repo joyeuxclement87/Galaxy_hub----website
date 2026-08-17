@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState, useSyncExternalStore } from "react
 import Link from "next/link";
 import { Search } from "lucide-react";
 import ProductsGrid from "@/components/ui/products-grid";
+import { ProductGridSkeleton } from "@/components/ui/LoadingSkeleton";
 import { fetchProductsPage } from "@/actions/products-data";
 import type { PublicProduct } from "@/data/public-products";
 import type { Product } from "@/data/mock-data";
@@ -136,8 +137,8 @@ export function ProductsGridBrowser({ initialProducts, initialTotal, params, pag
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-24">
-        <span className="h-7 w-7 animate-spin rounded-full border-2 border-ocean/15 border-t-ocean" />
+      <div className="pt-2">
+        <ProductGridSkeleton count={pageSize > 12 ? 12 : pageSize} />
       </div>
     );
   }

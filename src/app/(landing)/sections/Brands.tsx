@@ -1,6 +1,9 @@
 import React from "react";
+import Image from "next/image";
 import { BRAND_CATALOG } from "@/data/brands";
 import type { BrandCatalogItem } from "@/data/brands";
+import { Reveal } from "@/components/ui/Reveal";
+import { MOTION } from "@/lib/motion";
 
 interface BrandsProps {
   brands?: BrandCatalogItem[];
@@ -17,18 +20,32 @@ function isImageLogo(logo: string) {
   return /^https?:\/\//.test(logo) || logo.startsWith("/");
 }
 
+function isSvgLogo(logo: string) {
+  return /\.svg(\?|$)/i.test(logo);
+}
+
 function BrandLogoCard({ brand, index }: { brand: BrandCatalogItem; index: number }) {
   const hasImage = isImageLogo(brand.logo);
   return (
     <div className="flex shrink-0 items-center gap-3 rounded-[14px] bg-white px-5 py-4 select-none">
       <div
-        className={`flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-btn text-sm font-bold ${
+        className={`relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-btn text-sm font-bold ${
           hasImage ? "bg-ivory" : LOGO_COLORS[index % LOGO_COLORS.length]
         }`}
       >
         {hasImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={brand.logo} alt={brand.name} className="h-full w-full object-contain p-1.5" />
+          isSvgLogo(brand.logo) ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={brand.logo} alt={brand.name} className="h-full w-full object-contain p-1.5" />
+          ) : (
+            <Image
+              src={brand.logo}
+              alt={brand.name}
+              fill
+              sizes="44px"
+              className="object-contain p-1.5"
+            />
+          )
         ) : (
           brand.logo || brand.name.charAt(0)
         )}
@@ -57,25 +74,33 @@ export function Brands({ brands }: BrandsProps) {
     <section id="brands" className="rise-soft bg-ivory pt-14 pb-16 sm:pt-16 sm:pb-20">
       <div className="mx-auto max-w-[1320px] px-4 sm:px-6">
         <div className="max-w-2xl space-y-3">
-          <span className="section-label">BRANDS WE CARRY</span>
-          <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper">
-            Trusted Technology Brands
-          </h2>
-          <p className="text-sm leading-[1.8] text-ocean-deeper/60">
-            A showcase of the genuine technology brands stocked at Galaxy Hub, available in Kigali and delivered across Rwanda.
-          </p>
+          <Reveal y={8}>
+            <span className="section-label">BRANDS WE CARRY</span>
+          </Reveal>
+          <Reveal y={14} delay={MOTION.stagger}>
+            <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper">
+              Trusted Technology Brands
+            </h2>
+          </Reveal>
+          <Reveal y={12} delay={MOTION.stagger * 2}>
+            <p className="text-sm leading-[1.8] text-ocean-deeper/60">
+              A showcase of the genuine technology brands stocked at Galaxy Hub, available in Kigali and delivered across Rwanda.
+            </p>
+          </Reveal>
         </div>
 
-        <div className="relative mt-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
-          <div
-            className="flex w-max animate-marquee-left gap-3 hover:[animation-play-state:paused]"
-            style={{ animationDuration: `${track.length * 2.5}s` }}
-          >
-            {track.map((brand, index) => (
-              <BrandLogoCard key={`${brand.slug}-${index}`} brand={brand} index={index} />
-            ))}
+        <Reveal y={18} delay={MOTION.stagger * 3}>
+          <div className="relative mt-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+            <div
+              className="flex w-max animate-marquee-left gap-3 hover:[animation-play-state:paused]"
+              style={{ animationDuration: `${track.length * 2.5}s` }}
+            >
+              {track.map((brand, index) => (
+                <BrandLogoCard key={`${brand.slug}-${index}`} brand={brand} index={index} />
+              ))}
+            </div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

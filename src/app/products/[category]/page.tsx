@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ChevronRight, Phone } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
@@ -48,7 +49,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
           <div className="relative overflow-hidden rounded-[32px] bg-[#10233D] p-8 md:p-16 flex items-center min-h-[300px]">
             <div className="absolute inset-0 z-0">
               {category.image_url && (
-                <img src={category.image_url} alt={category.name} className="w-full h-full object-cover opacity-60 mix-blend-overlay" />
+                <Image src={category.image_url} alt={category.name} fill sizes="100vw" preload className="object-cover opacity-60 mix-blend-overlay" />
               )}
               <div className="absolute inset-0 bg-gradient-to-r from-[#10233D] via-[#10233D]/80 to-transparent" />
             </div>

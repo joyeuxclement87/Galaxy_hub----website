@@ -2,6 +2,7 @@
 
 import React, { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
@@ -432,8 +433,8 @@ function OrderContent() {
                             className="rounded-btn border border-ocean/[0.06] bg-ivory/40 p-3"
                           >
                             <div className="flex items-center gap-4">
-                              <div className="h-12 w-12 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 flex items-center justify-center p-1 border border-ocean/[0.04]">
-                                <img src={item.image} alt={item.title} className="h-full w-full object-contain mix-blend-multiply" />
+                              <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 flex items-center justify-center p-1 border border-ocean/[0.04]">
+                                <Image src={item.image} alt={item.title} fill sizes="48px" className="object-contain mix-blend-multiply" />
                               </div>
                               <div className="min-w-0 flex-1">
                                 {isDirect && (

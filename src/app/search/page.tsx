@@ -3,6 +3,7 @@ import { Search as SearchIcon, PackageOpen } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
 import { ProductCard } from "@/components/products/ProductCard";
+import { gridStaggerDelay } from "@/lib/motion";
 import { searchProducts } from "@/data/public-products";
 
 export const dynamic = "force-dynamic";
@@ -85,8 +86,8 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-              {results.map((p) => (
-                <ProductCard key={p.id} product={{
+              {results.map((p, index) => (
+                <ProductCard key={p.id} delay={gridStaggerDelay(index)} product={{
                   id: p.id, slug: p.slug, title: p.name,
                   tagline: p.short_description || "", description: "",
                   price: p.price, originalPrice: p.old_price || undefined, currency: "RWF",

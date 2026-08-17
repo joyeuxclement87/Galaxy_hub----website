@@ -6,9 +6,11 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BLUR_PLACEHOLDER } from "@/lib/image";
 import { Button } from "@/components/ui/button";
 import { getSessionId, notifyCartChanged, useSupabaseCart } from "@/hooks/use-cart";
 import { addCartItemBySlug } from "@/actions/cart";
+import { EASE, MOTION } from "@/lib/motion";
 import type { ProductStatus } from "@/lib/product-status";
 
 export interface HeroSlideData {
@@ -118,7 +120,12 @@ export function HeroSection({ slides }: HeroSectionProps) {
       <div className="absolute inset-0 hero-grid-texture opacity-40 pointer-events-none" />
 
       <div className="relative mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10 pt-6 pb-24 sm:pb-28 lg:pt-14 lg:pb-36">
-        <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-10 min-h-[380px] lg:min-h-[560px]">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE }}
+          className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:gap-10 min-h-[380px] lg:min-h-[560px]"
+        >
 
           {/* ── Left: Content ── */}
           <div className="lg:col-span-5 flex flex-col justify-center z-10">
@@ -225,22 +232,24 @@ export function HeroSection({ slides }: HeroSectionProps) {
                   initial={{ scale: 1.04, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.98, opacity: 0 }}
-                  transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.5, ease: EASE }}
                   className="absolute inset-0"
                 >
                   <Image
                     src={slide.image}
                     alt={slide.title}
                     fill
-                    priority
+                    preload
                     sizes="(min-width: 1024px) 580px, 90vw"
+                    placeholder="blur"
+                    blurDataURL={BLUR_PLACEHOLDER}
                     className="object-cover"
                   />
                 </motion.div>
               </AnimatePresence>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* ── Bottom bar: nav controls only — z-10 keeps it above rising sections ── */}
         <div className="relative z-10 mt-4 pt-3 border-t border-ocean/[0.06] flex items-center justify-between">

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Search, ShoppingCart, X, Trash2, ArrowRight, Loader2, PackageOpen } from "lucide-react";
@@ -9,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useApp } from "@/context/AppContext";
 import { useSupabaseCart } from "@/hooks/use-cart";
 import { ProductCard } from "@/components/products/ProductCard";
+import { gridStaggerDelay, EASE } from "@/lib/motion";
 import type { Product } from "@/data/mock-data";
 
 interface NavbarProps {
@@ -42,9 +44,11 @@ const NAV_LINKS = [
 function Wordmark() {
   return (
     <Link href="/" className="flex shrink-0 items-center gap-2.5 transition-opacity duration-200 hover:opacity-80">
-      <img
-        src="/g-hub%20logo.png"
+      <Image
+        src="/g-hub logo.png"
         alt="Galaxy Hub"
+        width={177}
+        height={36}
         className="block h-8 w-auto select-none object-contain sm:h-9"
       />
     </Link>
@@ -171,10 +175,11 @@ function SearchOverlay({
                   </div>
                 ) : (
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    {searchResults.map((result) => (
+                    {searchResults.map((result, index) => (
                       <ProductCard
                         key={result.id}
                         product={buildSearchCardProduct(result)}
+                        delay={gridStaggerDelay(index)}
                       />
                     ))}
                   </div>
@@ -292,11 +297,13 @@ function CartDropdown({
                       transition={{ duration: 0.2, ease: "easeOut" }}
                       className="group/item flex items-center gap-3 rounded-btn px-2.5 py-2.5 transition-colors duration-200 hover:bg-ocean/[0.03]"
                     >
-                      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 border border-ocean/[0.04] flex items-center justify-center p-1">
-                        <img
+                      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 border border-ocean/[0.04] flex items-center justify-center p-1">
+                        <Image
                           src={item.product!.main_image_url || ""}
                           alt={item.product!.name}
-                          className="h-full w-full object-contain mix-blend-multiply"
+                          fill
+                          sizes="48px"
+                          className="object-contain mix-blend-multiply"
                         />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -453,11 +460,13 @@ function MobileCartSheet({
                         transition={{ duration: 0.2 }}
                         className="flex items-center gap-3 rounded-btn px-2 py-3"
                       >
-                        <div className="h-12 w-12 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 border border-ocean/[0.04] flex items-center justify-center p-1.5">
-                          <img
+                        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-btn bg-ivory-dark/50 border border-ocean/[0.04] flex items-center justify-center p-1.5">
+                          <Image
                             src={item.product!.main_image_url || ""}
                             alt={item.product!.name}
-                            className="h-full w-full object-contain mix-blend-multiply"
+                            fill
+                            sizes="48px"
+                            className="object-contain mix-blend-multiply"
                           />
                         </div>
                         <div className="min-w-0 flex-1">
@@ -710,7 +719,12 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
       />
 
       {/* ── Floating navbar ── */}
-      <div className="fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 sm:px-5 sm:pt-4 pointer-events-none">
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: EASE }}
+        className="fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 sm:px-5 sm:pt-4 pointer-events-none"
+      >
         <header
           className={cn(
             "w-full pointer-events-auto transition-all duration-[250ms] rounded-2xl max-w-[1400px]",
@@ -804,7 +818,7 @@ export function Navbar({ onSearchFocus }: NavbarProps) {
             </div>
           </div>
         </header>
-      </div>
+      </motion.div>
 
       {/* Mobile cart bottom sheet */}
       <MobileCartSheet open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} />

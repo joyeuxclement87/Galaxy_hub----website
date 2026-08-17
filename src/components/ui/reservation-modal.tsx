@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { X, CheckCircle, Shield, ShoppingBag, ArrowRight } from "lucide-react";
 import { Product } from "@/data/mock-data";
 import { Button } from "./button";
@@ -107,11 +108,15 @@ export function ReservationModal({ product, onClose, onSuccess }: ReservationMod
 
               {/* Product Preview Panel */}
               <div className="flex items-center gap-4 rounded-[20px] border border-ocean/10 bg-white/60 p-4 shadow-[0_10px_30px_rgba(11,84,151,0.06)] backdrop-blur-sm">
-                <img
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-ivory-dark/40">
+                <Image
                   src={product.image}
                   alt={product.title}
-                  className="h-16 w-16 rounded-md object-contain"
+                  fill
+                  sizes="64px"
+                  className="object-contain"
                 />
+              </div>
                 <div>
                   <h4 className="font-clash text-sm font-bold text-[#10233D]">{product.title}</h4>
                   <span className="font-space text-sm font-semibold text-accent">

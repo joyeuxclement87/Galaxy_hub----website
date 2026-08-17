@@ -5,6 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/ui/Reveal";
+import { MOTION } from "@/lib/motion";
 
 const FAQ_ITEMS = [
   {
@@ -53,13 +55,19 @@ export function FAQSupport() {
     <section id="faq" className="relative bg-ivory px-4 pt-16 pb-24 sm:px-6 sm:pb-28 lg:pb-36">
       <div className="relative mx-auto max-w-[1320px]">
         <div className="mb-10 max-w-2xl space-y-3">
-          <span className="section-label">GOOD TO KNOW</span>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper tracking-tight">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-sm leading-[1.8] text-ocean-deeper/70">
-            Clear answers about ordering, delivery, payments, and support before you place your next request.
-          </p>
+          <Reveal y={8}>
+            <span className="section-label">GOOD TO KNOW</span>
+          </Reveal>
+          <Reveal y={14} delay={MOTION.stagger}>
+            <h2 className="font-display text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper tracking-tight">
+              Frequently Asked Questions
+            </h2>
+          </Reveal>
+          <Reveal y={12} delay={MOTION.stagger * 2}>
+            <p className="text-sm leading-[1.8] text-ocean-deeper/70">
+              Clear answers about ordering, delivery, payments, and support before you place your next request.
+            </p>
+          </Reveal>
         </div>
 
         <div className="space-y-2">

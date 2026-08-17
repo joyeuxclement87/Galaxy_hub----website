@@ -4,6 +4,7 @@ import { ChevronRight, Truck, ShieldCheck, RefreshCw } from "lucide-react";
 import { Navbar } from "@/components/navbar/Navbar";
 import Footer from "@/components/ui/Footer";
 import { ProductCard } from "@/components/products/ProductCard";
+import { gridStaggerDelay } from "@/lib/motion";
 import { ProductGallery } from "@/components/products/ProductGallery";
 import { ProductActions } from "@/components/products/ProductActions";
 import { OrderCTA } from "@/components/products/OrderCTA";
@@ -298,9 +299,10 @@ export default async function ProductPage({ params }: ProductPageParams) {
               )}
             </div>
             <div className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-4">
-              {relatedProducts.map((p) => (
+              {relatedProducts.map((p, index) => (
                 <ProductCard
                   key={p.id}
+                  delay={gridStaggerDelay(index)}
                   product={{
                     id: p.id,
                     slug: p.slug,

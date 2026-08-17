@@ -5,7 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BLUR_PLACEHOLDER } from "@/lib/image";
 import { btnBase, btnVariants } from "@/components/ui/button";
+import { Reveal } from "@/components/ui/Reveal";
+import { MOTION } from "@/lib/motion";
 
 const TRUST_ITEMS = [
   "Genuine Products",
@@ -29,8 +32,9 @@ export function CTA() {
               alt="Premium Tech Devices"
               fill
               sizes="(max-width: 1280px) 100vw, 1280px"
+              placeholder="blur"
+              blurDataURL={BLUR_PLACEHOLDER}
               className="object-cover object-right select-none"
-              priority
             />
           </div>
 
@@ -42,59 +46,69 @@ export function CTA() {
 
           <div className="relative z-10 max-w-3xl">
             {/* Eyebrow label */}
-            <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-ivory/60">
-              Ready to Upgrade?
-            </span>
+            <Reveal y={8}>
+              <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-ivory/60">
+                Ready to Upgrade?
+              </span>
+            </Reveal>
 
             {/* Large Display Headline */}
-            <h2
-              id="cta-heading"
-              className="mt-5 font-display font-bold leading-[1.04] tracking-[-0.03em] text-ivory text-3xl sm:text-4xl md:text-[3.25rem] lg:text-[3.75rem]"
-            >
-              Your Next Device<br className="hidden sm:block" /> Starts Here.
-            </h2>
+            <Reveal y={18} delay={MOTION.stagger}>
+              <h2
+                id="cta-heading"
+                className="mt-5 font-display font-bold leading-[1.04] tracking-[-0.03em] text-ivory text-3xl sm:text-4xl md:text-[3.25rem] lg:text-[3.75rem]"
+              >
+                Your Next Device<br className="hidden sm:block" /> Starts Here.
+              </h2>
+            </Reveal>
 
             {/* Short Supporting Copy */}
-            <p className="mt-4 max-w-xl text-sm sm:text-base leading-[1.7] text-ivory/70">
-              Browse genuine smartphones, laptops, accessories, creator gear, and everyday technology with delivery available across Rwanda.
-            </p>
+            <Reveal y={12} delay={MOTION.stagger * 2}>
+              <p className="mt-4 max-w-xl text-sm sm:text-base leading-[1.7] text-ivory/70">
+                Browse genuine smartphones, laptops, accessories, creator gear, and everyday technology with delivery available across Rwanda.
+              </p>
+            </Reveal>
 
             {/* Primary CTA + Secondary CTA */}
-            <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
-              <Link
-                href="/order"
-                className={cn(
-                  btnBase,
-                  btnVariants.primaryWhite,
-                  "gap-2 px-7 w-full sm:w-auto justify-center"
-                )}
-              >
-                Order Now
-                <ArrowRight className="h-[18px] w-[18px] transition-transform duration-200 group-hover:translate-x-[4px]" />
-              </Link>
-              <Link
-                href="/products"
-                className={cn(
-                  btnBase,
-                  btnVariants.ghostWhite,
-                  "gap-2 px-7 w-full sm:w-auto justify-center"
-                )}
-              >
-                Browse Products
-              </Link>
-            </div>
+            <Reveal y={10} delay={MOTION.stagger * 3}>
+              <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
+                <Link
+                  href="/order"
+                  className={cn(
+                    btnBase,
+                    btnVariants.primaryWhite,
+                    "gap-2 px-7 w-full sm:w-auto justify-center"
+                  )}
+                >
+                  Order Now
+                  <ArrowRight className="h-[18px] w-[18px] transition-transform duration-200 group-hover:translate-x-[4px]" />
+                </Link>
+                <Link
+                  href="/products"
+                  className={cn(
+                    btnBase,
+                    btnVariants.ghostWhite,
+                    "gap-2 px-7 w-full sm:w-auto justify-center"
+                  )}
+                >
+                  Browse Products
+                </Link>
+              </div>
+            </Reveal>
 
             {/* Trust Items */}
-            <ul className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2">
-              {TRUST_ITEMS.map((item, index) => (
-                <li key={item} className="flex items-center gap-x-5">
-                  {index > 0 && (
-                    <span aria-hidden="true" className="h-1 w-1 rounded-full bg-white/25" />
-                  )}
-                  <span className="text-[13px] font-medium text-ivory/55">{item}</span>
-                </li>
-              ))}
-            </ul>
+            <Reveal y={10} delay={MOTION.stagger * 4}>
+              <ul className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2">
+                {TRUST_ITEMS.map((item, index) => (
+                  <li key={item} className="flex items-center gap-x-5">
+                    {index > 0 && (
+                      <span aria-hidden="true" className="h-1 w-1 rounded-full bg-white/25" />
+                    )}
+                    <span className="text-[13px] font-medium text-ivory/55">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { BLUR_PLACEHOLDER } from "@/lib/image";
 import { ZoomIn } from "lucide-react";
 
 /**
@@ -41,8 +42,10 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
             src={current}
             alt={`${name} — image ${index + 1}${items.length > 1 ? ` of ${items.length}` : ""}`}
             fill
-            priority={index === 0}
+            preload={index === 0}
             sizes="(min-width: 1024px) 620px, (min-width: 640px) 50vw, 100vw"
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
             className="relative z-10 object-contain transition-all duration-300 ease-out group-hover:scale-[1.03]"
           />
 
@@ -75,6 +78,8 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
                   alt=""
                   fill
                   sizes="80px"
+                  placeholder="blur"
+                  blurDataURL={BLUR_PLACEHOLDER}
                   className="object-contain"
                 />
               </button>
@@ -103,11 +108,15 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
               ✕
             </button>
 
-            <img
-              src={current}
-              alt={name}
-              className="max-h-[80vh] w-full object-contain rounded-xl"
-            />
+            <div className="relative w-full h-[80vh]">
+              <Image
+                src={current}
+                alt={name}
+                fill
+                sizes="(min-width: 896px) 896px, 100vw"
+                className="object-contain rounded-xl"
+              />
+            </div>
 
             {/* Thumbnail row in lightbox */}
             {items.length > 1 && (
@@ -117,11 +126,17 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
                     key={img}
                     onClick={() => setIndex(i)}
                     className={cn(
-                      "h-10 w-10 rounded-lg overflow-hidden border-2 transition-all duration-200",
+                      "relative h-10 w-10 overflow-hidden rounded-lg border-2 transition-all duration-200",
                       i === index ? "border-white" : "border-white/30 opacity-60 hover:opacity-100"
                     )}
                   >
-                    <img src={img} alt="" className="h-full w-full object-contain" />
+                    <Image
+                      src={img}
+                      alt=""
+                      fill
+                      sizes="40px"
+                      className="object-contain"
+                    />
                   </button>
                 ))}
               </div>

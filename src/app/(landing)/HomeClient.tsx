@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { AlertCircle, ArrowRight, Search as SearchIcon } from "lucide-react";
 import { cn }                      from "@/lib/utils";
 import { Navbar }             from "@/components/navbar/Navbar";
@@ -13,6 +14,8 @@ import { useSearch }          from "@/hooks/useSearch";
 import { getSessionId, notifyCartChanged } from "@/hooks/use-cart";
 import { addCartItemBySlug }  from "@/actions/cart";
 import { getProductStatus }   from "@/lib/product-status";
+import { MOTION, gridStaggerDelay } from "@/lib/motion";
+import { Reveal }            from "@/components/ui/Reveal";
 import { HeroSection, HeroSlideData } from "@/components/hero/Hero";
 import { FeaturedCategories } from "@/app/(landing)/sections/FeaturedCategories";
 import { NewArrivals }         from "@/app/(landing)/sections/NewArrivals";
@@ -153,9 +156,12 @@ export default function HomeClient({ data }: HomeClientProps) {
           <div className="relative z-10 flex flex-col items-center text-center px-4">
             {/* Logo display */}
             <div className="mb-6 relative scale-110">
-              <img
+              <Image
                 src="/g-hub logo ii.png"
                 alt="Galaxy Hub"
+                width={184}
+                height={40}
+                preload
                 className="h-10 w-auto object-contain select-none animate-pulse duration-1500"
               />
               <div className="absolute -inset-4 bg-white/5 blur-xl rounded-full -z-10" />
@@ -195,21 +201,27 @@ export default function HomeClient({ data }: HomeClientProps) {
         <section className="bg-white px-4 py-16 sm:px-6">
           <div className="mx-auto max-w-[1320px]">
             <div className="max-w-2xl">
-              <span className="section-label">SEARCH RESULTS</span>
-              <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper mt-3">
-                "{searchQuery}"
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/60 max-w-xl">
-                {displayedProducts.length === 0
-                  ? "No products matched your search. Try a different term."
-                  : `${displayedProducts.length} product${displayedProducts.length !== 1 ? "s" : ""} found`}
-              </p>
+              <Reveal y={8}>
+                <span className="section-label">SEARCH RESULTS</span>
+              </Reveal>
+              <Reveal y={14} delay={MOTION.stagger}>
+                <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper mt-3">
+                  "{searchQuery}"
+                </h2>
+              </Reveal>
+              <Reveal y={12} delay={MOTION.stagger * 2}>
+                <p className="mt-3 text-sm leading-relaxed text-ocean-deeper/60 max-w-xl">
+                  {displayedProducts.length === 0
+                    ? "No products matched your search. Try a different term."
+                    : `${displayedProducts.length} product${displayedProducts.length !== 1 ? "s" : ""} found`}
+                </p>
+              </Reveal>
             </div>
 
             {displayedProducts.length > 0 ? (
               <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
-                {displayedProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} onReserve={setSelectedProduct} />
+                {displayedProducts.map((product, index) => (
+                  <ProductCard key={product.id} product={product} onReserve={setSelectedProduct} delay={gridStaggerDelay(index)} />
                 ))}
               </div>
             ) : (
@@ -239,35 +251,34 @@ export default function HomeClient({ data }: HomeClientProps) {
           <div className="mx-auto max-w-[1320px]">
             <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div className="max-w-2xl space-y-3">
-                <span className="section-label">TRENDING NOW</span>
-                <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper">
-                  Popular Tech Picks
-                </h2>
+                <Reveal y={8}>
+                  <span className="section-label">TRENDING NOW</span>
+                </Reveal>
+                <Reveal y={14} delay={MOTION.stagger}>
+                  <h2 className="font-clash text-2xl sm:text-3xl font-bold leading-tight text-ocean-deeper">
+                    Popular Tech Picks
+                  </h2>
+                </Reveal>
               </div>
-              <Link
-                href="/products"
-                className="text-action"
-              >
-                View All Products
-                <ArrowRight className="ta-arrow" />
-              </Link>
             </div>
 
           {products.length > 0 ? (
             <>
               <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
-                {products.map((product) => (
-                  <ProductCard key={product.id} product={product} onReserve={setSelectedProduct} />
+                {products.map((product, index) => (
+                  <ProductCard key={product.id} product={product} onReserve={setSelectedProduct} delay={gridStaggerDelay(index)} />
                 ))}
               </div>
-              <div className="mt-10 flex justify-center md:hidden">
-                <Link
-                  href="/products"
-                  className="text-action min-h-[44px] px-2"
-                >
-                  View All Products <ArrowRight className="ta-arrow" />
-                </Link>
-              </div>
+              <Reveal y={10} delay={MOTION.stagger * 3}>
+                <div className="mt-10 flex justify-center">
+                  <Link
+                    href="/products"
+                    className="text-action min-h-[44px] px-2"
+                  >
+                    View All Products <ArrowRight className="ta-arrow" />
+                  </Link>
+                </div>
+              </Reveal>
             </>
           ) : (
             <div className="rounded-2xl border border-dashed border-ocean/10 bg-white/80 py-16 text-center">
