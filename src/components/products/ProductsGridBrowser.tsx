@@ -31,6 +31,7 @@ function subscribeViewport(callback: () => void) {
 function buildHref(params: Record<string, string>, page: number) {
   const u = new URLSearchParams();
   Object.entries(params).forEach(([k, v]) => {
+    if (k === "page") return;
     if (v !== undefined && v !== null && String(v) !== "") u.set(k, String(v));
   });
   if (page > 1) u.set("page", String(page));
