@@ -16,7 +16,7 @@ export function LoginForm() {
   return (
     <form action={formAction} className="space-y-5">
       {state?.error && (
-        <div className="flex items-start gap-2.5 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div className="flex items-start gap-2.5 rounded-xl border border-red-100 bg-red-50 dark:bg-red-500/15 px-4 py-3 text-sm text-red-700 dark:text-red-300">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <span>{state.error}</span>
         </div>
@@ -36,7 +36,7 @@ export function LoginForm() {
           autoComplete="email"
           required
           placeholder="admin@galaxyhub.rw"
-          className="block w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-[#10233D] placeholder-gray-300 transition-colors focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/10"
+          className="block w-full rounded-xl border border-gray-200 bg-white dark:bg-[#0f2438] px-4 py-3 text-sm text-[#10233D] placeholder-gray-300 transition-colors focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/10"
         />
       </div>
 
@@ -54,7 +54,7 @@ export function LoginForm() {
           autoComplete="current-password"
           required
           placeholder="Enter your password"
-          className="block w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-[#10233D] placeholder-gray-300 transition-colors focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/10"
+          className="block w-full rounded-xl border border-gray-200 bg-white dark:bg-[#0f2438] px-4 py-3 text-sm text-[#10233D] placeholder-gray-300 transition-colors focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/10"
         />
       </div>
 

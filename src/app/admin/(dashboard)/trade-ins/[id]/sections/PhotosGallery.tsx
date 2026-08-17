@@ -39,7 +39,7 @@ export function PhotosGallery({ photos }: { photos: string[] }) {
             key={url}
             type="button"
             onClick={() => setLightbox(index)}
-            className="group relative aspect-square cursor-zoom-in overflow-hidden rounded-xl border border-white/8 bg-[#0a1628]"
+            className="group relative aspect-square cursor-zoom-in overflow-hidden rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438]"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -48,7 +48,7 @@ export function PhotosGallery({ photos }: { photos: string[] }) {
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               loading="lazy"
             />
-            <span className="absolute bottom-2 right-2 rounded-md bg-ocean-deeper/70 px-1.5 py-0.5 text-[10px] font-bold text-white backdrop-blur">
+            <span className="absolute bottom-2 right-2 rounded-md bg-ocean-deeper/70 px-1.5 py-0.5 text-[10px] font-bold text-slate-900 dark:text-slate-100 backdrop-blur">
               {index + 1}
             </span>
           </button>
@@ -65,7 +65,7 @@ export function PhotosGallery({ photos }: { photos: string[] }) {
           <button
             type="button"
             onClick={() => setLightbox(null)}
-            className="absolute right-4 top-4 cursor-pointer rounded-full border border-white/15 bg-white/5 p-2 text-white/70 hover:text-white"
+            className="absolute right-4 top-4 cursor-pointer rounded-full border border-slate-300 bg-slate-50 dark:bg-[#0f2438] p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
             aria-label="Close preview"
           >
             <X className="h-5 w-5" />
@@ -76,7 +76,7 @@ export function PhotosGallery({ photos }: { photos: string[] }) {
             alt={`Device photo ${lightbox + 1}`}
             className="max-h-[85vh] max-w-full rounded-xl object-contain"
           />
-          <p className="absolute bottom-4 text-xs font-semibold text-white/50">
+          <p className="absolute bottom-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
             {lightbox + 1} / {photos.length}
           </p>
         </div>

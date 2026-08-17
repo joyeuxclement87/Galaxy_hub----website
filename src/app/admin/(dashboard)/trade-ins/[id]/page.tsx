@@ -8,16 +8,16 @@ export const dynamic = "force-dynamic";
 function WorkspaceSkeleton() {
   return (
     <div className="space-y-6">
-      <div className="h-28 animate-pulse rounded-2xl border border-white/5 bg-white/5" />
+      <div className="h-28 animate-pulse rounded-2xl border border-slate-100 dark:border-[#1a3352] bg-slate-50 dark:bg-[#0f2438]" />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="h-44 animate-pulse rounded-2xl border border-white/5 bg-white/5" />
+            <div key={i} className="h-44 animate-pulse rounded-2xl border border-slate-100 dark:border-[#1a3352] bg-slate-50 dark:bg-[#0f2438]" />
           ))}
         </div>
         <div className="space-y-6">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="h-36 animate-pulse rounded-2xl border border-white/5 bg-white/5" />
+            <div key={i} className="h-36 animate-pulse rounded-2xl border border-slate-100 dark:border-[#1a3352] bg-slate-50 dark:bg-[#0f2438]" />
           ))}
         </div>
       </div>
@@ -41,7 +41,7 @@ export default async function TradeInDetailPage({
 
   return (
     <div className="space-y-6">
-      <h1 className="font-clash text-2xl font-bold text-white tracking-tight">Trade-In Detail</h1>
+      <h1 className="font-clash text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Trade-In Detail</h1>
       <Suspense fallback={<WorkspaceSkeleton />}>
         <WorkspaceContent id={id} />
       </Suspense>

@@ -17,8 +17,8 @@ export default async function EditReviewPage({ params }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-clash text-2xl font-bold text-white tracking-tight">Edit Review</h1>
-        <p className="mt-1 text-sm text-white/40">{review.author}</p>
+        <h1 className="font-clash text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Edit Review</h1>
+        <p className="mt-1 text-sm text-slate-400 dark:text-slate-500">{review.author}</p>
       </div>
       <ReviewForm review={review} onSubmit={boundUpdate} />
     </div>

@@ -84,12 +84,12 @@ export function SpecificationsEditor({ value, onChange, categoryName, categorySl
       {template && (
         <div className="rounded-xl border border-ocean/20 bg-ocean/[0.05] p-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-ocean-light" />
-            <p className="text-sm font-bold text-white">
+            <Sparkles className="h-4 w-4 text-accent dark:text-[#8ec5f2]" />
+            <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
               Suggested groups for {template.displayName}
             </p>
           </div>
-          <p className="mt-1 text-xs text-white/40">
+          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
             Click a group to add it with its usual fields — you only fill in the details that exist.
           </p>
           <div className="mt-3 flex flex-wrap gap-1.5">
@@ -103,8 +103,8 @@ export function SpecificationsEditor({ value, onChange, categoryName, categorySl
                   disabled={alreadyAdded}
                   className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
                     alreadyAdded
-                      ? "border-white/5 bg-white/[0.02] text-white/25"
-                      : "border-ocean/25 bg-ocean/10 text-ocean-light hover:bg-ocean/20 cursor-pointer"
+                      ? "border-slate-100 dark:border-[#1a3352] bg-slate-50 dark:bg-[#0f2438] text-slate-400 dark:text-slate-500"
+                      : "border-ocean/25 bg-ocean/10 text-accent dark:text-[#8ec5f2] hover:bg-ocean/20 cursor-pointer"
                   }`}
                 >
                   {group.name}
@@ -117,7 +117,7 @@ export function SpecificationsEditor({ value, onChange, categoryName, categorySl
             <button
               type="button"
               onClick={addAllTemplateGroups}
-              className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-ocean-dark cursor-pointer"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-ocean px-3 py-1.5 text-xs font-medium text-slate-900 dark:text-slate-100 transition-colors hover:bg-ocean-dark cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" /> Add all suggested groups
             </button>
@@ -126,26 +126,26 @@ export function SpecificationsEditor({ value, onChange, categoryName, categorySl
       )}
 
       {value.length === 0 && (
-        <p className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-6 text-center text-xs text-white/30">
+        <p className="rounded-xl border border-dashed border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-6 text-center text-xs text-slate-400 dark:text-slate-500">
           No specifications yet. Import from a phone search above, copy from an existing product, or add a group manually.
         </p>
       )}
 
       {value.map((group, groupIndex) => (
-        <div key={groupIndex} className="rounded-xl border border-white/8 bg-white/[0.03] p-4">
+        <div key={groupIndex} className="rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] p-4">
           <div className="flex items-center gap-2">
             <input
               type="text"
               value={group.name}
               onChange={(e) => updateGroup(groupIndex, { ...group, name: e.target.value })}
               placeholder="Group name, e.g. Display"
-              className="flex-1 rounded-lg border border-white/8 bg-white/5 px-3 py-2 text-sm font-bold text-white placeholder:text-white/25 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/20"
+              className="flex-1 rounded-lg border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-3 py-2 text-sm font-bold text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/20"
             />
             <button
               type="button"
               onClick={() => moveGroup(groupIndex, -1)}
               disabled={groupIndex === 0}
-              className="rounded-lg p-2 text-white/30 hover:bg-white/10 hover:text-white/60 disabled:opacity-20"
+              className="rounded-lg p-2 text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-[#1c3a5c] hover:text-slate-500 disabled:opacity-20"
               aria-label="Move group up"
             >
               <ChevronUp className="h-4 w-4" />
@@ -154,7 +154,7 @@ export function SpecificationsEditor({ value, onChange, categoryName, categorySl
               type="button"
               onClick={() => moveGroup(groupIndex, 1)}
               disabled={groupIndex === value.length - 1}
-              className="rounded-lg p-2 text-white/30 hover:bg-white/10 hover:text-white/60 disabled:opacity-20"
+              className="rounded-lg p-2 text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-[#1c3a5c] hover:text-slate-500 disabled:opacity-20"
               aria-label="Move group down"
             >
               <ChevronDown className="h-4 w-4" />
@@ -162,7 +162,7 @@ export function SpecificationsEditor({ value, onChange, categoryName, categorySl
             <button
               type="button"
               onClick={() => removeGroup(groupIndex)}
-              className="rounded-lg p-2 text-red-400/70 hover:bg-red-500/10 hover:text-red-400"
+              className="rounded-lg p-2 text-red-400/70 hover:bg-red-50 hover:text-red-400"
               aria-label="Remove group"
             >
               <Trash2 className="h-4 w-4" />
@@ -181,7 +181,7 @@ export function SpecificationsEditor({ value, onChange, categoryName, categorySl
                     updateGroup(groupIndex, { ...group, specs });
                   }}
                   placeholder="Specification name, e.g. Screen Size"
-                  className="w-1/3 rounded-lg border border-white/8 bg-white/5 px-3 py-2 text-xs text-white/70 placeholder:text-white/25 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/20"
+                  className="w-1/3 rounded-lg border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-3 py-2 text-xs text-slate-600 dark:text-slate-400 placeholder:text-slate-400 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/20"
                 />
                 <input
                   type="text"
@@ -192,7 +192,7 @@ export function SpecificationsEditor({ value, onChange, categoryName, categorySl
                     updateGroup(groupIndex, { ...group, specs });
                   }}
                   placeholder="Value, e.g. 6.9 inches"
-                  className="flex-1 rounded-lg border border-white/8 bg-white/5 px-3 py-2 text-xs text-white placeholder:text-white/25 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/20"
+                  className="flex-1 rounded-lg border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-3 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/20"
                 />
                 <button
                   type="button"
@@ -200,7 +200,7 @@ export function SpecificationsEditor({ value, onChange, categoryName, categorySl
                     const specs = group.specs.filter((_, i) => i !== specIndex);
                     updateGroup(groupIndex, { ...group, specs });
                   }}
-                  className="rounded-lg p-2 text-red-400/70 hover:bg-red-500/10 hover:text-red-400"
+                  className="rounded-lg p-2 text-red-400/70 hover:bg-red-50 hover:text-red-400"
                   aria-label="Remove specification"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -211,7 +211,7 @@ export function SpecificationsEditor({ value, onChange, categoryName, categorySl
             <button
               type="button"
               onClick={() => updateGroup(groupIndex, { ...group, specs: [...group.specs, { label: "", value: "" }] })}
-              className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-ocean-light hover:bg-ocean/10"
+              className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-accent dark:text-[#8ec5f2] hover:bg-ocean/10"
             >
               <Plus className="h-3.5 w-3.5" /> Add Specification
             </button>
@@ -222,7 +222,7 @@ export function SpecificationsEditor({ value, onChange, categoryName, categorySl
       <button
         type="button"
         onClick={addGroup}
-        className="inline-flex items-center gap-2 rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm font-medium text-white/60 hover:bg-white/10"
+        className="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c3a5c]"
       >
         <Plus className="h-4 w-4" /> Add Specification Group
       </button>

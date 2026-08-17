@@ -58,18 +58,18 @@ export function OfferSection({ workspace }: { workspace: TradeInWorkspace }) {
       icon={<Send className="h-3.5 w-3.5" />}
       actions={
         offerStatus ? (
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white/40">
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 dark:border-[#1e3a5f] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
             {statusLabel[offerStatus] ?? offerStatus}
           </span>
         ) : undefined
       }
     >
-      <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-white/30">
+      <div className="rounded-xl border border-slate-100 dark:border-[#1a3352] bg-slate-50 dark:bg-[#0f2438] p-4">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
           Trade-In Value
         </p>
-        <p className="mt-1 font-clash text-xl font-bold text-white">{formatRWF(Number(tradeIn.final_value))}</p>
-        <p className="mt-0.5 text-xs text-white/40">
+        <p className="mt-1 font-clash text-xl font-bold text-slate-900 dark:text-slate-100">{formatRWF(Number(tradeIn.final_value))}</p>
+        <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">
           For {tradeIn.wanted_product_name}
           {tradeIn.wanted_product_storage ? ` · ${tradeIn.wanted_product_storage}` : ""}
         </p>
@@ -90,7 +90,7 @@ export function OfferSection({ workspace }: { workspace: TradeInWorkspace }) {
           >
             Send Offer to Customer
           </ActionButton>
-          <p className="mt-2 text-xs text-white/30">
+          <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
             Delivered via Telegram. The record is kept even if delivery fails.
           </p>
         </div>
@@ -124,7 +124,7 @@ export function OfferSection({ workspace }: { workspace: TradeInWorkspace }) {
           >
             <XCircle className="h-3.5 w-3.5" /> Mark Rejected
           </ActionButton>
-          <p className="w-full text-xs text-white/30">
+          <p className="w-full text-xs text-slate-400 dark:text-slate-500">
             {tradeIn.offer_sent_at
               ? `Sent ${formatDateTime(tradeIn.offer_sent_at)} via Telegram.`
               : "Offer sent."}
@@ -133,14 +133,14 @@ export function OfferSection({ workspace }: { workspace: TradeInWorkspace }) {
       )}
 
       {offerStatus === "accepted" && (
-        <p className="mt-3 text-xs text-white/40">
+        <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
           Accepted by the customer{tradeIn.offer_accepted_at ? ` on ${formatDateTime(tradeIn.offer_accepted_at)}` : ""}.
           {tradeIn.status === "accepted" ? " You can now complete the trade-in." : ""}
         </p>
       )}
 
       {offerStatus === "rejected" && (
-        <p className="mt-3 text-xs text-white/40">
+        <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
           The customer declined the offer{tradeIn.offer_rejected_at ? ` on ${formatDateTime(tradeIn.offer_rejected_at)}` : ""}.
         </p>
       )}

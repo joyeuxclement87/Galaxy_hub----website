@@ -17,8 +17,8 @@ export default async function EditBrandPage({ params }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-clash text-2xl font-bold text-white tracking-tight">Edit Brand</h1>
-        <p className="mt-1 text-sm text-white/40">{brand.name}</p>
+        <h1 className="font-clash text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Edit Brand</h1>
+        <p className="mt-1 text-sm text-slate-400 dark:text-slate-500">{brand.name}</p>
       </div>
       <BrandForm brand={brand} onSubmit={boundUpdate} />
     </div>

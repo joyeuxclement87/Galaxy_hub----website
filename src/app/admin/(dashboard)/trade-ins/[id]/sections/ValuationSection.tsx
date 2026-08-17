@@ -8,9 +8,9 @@ import type { TradeInWorkspace } from "@/actions/trade-ins";
 import { Section, ActionButton, formatRWF, formatDateTime, staffName } from "../components";
 
 const inputClass =
-  "w-full rounded-xl border border-white/8 bg-[#0a1628] px-3 py-2 text-sm text-white focus:border-[#0f70c9] focus:outline-none";
+  "w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438] px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:border-[#0f70c9] focus:outline-none";
 const textareaClass =
-  "w-full rounded-xl border border-white/8 bg-[#0a1628] px-3 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-[#0f70c9] focus:outline-none resize-none";
+  "w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438] px-3 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-[#0f70c9] focus:outline-none resize-none";
 
 /* ─── VALUATION ─────────────────────────────────────────────────────────────
    Staff sets the estimated and final values. The final value becomes the
@@ -67,7 +67,7 @@ export function ValuationSection({ workspace }: { workspace: TradeInWorkspace })
     <Section title="Valuation" icon={<Coins className="h-3.5 w-3.5" />}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-white/30">
+          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
             Estimated Trade-In Value (RWF)
           </label>
           <div className="flex gap-2">
@@ -85,7 +85,7 @@ export function ValuationSection({ workspace }: { workspace: TradeInWorkspace })
           </div>
         </div>
         <div>
-          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-white/30">
+          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
             Final Trade-In Value (RWF)
           </label>
           <div className="flex gap-2">
@@ -105,7 +105,7 @@ export function ValuationSection({ workspace }: { workspace: TradeInWorkspace })
       </div>
 
       <div className="mt-4">
-        <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-white/30">
+        <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
           Valuation Notes
         </span>
         <textarea
@@ -119,29 +119,29 @@ export function ValuationSection({ workspace }: { workspace: TradeInWorkspace })
       </div>
 
       {(tradeIn.valued_by || tradeIn.valued_at) && (
-        <p className="mt-3 text-xs text-white/40">
+        <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
           Last valued by {staffName(tradeIn.valued_by)} · {tradeIn.valued_at ? formatDateTime(tradeIn.valued_at) : ""}
         </p>
       )}
 
       {valuations.length > 0 && (
-        <div className="mt-5 border-t border-white/5 pt-4">
-          <p className="mb-3 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-white/30">
+        <div className="mt-5 border-t border-slate-100 dark:border-[#1a3352] pt-4">
+          <p className="mb-3 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
             <History className="h-3 w-3" /> Valuation History
           </p>
           <div className="space-y-2">
             {valuations.map((v) => (
-              <div key={v.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2">
+              <div key={v.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-100 dark:border-[#1a3352] bg-slate-50 dark:bg-[#0f2438] px-3 py-2">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                  <span className="text-xs text-white/70">
-                    <span className="text-white/35">Est.</span> {formatRWF(Number(v.estimated_value))}
+                  <span className="text-xs text-slate-600 dark:text-slate-400">
+                    <span className="text-slate-400 dark:text-slate-500">Est.</span> {formatRWF(Number(v.estimated_value))}
                   </span>
-                  <span className="text-xs text-white/70">
-                    <span className="text-white/35">Final</span> {formatRWF(Number(v.final_value))}
+                  <span className="text-xs text-slate-600 dark:text-slate-400">
+                    <span className="text-slate-400 dark:text-slate-500">Final</span> {formatRWF(Number(v.final_value))}
                   </span>
-                  {v.notes && <span className="max-w-xs truncate text-xs text-white/40">{v.notes}</span>}
+                  {v.notes && <span className="max-w-xs truncate text-xs text-slate-400 dark:text-slate-500">{v.notes}</span>}
                 </div>
-                <span className="text-[10px] text-white/35">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500">
                   {staffName(v.created_by)} · {formatDateTime(v.created_at)}
                 </span>
               </div>

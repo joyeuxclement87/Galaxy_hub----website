@@ -21,13 +21,14 @@ export interface ProductsQuery {
   stock_status?: string;
   is_featured?: boolean;
   is_active?: boolean;
+  sort?: "newest" | "name" | "price_asc" | "price_desc" | "stock";
   page?: number;
   pageSize?: number;
 }
 
 export async function getProducts(query: ProductsQuery = {}): Promise<ProductsResponse> {
   const supabase = createClient();
-  const { search, category_id, brand_id, stock_status, is_featured, is_active, page = 1, pageSize = 20 } = query;
+  const { search, category_id, brand_id, stock_status, is_featured, is_active, sort = "newest", page = 1, pageSize = 20 } = query;
 
   let countQuery = supabase.from("products").select("*", { count: "exact", head: true });
   let dataQuery = supabase
@@ -61,7 +62,12 @@ export async function getProducts(query: ProductsQuery = {}): Promise<ProductsRe
 
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
-  dataQuery = dataQuery.order("created_at", { ascending: false }).range(from, to);
+  if (sort === "price_asc") dataQuery = dataQuery.order("price", { ascending: true });
+  else if (sort === "price_desc") dataQuery = dataQuery.order("price", { ascending: false });
+  else if (sort === "name") dataQuery = dataQuery.order("name", { ascending: true });
+  else if (sort === "stock") dataQuery = dataQuery.order("stock_status", { ascending: true });
+  else dataQuery = dataQuery.order("created_at", { ascending: false });
+  dataQuery = dataQuery.range(from, to);
 
   const [{ count }, { data, error }] = await Promise.all([countQuery, dataQuery]);
 

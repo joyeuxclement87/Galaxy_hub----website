@@ -4,19 +4,33 @@ function SkeletonPulse({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded-md bg-white/8",
+        "animate-pulse rounded-md bg-slate-100 dark:bg-[#162f4a]",
         className
       )}
     />
   );
 }
 
-export function StatCardSkeleton() {
+export function KpiCardSkeleton() {
   return (
-    <div className="rounded-xl border border-white/8 bg-white/5 p-5">
+    <div className="rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438] p-5">
       <div className="space-y-3">
+        <SkeletonPulse className="h-3 w-24" />
+        <SkeletonPulse className="h-8 w-28" />
         <SkeletonPulse className="h-3 w-20" />
-        <SkeletonPulse className="h-8 w-16" />
+      </div>
+    </div>
+  );
+}
+
+export function WidgetSkeleton({ rows = 4 }: { rows?: number }) {
+  return (
+    <div className="rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438] p-5">
+      <SkeletonPulse className="h-4 w-32" />
+      <div className="mt-4 space-y-3">
+        {Array.from({ length: rows }).map((_, i) => (
+          <SkeletonPulse key={i} className={cn("h-9", i % 2 ? "w-full" : "w-5/6")} />
+        ))}
       </div>
     </div>
   );
@@ -39,7 +53,7 @@ export function ProductRowSkeleton() {
     <tr>
       <td className="px-5 py-3.5">
         <div className="flex items-center gap-3">
-          <SkeletonPulse className="h-9 w-9 rounded-xl" />
+          <SkeletonPulse className="h-9 w-9 rounded-lg" />
           <SkeletonPulse className="h-4 w-36" />
         </div>
       </td>

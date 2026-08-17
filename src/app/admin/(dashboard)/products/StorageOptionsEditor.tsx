@@ -54,13 +54,13 @@ export function StorageOptionsEditor({ value, onChange, presets, ramPresets }: S
 
   const renderPresetSelect = (label: string, placeholder: string, options: string[]) => (
     <div>
-      <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+      <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
         {label}
       </label>
       <select
         value=""
         onChange={(e) => addPreset(e.target.value)}
-        className="block w-full max-w-xs rounded-lg border border-white/8 bg-white/5 px-3 py-2 text-sm text-white focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/20"
+        className="block w-full max-w-xs rounded-lg border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/20"
       >
         <option value="">{placeholder}</option>
         {options.map((p) => (
@@ -78,13 +78,13 @@ export function StorageOptionsEditor({ value, onChange, presets, ramPresets }: S
         {value.map((option) => (
           <span
             key={option}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-ocean/25 bg-ocean/10 px-3 py-1.5 text-xs font-semibold text-ocean-light"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-ocean/25 bg-ocean/10 px-3 py-1.5 text-xs font-semibold text-accent dark:text-[#8ec5f2]"
           >
             {option}
             <button
               type="button"
               onClick={() => remove(option)}
-              className="rounded p-0.5 text-ocean-light/50 hover:bg-ocean/20 hover:text-white"
+              className="rounded p-0.5 text-accent/50 hover:bg-ocean/20 hover:text-slate-900 dark:hover:text-slate-100"
               aria-label={`Remove ${option}`}
             >
               <X className="h-3 w-3" />
@@ -114,17 +114,17 @@ export function StorageOptionsEditor({ value, onChange, presets, ramPresets }: S
             }
           }}
           placeholder="e.g. 256GB"
-          className="w-40 rounded-lg border border-white/8 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/20"
+          className="w-40 rounded-lg border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:outline-none focus:ring-2 focus:ring-ocean/20"
         />
         <button
           type="button"
           onClick={add}
-          className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-ocean-light hover:bg-ocean/10"
+          className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-accent dark:text-[#8ec5f2] hover:bg-ocean/10"
         >
           <Plus className="h-3.5 w-3.5" /> Add Storage Option
         </button>
       </div>
-      <p className="text-xs text-white/25">
+      <p className="text-xs text-slate-400 dark:text-slate-500">
         Pick sizes from the preset list above (or type a custom one). Customers pick one of these sizes when ordering.
         Leave empty if the product has a single fixed size.
       </p>

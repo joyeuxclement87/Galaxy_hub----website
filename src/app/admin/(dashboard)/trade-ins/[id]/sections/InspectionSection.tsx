@@ -14,9 +14,9 @@ import {
 import { Section, ActionButton, EmptyState, Field, formatDateTime, staffName } from "../components";
 
 const selectClass =
-  "rounded-xl border border-white/8 bg-[#0a1628] px-3 py-2 text-sm text-white focus:border-[#0f70c9] focus:outline-none";
+  "rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438] px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:border-[#0f70c9] focus:outline-none";
 const textClass =
-  "w-full rounded-xl border border-white/8 bg-[#0a1628] px-3 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-[#0f70c9] focus:outline-none resize-none";
+  "w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438] px-3 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-[#0f70c9] focus:outline-none resize-none";
 
 function OptionSelect({
   label,
@@ -31,7 +31,7 @@ function OptionSelect({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-white/30">
+      <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
         {label}
       </span>
       <select
@@ -142,7 +142,7 @@ export function InspectionSection({ workspace }: { workspace: TradeInWorkspace }
               options={FUNCTIONAL_STATUSES}
             />
             <label className="block">
-              <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-white/30">
+              <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                 Battery Health
               </span>
               <input
@@ -160,12 +160,12 @@ export function InspectionSection({ workspace }: { workspace: TradeInWorkspace }
                 onChange={(e) => setForm((f) => ({ ...f, imei_verified: e.target.checked }))}
                 className="h-4 w-4 accent-[#0f70c9]"
               />
-              <span className="text-sm font-medium text-white/70">IMEI / serial verified</span>
+              <span className="text-sm font-medium text-slate-600 dark:text-slate-400">IMEI / serial verified</span>
             </label>
           </div>
 
           <div>
-            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-white/30">
+            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               Additional Faults
             </span>
             <textarea
@@ -179,7 +179,7 @@ export function InspectionSection({ workspace }: { workspace: TradeInWorkspace }
           </div>
 
           <div>
-            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-white/30">
+            <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               Inspection Notes
             </span>
             <textarea
@@ -218,7 +218,7 @@ export function InspectionSection({ workspace }: { workspace: TradeInWorkspace }
           {inspection.inspection_notes && (
             <Field label="Inspection Notes" value={inspection.inspection_notes} />
           )}
-          <p className="flex items-center gap-1.5 border-t border-white/5 pt-3 text-xs text-white/40">
+          <p className="flex items-center gap-1.5 border-t border-slate-100 dark:border-[#1a3352] pt-3 text-xs text-slate-400 dark:text-slate-500">
             <UserCheck className="h-3.5 w-3.5" />
             {staffName(inspection.inspected_by)} · {formatDateTime(inspection.inspected_at)}
           </p>

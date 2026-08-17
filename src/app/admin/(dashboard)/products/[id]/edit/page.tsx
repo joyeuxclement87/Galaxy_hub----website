@@ -24,13 +24,13 @@ export default async function EditProductPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-clash text-2xl font-bold text-white tracking-tight">Edit Product</h1>
-        <p className="mt-1 text-sm text-white/40">
+        <h1 className="font-clash text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Edit Product</h1>
+        <p className="mt-1 text-sm text-slate-400 dark:text-slate-500">
           Update &ldquo;{product.name}&rdquo;.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-white/8 bg-white/5 p-6 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] p-6 shadow-sm">
         <ProductForm
           product={product}
           categories={categories}

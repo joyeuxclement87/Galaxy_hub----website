@@ -17,6 +17,9 @@ export default async function ProductsPage({
   const stock_status = typeof params.stock_status === "string" ? params.stock_status : "";
   const is_featured = typeof params.is_featured === "string" ? params.is_featured : "";
   const is_active = typeof params.is_active === "string" ? params.is_active : "";
+  const sortParam = typeof params.sort === "string" && ["newest", "name", "price_asc", "price_desc", "stock"].includes(params.sort)
+    ? (params.sort as "newest" | "name" | "price_asc" | "price_desc" | "stock")
+    : "newest";
   const page = typeof params.page === "string" ? parseInt(params.page, 10) || 1 : 1;
 
   const pageSize = 20;
@@ -29,6 +32,7 @@ export default async function ProductsPage({
       stock_status,
       is_featured: is_featured ? is_featured === "true" : undefined,
       is_active: is_active ? is_active === "true" : undefined,
+      sort: sortParam,
       page,
       pageSize,
     }),
@@ -39,8 +43,8 @@ export default async function ProductsPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-clash text-2xl font-bold text-white tracking-tight">Products</h1>
-        <p className="mt-1 text-sm text-white/40">
+        <h1 className="font-clash text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Products</h1>
+        <p className="mt-1 text-sm text-slate-400 dark:text-slate-500">
           Manage your product catalog.
         </p>
       </div>
@@ -61,7 +65,7 @@ export default async function ProductsPage({
 
 function ProductsTableSkeleton() {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white">
+    <div className="rounded-xl border border-gray-200 bg-white dark:bg-[#0f2438]">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>

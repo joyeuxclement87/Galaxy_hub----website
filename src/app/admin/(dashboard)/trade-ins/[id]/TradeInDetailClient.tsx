@@ -97,10 +97,10 @@ export function TradeInDetailClient({ workspace }: { workspace: TradeInWorkspace
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="rounded-2xl border border-white/8 bg-white/5 p-5 sm:p-6">
+      <div className="rounded-2xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] p-5 sm:p-6">
         <Link
           href="/admin/trade-ins"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/40 transition-colors hover:text-white/80"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 dark:text-slate-500 transition-colors hover:text-slate-700 dark:hover:text-slate-200"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           Back to Trade-Ins
@@ -108,12 +108,12 @@ export function TradeInDetailClient({ workspace }: { workspace: TradeInWorkspace
 
         <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="font-mono text-xl font-bold text-white tracking-tight sm:text-2xl">
+            <h1 className="font-mono text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight sm:text-2xl">
               {tradeIn.trade_in_id}
             </h1>
-            <p className="mt-1 text-sm text-white/40">
+            <p className="mt-1 text-sm text-slate-400 dark:text-slate-500">
               Created: {formatDate(tradeIn.created_at, { day: "numeric", month: "short", year: "numeric" })}
-              <span className="mx-2 text-white/20">·</span>
+              <span className="mx-2 text-slate-300 dark:text-slate-600">·</span>
               <StatusIndicator status={status} />
             </p>
           </div>
@@ -121,12 +121,12 @@ export function TradeInDetailClient({ workspace }: { workspace: TradeInWorkspace
           <div className="flex flex-wrap items-center gap-2">
             {/* Controlled status dropdown */}
             <label className="flex items-center gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-white/30">Status</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Status</span>
               <select
                 value={status}
                 onChange={(e) => changeStatus(e.target.value)}
                 disabled={isPending}
-                className="cursor-pointer rounded-xl border border-white/8 bg-[#0a1628] px-3 py-1.5 text-xs font-semibold text-white/70 focus:border-[#0f70c9] focus:outline-none disabled:opacity-60"
+                className="cursor-pointer rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438] px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 focus:border-[#0f70c9] focus:outline-none disabled:opacity-60"
               >
                 {TRADE_IN_STATUSES.map((s) => (
                   <option key={s} value={s}>

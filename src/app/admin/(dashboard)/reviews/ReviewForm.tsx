@@ -81,105 +81,105 @@ export function ReviewForm({ review, onSubmit }: ReviewFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-8">
-      {submitError && <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">{submitError}</div>}
+      {submitError && <div className="rounded-xl border border-red-500/20 bg-red-50 dark:bg-red-500/15 px-4 py-3 text-sm text-red-600 dark:text-red-300">{submitError}</div>}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">Author *</label>
-            <input {...register("author")} placeholder="e.g. Diane Uwase" className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
-            {errors.author && <p className="mt-1 text-xs text-red-300">{errors.author.message}</p>}
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Author *</label>
+            <input {...register("author")} placeholder="e.g. Diane Uwase" className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
+            {errors.author && <p className="mt-1 text-xs text-red-600 dark:text-red-300">{errors.author.message}</p>}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">Location</label>
-              <input {...register("location")} placeholder="e.g. Kigali" className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Location</label>
+              <input {...register("location")} placeholder="e.g. Kigali" className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">Role</label>
-              <input {...register("role")} placeholder="e.g. Software Engineer" className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Role</label>
+              <input {...register("role")} placeholder="e.g. Software Engineer" className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">Rating</label>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Rating</label>
             <div className="flex items-center gap-1">
               {[1, 2, 3, 4, 5].map((value) => (
                 <button
                   key={value}
                   type="button"
                   onClick={() => setValue("rating", value)}
-                  className={`cursor-pointer rounded-lg p-1 transition-colors ${value <= rating ? "text-amber-400" : "text-white/20 hover:text-white/40"}`}
+                  className={`cursor-pointer rounded-lg p-1 transition-colors ${value <= rating ? "text-amber-400" : "text-slate-300 dark:text-slate-600 hover:text-slate-400"}`}
                   aria-label={`${value} star${value > 1 ? "s" : ""}`}
                 >
                   <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6"><path d="M12 2l2.9 6.26L21.5 9.27l-5 4.87 1.18 6.88L12 17.77l-5.68 3.25L7.5 14.14l-5-4.87 6.6-1.01L12 2z" /></svg>
                 </button>
               ))}
-              <span className="ml-2 text-sm font-bold text-white/60">{rating}/5</span>
+              <span className="ml-2 text-sm font-bold text-slate-500 dark:text-slate-400">{rating}/5</span>
             </div>
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">Review Content *</label>
-            <textarea {...register("content")} rows={5} placeholder="&ldquo;The iPhone I ordered arrived next day and was exactly as described...&rdquo;" className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
-            {errors.content && <p className="mt-1 text-xs text-red-300">{errors.content.message}</p>}
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Review Content *</label>
+            <textarea {...register("content")} rows={5} placeholder="&ldquo;The iPhone I ordered arrived next day and was exactly as described...&rdquo;" className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
+            {errors.content && <p className="mt-1 text-xs text-red-600 dark:text-red-300">{errors.content.message}</p>}
           </div>
         </div>
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">Avatar</label>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Avatar</label>
             <div className="flex items-start gap-4">
-              <div className="relative flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-full border border-dashed border-white/8 bg-white/[0.03]">
+              <div className="relative flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-full border border-dashed border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438]">
                 {avatarUrl ? (
                   <>
                     <img src={avatarUrl} alt="Avatar preview" className="h-full w-full object-cover" />
-                    <button type="button" onClick={() => { setAvatarUrl(""); setValue("avatar_url", ""); }} className="absolute right-0 top-0 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white/70 hover:bg-black/80"><X className="h-3.5 w-3.5" /></button>
+                    <button type="button" onClick={() => { setAvatarUrl(""); setValue("avatar_url", ""); }} className="absolute right-0 top-0 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-slate-600 dark:text-slate-400 hover:bg-black/80"><X className="h-3.5 w-3.5" /></button>
                   </>
-                ) : <ImageIcon className="h-6 w-6 text-white/20" />}
+                ) : <ImageIcon className="h-6 w-6 text-slate-300 dark:text-slate-600" />}
               </div>
               <div className="flex-1">
-                <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm font-medium text-white/50 hover:bg-white/10 transition-colors">
+                <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c3a5c] transition-colors">
                   <Upload className="h-4 w-4" />{uploading ? "Uploading..." : "Upload Photo"}
                   <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleUpload} disabled={uploading} className="hidden" />
                 </label>
-                {uploadError && <p className="mt-1 text-xs text-red-300">{uploadError}</p>}
-                <p className="mt-1 text-xs text-white/20">Square photo. Max 2MB. JPG, PNG, WebP.</p>
+                {uploadError && <p className="mt-1 text-xs text-red-600 dark:text-red-300">{uploadError}</p>}
+                <p className="mt-1 text-xs text-slate-300 dark:text-slate-600">Square photo. Max 2MB. JPG, PNG, WebP.</p>
               </div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">Purchased Product</label>
-              <input {...register("purchased_product")} placeholder="e.g. iPhone 16 Pro" className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Purchased Product</label>
+              <input {...register("purchased_product")} placeholder="e.g. iPhone 16 Pro" className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">Category</label>
-              <input {...register("category")} placeholder="e.g. Phones" className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Category</label>
+              <input {...register("category")} placeholder="e.g. Phones" className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">Sort Order</label>
-            <input {...register("sort_order")} type="number" placeholder="0" className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
-            <p className="mt-1 text-xs text-white/20">Lower numbers appear first (featured always first).</p>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Sort Order</label>
+            <input {...register("sort_order")} type="number" placeholder="0" className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all" />
+            <p className="mt-1 text-xs text-slate-300 dark:text-slate-600">Lower numbers appear first (featured always first).</p>
           </div>
-          <div className="space-y-3 rounded-xl border border-white/8 bg-white/[0.03] px-4 py-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-white/40">Display</p>
-            <label className="flex items-center gap-2 text-sm text-white/70 cursor-pointer">
-              <input type="checkbox" {...register("is_active")} className="h-4 w-4 rounded border-white/20 bg-white/5 text-ocean focus:ring-ocean/30" /> Show on homepage
+          <div className="space-y-3 rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Display</p>
+            <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer">
+              <input type="checkbox" {...register("is_active")} className="h-4 w-4 rounded border-slate-300 bg-slate-50 dark:bg-[#0f2438] text-ocean dark:text-[#8ec5f2] focus:ring-ocean/30" /> Show on homepage
             </label>
-            <label className="flex items-center gap-2 text-sm text-white/70 cursor-pointer">
-              <input type="checkbox" {...register("featured")} className="h-4 w-4 rounded border-white/20 bg-white/5 text-ocean focus:ring-ocean/30" /> Featured review
+            <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer">
+              <input type="checkbox" {...register("featured")} className="h-4 w-4 rounded border-slate-300 bg-slate-50 dark:bg-[#0f2438] text-ocean dark:text-[#8ec5f2] focus:ring-ocean/30" /> Featured review
             </label>
-            <label className="flex items-center gap-2 text-sm text-white/70 cursor-pointer">
-              <input type="checkbox" {...register("is_verified")} className="h-4 w-4 rounded border-white/20 bg-white/5 text-ocean focus:ring-ocean/30" /> Verified purchase badge
+            <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer">
+              <input type="checkbox" {...register("is_verified")} className="h-4 w-4 rounded border-slate-300 bg-slate-50 dark:bg-[#0f2438] text-ocean dark:text-[#8ec5f2] focus:ring-ocean/30" /> Verified purchase badge
             </label>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 border-t border-white/5 pt-6">
-        <button type="submit" disabled={pending} className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-ocean px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-ocean-dark disabled:opacity-50 shadow-md shadow-ocean/20">
+      <div className="flex items-center gap-3 border-t border-slate-100 dark:border-[#1a3352] pt-6">
+        <button type="submit" disabled={pending} className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-ocean px-6 py-2.5 text-sm font-medium text-slate-900 dark:text-slate-100 transition-colors hover:bg-ocean-dark disabled:opacity-50 shadow-md shadow-ocean/20">
           {pending && <Loader2 className="h-4 w-4 animate-spin" />}{review ? "Update Review" : "Create Review"}
         </button>
-        <button type="button" onClick={() => router.push("/admin/reviews")} className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/8 bg-white/5 px-6 py-2.5 text-sm font-medium text-white/50 transition-colors hover:bg-white/10">Cancel</button>
+        <button type="button" onClick={() => router.push("/admin/reviews")} className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-6 py-2.5 text-sm font-medium text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-[#1c3a5c]">Cancel</button>
       </div>
     </form>
   );

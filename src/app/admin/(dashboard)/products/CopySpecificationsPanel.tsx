@@ -92,12 +92,12 @@ export function CopySpecificationsPanel({ onImport }: CopySpecificationsPanelPro
   }, [onImport]);
 
   return (
-    <div className="space-y-4 rounded-xl border border-white/8 bg-white/[0.03] p-4">
+    <div className="space-y-4 rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] p-4">
       <div className="flex items-center gap-2">
-        <ClipboardCopy className="h-4 w-4 text-ocean-light" />
-        <p className="text-sm font-bold text-white">Copy Specifications from Existing Product</p>
+        <ClipboardCopy className="h-4 w-4 text-accent dark:text-[#8ec5f2]" />
+        <p className="text-sm font-bold text-slate-900 dark:text-slate-100">Copy Specifications from Existing Product</p>
       </div>
-      <p className="text-xs text-white/40">
+      <p className="text-xs text-slate-400 dark:text-slate-500">
         Search for a product already in your store (e.g. Galaxy Z Fold7) and copy its specifications.
         Only the specifications are copied — never the price, stock, images, or name. You can still
         edit everything afterwards.
@@ -105,33 +105,33 @@ export function CopySpecificationsPanel({ onImport }: CopySpecificationsPanelPro
 
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             value={query}
             onChange={(e) => handleQueryChange(e.target.value)}
             placeholder="e.g. Galaxy Z Fold, iPhone 16 Pro, MacBook Air"
-            className="w-full rounded-xl border border-white/8 bg-white/5 py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+            className="w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] py-2.5 pl-9 pr-3 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
           />
         </div>
-        {searching && <Loader2 className="mt-2.5 h-4 w-4 shrink-0 animate-spin text-ocean-light" />}
+        {searching && <Loader2 className="mt-2.5 h-4 w-4 shrink-0 animate-spin text-accent dark:text-[#8ec5f2]" />}
       </div>
 
       {searchError && (
-        <p className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+        <p className="rounded-lg border border-red-500/20 bg-red-50 dark:bg-red-500/15 px-3 py-2 text-xs text-red-600 dark:text-red-300">
           {searchError}
         </p>
       )}
 
       {copiedName && !searchError && (
-        <p className="flex items-center gap-1.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
+        <p className="flex items-center gap-1.5 rounded-lg border border-emerald-500/20 bg-emerald-50 dark:bg-emerald-500/15 px-3 py-2 text-xs text-emerald-600 dark:text-emerald-300">
           <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
           Copied specifications from &ldquo;{copiedName}&rdquo;. Review them below and edit anything necessary.
         </p>
       )}
 
       {!searching && hasSearched && !searchError && results.length === 0 && (
-        <p className="text-xs text-white/40">
+        <p className="text-xs text-slate-400 dark:text-slate-500">
           No products match that name. Try a different keyword, e.g. &ldquo;Galaxy Z&rdquo;, &ldquo;iPhone&rdquo;,
           or &ldquo;MacBook&rdquo;.
         </p>
@@ -142,14 +142,14 @@ export function CopySpecificationsPanel({ onImport }: CopySpecificationsPanelPro
           {results.map((result) => (
             <li
               key={result.id}
-              className="flex items-center justify-between gap-3 rounded-lg border border-white/8 bg-white/[0.02] px-3 py-2"
+              className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-3 py-2"
             >
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-white/85">
+                <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100/85">
                   {[result.brandName, result.name].filter(Boolean).join(" ")}
                 </p>
                 {result.categoryName && (
-                  <p className="truncate text-xs text-white/35">
+                  <p className="truncate text-xs text-slate-400 dark:text-slate-500">
                     {result.categoryName}
                     {result.specificationCount > 0 && (
                       <span className="ml-2">
@@ -159,7 +159,7 @@ export function CopySpecificationsPanel({ onImport }: CopySpecificationsPanelPro
                   </p>
                 )}
                 {(result.categoryName === null || !result.categoryName) && result.specificationCount > 0 && (
-                  <p className="truncate text-xs text-white/35">
+                  <p className="truncate text-xs text-slate-400 dark:text-slate-500">
                     {result.specificationCount} {result.specificationCount === 1 ? "specification" : "specifications"}
                   </p>
                 )}
@@ -168,7 +168,7 @@ export function CopySpecificationsPanel({ onImport }: CopySpecificationsPanelPro
                 type="button"
                 onClick={() => handleSelect(result)}
                 disabled={loadingSpecs}
-                className="shrink-0 rounded-lg border border-ocean/30 bg-ocean/10 px-3 py-1.5 text-xs font-semibold text-ocean-light transition-colors hover:bg-ocean/20 disabled:opacity-40"
+                className="shrink-0 rounded-lg border border-ocean/30 bg-ocean/10 px-3 py-1.5 text-xs font-semibold text-accent dark:text-[#8ec5f2] transition-colors hover:bg-ocean/20 disabled:opacity-40"
               >
                 Select
               </button>
@@ -178,29 +178,29 @@ export function CopySpecificationsPanel({ onImport }: CopySpecificationsPanelPro
       )}
 
       {loadingSpecs && (
-        <div className="flex items-center gap-2 rounded-lg border border-white/8 bg-white/[0.02] px-3 py-3 text-xs text-white/40">
+        <div className="flex items-center gap-2 rounded-lg border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-3 py-3 text-xs text-slate-400 dark:text-slate-500">
           <Loader2 className="h-4 w-4 animate-spin" />
           Loading specifications…
         </div>
       )}
 
       {copyError && (
-        <p className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-300">
+        <p className="rounded-lg border border-red-500/20 bg-red-50 dark:bg-red-500/15 px-3 py-2 text-xs text-red-600 dark:text-red-300">
           {copyError}
         </p>
       )}
 
       {selected && (
         <div className="flex items-center gap-2.5 rounded-xl border border-ocean/25 bg-ocean/[0.06] px-4 py-3">
-          <PackageSearch className="h-4 w-4 shrink-0 text-ocean-light" />
-          <p className="min-w-0 text-xs text-white/60">
-            <span className="font-semibold text-white">Selected:</span>{" "}
+          <PackageSearch className="h-4 w-4 shrink-0 text-accent dark:text-[#8ec5f2]" />
+          <p className="min-w-0 text-xs text-slate-500 dark:text-slate-400">
+            <span className="font-semibold text-slate-900 dark:text-slate-100">Selected:</span>{" "}
             <span className="truncate">{selected.name}</span>
           </p>
           <button
             type="button"
             onClick={() => setSelected(null)}
-            className="ml-auto rounded-lg p-1 text-white/30 hover:bg-white/10 hover:text-white/60"
+            className="ml-auto rounded-lg p-1 text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-[#1c3a5c] hover:text-slate-500"
             aria-label="Clear selection"
           >
             <X className="h-3.5 w-3.5" />

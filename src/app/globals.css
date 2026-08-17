@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Class-based dark mode, scoped to the admin panel (`.dark` on <html>). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: var(--font-manrope), "Manrope", sans-serif;
   --font-display: var(--font-plus-jakarta), "Plus Jakarta Sans", sans-serif;

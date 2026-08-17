@@ -2,38 +2,61 @@
 
 import { usePathname } from "next/navigation";
 import { signOut } from "@/actions/auth";
-import { LogOut, Bell, Search } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
+import { GlobalSearch } from "@/components/admin/GlobalSearch";
+import { NotificationBell } from "@/components/admin/NotificationBell";
+import { AdminProfileMenu } from "@/components/admin/AdminProfileMenu";
+import { ThemeToggle } from "@/components/admin/ThemeToggle";
 
-const PAGE_TITLES: Record<string, string> = {
-  "/admin": "Dashboard",
-  "/admin/products": "Products",
-  "/admin/products/new": "Add Product",
-  "/admin/categories": "Categories",
-  "/admin/brands": "Brands",
-  "/admin/promotions": "Promotions",
-  "/admin/hero": "Hero Section",
-  "/admin/orders": "Orders",
-  "/admin/trade-ins": "Trade-Ins",
-  "/admin/messages": "Messages",
-  "/admin/settings": "Settings",
+const PAGE_META: Record<string, { title: string; description: string }> = {
+  "/admin": { title: "Dashboard", description: "Store overview and daily operations." },
+  "/admin/messages": { title: "Messages", description: "Customer enquiries and contact forms." },
+  "/admin/products": { title: "Products", description: "Manage the Galaxy Hub catalog." },
+  "/admin/categories": { title: "Categories", description: "Organize product categories." },
+  "/admin/brands": { title: "Brands", description: "Manage the brand catalog." },
+  "/admin/promotions": { title: "Promotions", description: "Plan and manage campaigns." },
+  "/admin/reviews": { title: "Reviews", description: "Curate customer testimonials." },
+  "/admin/hero": { title: "Hero Section", description: "Homepage hero banner settings." },
+  "/admin/orders": { title: "Orders", description: "Track and fulfil customer orders." },
+  "/admin/trade-ins": { title: "Trade-Ins", description: "Review devices and manage offers." },
+  "/admin/customers": { title: "Customers", description: "Customer activity across the store." },
+  "/admin/analytics": { title: "Analytics", description: "Business performance overview." },
+  "/admin/reports": { title: "Reports", description: "Exportable business reports." },
+  "/admin/settings": { title: "Settings", description: "System control center." },
 };
 
-export function TopBar({ userEmail }: { userEmail: string }) {
-  const pathname = usePathname();
+function resolveMeta(pathname: string): { title: string; description: string } {
+  if (PAGE_META[pathname]) return PAGE_META[pathname];
+  if (/^\/admin\/products\/.+\/edit$/.test(pathname)) return { title: "Edit Product", description: "" };
+  if (/^\/admin\/products\/new$/.test(pathname)) return { title: "Add Product", description: "" };
+  if (/^\/admin\/categories\/.+\/edit$/.test(pathname)) return { title: "Edit Category", description: "" };
+  if (/^\/admin\/categories\/new$/.test(pathname)) return { title: "Add Category", description: "" };
+  if (/^\/admin\/brands\/.+\/edit$/.test(pathname)) return { title: "Edit Brand", description: "" };
+  if (/^\/admin\/brands\/new$/.test(pathname)) return { title: "Add Brand", description: "" };
+  if (/^\/admin\/promotions\/.+\/edit$/.test(pathname)) return { title: "Edit Promotion", description: "" };
+  if (/^\/admin\/promotions\/new$/.test(pathname)) return { title: "Add Promotion", description: "" };
+  if (/^\/admin\/reviews\/.+\/edit$/.test(pathname)) return { title: "Edit Review", description: "" };
+  if (/^\/admin\/reviews\/new$/.test(pathname)) return { title: "Add Review", description: "" };
+  if (/^\/admin\/orders\/.+/.test(pathname)) return { title: "Order Detail", description: "" };
+  if (/^\/admin\/trade-ins\/.+/.test(pathname)) return { title: "Trade-In Detail", description: "" };
+  return { title: "Admin", description: "" };
+}
 
-  let pageTitle = PAGE_TITLES[pathname] || "Admin";
-  if (!pageTitle || pageTitle === "Admin") {
-    if (pathname.match(/^\/admin\/products\/.+\/edit$/)) pageTitle = "Edit Product";
-    else if (pathname.match(/^\/admin\/products\/new$/)) pageTitle = "Add Product";
-    else if (pathname.match(/^\/admin\/categories\/.+\/edit$/)) pageTitle = "Edit Category";
-    else if (pathname.match(/^\/admin\/categories\/new$/)) pageTitle = "Add Category";
-    else if (pathname.match(/^\/admin\/brands\/.+\/edit$/)) pageTitle = "Edit Brand";
-    else if (pathname.match(/^\/admin\/brands\/new$/)) pageTitle = "Add Brand";
-    else if (pathname.match(/^\/admin\/promotions\/.+\/edit$/)) pageTitle = "Edit Promotion";
-    else if (pathname.match(/^\/admin\/promotions\/new$/)) pageTitle = "Add Promotion";
-    else if (pathname.match(/^\/admin\/orders\/.+/)) pageTitle = "Order Detail";
-    else if (pathname.match(/^\/admin\/trade-ins\/.+/)) pageTitle = "Trade-In Detail";
-  }
+export function TopBar({
+  userEmail,
+  onOpenMobileSidebar,
+}: {
+  userEmail: string;
+  onOpenMobileSidebar: () => void;
+}) {
+  const pathname = usePathname();
+  const meta = resolveMeta(pathname);
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const description =
+    pathname === "/admin"
+      ? `${greeting} — here's what's happening with Galaxy Hub today.`
+      : meta.description;
 
   const initials = userEmail
     .split("@")[0]
@@ -41,54 +64,39 @@ export function TopBar({ userEmail }: { userEmail: string }) {
     .toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/5 bg-[#0d1f3c]/90 backdrop-blur-xl">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3 pl-10 lg:pl-0">
-          <div>
-            <p className="text-caption font-bold uppercase tracking-[0.18em] text-white/30">
-              Galaxy Hub
-            </p>
-            <h1 className="font-clash text-lg font-bold leading-tight text-white lg:text-xl">
-              {pageTitle}
+    <header className="sticky top-0 z-30 border-b border-slate-200 dark:border-[#1e3a5f] bg-white/95 dark:bg-[#0a1628]/95 backdrop-blur">
+      <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+        <div className="flex min-w-0 items-center gap-3">
+          <button
+            onClick={onOpenMobileSidebar}
+            className="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-slate-200 dark:border-[#1e3a5f] p-2 text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-[#132c46] hover:text-slate-700 dark:hover:text-slate-200 lg:hidden"
+            aria-label="Open sidebar"
+          >
+            <Menu className="h-4 w-4" />
+          </button>
+          <div className="min-w-0">
+            <h1 className="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100 truncate">
+              {meta.title}
             </h1>
+            {description && (
+              <p className="hidden truncate text-xs text-slate-400 dark:text-slate-500 sm:block">{description}</p>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="relative hidden sm:block">
-            <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/30 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Search anything…"
-              className="w-44 rounded-xl border border-white/8 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all lg:w-56"
-            />
-          </div>
-
-          <button className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-white/8 bg-white/5 text-white/50 hover:border-ocean/30 hover:bg-ocean/15 hover:text-ocean transition-all">
-            <Bell className="h-4 w-4" />
-            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#0f70c9] ring-2 ring-[#0d1f3c]" />
-          </button>
-
-          <div className="h-6 w-px bg-white/8 mx-1 hidden sm:block" />
-
-          <div className="hidden sm:flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#0b5497] to-[#0f70c9] text-xs font-bold text-white shadow-md shadow-[#0b5497]/30">
-              {initials}
-            </div>
-            <div className="hidden lg:block">
-              <p className="text-xs font-semibold text-white/80 leading-none">{userEmail.split("@")[0]}</p>
-              <p className="text-caption text-white/30 mt-0.5">{userEmail.split("@")[1] ?? "Admin"}</p>
-            </div>
-          </div>
-
-          <form action={signOut}>
+        <div className="flex shrink-0 items-center gap-2">
+          <GlobalSearch />
+          <ThemeToggle />
+          <NotificationBell />
+          <div className="mx-1 hidden h-6 w-px bg-slate-200 dark:bg-slate-600 sm:block" />
+          <AdminProfileMenu userEmail={userEmail} initials={initials} />
+          <form action={signOut} className="hidden sm:block">
             <button
               type="submit"
               title="Sign out"
-              className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/8 bg-white/5 px-3 py-2 text-sm font-medium text-white/50 transition-all hover:border-red-400/30 hover:bg-red-500/15 hover:text-red-400"
+              className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-slate-200 dark:border-[#1e3a5f] text-slate-400 dark:text-slate-500 transition-colors hover:border-red-200 dark:border-red-500/30 hover:bg-red-50 hover:text-red-600"
             >
               <LogOut className="h-4 w-4" />
-              <span className="hidden sm:inline text-xs">Sign Out</span>
             </button>
           </form>
         </div>

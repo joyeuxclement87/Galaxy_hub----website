@@ -226,7 +226,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-8">
       {submitError && (
-        <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <div className="rounded-xl border border-red-500/20 bg-red-50 dark:bg-red-500/15 px-4 py-3 text-sm text-red-600 dark:text-red-300">
           {submitError}
         </div>
       )}
@@ -234,59 +234,59 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
               Product Name *
             </label>
             <input
               {...register("name")}
               onChange={handleNameChange}
-              className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+              className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
             />
-            {errors.name && <p className="mt-1 text-xs text-red-300">{errors.name.message}</p>}
+            {errors.name && <p className="mt-1 text-xs text-red-600 dark:text-red-300">{errors.name.message}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
               Slug *
             </label>
             <input
               {...register("slug")}
               onChange={handleSlugChange}
-              className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+              className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
             />
-            {errors.slug && <p className="mt-1 text-xs text-red-300">{errors.slug.message}</p>}
+            {errors.slug && <p className="mt-1 text-xs text-red-600 dark:text-red-300">{errors.slug.message}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
               Short Description
             </label>
             <textarea
               {...register("short_description")}
               rows={3}
-              className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+              className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
               Full Description
             </label>
             <textarea
               {...register("description")}
               rows={5}
-              className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+              className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
                 Category
               </label>
               <select
                 {...register("category_id")}
-                className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+                className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
               >
                 <option value="">Select category</option>
                 {categories.map((c) => (
@@ -296,12 +296,12 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
                 Brand
               </label>
               <select
                 {...register("brand_id")}
-                className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+                className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
               >
                 <option value="">Select brand</option>
                 {brands.map((b) => (
@@ -314,11 +314,11 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
               Main Image
             </label>
             <div className="flex items-start gap-4">
-              <div className="relative flex h-40 w-40 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-dashed border-white/8 bg-white/[0.03]">
+              <div className="relative flex h-40 w-40 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-dashed border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438]">
                 {imageUrl ? (
                   <>
                     <img
@@ -329,17 +329,17 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                     <button
                       type="button"
                       onClick={() => { setImageUrl(""); setValue("main_image_url", ""); }}
-                      className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white/70 hover:bg-black/80"
+                      className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-slate-600 dark:text-slate-400 hover:bg-black/80"
                     >
                       <X className="h-3.5 w-3.5" />
                     </button>
                   </>
                 ) : (
-                  <ImageIcon className="h-8 w-8 text-white/20" />
+                  <ImageIcon className="h-8 w-8 text-slate-300 dark:text-slate-600" />
                 )}
               </div>
               <div className="flex-1">
-                <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm font-medium text-white/50 hover:bg-white/10 transition-colors">
+                <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-[#1c3a5c] transition-colors">
                   <Upload className="h-4 w-4" />
                   {uploading ? "Uploading..." : "Upload Image"}
                   <input
@@ -350,43 +350,43 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                     className="hidden"
                   />
                 </label>
-                {uploading && <Loader2 className="mt-2 h-4 w-4 animate-spin text-ocean" />}
-                {uploadError && <p className="mt-1 text-xs text-red-300">{uploadError}</p>}
-                <p className="mt-1 text-xs text-white/20">Max 5MB. JPG, PNG, WebP, GIF.</p>
+                {uploading && <Loader2 className="mt-2 h-4 w-4 animate-spin text-ocean dark:text-[#8ec5f2]" />}
+                {uploadError && <p className="mt-1 text-xs text-red-600 dark:text-red-300">{uploadError}</p>}
+                <p className="mt-1 text-xs text-slate-300 dark:text-slate-600">Max 5MB. JPG, PNG, WebP, GIF.</p>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
                 Price *
               </label>
               <input
                 type="number"
                 step="0.01"
                 {...register("price")}
-                className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+                className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
               />
-              {errors.price && <p className="mt-1 text-xs text-red-300">{errors.price.message}</p>}
+              {errors.price && <p className="mt-1 text-xs text-red-600 dark:text-red-300">{errors.price.message}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
                 Old Price
               </label>
               <input
                 type="number"
                 step="0.01"
                 {...register("old_price")}
-                className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+                className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
                 Discount %
               </label>
               <input
@@ -394,29 +394,29 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 min="0"
                 max="100"
                 {...register("discount_percentage")}
-                className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+                className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
                 Stock Status *
               </label>
               <select
                 {...register("stock_status")}
-                className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+                className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
               >
                 <option value="available">In Stock</option>
                 <option value="out_of_stock">Out of Stock</option>
                 <option value="coming_soon">Coming Soon</option>
               </select>
-              {errors.stock_status && <p className="mt-1 text-xs text-red-300">{errors.stock_status.message}</p>}
+              {errors.stock_status && <p className="mt-1 text-xs text-red-600 dark:text-red-300">{errors.stock_status.message}</p>}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
                 Rating (0–5)
               </label>
               <input
@@ -426,44 +426,44 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 step="0.1"
                 placeholder="e.g. 4.8"
                 {...register("rating")}
-                className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+                className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
               />
-              {errors.rating && <p className="mt-1 text-xs text-red-300">{errors.rating.message}</p>}
-              <p className="mt-1 text-xs text-white/20">Shown as stars on product cards.</p>
+              {errors.rating && <p className="mt-1 text-xs text-red-600 dark:text-red-300">{errors.rating.message}</p>}
+              <p className="mt-1 text-xs text-slate-300 dark:text-slate-600">Shown as stars on product cards.</p>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-white/40 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">
                 Review Count
               </label>
               <input
                 type="number"
                 min="0"
                 {...register("review_count")}
-                className="block w-full rounded-xl border border-white/8 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:border-ocean/40 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
+                className="block w-full rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:border-ocean/40 focus:bg-slate-100 dark:bg-[#162f4a] focus:outline-none focus:ring-2 focus:ring-ocean/20 transition-all"
               />
-              {errors.review_count && <p className="mt-1 text-xs text-red-300">{errors.review_count.message}</p>}
-              <p className="mt-1 text-xs text-white/20">Number shown next to the rating.</p>
+              {errors.review_count && <p className="mt-1 text-xs text-red-600 dark:text-red-300">{errors.review_count.message}</p>}
+              <p className="mt-1 text-xs text-slate-300 dark:text-slate-600">Number shown next to the rating.</p>
             </div>
           </div>
 
-          <div className="space-y-3 rounded-xl border border-white/8 bg-white/[0.03] px-4 py-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-white/40">Flags & Visibility</p>
+          <div className="space-y-3 rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-4 py-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Flags & Visibility</p>
             <div className="flex flex-wrap gap-6">
-              <label className="flex items-center gap-2 text-sm text-white/70 cursor-pointer">
-                <input type="checkbox" {...register("is_featured")} className="h-4 w-4 rounded border-white/20 bg-white/5 text-ocean focus:ring-ocean/30" />
+              <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer">
+                <input type="checkbox" {...register("is_featured")} className="h-4 w-4 rounded border-slate-300 bg-slate-50 dark:bg-[#0f2438] text-ocean dark:text-[#8ec5f2] focus:ring-ocean/30" />
                 Featured
               </label>
-              <label className="flex items-center gap-2 text-sm text-white/70 cursor-pointer">
-                <input type="checkbox" {...register("is_new")} className="h-4 w-4 rounded border-white/20 bg-white/5 text-ocean focus:ring-ocean/30" />
+              <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer">
+                <input type="checkbox" {...register("is_new")} className="h-4 w-4 rounded border-slate-300 bg-slate-50 dark:bg-[#0f2438] text-ocean dark:text-[#8ec5f2] focus:ring-ocean/30" />
                 New Product
               </label>
-              <label className="flex items-center gap-2 text-sm text-white/70 cursor-pointer">
-                <input type="checkbox" {...register("is_active")} className="h-4 w-4 rounded border-white/20 bg-white/5 text-ocean focus:ring-ocean/30" />
+              <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer">
+                <input type="checkbox" {...register("is_active")} className="h-4 w-4 rounded border-slate-300 bg-slate-50 dark:bg-[#0f2438] text-ocean dark:text-[#8ec5f2] focus:ring-ocean/30" />
                 Active
               </label>
-              <label className="flex items-center gap-2 text-sm font-semibold text-ocean-light cursor-pointer">
-                <input type="checkbox" {...register("show_in_hero")} className="h-4 w-4 rounded border-white/20 bg-white/5 text-ocean focus:ring-ocean/30" />
+              <label className="flex items-center gap-2 text-sm font-semibold text-accent dark:text-[#8ec5f2] cursor-pointer">
+                <input type="checkbox" {...register("show_in_hero")} className="h-4 w-4 rounded border-slate-300 bg-slate-50 dark:bg-[#0f2438] text-ocean dark:text-[#8ec5f2] focus:ring-ocean/30" />
                 Display on Hero Section
               </label>
             </div>
@@ -471,10 +471,10 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         </div>
       </div>
 
-      <div className="space-y-4 border-t border-white/5 pt-8">
+      <div className="space-y-4 border-t border-slate-100 dark:border-[#1a3352] pt-8">
         <div>
-          <h2 className="text-sm font-bold text-white">Technical Specifications</h2>
-          <p className="mt-1 text-xs text-white/40">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">Technical Specifications</h2>
+          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
             Specs can come from a device search, be typed by hand, or be copied from a product you
             already have — whichever you pick, everything lands in the same editor below and saves
             to the same place.
@@ -493,15 +493,15 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
                 className={`flex items-start gap-3 rounded-xl border p-3 text-left transition-colors ${
                   active
                     ? "border-ocean/40 bg-ocean/10"
-                    : "border-white/8 bg-white/[0.03] hover:bg-white/[0.06] cursor-pointer"
+                    : "border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] hover:bg-slate-100 dark:hover:bg-[#1c3a5c] cursor-pointer"
                 }`}
               >
-                <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${active ? "text-ocean-light" : "text-white/30"}`} />
+                <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${active ? "text-accent dark:text-[#8ec5f2]" : "text-slate-400 dark:text-slate-500"}`} />
                 <span>
-                  <span className={`block text-sm font-semibold ${active ? "text-ocean-light" : "text-white/70"}`}>
+                  <span className={`block text-sm font-semibold ${active ? "text-accent dark:text-[#8ec5f2]" : "text-slate-600 dark:text-slate-400"}`}>
                     {label}
                   </span>
-                  <span className="block text-xs text-white/35">{description}</span>
+                  <span className="block text-xs text-slate-400 dark:text-slate-500">{description}</span>
                 </span>
               </button>
             );
@@ -534,10 +534,10 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         />
       </div>
 
-      <div className="space-y-4 border-t border-white/5 pt-8">
+      <div className="space-y-4 border-t border-slate-100 dark:border-[#1a3352] pt-8">
         <div>
-          <h2 className="text-sm font-bold text-white">Product Highlights</h2>
-          <p className="mt-1 text-xs text-white/40">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">Product Highlights</h2>
+          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
             3–5 short marketing bullet points shown on the product page (e.g. &ldquo;200MP Pro Camera&rdquo;). These
             are written by you, not imported.
           </p>
@@ -545,10 +545,10 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         <HighlightsEditor value={highlights} onChange={setHighlights} />
       </div>
 
-      <div className="space-y-4 border-t border-white/5 pt-8">
+      <div className="space-y-4 border-t border-slate-100 dark:border-[#1a3352] pt-8">
         <div>
-          <h2 className="text-sm font-bold text-white">Storage Options</h2>
-          <p className="mt-1 text-xs text-white/40">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">Storage Options</h2>
+          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
             Selectable storage sizes for this listing (e.g. 128GB, 256GB). Shown on the product page and at ordering.
             Presets update automatically based on the selected category — {isSmartwatch ? "smartwatch sizes (8GB – 64GB)" : "device sizes (64GB – 2TB)"}.
           </p>
@@ -561,11 +561,11 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         />
       </div>
 
-      <div className="flex items-center gap-3 border-t border-white/5 pt-6">
+      <div className="flex items-center gap-3 border-t border-slate-100 dark:border-[#1a3352] pt-6">
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-ocean px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-ocean-dark disabled:opacity-50 shadow-md shadow-ocean/20"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-ocean px-6 py-2.5 text-sm font-medium text-slate-900 dark:text-slate-100 transition-colors hover:bg-ocean-dark disabled:opacity-50 shadow-md shadow-ocean/20"
         >
           {pending && <Loader2 className="h-4 w-4 animate-spin" />}
           {product ? "Update Product" : "Create Product"}
@@ -573,7 +573,7 @@ export function ProductForm({ product, categories, brands }: ProductFormProps) {
         <button
           type="button"
           onClick={() => router.push("/admin/products")}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/8 bg-white/5 px-6 py-2.5 text-sm font-medium text-white/50 transition-colors hover:bg-white/10"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438] px-6 py-2.5 text-sm font-medium text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-[#1c3a5c]"
         >
           Cancel
         </button>

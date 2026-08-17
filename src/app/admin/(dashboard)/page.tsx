@@ -1,30 +1,29 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { getDashboardData, type RecentMessage } from "@/data/admin";
-import { StatCard } from "@/components/admin/StatCard";
-import { EmptyState } from "@/components/admin/EmptyState";
-import { StatCardSkeleton } from "@/components/admin/Skeleton";
+import { createAuthClient } from "@/lib/supabase-server-auth";
 import {
-  Package,
-  Tags,
-  Building2,
-  Percent,
-  ShoppingCart,
-  Clock,
   Plus,
   Sparkles,
-  ImageIcon,
-  ArrowRight,
-  CreditCard,
-  TrendingUp,
-  Zap,
-  Activity,
-  Mail,
+  RefreshCw,
+  ShoppingCart,
   MessageSquare,
+  ChevronRight,
+  AlertTriangle,
+  Package,
+  Star,
+  ArrowUpRight,
+  ArrowDownRight,
   Inbox,
+  Users,
+  ImageIcon,
+  Clock,
+  CircleAlert,
 } from "lucide-react";
-import { createAuthClient } from "@/lib/supabase-server-auth";
+import { getDashboardData } from "@/data/admin-dashboard";
+import { SalesChart } from "@/components/admin/SalesChart";
+import { Card, PageHeader, StatusBadge } from "@/components/admin/ui";
+import { KpiCardSkeleton, WidgetSkeleton } from "@/components/admin/Skeleton";
+import { EmptyState } from "@/components/admin/EmptyState";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -32,97 +31,86 @@ export const dynamic = "force-dynamic";
 const formatRWF = (amount: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "RWF", maximumFractionDigits: 0 }).format(amount);
 
+const timeAgo = (iso: string) => {
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return "yesterday";
+  return `${days}d ago`;
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  pending: "bg-amber-50 dark:bg-amber-500/15",
+  confirmed: "bg-blue-50 dark:bg-blue-500/15",
+  processing: "bg-violet-50 dark:bg-violet-500/15",
+  shipped: "bg-purple-50 dark:bg-purple-500/15",
+  delivered: "bg-emerald-50 dark:bg-emerald-500/15",
+  cancelled: "bg-red-50 dark:bg-red-500/15",
+};
+
 export default async function AdminDashboardPage() {
   const supabase = await createAuthClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const firstName = user?.email?.split("@")[0] ?? "Admin";
   const displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
 
   const now = new Date();
   const hour = now.getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
-
-  const dayName = now.toLocaleDateString("en-GB", { weekday: "long" });
-  const dateStr = now.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  const dateStr = now.toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   return (
-    <div className="space-y-8 pb-10">
+    <div className="space-y-6 pb-10">
+      <PageHeader
+        title={`${greeting}, ${displayName}`}
+        description={dateStr}
+        actions={
+          <>
+            <Link
+              href="/admin/orders"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438] px-3.5 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 shadow-sm transition-colors hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-50 dark:hover:bg-[#132c46]"
+            >
+              <ShoppingCart className="h-4 w-4" />
+              Orders
+            </Link>
+            <Link
+              href="/admin/products/new"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-ocean px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-ocean-dark"
+            >
+              <Plus className="h-4 w-4" />
+              Add Product
+            </Link>
+          </>
+        }
+      />
 
-      {/* ── Welcome Banner ──────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-3xl bg-[#0a1628] p-[1px] shadow-2xl shadow-[#0b5497]/20">
-        <div className="relative overflow-hidden rounded-[calc(1.5rem-1px)] bg-gradient-to-br from-[#0d1f3c] via-[#0a1628] to-[#0b2a50] px-7 py-8 md:px-9 md:py-9">
-          {/* Glow orbs */}
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#0f70c9]/20 blur-3xl" />
-            <div className="absolute -bottom-16 left-1/4 h-56 w-56 rounded-full bg-[#0b5497]/25 blur-3xl" />
-            <div className="absolute right-1/3 top-1/2 h-40 w-40 rounded-full bg-white/[0.03] blur-2xl" />
-            <svg className="absolute inset-0 h-full w-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="dashboard-dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-                  <circle cx="2" cy="2" r="1" fill="white" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#dashboard-dots)" />
-            </svg>
-          </div>
-
-          <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-3.5">
-              <div className="flex items-center gap-2.5">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-white/80 ring-1 ring-white/15">
-                  <Zap className="h-3.5 w-3.5 fill-white/40 text-white/40" />
-                  Store Overview
-                </span>
-                <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-emerald-300 ring-1 ring-emerald-500/20">
-                  <Activity className="h-3.5 w-3.5" />
-                  Live
-                </span>
-              </div>
-              <h1 className="font-clash text-3xl font-bold text-white md:text-4xl tracking-tight">
-                {greeting}, {displayName}
-              </h1>
-              <p className="text-base text-white/70 max-w-lg leading-relaxed">{dayName}, {dateStr} — here&apos;s your store snapshot.</p>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <Link
-                href="/admin/products/new"
-                className="group inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#0b5497] shadow-lg shadow-black/20 transition-all duration-200 hover:bg-ocean-light hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
-              >
-                <Plus className="h-4 w-4 transition-transform group-hover:rotate-90 duration-200" />
-                Add Product
-              </Link>
-            </div>
-          </div>
-
-          {/* Stats strip */}
-          <div className="relative mt-6 grid grid-cols-2 gap-px rounded-xl bg-white/8 overflow-hidden sm:grid-cols-4">
-            {[
-              { label: "Date", value: dateStr },
-              { label: "Status", value: "All Systems Operational" },
-              { label: "Region", value: "Kigali, Rwanda" },
-              { label: "Platform", value: "Galaxy Hub v1.0" },
-            ].map((item) => (
-              <div key={item.label} className="bg-[#0a1628] px-4 py-3.5 sm:px-5">
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/50">{item.label}</p>
-                <p className="mt-1 text-sm font-semibold text-white/90 truncate">{item.value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Content (fetched once) ──────────────────────────── */}
       <Suspense
         fallback={
-          <div className="space-y-8">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <StatCardSkeleton key={i} />
+          <div className="space-y-6">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <KpiCardSkeleton key={i} />
               ))}
             </div>
-            <div className="h-32 animate-pulse rounded-2xl bg-white/5" />
-            <div className="h-72 animate-pulse rounded-2xl bg-white/5" />
+            <div className="grid gap-6 lg:grid-cols-3">
+              <WidgetSkeleton rows={3} />
+              <WidgetSkeleton rows={4} />
+            </div>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <WidgetSkeleton rows={5} />
+              <WidgetSkeleton rows={5} />
+            </div>
           </div>
         }
       >
@@ -136,428 +124,389 @@ async function DashboardContent() {
   const data = await getDashboardData();
 
   return (
-    <div className="space-y-8">
-      <StatsCards stats={data.stats} />
-      <QuickActions unreadMessages={data.stats.unreadMessages} />
-      <RecentMessages messages={data.recentMessages} />
+    <div className="space-y-6">
+      <KpiRow data={data} />
+      <div className="grid gap-6 lg:grid-cols-3">
+        <QuickActions data={data} />
+        <NeedsAttention items={data.attention} />
+      </div>
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Card className="p-5 lg:col-span-2">
+          <div className="mb-1 flex items-center justify-between">
+            <h2 className="font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">
+              Sales Overview
+            </h2>
+          </div>
+          <SalesChart />
+        </Card>
+        <OrderStatusPanel counts={data.orderStatus} />
+      </div>
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Card className="lg:col-span-2 overflow-hidden">
+          <RecentOrders orders={data.recentOrders} />
+        </Card>
+        <TradeInPanel overview={data.tradeIns} />
+      </div>
+      <div className="grid gap-6 lg:grid-cols-3">
+        <ProductHealthPanel health={data.productHealth.health} />
+        <Card className="p-5">
+          <AttentionProducts alerts={data.productHealth.alerts} />
+        </Card>
+        <TopProductsPanel products={data.topProducts} />
+      </div>
       <div className="grid gap-6 lg:grid-cols-2">
-        <RecentOrders orders={data.recentOrders} />
-        <RecentProducts products={data.recentProducts} />
+        <Card className="p-5">
+          <MessagesPanel overview={data.messages} />
+        </Card>
+        <MarketingPanel overview={data.marketing} reviewsAvg={data.reviews.average} reviewsTotal={data.reviews.total} />
+      </div>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card className="p-5">
+          <ReviewsPanel overview={data.reviews} />
+        </Card>
+        <CustomerActivityPanel activity={data.customerActivity} />
       </div>
     </div>
   );
 }
 
-function StatsCards({ stats }: { stats: { totalProducts: number; totalCategories: number; totalBrands: number; activePromotions: number; pendingOrders: number; totalOrders: number; unreadMessages: number } }) {
-  const cards = [
+/* ─── KPI row ───────────────────────────────────────────────────────────── */
+
+interface DashboardDataShape {
+  kpis: {
+    totalRevenue: number;
+    revenueThisMonth: number;
+    revenueLastMonth: number;
+    totalOrders: number;
+    pendingOrders: number;
+    totalProducts: number;
+    pendingTradeIns: number;
+    unreadMessages: number;
+  };
+  productHealth: { alerts: unknown[] };
+}
+
+function KpiRow({ data }: { data: DashboardDataShape }) {
+  const { kpis, productHealth } = data;
+  const revenueTrend =
+    kpis.revenueLastMonth > 0
+      ? ((kpis.revenueThisMonth - kpis.revenueLastMonth) / kpis.revenueLastMonth) * 100
+      : null;
+
+  const cards: {
+    label: string;
+    value: string;
+    supporting: React.ReactNode;
+  }[] = [
     {
-      label: "Total Orders",
-      value: stats.totalOrders,
-      icon: <ShoppingCart className="h-5 w-5" />,
-      gradient: "from-cyan-500 to-sky-600",
+      label: "Total Revenue",
+      value: formatRWF(kpis.totalRevenue),
+      supporting:
+        kpis.totalRevenue === 0 ? (
+          <span className="text-xs text-slate-400 dark:text-slate-500">No sales yet</span>
+        ) : revenueTrend === null ? (
+          <span className="text-xs text-slate-400 dark:text-slate-500">
+            RWF {new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(kpis.revenueThisMonth)} this month
+          </span>
+        ) : (
+          <span className={cn("inline-flex items-center gap-1 text-xs font-semibold", revenueTrend >= 0 ? "text-emerald-600 dark:text-emerald-300" : "text-red-600 dark:text-red-300")}>
+            {revenueTrend >= 0 ? <ArrowUpRight className="h-3.5 w-3.5" /> : <ArrowDownRight className="h-3.5 w-3.5" />}
+            {Math.abs(revenueTrend).toFixed(1)}% vs last month
+          </span>
+        ),
     },
     {
-      label: "Pending Orders",
-      value: stats.pendingOrders,
-      icon: <Clock className="h-5 w-5" />,
-      gradient: "from-rose-500 to-pink-600",
-      trend: { value: stats.pendingOrders > 0 ? "Needs attention" : "All clear", positive: stats.pendingOrders === 0 },
+      label: "Orders",
+      value: String(kpis.totalOrders),
+      supporting:
+        kpis.pendingOrders > 0 ? (
+          <span className="text-xs font-semibold text-amber-600 dark:text-amber-300">{kpis.pendingOrders} need attention</span>
+        ) : (
+          <span className="text-xs text-slate-400 dark:text-slate-500">All orders handled</span>
+        ),
     },
     {
-      label: "Total Products",
-      value: stats.totalProducts,
-      icon: <Package className="h-5 w-5" />,
-      gradient: "from-[#0b5497] to-[#0f70c9]",
-      trend: { value: `${stats.totalCategories} categories · ${stats.totalBrands} brands`, positive: true },
+      label: "Products",
+      value: String(kpis.totalProducts),
+      supporting:
+        productHealth.alerts.length > 0 ? (
+          <span className="text-xs font-semibold text-amber-600 dark:text-amber-300">{productHealth.alerts.length}+ need attention</span>
+        ) : (
+          <span className="text-xs text-slate-400 dark:text-slate-500">Catalog healthy</span>
+        ),
     },
     {
-      label: "New Messages",
-      value: stats.unreadMessages,
-      icon: <Mail className="h-5 w-5" />,
-      gradient: "from-violet-500 to-purple-600",
-      trend: { value: stats.unreadMessages > 0 ? "Awaiting reply" : "Inbox clear", positive: stats.unreadMessages === 0 },
+      label: "Pending Trade-Ins",
+      value: String(kpis.pendingTradeIns),
+      supporting:
+        kpis.pendingTradeIns > 0 ? (
+          <span className="text-xs font-semibold text-amber-600 dark:text-amber-300">Awaiting review</span>
+        ) : (
+          <span className="text-xs text-slate-400 dark:text-slate-500">No pending requests</span>
+        ),
     },
     {
-      label: "Active Promotions",
-      value: stats.activePromotions,
-      icon: <Percent className="h-5 w-5" />,
-      gradient: "from-orange-500 to-amber-500",
-    },
-    {
-      label: "Total Brands",
-      value: stats.totalBrands,
-      icon: <Building2 className="h-5 w-5" />,
-      gradient: "from-emerald-500 to-teal-600",
+      label: "Messages",
+      value: String(kpis.unreadMessages),
+      supporting:
+        kpis.unreadMessages > 0 ? (
+          <span className="text-xs font-semibold text-blue-600 dark:text-blue-300">Awaiting reply</span>
+        ) : (
+          <span className="text-xs text-slate-400 dark:text-slate-500">Inbox clear</span>
+        ),
     },
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
       {cards.map((card) => (
-        <StatCard key={card.label} {...card} />
+        <div key={card.label} className="rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438] p-4 shadow-sm">
+          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">{card.label}</p>
+          <p className="mt-1.5 font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            {card.value}
+          </p>
+          <div className="mt-1">{card.supporting}</div>
+        </div>
       ))}
     </div>
   );
 }
 
-function QuickActions({ unreadMessages }: { unreadMessages: number }) {
+/* ─── Quick actions ─────────────────────────────────────────────────────── */
+
+function QuickActions({ data }: { data: DashboardDataShape }) {
   const actions = [
     {
       label: "Add Product",
-      description: "Create a new listing",
-      icon: Plus,
       href: "/admin/products/new",
-      gradient: "from-[#0b5497] to-[#0f70c9]",
+      icon: Plus,
+      detail: "New listing",
     },
     {
-      label: "New Promotion",
-      description: "Set up a discount",
-      icon: Sparkles,
+      label: "Create Promotion",
       href: "/admin/promotions/new",
-      gradient: "from-violet-500 to-purple-600",
+      icon: Sparkles,
+      detail: "New campaign",
     },
     {
-      label: "Manage Hero",
-      description: "Update homepage banner",
-      icon: ImageIcon,
-      href: "/admin/hero",
-      gradient: "from-emerald-500 to-teal-600",
+      label: "Review Trade-Ins",
+      href: "/admin/trade-ins",
+      icon: RefreshCw,
+      detail: data.kpis.pendingTradeIns > 0 ? `${data.kpis.pendingTradeIns} pending` : "All reviewed",
+      badge: data.kpis.pendingTradeIns,
     },
     {
       label: "View Orders",
-      description: "Review customer orders",
-      icon: CreditCard,
       href: "/admin/orders",
-      gradient: "from-orange-500 to-amber-500",
+      icon: ShoppingCart,
+      detail: data.kpis.pendingOrders > 0 ? `${data.kpis.pendingOrders} pending` : "All clear",
+      badge: data.kpis.pendingOrders,
     },
     {
       label: "View Messages",
-      description: unreadMessages > 0 ? `${unreadMessages} unread` : "Inbox is clear",
-      icon: Mail,
       href: "/admin/messages",
-      gradient: "from-purple-500 to-fuchsia-600",
-      badge: unreadMessages > 0 ? unreadMessages : undefined,
-    },
-    {
-      label: "Manage Products",
-      description: "Edit catalog listings",
-      icon: Package,
-      href: "/admin/products",
-      gradient: "from-cyan-500 to-sky-600",
-    },
-    {
-      label: "Manage Brands",
-      description: "Update brand catalog",
-      icon: Building2,
-      href: "/admin/brands",
-      gradient: "from-teal-500 to-emerald-600",
-    },
-    {
-      label: "Manage Categories",
-      description: "Organize categories",
-      icon: Tags,
-      href: "/admin/categories",
-      gradient: "from-rose-500 to-red-600",
+      icon: MessageSquare,
+      detail: data.kpis.unreadMessages > 0 ? `${data.kpis.unreadMessages} unread` : "Inbox clear",
+      badge: data.kpis.unreadMessages,
     },
   ];
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2.5">
-          <h2 className="font-clash text-xl font-bold text-white">Quick Actions</h2>
-          <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-white/50">{actions.length} shortcuts</span>
-        </div>
-        <TrendingUp className="h-5 w-5 text-white/30" />
-      </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {actions.map((action) => (
+    <Card className="p-5">
+      <h2 className="mb-3 font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">Quick Actions</h2>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {actions.map((a) => (
           <Link
-            key={action.label}
-            href={action.href}
-            className="group relative overflow-hidden rounded-2xl border border-white/8 bg-white/5 p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-black/20 hover:border-white/15"
+            key={a.label}
+            href={a.href}
+            className="group relative flex flex-col gap-1.5 rounded-lg border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438] p-3 transition-colors hover:border-ocean/40 hover:bg-ocean-subtle dark:bg-ocean/15"
           >
-            <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-5`} />
-            <div className="relative flex items-start justify-between gap-3">
-              <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${action.gradient} text-white shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`}>
-                <action.icon className="h-5 w-5" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="font-clash text-base font-bold text-white">{action.label}</p>
-                <p className="mt-0.5 text-sm text-white/55">{action.description}</p>
-              </div>
-              {action.badge !== undefined && action.badge > 0 ? (
-                <span className="inline-flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-red-500 px-2 text-xs font-bold text-white">
-                  {action.badge}
+            <div className="flex items-center justify-between">
+              <a.icon className="h-4 w-4 text-ocean dark:text-[#8ec5f2]" />
+              {a.badge ? (
+                <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/15 px-1 text-[10px] font-bold text-red-600 dark:text-red-300">
+                  {a.badge}
                 </span>
-              ) : (
-                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-white/30 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-white/60" />
-              )}
+              ) : null}
             </div>
+            <span className="text-[13px] font-semibold leading-tight text-slate-700 dark:text-slate-300">{a.label}</span>
+            <span className="text-[11px] text-slate-400 dark:text-slate-500">{a.detail}</span>
           </Link>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }
 
-const messageStatusConfig = (status: string) => {
-  switch (status) {
-    case "new": return { bg: "bg-blue-500/10", text: "text-blue-300", ring: "ring-blue-500/20" };
-    case "read":
-    case "contacted": return { bg: "bg-amber-500/10", text: "text-amber-300", ring: "ring-amber-500/20" };
-    case "responded":
-    case "closed": return { bg: "bg-emerald-500/10", text: "text-emerald-300", ring: "ring-emerald-500/20" };
-    case "archived": return { bg: "bg-white/5", text: "text-white/40", ring: "ring-white/10" };
-    default: return { bg: "bg-white/5", text: "text-white/50", ring: "ring-white/10" };
-  }
+/* ─── Needs attention ───────────────────────────────────────────────────── */
+
+const TONE_STYLES: Record<string, { icon: string; text: string }> = {
+  red: { icon: "bg-red-50 dark:bg-red-500/15 text-red-600 dark:text-red-300", text: "text-red-700 dark:text-red-300" },
+  amber: { icon: "bg-amber-50 dark:bg-amber-500/15 text-amber-600 dark:text-amber-300", text: "text-amber-700 dark:text-amber-300" },
+  blue: { icon: "bg-blue-50 dark:bg-blue-500/15 text-blue-600 dark:text-blue-300", text: "text-blue-700 dark:text-blue-300" },
+  purple: { icon: "bg-purple-50 dark:bg-purple-500/15 text-purple-600 dark:text-purple-300", text: "text-purple-700 dark:text-purple-300" },
 };
 
-function RecentMessages({ messages }: { messages: RecentMessage[] }) {
+function NeedsAttention({ items }: { items: { label: string; detail: string; href: string; tone: string }[] }) {
   return (
-    <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
-      <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
-        <div className="flex items-center gap-2.5">
-          <h2 className="font-clash text-lg font-bold text-white">Recent Messages</h2>
-          <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-bold text-white/60">{messages.length}</span>
-        </div>
-        <Link
-          href="/admin/messages"
-          className="group flex items-center gap-1.5 text-sm font-semibold text-ocean hover:text-ocean-light transition-colors"
-        >
-          View All <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-        </Link>
+    <div className="rounded-xl border border-amber-200/70 bg-amber-50 p-5 dark:border-amber-500/30 dark:bg-amber-500/15 lg:col-span-2">
+      <div className="mb-3 flex items-center gap-2">
+        <CircleAlert className="h-4 w-4 text-amber-600 dark:text-amber-300" />
+        <h2 className="font-display text-sm font-bold tracking-tight text-amber-900 dark:text-amber-200">Needs Attention</h2>
+        {items.length > 0 && (
+          <span className="rounded-md bg-amber-100 dark:bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">
+            {items.length}
+          </span>
+        )}
       </div>
 
-      {messages.length === 0 ? (
-        <EmptyState
-          icon={<Inbox className="h-10 w-10" />}
-          title="No messages yet"
-          description="Contact form submissions and product enquiries will appear here."
-          className="border-none rounded-none"
-        />
+      {items.length === 0 ? (
+        <p className="text-sm text-slate-400 dark:text-slate-500">Nothing needs your attention right now.</p>
       ) : (
-        <div className="divide-y divide-white/5">
-          {messages.map((msg) => {
-            const cfg = messageStatusConfig(msg.status);
-            const isUnread = msg.status === "new";
-            const title = msg.type === "contact" ? msg.subject || "Contact Form" : `Quote: ${msg.product_name || "Product"}`;
-            const snippet = msg.type === "contact" ? msg.message || "" : msg.notes || "";
+        <ul className="divide-y divide-amber-100/70 dark:divide-amber-500/15">
+          {items.map((item) => {
+            const s = TONE_STYLES[item.tone] ?? TONE_STYLES.blue;
             return (
-              <Link
-                key={`${msg.type}-${msg.id}`}
-                href="/admin/messages"
-                className={cn(
-                  "group flex items-start gap-4 px-5 py-4 transition-colors hover:bg-white/[0.03]",
-                  isUnread && "bg-blue-500/[0.04]"
-                )}
-              >
-                <div className={cn(
-                  "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors",
-                  msg.type === "contact"
-                    ? "border-violet-500/20 bg-violet-500/10 text-violet-300 group-hover:bg-violet-500/20"
-                    : "border-cyan-500/20 bg-cyan-500/10 text-cyan-300 group-hover:bg-cyan-500/20"
-                )}>
-                  {msg.type === "contact" ? <Mail className="h-5 w-5" /> : <MessageSquare className="h-5 w-5" />}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <span className={cn("text-base font-bold truncate", isUnread ? "text-white" : "text-white/85")}>
-                        {msg.name}
-                      </span>
-                      <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-white/60 shrink-0">
-                        {msg.type === "contact" ? "Contact" : "Enquiry"}
-                      </span>
-                      {isUnread && (
-                        <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-blue-400 animate-pulse" />
-                      )}
-                    </div>
-                    <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ring-1 shrink-0", cfg.bg, cfg.text, cfg.ring)}>
-                      {msg.status}
-                    </span>
-                  </div>
-                  <p className="mt-1 text-sm font-semibold text-white/75 line-clamp-1">{title}</p>
-                  {snippet && (
-                    <p className="mt-0.5 text-sm text-white/55 line-clamp-1">{snippet}</p>
-                  )}
-                  <p className="mt-1 text-xs text-white/40">
-                    {new Date(msg.created_at).toLocaleDateString("en-GB", {
-                      day: "numeric",
-                      month: "short",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                </div>
-              </Link>
+              <li key={item.label + item.detail}>
+                <Link
+                  href={item.href}
+                  className="group flex items-center gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-amber-100 dark:hover:bg-amber-500/20"
+                >
+                  <span className={cn("flex h-7 w-7 shrink-0 items-center justify-center rounded-md", s.icon)}>
+                    <AlertTriangle className="h-3.5 w-3.5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className={cn("block truncate text-[13px] font-semibold", s.text)}>{item.label}</span>
+                    <span className="block truncate text-xs text-slate-500 dark:text-slate-400">{item.detail}</span>
+                  </span>
+                  <ChevronRight className="h-4 w-4 shrink-0 text-slate-300 dark:text-slate-600 transition-transform group-hover:translate-x-0.5 group-hover:text-slate-400" />
+                </Link>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
     </div>
   );
 }
 
-async function RecentOrders({ orders }: { orders: { id: string; order_number: string; customer_name: string; status: string; total_amount: number; created_at: string }[] }) {
-  const statusConfig = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return { bg: "bg-amber-500/10", text: "text-amber-300", dot: "bg-amber-400", ring: "ring-amber-500/20" };
-      case "confirmed":
-        return { bg: "bg-blue-500/10", text: "text-blue-300", dot: "bg-blue-400", ring: "ring-blue-500/20" };
-      case "processing":
-        return { bg: "bg-violet-500/10", text: "text-violet-300", dot: "bg-violet-400", ring: "ring-violet-500/20" };
-      case "completed":
-      case "delivered":
-        return { bg: "bg-emerald-500/10", text: "text-emerald-300", dot: "bg-emerald-400", ring: "ring-emerald-500/20" };
-      case "cancelled":
-        return { bg: "bg-red-500/10", text: "text-red-300", dot: "bg-red-400", ring: "ring-red-500/20" };
-      default:
-        return { bg: "bg-white/5", text: "text-white/50", dot: "bg-white/30", ring: "ring-white/10" };
-    }
-  };
+/* ─── Order status panel ────────────────────────────────────────────────── */
+
+function OrderStatusPanel({ counts }: { counts: { status: string; count: number }[] }) {
+  const total = counts.reduce((a, c) => a + c.count, 0);
+
+  if (total === 0) {
+    return (
+      <Card className="p-5">
+        <h2 className="font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">Order Status</h2>
+        <EmptyState
+          icon={<ShoppingCart className="h-8 w-8" />}
+          title="No orders yet"
+          description="Orders placed by customers will appear here."
+          className="mt-4"
+        />
+      </Card>
+    );
+  }
 
   return (
-    <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
-      <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
-        <div className="flex items-center gap-2.5">
-          <h2 className="font-clash text-lg font-bold text-white">Recent Orders</h2>
-          <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-bold text-white/60">{orders.length}</span>
-        </div>
-        <Link
-          href="/admin/orders"
-          className="group flex items-center gap-1.5 text-sm font-semibold text-ocean hover:text-ocean-light transition-colors"
-        >
-          View All <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+    <Card className="p-5">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">Order Status</h2>
+        <Link href="/admin/orders" className="text-xs font-semibold text-ocean dark:text-[#8ec5f2] hover:text-ocean dark:hover:text-[#a5d3f7]">
+          View all
         </Link>
+      </div>
+
+      <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-[#162f4a]">
+        {counts.map((c) => (
+          <div
+            key={c.status}
+            style={{ width: `${(c.count / total) * 100}%` }}
+            className={cn("h-full", STATUS_COLORS[c.status] ?? "bg-slate-400")}
+            title={`${c.status}: ${c.count}`}
+          />
+        ))}
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        {counts.map((c) => (
+          <Link
+            key={c.status}
+            href={`/admin/orders?status=${c.status}`}
+            className="group flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 dark:border-[#1e3a5f] bg-white dark:bg-[#0f2438] px-2.5 py-1.5 transition-colors hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-50 dark:hover:bg-[#132c46]"
+          >
+            <span className={cn("h-1.5 w-1.5 rounded-full", STATUS_COLORS[c.status] ?? "bg-slate-400")} />
+            <span className="text-xs font-medium capitalize text-slate-600 dark:text-slate-400 group-hover:text-slate-800">
+              {c.status.replace(/_/g, " ")}
+            </span>
+            <span className="text-xs font-bold text-slate-900 dark:text-slate-100">{c.count}</span>
+          </Link>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+/* ─── Recent orders table ───────────────────────────────────────────────── */
+
+function RecentOrders({ orders }: { orders: { id: string; order_number: string; customer_name: string; items: number; total_amount: number; status: string; created_at: string }[] }) {
+  return (
+    <div>
+      <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#1a3352] px-5 py-3.5">
+        <h2 className="font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">Recent Orders</h2>
+        <span className="text-xs text-slate-400 dark:text-slate-500">Latest {orders.length}</span>
       </div>
 
       {orders.length === 0 ? (
         <EmptyState
-          icon={<ShoppingCart className="h-10 w-10" />}
+          icon={<Inbox className="h-8 w-8" />}
           title="No orders yet"
           description="Orders placed by customers will appear here."
-          className="border-none rounded-none"
+          className="m-5"
         />
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-white/5">
-                <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-white/50">Order</th>
-                <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-white/50">Customer</th>
-                <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-white/50">Status</th>
-                <th className="px-5 py-3 text-right text-xs font-bold uppercase tracking-[0.12em] text-white/50">Total</th>
-                <th className="px-5 py-3 text-right text-xs font-bold uppercase tracking-[0.12em] text-white/50">Date</th>
+              <tr className="border-b border-slate-100 dark:border-[#1a3352] text-left">
+                <th className="px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Order</th>
+                <th className="px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Customer</th>
+                <th className="px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Items</th>
+                <th className="px-5 py-2.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Total</th>
+                <th className="px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Status</th>
+                <th className="px-5 py-2.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Date</th>
+                <th className="px-5 py-2.5 text-right text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
-              {orders.map((order) => {
-                const cfg = statusConfig(order.status);
-                return (
-                  <tr key={order.id} className="group transition-colors hover:bg-white/[0.03]">
-                    <td className="px-5 py-3.5">
-                      <span className="font-mono text-sm font-bold text-ocean">#{order.order_number}</span>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span className="text-sm font-semibold text-white/90">{order.customer_name}</span>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold capitalize ring-1 ${cfg.bg} ${cfg.text} ${cfg.ring}`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />
-                        {order.status}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3.5 text-right">
-                      <span className="text-sm font-bold text-white">{formatRWF(Number(order.total_amount))}</span>
-                    </td>
-                    <td className="px-5 py-3.5 text-right">
-                      <span className="text-sm text-white/55 whitespace-nowrap">
-                        {new Date(order.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  );
-}
-
-async function RecentProducts({ products }: { products: { id: string; name: string; main_image_url: string | null; category_name: string | null; price: number; created_at: string }[] }) {
-  return (
-    <div className="rounded-2xl border border-white/8 bg-white/5 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-white/15">
-      <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
-        <div className="flex items-center gap-2.5">
-          <h2 className="font-clash text-lg font-bold text-white">Recent Products</h2>
-          <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-bold text-white/60">{products.length}</span>
-        </div>
-        <Link
-          href="/admin/products"
-          className="group flex items-center gap-1.5 text-sm font-semibold text-ocean hover:text-ocean-light transition-colors"
-        >
-          View All <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-        </Link>
-      </div>
-
-      {products.length === 0 ? (
-        <EmptyState
-          icon={<Package className="h-10 w-10" />}
-          title="No products yet"
-          description="Products added to the catalog will appear here."
-          className="border-none rounded-none"
-        />
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-white/5">
-                <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-white/50">Product</th>
-                <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-white/50">Category</th>
-                <th className="px-5 py-3 text-right text-xs font-bold uppercase tracking-[0.12em] text-white/50">Price</th>
-                <th className="px-5 py-3 text-right text-xs font-bold uppercase tracking-[0.12em] text-white/50">Added</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {products.map((product) => (
-                <tr key={product.id} className="group transition-colors hover:bg-white/[0.03]">
-                  <td className="px-5 py-3.5">
-                    <div className="flex items-center gap-3">
-                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-white/8 border border-white/10 transition-transform group-hover:scale-105">
-                        {product.main_image_url ? (
-                          <Image
-                            src={product.main_image_url}
-                            alt={product.name}
-                            fill
-                            className="object-cover"
-                            sizes="40px"
-                            unoptimized
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center text-white/25">
-                            <Package className="h-4 w-4" />
-                          </div>
-                        )}
-                      </div>
-                      <span className="text-sm font-semibold text-white/90 leading-tight">{product.name}</span>
-                    </div>
+            <tbody className="divide-y divide-slate-50 dark:divide-[#1a3352]">
+              {orders.map((order) => (
+                <tr key={order.id} className="transition-colors hover:bg-slate-50 dark:hover:bg-[#132c46]/70">
+                  <td className="px-5 py-3">
+                    <span className="font-mono text-[13px] font-semibold text-ocean dark:text-[#8ec5f2]">#{order.order_number}</span>
                   </td>
-                  <td className="px-5 py-3.5">
-                    <span className="inline-flex rounded-lg bg-white/10 px-2.5 py-1 text-sm font-medium text-white/70 group-hover:bg-white/15 transition-colors">
-                      {product.category_name ?? "—"}
-                    </span>
+                  <td className="px-5 py-3">
+                    <span className="text-[13px] font-medium text-slate-700 dark:text-slate-300">{order.customer_name}</span>
                   </td>
-                  <td className="px-5 py-3.5 text-right">
-                    <span className="text-sm font-bold text-white">{formatRWF(Number(product.price))}</span>
+                  <td className="px-5 py-3 text-[13px] text-slate-500 dark:text-slate-400">
+                    {order.items} item{order.items === 1 ? "" : "s"}
                   </td>
-                  <td className="px-5 py-3.5 text-right">
-                    <span className="text-sm text-white/55 whitespace-nowrap">
-                      {new Date(product.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
-                    </span>
+                  <td className="px-5 py-3 text-right text-[13px] font-semibold text-slate-800 dark:text-slate-200">
+                    {formatRWF(order.total_amount)}
+                  </td>
+                  <td className="px-5 py-3">
+                    <StatusBadge status={order.status} />
+                  </td>
+                  <td className="whitespace-nowrap px-5 py-3 text-right text-xs text-slate-400 dark:text-slate-500">
+                    {timeAgo(order.created_at)}
+                  </td>
+                  <td className="px-5 py-3 text-right">
+                    <Link
+                      href={`/admin/orders/${order.id}`}
+                      className="text-xs font-semibold text-ocean dark:text-[#8ec5f2] transition-colors hover:text-ocean dark:hover:text-[#a5d3f7]"
+                    >
+                      View →
+                    </Link>
                   </td>
                 </tr>
               ))}
@@ -565,6 +514,419 @@ async function RecentProducts({ products }: { products: { id: string; name: stri
           </table>
         </div>
       )}
+
+      <div className="border-t border-slate-100 dark:border-[#1a3352] px-5 py-3 text-right">
+        <Link href="/admin/orders" className="text-xs font-semibold text-ocean dark:text-[#8ec5f2] hover:text-ocean dark:hover:text-[#a5d3f7]">
+          View All Orders →
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Trade-in panel ────────────────────────────────────────────────────── */
+
+function TradeInPanel({ overview }: { overview: { pending: number; underReview: number; offerSent: number; accepted: number; completed: number } }) {
+  const rows = [
+    { key: "pending", label: "Pending", count: overview.pending, dot: "bg-amber-50 dark:bg-amber-500/15", href: "/admin/trade-ins" },
+    { key: "under_review", label: "Under Review", count: overview.underReview, dot: "bg-blue-50 dark:bg-blue-500/15", href: "/admin/trade-ins" },
+    { key: "offer_sent", label: "Offer Sent", count: overview.offerSent, dot: "bg-violet-50 dark:bg-violet-500/15", href: "/admin/trade-ins" },
+    { key: "accepted", label: "Accepted", count: overview.accepted, dot: "bg-emerald-50 dark:bg-emerald-500/15", href: "/admin/trade-ins" },
+    { key: "completed", label: "Completed", count: overview.completed, dot: "bg-teal-50 dark:bg-teal-500/15", href: "/admin/trade-ins" },
+  ];
+  const actionable = overview.pending + overview.underReview;
+
+  return (
+    <Card className="p-5">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">Trade-Ins</h2>
+        {actionable > 0 && (
+          <span className="rounded-md bg-amber-50 dark:bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">
+            {actionable} pending review
+          </span>
+        )}
+      </div>
+
+      {rows.every((r) => r.count === 0) ? (
+        <EmptyState
+          icon={<RefreshCw className="h-8 w-8" />}
+          title="No trade-ins yet"
+          description="Customer device submissions will appear here."
+        />
+      ) : (
+        <ul className="space-y-1">
+          {rows.map((r) => (
+            <li key={r.key}>
+              <Link
+                href={r.href}
+                className="group flex items-center justify-between rounded-lg px-2 py-2 transition-colors hover:bg-slate-50 dark:hover:bg-[#132c46]"
+              >
+                <span className="flex items-center gap-2.5 text-[13px] font-medium text-slate-600 dark:text-slate-400">
+                  <span className={cn("h-1.5 w-1.5 rounded-full", r.dot)} />
+                  {r.label}
+                </span>
+                <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{r.count}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <Link
+        href="/admin/trade-ins"
+        className="mt-4 flex cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-slate-200 dark:border-[#1e3a5f] px-3 py-2 text-[13px] font-semibold text-slate-600 dark:text-slate-400 transition-colors hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-50 dark:hover:bg-[#132c46]"
+      >
+        <RefreshCw className="h-3.5 w-3.5" />
+        Review Trade-Ins
+      </Link>
+    </Card>
+  );
+}
+
+/* ─── Product health ────────────────────────────────────────────────────── */
+
+function ProductHealthPanel({ health }: { health: { total: number; inStock: number; limited: number; outOfStock: number; comingSoon: number } }) {
+  const rows = [
+    { label: "In Stock", count: health.inStock, href: "/admin/products?stock_status=in_stock", tone: "text-emerald-600 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15" },
+    { label: "Low Stock", count: health.limited, href: "/admin/products?stock_status=limited", tone: "text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/15" },
+    { label: "Out of Stock", count: health.outOfStock, href: "/admin/products?stock_status=out_of_stock", tone: "text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-500/15" },
+    { label: "Coming Soon", count: health.comingSoon, href: "/admin/products?stock_status=coming_soon", tone: "text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-500/15" },
+  ];
+
+  return (
+    <Card className="p-5">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">Inventory Health</h2>
+        <Link href="/admin/products" className="text-xs font-semibold text-ocean dark:text-[#8ec5f2] hover:text-ocean dark:hover:text-[#a5d3f7]">
+          Catalog
+        </Link>
+      </div>
+
+      <div className="mb-4 flex items-end gap-2">
+        <p className="font-display text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">{health.total}</p>
+        <p className="pb-1 text-xs text-slate-400 dark:text-slate-500">total products</p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        {rows.map((r) => (
+          <Link
+            key={r.label}
+            href={r.href}
+            className={cn("flex items-center justify-between rounded-lg border border-slate-100 dark:border-[#1a3352] px-3 py-2.5 transition-colors hover:border-slate-200 dark:border-[#1e3a5f] dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-[#132c46]")}
+          >
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{r.label}</span>
+            <span className={cn("rounded-md px-1.5 py-0.5 text-xs font-bold", r.tone)}>{r.count}</span>
+          </Link>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+/* ─── Products needing attention ────────────────────────────────────────── */
+
+function AttentionProducts({ alerts }: { alerts: { id: string; name: string; issue: string; tone: string; href: string }[] }) {
+  const toneText: Record<string, string> = {
+    red: "bg-red-50 dark:bg-red-500/15 text-red-600 dark:text-red-300",
+    amber: "bg-amber-50 dark:bg-amber-500/15 text-amber-600 dark:text-amber-300",
+    blue: "bg-blue-50 dark:bg-blue-500/15 text-blue-600 dark:text-blue-300",
+    purple: "bg-purple-50 dark:bg-purple-500/15 text-purple-600 dark:text-purple-300",
+  };
+
+  return (
+    <div>
+      <h2 className="mb-3 font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">
+        Products Needing Attention
+      </h2>
+      {alerts.length === 0 ? (
+        <EmptyState
+          icon={<Package className="h-8 w-8" />}
+          title="All products healthy"
+          description="Products with missing details or stock issues will appear here."
+        />
+      ) : (
+        <ul className="divide-y divide-slate-50 dark:divide-[#1a3352]">
+          {alerts.map((a) => (
+            <li key={a.id}>
+              <Link
+                href={a.href}
+                className="group flex items-center gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-[#132c46]"
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[13px] font-semibold text-slate-700 dark:text-slate-300">{a.name}</span>
+                </span>
+                <span className={cn("rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide", toneText[a.tone])}>
+                  {a.issue}
+                </span>
+                <span className="text-xs font-semibold text-ocean dark:text-[#8ec5f2] group-hover:text-ocean dark:hover:text-[#a5d3f7]">Manage →</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/* ─── Top products ──────────────────────────────────────────────────────── */
+
+function TopProductsPanel({ products }: { products: { name: string; units: number; revenue: number }[] }) {
+  return (
+    <Card className="p-5">
+      <h2 className="mb-3 font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">Top Products</h2>
+      {products.length === 0 ? (
+        <EmptyState
+          icon={<Package className="h-8 w-8" />}
+          title="No sales data yet"
+          description="Product rankings will appear here once orders come in."
+        />
+      ) : (
+        <ul className="space-y-2">
+          {products.map((p, i) => (
+            <li key={p.name} className="flex items-center gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-slate-100 dark:bg-[#162f4a] text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                {i + 1}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[13px] font-semibold text-slate-700 dark:text-slate-300">{p.name}</p>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500">{p.units} sold</p>
+              </div>
+              <p className="text-[13px] font-bold text-slate-800 dark:text-slate-200">{formatRWF(p.revenue)}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Card>
+  );
+}
+
+/* ─── Messages ──────────────────────────────────────────────────────────── */
+
+function MessagesPanel({ overview }: { overview: { unread: number; recent: { id: string; type: string; name: string; subject: string | null; status: string; created_at: string }[] } }) {
+  return (
+    <div>
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">Customer Messages</h2>
+        <Link href="/admin/messages" className="text-xs font-semibold text-ocean dark:text-[#8ec5f2] hover:text-ocean dark:hover:text-[#a5d3f7]">
+          View →
+        </Link>
+      </div>
+
+      {overview.unread > 0 && (
+        <p className="mb-3 rounded-lg bg-blue-50 dark:bg-blue-500/15 px-3 py-2 text-xs font-semibold text-blue-700 dark:text-blue-300">
+          {overview.unread} unread message{overview.unread === 1 ? "" : "s"} waiting for a reply
+        </p>
+      )}
+
+      {overview.recent.length === 0 ? (
+        <EmptyState
+          icon={<Inbox className="h-8 w-8" />}
+          title="No messages yet"
+          description="Contact form submissions and product enquiries will appear here."
+        />
+      ) : (
+        <ul className="divide-y divide-slate-50 dark:divide-[#1a3352]">
+          {overview.recent.map((m) => (
+            <li key={`${m.type}-${m.id}`}>
+              <Link
+                href="/admin/messages"
+                className="group flex items-start gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-[#132c46]"
+              >
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-[#162f4a] text-slate-500 dark:text-slate-400">
+                  <MessageSquare className="h-3.5 w-3.5" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center justify-between gap-2">
+                    <span className="truncate text-[13px] font-semibold text-slate-700 dark:text-slate-300">{m.name}</span>
+                    <span className="shrink-0 text-[10px] text-slate-400 dark:text-slate-500">{timeAgo(m.created_at)}</span>
+                  </span>
+                  <span className="block truncate text-xs text-slate-400 dark:text-slate-500">
+                    {m.subject || "No subject"}
+                  </span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/* ─── Marketing ─────────────────────────────────────────────────────────── */
+
+function MarketingPanel({
+  overview,
+  reviewsAvg,
+  reviewsTotal,
+}: {
+  overview: { activePromotions: number; endingSoon: { id: string; title: string; daysLeft: number }[]; heroPublished: boolean; heroTitle: string | null; pendingReviews: number };
+  reviewsAvg: number;
+  reviewsTotal: number;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-200 dark:border-[#1e3a5f] bg-slate-50 dark:bg-[#0f2438]/60 p-5">
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">Marketing</h2>
+        <Link href="/admin/promotions" className="text-xs font-semibold text-ocean dark:text-[#8ec5f2] hover:text-ocean dark:hover:text-[#a5d3f7]">
+          Manage Promotions
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="rounded-lg bg-white dark:bg-[#0f2438] p-3 shadow-sm ring-1 ring-slate-100 dark:ring-slate-600">
+          <p className="font-display text-xl font-bold text-slate-900 dark:text-slate-100">{overview.activePromotions}</p>
+          <p className="mt-0.5 text-[11px] font-medium text-slate-400 dark:text-slate-500">Active promotions</p>
+        </div>
+        <div className="rounded-lg bg-white dark:bg-[#0f2438] p-3 shadow-sm ring-1 ring-slate-100 dark:ring-slate-600">
+          <p className="font-display text-xl font-bold text-slate-900 dark:text-slate-100">{overview.pendingReviews}</p>
+          <p className="mt-0.5 text-[11px] font-medium text-slate-400 dark:text-slate-500">Unpublished reviews</p>
+        </div>
+        <div className="rounded-lg bg-white dark:bg-[#0f2438] p-3 shadow-sm ring-1 ring-slate-100 dark:ring-slate-600">
+          <p className="font-display text-xl font-bold text-slate-900 dark:text-slate-100">{reviewsTotal}</p>
+          <p className="mt-0.5 text-[11px] font-medium text-slate-400 dark:text-slate-500">Total reviews</p>
+        </div>
+        <div className="rounded-lg bg-white dark:bg-[#0f2438] p-3 shadow-sm ring-1 ring-slate-100 dark:ring-slate-600">
+          <div className="flex items-center gap-1">
+            <p className="font-display text-xl font-bold text-slate-900 dark:text-slate-100">{reviewsAvg || "—"}</p>
+            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+          </div>
+          <p className="mt-0.5 text-[11px] font-medium text-slate-400 dark:text-slate-500">Average rating</p>
+        </div>
+      </div>
+
+      <div className="mt-4 space-y-2">
+        <div className="flex items-center gap-2.5 rounded-lg bg-white dark:bg-[#0f2438] px-3 py-2.5 shadow-sm ring-1 ring-slate-100 dark:ring-slate-600">
+          <ImageIcon className="h-4 w-4 text-ocean dark:text-[#8ec5f2]" />
+          <span className="text-[13px] text-slate-600 dark:text-slate-400">
+            {overview.heroPublished ? (
+              <>Hero published: <span className="font-semibold text-slate-800 dark:text-slate-200">{overview.heroTitle || "Active"}</span></>
+            ) : (
+              <span className="font-semibold text-amber-600 dark:text-amber-300">No hero content published</span>
+            )}
+          </span>
+          <Link href="/admin/hero" className="ml-auto text-xs font-semibold text-ocean dark:text-[#8ec5f2] hover:text-ocean dark:hover:text-[#a5d3f7]">
+            Edit →
+          </Link>
+        </div>
+
+        {overview.endingSoon.length > 0 && (
+          <div className="rounded-lg bg-amber-50 dark:bg-amber-500/15 px-3 py-2.5 ring-1 ring-amber-100 dark:ring-amber-500/25">
+            <p className="mb-1 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+              <Clock className="h-3 w-3" /> Ending soon
+            </p>
+            <ul className="space-y-1">
+              {overview.endingSoon.map((p) => (
+                <li key={p.id} className="flex items-center justify-between gap-2 text-[13px]">
+                  <span className="truncate font-semibold text-amber-800 dark:text-amber-200">{p.title}</span>
+                  <span className="shrink-0 text-xs text-amber-600 dark:text-amber-300">
+                    {p.daysLeft <= 1 ? "ends tomorrow" : `ends in ${p.daysLeft} days`}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Reviews ───────────────────────────────────────────────────────────── */
+
+function ReviewsPanel({ overview }: { overview: { average: number; total: number; active: number; recent: { id: string; author: string; rating: number; content: string }[] } }) {
+  return (
+    <div>
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">Reviews</h2>
+        <Link href="/admin/reviews" className="text-xs font-semibold text-ocean dark:text-[#8ec5f2] hover:text-ocean dark:hover:text-[#a5d3f7]">
+          View Reviews →
+        </Link>
+      </div>
+
+      <div className="mb-4 flex items-end gap-4">
+        <div>
+          <p className="font-display text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            {overview.average || "—"}
+          </p>
+          <p className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
+            Average from {overview.active} published review{overview.active === 1 ? "" : "s"}
+          </p>
+        </div>
+        <div className="pb-1">
+          <div className="flex gap-0.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={i}
+                className={cn(
+                  "h-4 w-4",
+                  i < Math.round(overview.average) ? "fill-amber-400 text-amber-400" : "text-slate-200"
+                )}
+              />
+            ))}
+          </div>
+          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">{overview.total} total review{overview.total === 1 ? "" : "s"}</p>
+        </div>
+      </div>
+
+      {overview.recent.length === 0 ? (
+        <EmptyState
+          icon={<Star className="h-8 w-8" />}
+          title="No reviews yet"
+          description="Customer reviews will appear here."
+        />
+      ) : (
+        <ul className="space-y-2.5">
+          {overview.recent.map((r) => (
+            <li key={r.id} className="rounded-lg border border-slate-100 dark:border-[#1a3352] px-3 py-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] font-semibold text-slate-700 dark:text-slate-300">{r.author}</span>
+                <span className="text-xs text-amber-500">
+                  {"★".repeat(r.rating)}
+                  <span className="text-slate-200">{"★".repeat(5 - r.rating)}</span>
+                </span>
+              </div>
+              <p className="mt-1 line-clamp-2 text-xs text-slate-500 dark:text-slate-400">&ldquo;{r.content}&rdquo;</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/* ─── Customer activity ─────────────────────────────────────────────────── */
+
+function CustomerActivityPanel({ activity }: { activity: { totalCustomers: number; newThisMonth: number; returning: number; newInquiries: number } }) {
+  const stats = [
+    { label: "Total customers", value: activity.totalCustomers },
+    { label: "New this month", value: activity.newThisMonth },
+    { label: "Returning", value: activity.returning },
+    { label: "New inquiries", value: activity.newInquiries },
+  ];
+
+  return (
+    <div>
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="font-display text-sm font-bold tracking-tight text-slate-800 dark:text-slate-200">Customer Activity</h2>
+        <Link href="/admin/customers" className="text-xs font-semibold text-ocean dark:text-[#8ec5f2] hover:text-ocean dark:hover:text-[#a5d3f7]">
+          View Customers →
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {stats.map((s) => (
+          <div key={s.label} className="rounded-lg border border-slate-100 dark:border-[#1a3352] px-3 py-3">
+            <p className="font-display text-xl font-bold text-slate-900 dark:text-slate-100">{s.value}</p>
+            <p className="mt-0.5 text-[11px] font-medium text-slate-400 dark:text-slate-500">{s.label}</p>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-4 flex items-start gap-2 rounded-lg bg-slate-50 dark:bg-[#0f2438] px-3 py-2.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+        <Users className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-400 dark:text-slate-500" />
+        Customers are identified by phone or name across orders, trade-ins and enquiries. No duplicate records are stored.
+      </p>
     </div>
   );
 }
