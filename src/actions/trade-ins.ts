@@ -191,9 +191,11 @@ export async function submitTradeIn(formData: FormData) {
 
   const supabase = createClient();
 
-  // Rate limit: one trade-in per contact within the window.
+  // Rate limit: one trade-in per contact within the window. Read through the
+  // service-role client — the anon role has no SELECT policy on trade_ins.
+  const adminSupabase = createAdminClient();
   const since = new Date(Date.now() - TRADE_IN_RATE_LIMIT_MS).toISOString();
-  const { data: recent } = await supabase
+  const { data: recent } = await adminSupabase
     .from("trade_ins")
     .select("trade_in_id")
     .or(phone ? `phone.eq.${phone}` : `customer_name.eq.${customer_name}`)
@@ -276,7 +278,7 @@ export async function submitTradeIn(formData: FormData) {
 
   // Best-effort staff notification — never fails the submission.
   const telegramOk = await sendTelegramNotification("trade-in", buildTradeInTelegramData(record));
-  await supabase
+  await adminSupabase
     .from("trade_ins")
     .update({ telegram_sent: telegramOk })
     .eq("id", record.id);

@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { getTradeIns } from "@/actions/trade-ins";
 import { TradeInsClient } from "./TradeInsClient";
 
+export const dynamic = "force-dynamic";
+
 async function TradeInsContent() {
   const tradeIns = await getTradeIns();
   return <TradeInsClient tradeIns={tradeIns} />;

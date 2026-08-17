@@ -4,6 +4,8 @@ import { ArrowLeft } from "lucide-react";
 import { getTradeInById } from "@/actions/trade-ins";
 import { TradeInDetailClient } from "./TradeInDetailClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function TradeInDetailPage({
   params,
 }: {

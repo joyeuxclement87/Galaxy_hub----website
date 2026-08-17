@@ -13,6 +13,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin/promotions": "Promotions",
   "/admin/hero": "Hero Section",
   "/admin/orders": "Orders",
+  "/admin/trade-ins": "Trade-Ins",
   "/admin/messages": "Messages",
   "/admin/settings": "Settings",
 };
@@ -31,6 +32,7 @@ export function TopBar({ userEmail }: { userEmail: string }) {
     else if (pathname.match(/^\/admin\/promotions\/.+\/edit$/)) pageTitle = "Edit Promotion";
     else if (pathname.match(/^\/admin\/promotions\/new$/)) pageTitle = "Add Promotion";
     else if (pathname.match(/^\/admin\/orders\/.+/)) pageTitle = "Order Detail";
+    else if (pathname.match(/^\/admin\/trade-ins\/.+/)) pageTitle = "Trade-In Detail";
   }
 
   const initials = userEmail
