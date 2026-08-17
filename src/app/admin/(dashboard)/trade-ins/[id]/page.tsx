@@ -34,7 +34,7 @@ export default async function TradeInDetailPage({
           {tradeIn.wanted_product_storage ? ` · ${tradeIn.wanted_product_storage}` : ""}
         </p>
       </div>
-      <TradeInDetailClient tradeIn={tradeIn} />
+      <TradeInDetailClient key={tradeIn.updated_at} tradeIn={tradeIn} />
     </div>
   );
 }
