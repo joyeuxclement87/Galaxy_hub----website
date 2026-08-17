@@ -74,6 +74,15 @@ function escapeMarkdownV2(text: string | number | null | undefined): string {
 }
 
 /**
+ * Escapes a URL for use inside a MarkdownV2 link. Telegram parses link URLs
+ * with the same special-char rules as the body, so '-', '.', '_' etc. must be
+ * escaped too (slash and colon are safe).
+ */
+function escapeMarkdownV2Url(url: string): string {
+  return url.replace(/([_*[\]()~`>#+\-=|{}.!\\])/g, "\\$1");
+}
+
+/**
  * Raw Bot API sender. Server-only module: the token must never leave the
  * server (it is read from process.env, never rendered or passed to client
  * components). Validation + non-blocking failure handling live here.
@@ -148,7 +157,7 @@ function buildOrderMessage(data: TelegramNotificationData): string {
   if (customer.notes) lines.push("", `*Notes:* ${escapeMarkdownV2(customer.notes)}`);
 
   if (order.id && process.env.NEXT_PUBLIC_SITE_URL) {
-    lines.push("", `🔗 [View in admin](${process.env.NEXT_PUBLIC_SITE_URL}/admin/orders/${order.id})`);
+    lines.push("", `🔗 [View in admin](${escapeMarkdownV2Url(process.env.NEXT_PUBLIC_SITE_URL)}/admin/orders/${order.id})`);
   }
 
   return lines.join("\n");
@@ -167,7 +176,7 @@ function buildStatusMessage(data: TelegramNotificationData): string {
   lines.push(`*Updated:* ${escapeMarkdownV2(status.updated_at ?? new Date().toISOString())}`);
 
   if (order.id && process.env.NEXT_PUBLIC_SITE_URL) {
-    lines.push("", `🔗 [View in admin](${process.env.NEXT_PUBLIC_SITE_URL}/admin/orders/${order.id})`);
+    lines.push("", `🔗 [View in admin](${escapeMarkdownV2Url(process.env.NEXT_PUBLIC_SITE_URL)}/admin/orders/${order.id})`);
   }
 
   return lines.join("\n");
@@ -200,7 +209,7 @@ function buildQuoteMessage(data: TelegramNotificationData): string {
   if (quote.product_slug && process.env.NEXT_PUBLIC_SITE_URL) {
     lines.push(
       "",
-      `🔗 [View product](${process.env.NEXT_PUBLIC_SITE_URL}/product/${quote.product_slug})`,
+      `🔗 [View product](${escapeMarkdownV2Url(process.env.NEXT_PUBLIC_SITE_URL)}/product/${quote.product_slug})`,
     );
   }
 
@@ -223,7 +232,7 @@ function buildTradeInMessage(data: TelegramNotificationData): string {
 
   const lines: string[] = [];
   lines.push(bar);
-  lines.push("📱 *NEW TRADE-IN REQUEST*");
+  lines.push("📱 *NEW TRADE\\-IN REQUEST*");
   lines.push(bar);
   lines.push("");
   lines.push(`*ID:* ${escapeMarkdownV2(t.trade_in_id)}`);
@@ -260,7 +269,7 @@ function buildTradeInMessage(data: TelegramNotificationData): string {
   );
 
   if (t.id && process.env.NEXT_PUBLIC_SITE_URL) {
-    lines.push("", `🔗 [Review in admin](${process.env.NEXT_PUBLIC_SITE_URL}/admin/trade-ins/${t.id})`);
+    lines.push("", `🔗 [Review in admin](${escapeMarkdownV2Url(process.env.NEXT_PUBLIC_SITE_URL)}/admin/trade-ins/${t.id})`);
   }
 
   return lines.join("\n");
